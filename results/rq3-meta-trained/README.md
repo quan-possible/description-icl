@@ -5,6 +5,11 @@ been trained to completion.
 
 ## Prompt
 
+![How one prompt is built, read, and scored](prompt.svg)
+
+`prompt_figure.py` draws the figure from `meta.sample_batch`, so it stays in
+step with the code.
+
 One description slot followed by one slot per example, after the prefix
 layout of Huang & Ge (2025). Each slot holds $d + 2$ numbers:
 
