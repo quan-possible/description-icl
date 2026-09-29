@@ -68,6 +68,12 @@ the next prediction.
 | $N = 1$ | One question, one answer |
 | $N$ large | A long session with feedback |
 
+The trained networks of section 6 are scored by squared error instead, as in
+Garg et al. and Huang & Ge: regret is the squared error of the prediction
+minus the oracle's, in units of the noise variance. The exact learner is
+computed under both losses, so each network is compared with the exact
+learner under the loss it was trained on.
+
 ## 4. Effective sample size
 
 Take a learner with the description and no examples, and a learner with $n$
@@ -96,15 +102,20 @@ come from `meta.sample_batch` and `mixture.py` with $d = 2$, $a_0 = 10$,
 $r = 0.05$, $p = 0.9$, and generator seed 3. The experiments use $d = 5$;
 the steps are the same.
 
+**Units.** The model sees the task in the units of Garg et al. and Huang &
+Ge, $w \sim \mathcal{N}(0, I)$. This is the task of sections 1 and 2 with
+$m$, $w$, and every $y$ divided by $\sqrt{a_0}$, so the noise variance is
+$1 / a_0 = 0.1$. All numbers in 6.1 to 6.6 are in these units.
+
 ### 6.1 Draw a task and a description
 
 | Step | Draw | Value in the example |
 | --- | --- | --- |
-| Description | $m \sim \mathcal{N}(0, (1 - r)\,a_0 I)$ | $m = (2.35, 4.61)$ |
+| Description | $m \sim \mathcal{N}(0, (1 - r) I)$ | $m = (0.74, 1.46)$ |
 | Is it correct? | Yes with probability $p = 0.9$ | Yes |
-| Hidden weights | Correct: $w \sim \mathcal{N}(m, r\,a_0 I)$ | $w = (1.69, 4.90)$ |
+| Hidden weights | Correct: $w \sim \mathcal{N}(m, r I)$ | $w = (0.54, 1.55)$ |
 | Inputs | $x_k \sim \mathcal{N}(0, I)$ | $(0.42, 0.26)$, $(-2.39, -0.50)$, $(1.02, 1.05)$ |
-| Answers | $y_k = w^\top x_k + \text{noise}$ | $0.80$, $-7.06$, $6.46$ |
+| Answers | $y_k = w^\top x_k + \text{noise}$ | $0.25$, $-2.23$, $2.04$ |
 
 Half the training prompts have no description; their $w$ comes from the base
 prior. Prompts are drawn fresh at every step and never reused.
@@ -117,9 +128,9 @@ the numbers enter the model through one linear layer. With $n = 2$:
 
 ```text
          is-description  is-example   vector          answer
-row 0:        1              0        2.35   4.61      0.00     the description m
-row 1:        0              1        0.42   0.26      0.80     example: x1 with y1
-row 2:        0              1       -2.39  -0.50     -7.06     example: x2 with y2
+row 0:        1              0        0.74   1.46      0.00     the description m
+row 1:        0              1        0.42   0.26      0.25     example: x1 with y1
+row 2:        0              1       -2.39  -0.50     -2.23     example: x2 with y2
 row 3:        0              0        1.02   1.05      0.00     question: x3, answer blank
 ```
 
@@ -133,8 +144,7 @@ own answer, and a final question with a blank answer.
 | Fewer examples | The question moves up; later rows are hidden |
 
 The number of examples $n$ is drawn uniformly from $0, \dots, K - 1$ for each
-prompt, with $K = 16$. Hidden rows keep every prompt the same shape, so
-changing $n$ costs no speed.
+prompt, with $K = 16$. Hidden rows keep every prompt the same shape.
 
 ### 6.3 What is stated and what is learned
 
@@ -146,78 +156,69 @@ changing $n$ costs no speed.
 
 ### 6.4 Model and output
 
-| Item | Value |
-| --- | --- |
-| Model | Transformer encoder, 6 layers, width 128, 4 heads, trained from scratch |
-| Positions | None. The examples of a prompt have no order, and the marker columns tell the rows apart |
-| Output | Read at the question row: a mixture of two Gaussians (two weights, two centres, two spreads) |
-
-Two components are what the exact answer needs: one for "the description is
-right" and one for "it is wrong".
+| Item | Value | Source |
+| --- | --- | --- |
+| Model | Transformer, 12 layers, 8 heads, width 256, GELU, no dropout; 9.5M parameters | Garg et al., Section 2 |
+| Positions | None; the marker columns tell the rows apart | Huang & Ge |
+| Output | One number, read at the question row | Garg et al.; Huang & Ge |
 
 ### 6.5 Loss
 
-The loss is minus the log of the density the model gives the true answer to
-the question. In the example the model outputs a distribution for $y_3$ and
-is scored at $6.46$. Each prompt contributes one question, as in Huang & Ge.
+Squared error between the model's number and the true answer to the
+question, as in Garg et al. and Huang & Ge. In the example the model outputs
+one number for the blank in row 3 and is scored against $2.04$. Each prompt
+contributes one question.
 
 ### 6.6 What the exact learner predicts for the same prompt
 
-The exact learner weighs "the description is right" against "it is wrong" by
-how well each has predicted the examples so far.
+Under squared error the best prediction is the exact learner's average
+belief about the answer.
 
-| Examples seen | Weight on "right" | If right, $y \sim$ | If wrong, $y \sim$ | True $y$ |
-| --- | --- | --- | --- | --- |
-| 0 | 0.90 | centre 2.18, spread 1.06 | centre 0.00, spread 1.86 | 0.80 |
-| 1 | 0.88 | centre −7.24, spread 1.92 | centre −2.66, spread 4.79 | −7.06 |
-| 2 | 0.97 | centre 6.76, spread 1.23 | centre 2.89, spread 2.52 | 6.46 |
+| Learner | How it predicts the blank in row 3 | Prediction | Squared error against 2.04 |
+| --- | --- | --- | --- |
+| Oracle who knows $w$ | $w^\top x_3$ | 2.18 | 0.018 |
+| Stage 1: description always right | Fit to the two examples, pulled toward $m$ | 2.14 | 0.009 |
+| Stage 2: right with probability 0.9 | $0.97 \times 2.14 + 0.03 \times 0.91$ | 2.10 | 0.003 |
+| No description | Fit to the two examples, pulled toward zero | 0.91 | 1.275 |
 
-With no examples the weight is the reliability, 0.90. After two examples
-that the description predicted well it is 0.97.
+In stage 2 the weight 0.97 is the learner's belief that the description is
+right. It starts at the reliability, 0.90, and rises because the description
+predicted the two examples well.
 
-**Regret** is the log density an oracle who knows $w$ gives the true answer,
-minus the learner's.
-
-| Examples seen | Oracle | Exact learner, with description | Regret | Exact learner, no description | Regret |
-| --- | --- | --- | --- | --- | --- |
-| 0 | −1.60 | −1.79 | 0.19 | −1.63 | 0.03 |
-| 1 | −1.07 | −1.67 | 0.60 | −2.91 | 1.84 |
-| 2 | −1.01 | −1.18 | 0.17 | −2.84 | 1.83 |
-
-These are values for one prompt. With no examples the noise happened to put
-$y_1$ near zero, which favoured the learner without a description. Results
-use the average over 20,000 prompts.
+**Regret** is a learner's squared error minus the oracle's. For this one
+prompt the learners with a description happen to beat the oracle, because
+the noise in $y_3$ fell their way. Results use the average over 20,000
+prompts, where the oracle is best.
 
 ### 6.7 From regret to ESS
 
-Averaged over prompts at the experimental setting ($d = 5$, $a_0 = 10$),
-the exact learner gives:
+Averaged over prompts at the experimental setting ($d = 5$, $a_0 = 10$), in
+units of the noise variance (`results/rq3-meta-trained/targets.csv`):
 
-| Examples, no description | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Single-query regret | 1.87 | 1.74 | 1.58 | 1.38 | 1.14 | 0.88 | 0.68 | 0.55 |
+| Examples, no description | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Regret | 49.8 | 40.4 | 30.7 | 22.0 | 13.9 | 7.9 | 4.6 | 2.9 | 2.0 |
 
 | Description alone | Regret | Falls on the curve at | ESS |
 | --- | --- | --- | --- |
-| $r = 0.5$, $p = 1$ | 1.54 | between 2 and 3 examples | 2.2 |
-| $r = 0.5$, $p = 0.9$ | 1.61 | between 1 and 2 examples | 1.8 |
-| $r = 0.05$, $p = 1$ | 0.58 | between 6 and 7 examples | 6.7 |
-| $r = 0.05$, $p = 0.9$ | 0.87 | between 5 and 6 examples | 5.0 |
+| $r = 0.5$, $p = 1$ | 25.0 | between 2 and 3 examples | 2.7 |
+| $r = 0.5$, $p = 0.9$ | 29.7 | between 2 and 3 examples | 2.1 |
+| $r = 0.05$, $p = 1$ | 2.5 | between 7 and 8 examples | 7.4 |
+| $r = 0.05$, $p = 0.9$ | 11.4 | between 4 and 5 examples | 4.4 |
 
-These four numbers are the targets for the networks.
-
-The same calculation is done with the network's regrets in place of the
-exact learner's. RQ3 asks whether the two ESS values agree.
+These four ESS values are the targets for the networks. The same
+calculation is done with the network's regrets in place of the exact
+learner's. RQ3 asks whether the two agree.
 
 ### 6.8 Training
 
-| Item | Value |
-| --- | --- |
-| Optimiser | AdamW, no weight decay, learning rate 3e-4, warm-up then decay |
-| Gradient clipping | Norm 1 |
-| Batch | 1024 prompts |
-| Steps | Set by the pilot (6.10) |
-| Hardware | Colab L4 |
+| Item | Value | Source |
+| --- | --- | --- |
+| Optimiser | Adam, learning rate $10^{-4}$, constant | Garg et al., Appendix A |
+| Gradient clipping | Norm 1 | Huang & Ge |
+| Batch | 1024 prompts | Ours; one question per prompt carries less signal than Garg et al.'s every-row loss at batch 64 |
+| Steps | Set by the pilot (6.11) | |
+| Hardware | Colab L4 | |
 
 ### 6.9 Stages
 
@@ -225,34 +226,35 @@ The experiments start with the easiest task for the model and add one
 difficulty at a time. A stage begins only after the previous one shows the
 network reaching the exact learner's regret.
 
-| Stage | Adds | Reliability $p$ | Output | Exact answer the model must learn |
-| --- | --- | --- | --- | --- |
-| 1 | Nothing: the description is always right | 1 | One Gaussian | Ridge regression pulled toward $m$ |
-| 2 | The description can be wrong | 0.9 | Two Gaussians | Weigh "right" against "wrong" from the examples |
-| 3 | Test reliability differs from training | as stage 2 | Two Gaussians | None learned; this measures how the network's trust transfers |
-
-In stage 1 the example of 6.6 has a single hypothesis: after two examples the
-exact learner predicts $y_3$ with centre 6.76 and spread 1.23, and the ESS of
-the description at the experimental setting is 6.7 examples (section 6.7).
+| Stage | Adds | Reliability $p$ | Exact answer the model must learn |
+| --- | --- | --- | --- |
+| 1 | Nothing: the description is always right | 1 | Ridge regression pulled toward $m$ |
+| 2 | The description can be wrong | 0.9 | Weigh "right" against "wrong" from the examples |
+| 3 | Test reliability differs from training | as stage 2 | None learned; this measures how the network's trust transfers |
 
 ### 6.10 Grid
 
-| Factor | Values | Count |
-| --- | --- | --- |
-| Precision $r$ | 0.5, 0.05 | 2 |
-| Reliability $p$ | 1 (stage 1), 0.9 (stage 2) | 2 |
-| Seed | 0, 1, 2 | 3 |
-| Setting | $d = 5$, $a_0 = 10$, $K = 16$ | 1 |
+| Factor | Values | Count | Reason for the values |
+| --- | --- | --- | --- |
+| Precision $r$ | 0.5, 0.05 | 2 | A coarse description that removes half the prior variance, and a precise one that removes 95% |
+| Reliability $p$ | 1 (stage 1), 0.9 (stage 2) | 2 | The reliable case, and one level at which the description is usually right |
+| Seed | 0, 1, 2 | 3 | |
+| Setting | $d = 5$, $a_0 = 10$, $K = 16$ | 1 | $d$ from Huang & Ge; $K$ covers the largest ESS, 7.4, twice over |
+| Prompts with a description | Half | | Equal practice with and without |
 
 12 models, 6 per stage. Each model handles every number of examples from
 0 to 15; there is not one model per $n$.
 
 ### 6.11 Pilot
 
-One stage-1 model ($p = 1$, $r = 0.05$, seed 0) is trained first. Its regret is
-compared with the exact learner's on the same kind of prompts. The step
+One stage-1 model ($p = 1$, $r = 0.05$, seed 0) is trained first. Its regret
+is compared with the exact learner's on the same kind of prompts. The step
 count for the grid is the point where the gap stops shrinking. If the gap
 does not close, the design is revisited before the grid runs.
+
+An earlier pilot with a distribution output and log loss (6 layers, width
+128) came within 0.03 to 0.05 nats of the exact learner after 10,000 steps.
+It shows the task is learnable; it is not part of the results.
 
 ## 7. Comparison
 
@@ -263,31 +265,37 @@ number of examples.
 | Readout | Question |
 | --- | --- |
 | Regret after $n$ examples | Does the network predict as well as the exact learner? |
-| ESS at horizons 1 and 8 | Is the description worth as many examples to the network? |
+| ESS | Is the description worth as many examples to the network? |
 | Implied trust | Which trust $q$ makes the exact learner's prediction closest to the network's? |
 | Shifted reliability (`--p-test`) | What happens when test reliability differs from training? |
 
 ## Grounding
 
+Every element either matches a published setup or is required by the
+question. Elements that are neither are listed under Departures.
+
 | Design element | Source |
 | --- | --- |
-| In-context linear regression with Gaussian inputs | Garg et al. 2022 |
-| Prefix layout, marker columns, one question per prompt | Huang & Ge 2025 |
-| Dimension $d = 5$ | Huang & Ge 2025 |
-| Log loss, regret against the exact learner, small networks | Genewein et al. 2025 |
+| In-context linear regression, $x \sim \mathcal{N}(0, I)$, $w \sim \mathcal{N}(0, I)$ | Garg et al. 2022; Huang & Ge 2025 |
+| Model size, optimiser, learning rate, squared error, one-number output | Garg et al. 2022 |
+| Prefix layout, marker columns, no positions, one question per prompt, $d = 5$, gradient clipping | Huang & Ge 2025 |
+| One model for every number of examples | Garg et al. 2022 |
+| Comparison with the exact learner by regret | Genewein et al. 2025 |
 | Robust mixture prior for reliability | Schmidli et al. 2014 |
 | ESS by matching a prior against observations | Morita et al. 2008; Reimherr et al. 2021 |
 
-## Differences from Huang & Ge
+## Departures
 
-| Piece | Theirs | Ours | Reason |
+| Piece | Related work | Ours | Reason |
 | --- | --- | --- | --- |
-| What the descriptor describes | The mean of the inputs | The weights | It must carry information about the task to have a worth in examples |
-| Noise in the answers | None | Variance 1 | Without noise the regret is not defined |
-| Reliability | None | Right with probability $p$ | Second axis of the study |
-| Model | Linear attention, 1 to 3 layers | Standard Transformer, 6 layers | A linear model cannot weigh two hypotheses |
-| Output | One number, squared error | A distribution, log loss | The exact results are in log loss |
-| With and without a descriptor | Separate models | One model; the description row is present or hidden | The ESS then compares a learner with itself |
+| What the descriptor describes | The mean of the inputs | The weights | Required: it must carry information about the task to have a worth in examples |
+| Reliability | None | Right with probability $p$ | Required: second axis of the study |
+| Noise in the answers | None | Variance 0.1 | Required: without noise, $d$ examples determine $w$ exactly, so no description could be worth more than $d = 5$ examples; the precise description is worth 7.4 |
+| Attention | Linear (Huang & Ge) | Standard (Garg et al.) | Required: weighing two hypotheses is not linear in the examples |
+| With and without a descriptor | Separate models (Huang & Ge) | One model; the description row is present or hidden | Kept by Bruce. The ESS then compares a learner with itself |
+| Number of examples | Fixed (Huang & Ge); every row scored (Garg et al.) | One question after a random number of examples | Kept by Bruce. The ESS needs regret at every number of examples |
+| Examples per prompt | 40 (Garg et al.), 50 (Huang & Ge) | Up to 15 | Kept by Bruce. Covers the largest ESS twice over |
+| Seeds | 5 (Huang & Ge) | 3 | Kept by Bruce |
 
 ## Decisions
 
@@ -297,21 +305,20 @@ number of examples.
 | 2 | A description is a statement about the weights. | 2026-09-29 | A description of the inputs is worth zero examples to the exact learner. |
 | 3 | The description occupies the first token only. | 2026-09-29 | Huang & Ge's prefix embedding. |
 | 4 | The description states only $m$. Precision is fixed per model. | 2026-09-29 | Nothing for the model to misread; same treatment as reliability. |
-| 5 | The output has one component when $p = 1$ and two otherwise. | 2026-09-29 | The exact predictive has that many. |
-| 6 | Transformer only. | 2026-09-29 | One architecture is enough for the main result. |
-| 7 | One question per prompt, after a random number of examples. | 2026-09-29 | Huang & Ge's loss form. |
-| 8 | Log loss, not squared error. | 2026-09-29 | The exact results are in log loss. |
-| 9 | Answers are noisy. | 2026-09-29 | Without noise the regret is not defined. |
-| 10 | Each input sits beside its own answer, and the prompt ends with a question row. Supersedes the layout with the answer one row late. | 2026-09-29 | Huang & Ge's layout exactly. With one question per prompt the late answer served no purpose. |
-| 11 | A prompt without a description hides the description row. Supersedes the has-description flag. | 2026-09-29 | A prompt either has an instruction or does not; no extra field. |
-| 12 | No position information and no causal mask. | 2026-09-29 | Examples have no order, as for the exact learner; the marker columns separate the rows, as in Huang & Ge. |
-| 13 | $d = 5$ and at most 15 examples. Supersedes $d = 8$ and 32 rows. | 2026-09-29 | Huang & Ge's dimension. The ESS stays below 7 at this setting, so 15 examples cover it. |
-| 14 | Experiments run in stages, easiest first (6.9). | 2026-09-29 | Bruce: keep it easy for the model and raise the difficulty later. |
-| 15 | Unreliable descriptions are studied at $p = 0.9$ only. Supersedes $p \in \{0.9, 0.7\}$. | 2026-09-29 | Bruce: one level is enough to start. |
-| 16 | One model covers all numbers of examples. | 2026-09-29 | The ESS compares regrets across $n$ for one learner; Garg et al. train the same way. |
-
-Bruce asked on 2026-09-29 for the simplest design grounded in existing
-research; decisions 10 to 13 were made under that instruction.
+| 5 | One question per prompt, after a random number of examples. | 2026-09-29 | Huang & Ge's loss form. |
+| 6 | Answers are noisy. | 2026-09-29 | See Departures. |
+| 7 | Each input sits beside its own answer, and the prompt ends with a question row. | 2026-09-29 | Huang & Ge's layout exactly. |
+| 8 | A prompt without a description hides the description row. | 2026-09-29 | A prompt either has an instruction or does not; no extra field. |
+| 9 | No position information and no causal mask. | 2026-09-29 | Huang & Ge; examples have no order. |
+| 10 | $d = 5$ and at most 15 examples. | 2026-09-29 | Huang & Ge's dimension. |
+| 11 | Experiments run in stages, easiest first (6.9). | 2026-09-29 | Bruce: keep it easy for the model and raise the difficulty later. |
+| 12 | Unreliable descriptions are studied at $p = 0.9$ only. | 2026-09-29 | Bruce: one level is enough to start. |
+| 13 | One model covers all numbers of examples. | 2026-09-29 | The ESS compares regrets across $n$ for one learner; Garg et al. train the same way. |
+| 14 | **Standard:** match related work wherever possible; depart only where the question requires it, and record the reason under Departures. | 2026-09-29 | Bruce: every choice must be justifiable, and each departure invites a question. |
+| 15 | The networks output one number and train on squared error. Supersedes the distribution output and log loss. | 2026-09-29 | Decision 14. Garg et al. and Huang & Ge; squared error can answer the question. |
+| 16 | Model size of Garg et al.: 12 layers, 8 heads, width 256. Supersedes 6 layers, width 128. | 2026-09-29 | Decision 14. |
+| 17 | Adam at a constant learning rate of $10^{-4}$. Supersedes warm-up and decay at 3e-4. | 2026-09-29 | Decision 14. Garg et al. |
+| 18 | The model sees $w \sim \mathcal{N}(0, I)$. Supersedes weights of variance 10. | 2026-09-29 | Decision 14. The same task in the units of Garg et al. and Huang & Ge. |
 
 ## Open questions
 
@@ -321,6 +328,6 @@ None.
 
 - The input-mean descriptor of Huang & Ge as a second condition.
 - An LLM experiment.
-- An LSTM, which the proposal names. Its code was removed and is in Git
-  history before this change.
-- Squared-error output as a check on decision 8.
+- An LSTM, which the proposal names.
+- A distribution output with log loss, which would let the network's trust
+  be read directly and match the loss of the exact results in RQ1 and RQ2.

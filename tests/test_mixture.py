@@ -59,3 +59,13 @@ def test_calibrated_trust_is_optimal():
     paths = mx.simulate(d, a_base, a_desc, p, K=10, S=200_000, seed=6)
     r = {q: mx.regret(paths, q, 1)[0] for q in (0.3, 0.5, 0.7, 0.9, 0.99)}
     assert min(r, key=r.get) == 0.7
+
+
+def test_mean_prediction_limits():
+    """Full trust predicts from the description, none from the base prior,
+    and with no observations the weight is the trust itself."""
+    paths = mx.simulate(3, 10.0, 0.5, 0.8, 4, 200, 0)
+    assert np.allclose(mx.mean_prediction(paths, 1.0), paths.mu1)
+    assert np.allclose(mx.mean_prediction(paths, 0.0), paths.mu0)
+    first = mx.mean_prediction(paths, 0.8)[:, 0]
+    assert np.allclose(first, 0.8 * paths.mu1[:, 0] + 0.2 * paths.mu0[:, 0])

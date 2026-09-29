@@ -18,13 +18,14 @@ def test_prompt_layout():
     b = batch([True, False, True, True])
     n = torch.tensor([2, 2, 0, 3])
     tok, hidden = meta.tokens(b, n)
+    m, Y = b["m"] / 10.0**0.5, b["Y"] / 10.0**0.5  # the model sees w ~ N(0, I)
     assert tok.shape == (4, K + 1, D + 3) and hidden.shape == (4, K + 1)
     # prompt 0: description, two examples, question x_3
-    assert torch.equal(tok[0, 0], torch.cat([torch.tensor([1.0, 0.0]), b["m"][0], torch.zeros(1)]))
+    assert torch.allclose(tok[0, 0], torch.cat([torch.tensor([1.0, 0.0]), m[0], torch.zeros(1)]))
     for k in (0, 1):
-        want = torch.cat([torch.tensor([0.0, 1.0]), b["X"][0, k], b["Y"][0, k : k + 1]])
-        assert torch.equal(tok[0, k + 1], want)
-    assert torch.equal(tok[0, 3], torch.cat([torch.zeros(2), b["X"][0, 2], torch.zeros(1)]))
+        want = torch.cat([torch.tensor([0.0, 1.0]), b["X"][0, k], Y[0, k : k + 1]])
+        assert torch.allclose(tok[0, k + 1], want)
+    assert torch.allclose(tok[0, 3], torch.cat([torch.zeros(2), b["X"][0, 2], torch.zeros(1)]))
     assert hidden[0].tolist() == [False, False, False, False, True]
     # prompt 1 has no description: its first row is hidden
     assert hidden[1].tolist() == [True, False, False, False, True]
@@ -41,13 +42,11 @@ def test_model_reads_only_the_prompt():
     n = torch.tensor([2, 2, 2, 2])
     tok, hidden = meta.tokens(b, n)
     pred = model(tok, hidden, n)
-    assert all(t.shape == (4, 2) for t in pred)
-    assert meta.log_density(pred, b["Y"][:, 2]).shape == (4,)
+    assert pred.shape == (4,)
 
     changed = tok.clone()
     changed[:, 4] = 7.0  # a hidden row
     swapped = tok.clone()
     swapped[:, [1, 2]] = tok[:, [2, 1]]  # the two examples
     for other in (changed, swapped):
-        for a, c in zip(pred, model(other, hidden, n)):
-            assert torch.allclose(a, c, atol=1e-5)
+        assert torch.allclose(pred, model(other, hidden, n), atol=1e-5)

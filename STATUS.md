@@ -68,11 +68,13 @@ learner and then for meta-trained networks.
 - The description models statements about the mapping $w$. Descriptions of
   the inputs (Huang & Ge 2025) are worth zero examples to a Bayes-optimal
   learner; their worth is computational.
+- Design standard: match related work wherever possible and depart only
+  where the question requires it.
 - RQ3 uses Huang & Ge's prefix layout exactly: an optional description
   row, $n$ examples each beside its own answer, and one question row. The
-  model has no position information, predicts a two-component mixture for
-  the question, and is trained on log loss with one question per prompt, at
-  $d = 5$. [docs/DESIGN.md](docs/DESIGN.md) is authoritative and walks one
+  model has the size of Garg et al. (12 layers, width 256), no position
+  information, outputs one number, and is trained on squared error with one
+  question per prompt, at $d = 5$. [docs/DESIGN.md](docs/DESIGN.md) is authoritative and walks one
   prompt through end to end.
 
 ## Assessment for NeurIPS 2027 (2026-09-29)
