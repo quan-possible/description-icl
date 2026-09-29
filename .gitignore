@@ -1,6 +1,30 @@
+# macOS metadata
 .DS_Store
+._*
+
+# Local work
 .worktrees/
 tmp/
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local credentials
+.env
+.env.*
+!.env.example
+
+# Large run outputs (keep configs and small summaries in Git)
+*.pt
+*.ckpt
+*.npz
+wandb/
 
 # LaTeX build files
 *.aux
