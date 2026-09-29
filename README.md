@@ -54,7 +54,9 @@ The full plan is in the
 | Path | Contents |
 | --- | --- |
 | `docs/proposal/bayesian_icl/` | Research proposal (LaTeX source and PDF). |
-| `AGENTS.md` | Project contract for agents, including where code, experiments, results, and the paper go. |
+| `src/descriptor_icl/` | Shared code (created with the first implementation). |
+| `results/<rq>-<slug>/` | One self-contained analysis each: code, config, figures, and a short README. |
+| `AGENTS.md` | Project contract for agents, including where each kind of work goes. |
 | `STATUS.md` | Current state and next actions. |
 | `MEMORY.md`, `memory/` | Project history. |
 
@@ -64,9 +66,4 @@ The full plan is in the
 cd docs/proposal/bayesian_icl && latexmk -pdf bayesian_icl_proposal.tex
 ```
 
-This needs a TeX distribution with `titlesec` and `enumitem`. A BasicTeX
-install lacks both; add them with:
-
-```bash
-sudo tlmgr install titlesec enumitem
-```
+This needs the `titlesec` and `enumitem` LaTeX packages.

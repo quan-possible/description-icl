@@ -23,7 +23,7 @@ flowchart TD
         rq3["RQ3 · Meta-trained models<br/>match the Bayes-optimal ESS?"]
     end
 
-    paper["Paper"]
+    paper["Paper<br/>docs/paper/"]
 
     proposal e1@--> rq1
     proposal e2@--> rq2
@@ -79,16 +79,20 @@ large language models.
 Create each folder when its first real file arrives; do not add empty
 scaffolding.
 
-- **Code:** a Python package in `src/descriptor_icl/` (priors, Bayes-optimal
-  predictors, regret and ESS computation, models). Tests in `tests/`.
-- **Experiments:** one runnable script or config per experiment in
-  `experiments/<rq>-<slug>/`. Every figure or number used in writing must be
-  reproducible from a committed script with a fixed seed.
-- **Results:** `results/<YYYY-MM-DD>-<slug>/` holding the config, a short
-  `README.md` stating what the run shows, and small outputs. Keep large
-  checkpoints and arrays out of Git.
-- **Writing:** the paper in `paper/`. Keep the proposal as the record of the
-  original plan; do not rewrite it into the paper.
+| Role | Home |
+| --- | --- |
+| Shared code: priors, Bayes-optimal predictors, regret, ESS, models | `src/descriptor_icl/`, tests in `tests/` |
+| One analysis: its script or notebook, config, figures, tables, and a `README.md` stating what it shows | `results/<rq>-<slug>/`, e.g. `results/rq1-dimension-sweep/` |
+| Hand-written prose: proposal, notes, paper | `docs/` (`docs/proposal/`, `docs/paper/`) |
+| Resumable multi-session work | `docs/jobs/active/<slug>/JOB.md` |
+| Disposable work | `tmp/` (ignored) |
+
+- Analysis code that a second analysis needs moves into `src/`.
+- Every number or figure used in writing must regenerate from its committed
+  `results/` script with a fixed seed. Keep checkpoints and large arrays out
+  of Git.
+- Keep the proposal as the record of the original plan; write the paper
+  separately.
 
 ## Research rules
 
@@ -97,6 +101,8 @@ scaffolding.
   and balanced designs $X^\top X \propto I$).
 - Report the setting (dimension, noise, hierarchy scales, horizon, $p$) beside
   every ESS number.
+- Keep cited results, derivations, hypotheses, planned experiments, and actual
+  findings distinct in writing and records.
 - If a result contradicts the proposal's hypotheses, record it in `STATUS.md`
   and the dated memory; do not quietly reframe the question.
 

@@ -58,8 +58,6 @@ learner and then for meta-trained networks.
   reproduced.
 - The proposal names a main risk: the single-query gap may be small beyond the
   coarsest descriptions, leaving RQ2 as the main contribution.
-- The local BasicTeX install cannot build the proposal (missing `titlesec`,
-  `enumitem`); see `README.md`.
 
 ## Current owners
 
