@@ -2,30 +2,52 @@ import torch
 
 from descriptor_icl import meta
 
+D, K = 3, 4
 
-def test_token_layout():
-    """One description slot, then one slot per example; the precision is
-    never written into the prompt."""
-    d, K = 3, 4
+
+def batch(has_desc):
     g = torch.Generator().manual_seed(0)
-    b = meta.sample_batch(6, K, d, 10.0, torch.tensor([0.05]), 0.7, 0.5, "cpu", g)
-    b["has_desc"] = torch.tensor([True, False] * 3)
-    tok = meta.tokens(b)
-    assert tok.shape == (6, K + 1, d + 2)
-    # description slot: m and the flag, or all zeros without a description
-    assert torch.equal(tok[0, 0], torch.cat([b["m"][0], torch.tensor([0.0, 1.0])]))
-    assert torch.all(tok[1, 0] == 0)
-    # example slot k: x_k and the previous answer
-    assert torch.equal(tok[:, 1:, :d], b["X"])
-    assert torch.all(tok[:, 1, d] == 0)
-    assert torch.equal(tok[:, 2:, d], b["Y"][:, :-1])
-    assert torch.all(tok[:, 1:, d + 1] == 0)
+    b = meta.sample_batch(4, K, D, 10.0, torch.tensor([0.05]), 0.7, 1.0, "cpu", g)
+    b["has_desc"] = torch.tensor(has_desc)
+    return b
 
 
-def test_models_predict_a_two_component_mixture():
-    d, K = 3, 4
-    b = meta.sample_batch(2, K, d, 10.0, torch.tensor([0.5]), 1.0, 1.0, "cpu")
-    for model in (meta.Transformer(d, width=16, layers=1), meta.LSTM(d, width=16, layers=1)):
-        pred = model(meta.tokens(b))
-        assert all(t.shape == (2, K, 2) for t in pred)
-        assert meta.log_density(pred, b["Y"]).shape == (2, K)
+def test_prompt_layout():
+    """Description row, n example rows with their own answers, one question
+    row with a blank answer; everything else hidden."""
+    b = batch([True, False, True, True])
+    n = torch.tensor([2, 2, 0, 3])
+    tok, hidden = meta.tokens(b, n)
+    assert tok.shape == (4, K + 1, D + 3) and hidden.shape == (4, K + 1)
+    # prompt 0: description, two examples, question x_3
+    assert torch.equal(tok[0, 0], torch.cat([torch.tensor([1.0, 0.0]), b["m"][0], torch.zeros(1)]))
+    for k in (0, 1):
+        want = torch.cat([torch.tensor([0.0, 1.0]), b["X"][0, k], b["Y"][0, k : k + 1]])
+        assert torch.equal(tok[0, k + 1], want)
+    assert torch.equal(tok[0, 3], torch.cat([torch.zeros(2), b["X"][0, 2], torch.zeros(1)]))
+    assert hidden[0].tolist() == [False, False, False, False, True]
+    # prompt 1 has no description: its first row is hidden
+    assert hidden[1].tolist() == [True, False, False, False, True]
+    # prompt 2 has no examples: the question follows the description
+    assert hidden[2].tolist() == [False, False, True, True, True]
+    assert hidden[3].tolist() == [False] * 5
+
+
+def test_model_reads_only_the_prompt():
+    """The prediction ignores hidden rows and the order of the examples."""
+    torch.manual_seed(0)
+    model = meta.Transformer(D, width=16, layers=2).eval()
+    b = batch([True] * 4)
+    n = torch.tensor([2, 2, 2, 2])
+    tok, hidden = meta.tokens(b, n)
+    pred = model(tok, hidden, n)
+    assert all(t.shape == (4, 2) for t in pred)
+    assert meta.log_density(pred, b["Y"][:, 2]).shape == (4,)
+
+    changed = tok.clone()
+    changed[:, 4] = 7.0  # a hidden row
+    swapped = tok.clone()
+    swapped[:, [1, 2]] = tok[:, [2, 1]]  # the two examples
+    for other in (changed, swapped):
+        for a, c in zip(pred, model(other, hidden, n)):
+            assert torch.allclose(a, c, atol=1e-5)

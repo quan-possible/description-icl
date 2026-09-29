@@ -1,9 +1,10 @@
 """Meta-trained sequence models for in-context regression with descriptions.
 
-A prompt is an optional description token followed by examples. The model
-predicts each y_k from x_k and everything before it, as a mixture of
-Gaussians, and is trained on log loss so it can match the Bayes-optimal
-predictive (a two-component Gaussian mixture under the robust prior).
+A prompt is an optional description, n examples, and one question, in the
+prefix layout of Huang & Ge (2025). The model predicts the answer to the
+question as a mixture of Gaussians and is trained on log loss, so it can
+match the Bayes-optimal predictive (a two-component Gaussian mixture under
+the robust prior).
 
 Units: sigma_y = 1. The description states only its vector m. Its precision
 r = a_desc / a_base and its reliability p are fixed for each trained model
@@ -38,19 +39,24 @@ def sample_batch(B, K, d, a_base, rs, p, p_desc, device, generator=None):
     return dict(X=X, Y=Y, m=m, r=r, has_desc=has_desc, correct=correct, w=w)
 
 
-def tokens(batch):
-    """Prefix layout of Huang & Ge (2025). Each token is (vector, previous
-    answer, has-description flag). Token 0 is the description (m, 0, flag),
-    all zeros when the prompt has none; token k >= 1 is (x_k, y_{k-1}, 0), so
-    a causal model at position k has seen examples 1..k-1 and the query x_k."""
+def tokens(batch, n):
+    """Prompts with n examples each (n a tensor of B counts, below K).
+
+    Every row is (is-description, is-example, vector, answer). Row 0 is the
+    description (1, 0, m, 0); rows 1..n are examples (0, 1, x_k, y_k); row
+    n + 1 is the question (0, 0, x_{n+1}, 0). Returns the rows and a mask of
+    the hidden ones: later rows, and row 0 when there is no description.
+    """
     X, Y = batch["X"], batch["Y"]
     B, K, d = X.shape
-    h = batch["has_desc"].float()[:, None]
-    z = lambda *s: torch.zeros(*s, device=X.device)
-    desc = torch.cat([batch["m"] * h, z(B, 1), h], dim=1)
-    prev_y = torch.cat([z(B, 1), Y[:, :-1]], dim=1)
-    ex = torch.cat([X, prev_y[..., None], z(B, K, 1)], dim=2)
-    return torch.cat([desc[:, None, :], ex], dim=1)  # (B, K+1, d+2)
+    k = torch.arange(K, device=X.device)[None, :]
+    is_ex = (k < n[:, None]).float()[..., None]
+    rows = torch.cat([torch.zeros_like(is_ex), is_ex, X, Y[..., None] * is_ex], dim=2)
+    zero = torch.zeros(B, 1, device=X.device)
+    desc = torch.cat([zero + 1, zero, batch["m"], zero], dim=1)
+    tok = torch.cat([desc[:, None, :], rows], dim=1)  # (B, K+1, d+3)
+    hidden = torch.cat([~batch["has_desc"][:, None], k > n[:, None]], dim=1)
+    return tok, hidden
 
 
 class Head(nn.Module):
@@ -64,10 +70,12 @@ class Head(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, d, width=128, layers=6, heads=4, components=2, max_len=64):
+    """No positions and no causal mask: the examples of a prompt have no
+    order, and the marker columns tell the three kinds of row apart."""
+
+    def __init__(self, d, width=128, layers=6, heads=4, components=2):
         super().__init__()
-        self.embed = nn.Linear(d + 2, width)
-        self.pos = nn.Parameter(torch.zeros(max_len, width))
+        self.embed = nn.Linear(d + 3, width)
         layer = nn.TransformerEncoderLayer(
             width, heads, 4 * width, dropout=0.0, batch_first=True, norm_first=True
         )
@@ -75,27 +83,15 @@ class Transformer(nn.Module):
         self.norm = nn.LayerNorm(width)
         self.head = Head(width, components)
 
-    def forward(self, tok):
-        T = tok.shape[1]
-        mask = nn.Transformer.generate_square_subsequent_mask(T, device=tok.device)
-        h = self.body(self.embed(tok) + self.pos[:T], mask=mask, is_causal=True)
-        return self.head(self.norm(h)[:, 1:])  # predictions for y_1..y_K
-
-
-class LSTM(nn.Module):
-    def __init__(self, d, width=256, layers=2, components=2):
-        super().__init__()
-        self.embed = nn.Linear(d + 2, width)
-        self.body = nn.LSTM(width, width, layers, batch_first=True)
-        self.head = Head(width, components)
-
-    def forward(self, tok):
-        return self.head(self.body(self.embed(tok))[0][:, 1:])
+    def forward(self, tok, hidden, n):
+        h = self.norm(self.body(self.embed(tok), src_key_padding_mask=hidden))
+        return self.head(h[torch.arange(len(n), device=n.device), n + 1])  # the question row
 
 
 def log_density(pred, y):
-    """log of the predicted mixture density at y; pred from a model, y (B, K)
-    or a grid (B, K, G)."""
+    """log of the predicted mixture density at y. pred is a model's output, or
+    several stacked to (B, K, components); y matches its leading shape, or is
+    a grid (B, K, G)."""
     log_w, mean, log_sd = pred
     if y.dim() == 3:
         y, log_w, mean, log_sd = (

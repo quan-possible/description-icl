@@ -41,7 +41,7 @@ d, a0, K, p_train = cfg["d"], cfg["a_base"], cfg["K"], cfg["p"]
 RS = (cfg["r"],)  # each model is trained at one precision
 p_test = p_train if args.p_test is None else args.p_test
 dev = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
-model = (meta.Transformer if cfg["arch"] == "transformer" else meta.LSTM)(d)
+model = meta.Transformer(d)
 model.load_state_dict(ck["model"])
 model.to(dev).eval()
 name = pathlib.Path(args.ckpt).stem + ("" if args.p_test is None else f"_ptest{p_test}")
@@ -49,11 +49,17 @@ here = pathlib.Path(__file__).parent
 
 
 def predict(batch):
+    """The network's prediction of y_{n+1} after n examples, for every n,
+    stacked to (S, K, components)."""
     out = []
     with torch.no_grad():
         for i in range(0, args.S, 2000):
             part = {k: v[i : i + 2000].to(dev) for k, v in batch.items()}
-            out.append([t.cpu() for t in model(meta.tokens(part))])
+            per_n = []
+            for n in range(K):
+                count = torch.full((len(part["X"]),), n, device=dev)
+                per_n.append(model(*meta.tokens(part, count), count))
+            out.append([torch.stack(t, 1).cpu() for t in zip(*per_n)])
     return [torch.cat(t) for t in zip(*out)]
 
 

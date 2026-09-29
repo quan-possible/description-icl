@@ -68,12 +68,12 @@ learner and then for meta-trained networks.
 - The description models statements about the mapping $w$. Descriptions of
   the inputs (Huang & Ge 2025) are worth zero examples to a Bayes-optimal
   learner; their worth is computational.
-- RQ3 uses the simplest design: Huang & Ge's prefix layout, a description
-  token that states only $m$, one precision and one reliability per model,
-  a two-component output, and the Transformer first.
-- RQ3 trains on one answer per prompt at a random row, matching Huang &
-  Ge's single-query loss. Bruce accepted about ten times the training for
-  this; a pilot sets the step count.
+- RQ3 uses Huang & Ge's prefix layout exactly: an optional description
+  row, $n$ examples each beside its own answer, and one question row. The
+  model has no position information, predicts a two-component mixture for
+  the question, and is trained on log loss with one question per prompt, at
+  $d = 5$. [docs/DESIGN.md](docs/DESIGN.md) is authoritative and walks one
+  prompt through end to end.
 
 ## Assessment for NeurIPS 2027 (2026-09-29)
 
@@ -90,8 +90,8 @@ learner and then for meta-trained networks.
 ## Next actions
 
 1. Derive the boundary of the horizon reversal.
-2. Train the 18 RQ3 models (2 precisions, 3 reliabilities, 3 seeds; about
-   3 hours each on the Mac), and evaluate them at test reliabilities
+2. Run the RQ3 pilot on Colab, then the 18 models (2 precisions, 3
+   reliabilities, 3 seeds), and evaluate them at test reliabilities
    different from training.
 
 ## Risks and blockers
