@@ -93,7 +93,7 @@ formula; the only randomness is the draw of inputs and tasks.
 
 This section follows one prompt from its creation to its score. The numbers
 come from `meta.sample_batch` and `mixture.py` with $d = 2$, $a_0 = 10$,
-$r = 0.05$, $p = 0.7$, and generator seed 3. The experiments use $d = 5$;
+$r = 0.05$, $p = 0.9$, and generator seed 3. The experiments use $d = 5$;
 the steps are the same.
 
 ### 6.1 Draw a task and a description
@@ -101,7 +101,7 @@ the steps are the same.
 | Step | Draw | Value in the example |
 | --- | --- | --- |
 | Description | $m \sim \mathcal{N}(0, (1 - r)\,a_0 I)$ | $m = (2.35, 4.61)$ |
-| Is it correct? | Yes with probability $p = 0.7$ | Yes |
+| Is it correct? | Yes with probability $p = 0.9$ | Yes |
 | Hidden weights | Correct: $w \sim \mathcal{N}(m, r\,a_0 I)$ | $w = (1.69, 4.90)$ |
 | Inputs | $x_k \sim \mathcal{N}(0, I)$ | $(0.42, 0.26)$, $(-2.39, -0.50)$, $(1.02, 1.05)$ |
 | Answers | $y_k = w^\top x_k + \text{noise}$ | $0.80$, $-7.06$, $6.46$ |
@@ -168,21 +168,21 @@ how well each has predicted the examples so far.
 
 | Examples seen | Weight on "right" | If right, $y \sim$ | If wrong, $y \sim$ | True $y$ |
 | --- | --- | --- | --- | --- |
-| 0 | 0.70 | centre 2.18, spread 1.06 | centre 0.00, spread 1.86 | 0.80 |
-| 1 | 0.66 | centre −7.24, spread 1.92 | centre −2.66, spread 4.79 | −7.06 |
-| 2 | 0.88 | centre 6.76, spread 1.23 | centre 2.89, spread 2.52 | 6.46 |
+| 0 | 0.90 | centre 2.18, spread 1.06 | centre 0.00, spread 1.86 | 0.80 |
+| 1 | 0.88 | centre −7.24, spread 1.92 | centre −2.66, spread 4.79 | −7.06 |
+| 2 | 0.97 | centre 6.76, spread 1.23 | centre 2.89, spread 2.52 | 6.46 |
 
-With no examples the weight is the reliability, 0.70. After two examples
-that the description predicted well it is 0.88.
+With no examples the weight is the reliability, 0.90. After two examples
+that the description predicted well it is 0.97.
 
 **Regret** is the log density an oracle who knows $w$ gives the true answer,
 minus the learner's.
 
 | Examples seen | Oracle | Exact learner, with description | Regret | Exact learner, no description | Regret |
 | --- | --- | --- | --- | --- | --- |
-| 0 | −1.60 | −1.76 | 0.15 | −1.63 | 0.03 |
-| 1 | −1.07 | −1.86 | 0.79 | −2.91 | 1.84 |
-| 2 | −1.01 | −1.26 | 0.24 | −2.84 | 1.83 |
+| 0 | −1.60 | −1.79 | 0.19 | −1.63 | 0.03 |
+| 1 | −1.07 | −1.67 | 0.60 | −2.91 | 1.84 |
+| 2 | −1.01 | −1.18 | 0.17 | −2.84 | 1.83 |
 
 These are values for one prompt. With no examples the noise happened to put
 $y_1$ near zero, which favoured the learner without a description. Results
@@ -190,8 +190,8 @@ use the average over 20,000 prompts.
 
 ### 6.7 From regret to ESS
 
-Averaged over prompts at the experimental setting ($d = 5$, $a_0 = 10$,
-$r = 0.05$), the exact learner gives:
+Averaged over prompts at the experimental setting ($d = 5$, $a_0 = 10$),
+the exact learner gives:
 
 | Examples, no description | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -199,8 +199,12 @@ $r = 0.05$), the exact learner gives:
 
 | Description alone | Regret | Falls on the curve at | ESS |
 | --- | --- | --- | --- |
-| $p = 1$ | 0.58 | between 6 and 7 examples | 6.7 |
-| $p = 0.7$ | 1.26 | between 3 and 4 examples | 3.5 |
+| $r = 0.5$, $p = 1$ | 1.54 | between 2 and 3 examples | 2.2 |
+| $r = 0.5$, $p = 0.9$ | 1.61 | between 1 and 2 examples | 1.8 |
+| $r = 0.05$, $p = 1$ | 0.58 | between 6 and 7 examples | 6.7 |
+| $r = 0.05$, $p = 0.9$ | 0.87 | between 5 and 6 examples | 5.0 |
+
+These four numbers are the targets for the networks.
 
 The same calculation is done with the network's regrets in place of the
 exact learner's. RQ3 asks whether the two ESS values agree.
@@ -224,7 +228,7 @@ network reaching the exact learner's regret.
 | Stage | Adds | Reliability $p$ | Output | Exact answer the model must learn |
 | --- | --- | --- | --- | --- |
 | 1 | Nothing: the description is always right | 1 | One Gaussian | Ridge regression pulled toward $m$ |
-| 2 | The description can be wrong | 0.9, 0.7 | Two Gaussians | Weigh "right" against "wrong" from the examples |
+| 2 | The description can be wrong | 0.9 | Two Gaussians | Weigh "right" against "wrong" from the examples |
 | 3 | Test reliability differs from training | as stage 2 | Two Gaussians | None learned; this measures how the network's trust transfers |
 
 In stage 1 the example of 6.6 has a single hypothesis: after two examples the
@@ -236,11 +240,12 @@ the description at the experimental setting is 6.7 examples (section 6.7).
 | Factor | Values | Count |
 | --- | --- | --- |
 | Precision $r$ | 0.5, 0.05 | 2 |
-| Reliability $p$ | 1, 0.9, 0.7 | 3 |
+| Reliability $p$ | 1 (stage 1), 0.9 (stage 2) | 2 |
 | Seed | 0, 1, 2 | 3 |
 | Setting | $d = 5$, $a_0 = 10$, $K = 16$ | 1 |
 
-18 models.
+12 models, 6 per stage. Each model handles every number of examples from
+0 to 15; there is not one model per $n$.
 
 ### 6.11 Pilot
 
@@ -302,6 +307,8 @@ number of examples.
 | 12 | No position information and no causal mask. | 2026-09-29 | Examples have no order, as for the exact learner; the marker columns separate the rows, as in Huang & Ge. |
 | 13 | $d = 5$ and at most 15 examples. Supersedes $d = 8$ and 32 rows. | 2026-09-29 | Huang & Ge's dimension. The ESS stays below 7 at this setting, so 15 examples cover it. |
 | 14 | Experiments run in stages, easiest first (6.9). | 2026-09-29 | Bruce: keep it easy for the model and raise the difficulty later. |
+| 15 | Unreliable descriptions are studied at $p = 0.9$ only. Supersedes $p \in \{0.9, 0.7\}$. | 2026-09-29 | Bruce: one level is enough to start. |
+| 16 | One model covers all numbers of examples. | 2026-09-29 | The ESS compares regrets across $n$ for one learner; Garg et al. train the same way. |
 
 Bruce asked on 2026-09-29 for the simplest design grounded in existing
 research; decisions 10 to 13 were made under that instruction.

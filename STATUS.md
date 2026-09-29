@@ -90,9 +90,9 @@ learner and then for meta-trained networks.
 ## Next actions
 
 1. Derive the boundary of the horizon reversal.
-2. Run the RQ3 pilot on Colab, then the 18 models (2 precisions, 3
-   reliabilities, 3 seeds), and evaluate them at test reliabilities
-   different from training.
+2. Finish the RQ3 stage-1 pilot, then train the 12 models in stages
+   (reliable descriptions first, then $p = 0.9$), and evaluate stage-2
+   models at test reliabilities different from training.
 
 ## Risks and blockers
 

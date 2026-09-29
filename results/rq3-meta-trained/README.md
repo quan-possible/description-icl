@@ -16,7 +16,7 @@ The design, a worked example, and the reasons are in
 | $d$, `a0`, $\sigma_y$ | 5, 10, 1 |
 | Prompt | Optional description, 0 to 15 examples, one question |
 | `r` | 0.5, 0.05 (one model each) |
-| $p$ | 1, 0.9, 0.7 (one model each) |
+| $p$ | 1 in stage 1, 0.9 in stage 2 (one model each) |
 | Model | Transformer encoder, 6 layers, width 128, 4 heads, no positions |
 | Output | Mixture of two Gaussians for the answer to the question |
 | Loss | Log loss on that answer |
@@ -26,8 +26,8 @@ The design, a worked example, and the reasons are in
 ## Run
 
 ```bash
-uv run python results/rq3-meta-trained/train.py --p 0.7 --r 0.05 --seed 0
-uv run python results/rq3-meta-trained/evaluate.py tmp/rq3/p0.7_r0.05_d5_s0.pt
+uv run python results/rq3-meta-trained/train.py --p 1.0 --r 0.05 --seed 0
+uv run python results/rq3-meta-trained/evaluate.py tmp/rq3/p1.0_r0.05_d5_s0.pt
 ```
 
 Checkpoints go to `tmp/rq3/` and stay out of Git. `evaluate.py --p-test`
