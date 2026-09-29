@@ -37,7 +37,9 @@ learner and then for meta-trained networks.
   times larger. The code behind those checks is not in this repository.
 - No code, experiments, or results exist here yet.
 - The repository is on `main`, tracking private GitHub
-  `quan-possible/descriptor-icl`.
+  `quan-possible/descriptor-icl`. A second checkout lives on the Mac mini
+  (`bruces-mac-mini` on Tailscale) at `~/Projects/descriptor-icl`; its GitHub
+  login has expired, so it cannot pull until `gh auth login` is run there.
 
 ## Active priorities
 
