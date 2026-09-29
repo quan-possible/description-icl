@@ -90,6 +90,18 @@ def log_weight_true(paths, q):
     return np.where(paths.correct[:, None], l1, l0) - mix
 
 
+def mean_prediction(paths, q):
+    """The learner's point prediction of each y_{k+1} from the first k
+    observations, (S, K): its posterior mean, which is optimal under squared
+    error. The two components' predictions are weighted by the learner's
+    posterior weights on them."""
+    with np.errstate(divide="ignore"):
+        l1 = np.log(q) + paths.L1[:, :-1]
+        l0 = np.log1p(-q) + paths.L0[:, :-1]
+    w1 = np.exp(l1 - np.logaddexp(l1, l0))
+    return w1 * paths.mu1 + (1 - w1) * paths.mu0
+
+
 def regret(paths, q, N, with_se=False):
     """Regret over horizon N of description + n examples, for n = 0..K-N.
 
