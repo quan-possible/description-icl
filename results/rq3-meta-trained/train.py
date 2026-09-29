@@ -28,7 +28,8 @@ args = ap.parse_args()
 
 torch.manual_seed(args.seed)
 dev = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
-model = meta.Transformer(args.d).to(dev)
+# a reliable description needs one bell curve; an unreliable one needs two
+model = meta.Transformer(args.d, components=1 if args.p == 1 else 2).to(dev)
 opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.0)
 sched = torch.optim.lr_scheduler.OneCycleLR(opt, args.lr, total_steps=args.steps, pct_start=0.05)
 rs = torch.tensor([args.r], device=dev)

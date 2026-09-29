@@ -215,7 +215,23 @@ exact learner's. RQ3 asks whether the two ESS values agree.
 | Steps | Set by the pilot (6.10) |
 | Hardware | Colab L4 |
 
-### 6.9 Grid
+### 6.9 Stages
+
+The experiments start with the easiest task for the model and add one
+difficulty at a time. A stage begins only after the previous one shows the
+network reaching the exact learner's regret.
+
+| Stage | Adds | Reliability $p$ | Output | Exact answer the model must learn |
+| --- | --- | --- | --- | --- |
+| 1 | Nothing: the description is always right | 1 | One Gaussian | Ridge regression pulled toward $m$ |
+| 2 | The description can be wrong | 0.9, 0.7 | Two Gaussians | Weigh "right" against "wrong" from the examples |
+| 3 | Test reliability differs from training | as stage 2 | Two Gaussians | None learned; this measures how the network's trust transfers |
+
+In stage 1 the example of 6.6 has a single hypothesis: after two examples the
+exact learner predicts $y_3$ with centre 6.76 and spread 1.23, and the ESS of
+the description at the experimental setting is 6.7 examples (section 6.7).
+
+### 6.10 Grid
 
 | Factor | Values | Count |
 | --- | --- | --- |
@@ -226,9 +242,9 @@ exact learner's. RQ3 asks whether the two ESS values agree.
 
 18 models.
 
-### 6.10 Pilot
+### 6.11 Pilot
 
-One model ($p = 0.7$, $r = 0.05$, seed 0) is trained first. Its regret is
+One stage-1 model ($p = 1$, $r = 0.05$, seed 0) is trained first. Its regret is
 compared with the exact learner's on the same kind of prompts. The step
 count for the grid is the point where the gap stops shrinking. If the gap
 does not close, the design is revisited before the grid runs.
@@ -276,7 +292,7 @@ number of examples.
 | 2 | A description is a statement about the weights. | 2026-09-29 | A description of the inputs is worth zero examples to the exact learner. |
 | 3 | The description occupies the first token only. | 2026-09-29 | Huang & Ge's prefix embedding. |
 | 4 | The description states only $m$. Precision is fixed per model. | 2026-09-29 | Nothing for the model to misread; same treatment as reliability. |
-| 5 | The output has two components. | 2026-09-29 | The exact predictive has two. |
+| 5 | The output has one component when $p = 1$ and two otherwise. | 2026-09-29 | The exact predictive has that many. |
 | 6 | Transformer only. | 2026-09-29 | One architecture is enough for the main result. |
 | 7 | One question per prompt, after a random number of examples. | 2026-09-29 | Huang & Ge's loss form. |
 | 8 | Log loss, not squared error. | 2026-09-29 | The exact results are in log loss. |
@@ -285,6 +301,7 @@ number of examples.
 | 11 | A prompt without a description hides the description row. Supersedes the has-description flag. | 2026-09-29 | A prompt either has an instruction or does not; no extra field. |
 | 12 | No position information and no causal mask. | 2026-09-29 | Examples have no order, as for the exact learner; the marker columns separate the rows, as in Huang & Ge. |
 | 13 | $d = 5$ and at most 15 examples. Supersedes $d = 8$ and 32 rows. | 2026-09-29 | Huang & Ge's dimension. The ESS stays below 7 at this setting, so 15 examples cover it. |
+| 14 | Experiments run in stages, easiest first (6.9). | 2026-09-29 | Bruce: keep it easy for the model and raise the difficulty later. |
 
 Bruce asked on 2026-09-29 for the simplest design grounded in existing
 research; decisions 10 to 13 were made under that instruction.
