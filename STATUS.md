@@ -71,6 +71,9 @@ learner and then for meta-trained networks.
 - RQ3 uses the simplest design: Huang & Ge's prefix layout, a description
   token that states only $m$, one precision and one reliability per model,
   a two-component output, and the Transformer first.
+- RQ3 trains on one answer per prompt at a random row, matching Huang &
+  Ge's single-query loss. Bruce accepted about ten times the training for
+  this; a pilot sets the step count.
 
 ## Assessment for NeurIPS 2027 (2026-09-29)
 

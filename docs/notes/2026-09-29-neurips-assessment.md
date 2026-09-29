@@ -121,6 +121,7 @@ after tens of examples, where the exact learner tips after 1 to 3.
 | Example token | $x_k$, $x_{k-1}$, $y_{k-1}$ | $x_k$, $y_{k-1}$ | The model saw $x_{k-1}$ one slot earlier |
 | Slot marker | Marker and flag | Flag | Slot 0 is always the description |
 | Output | Three Gaussian components | Two | The Bayes-optimal predictive has two |
+| Loss | Every row of the prompt | One random row per prompt | Matches Huang & Ge's single-query loss; Bruce's choice, accepting about ten times the training |
 | Architectures | Transformer and LSTM | Transformer first | LSTM is a later robustness check |
 
 If training stalls, restore $x_{k-1}$ in the example token first.
