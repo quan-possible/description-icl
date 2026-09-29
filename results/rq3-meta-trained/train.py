@@ -28,7 +28,7 @@ ap.add_argument("--seed", type=int, default=0)
 args = ap.parse_args()
 
 torch.manual_seed(args.seed)
-dev = "mps" if torch.backends.mps.is_available() else "cpu"
+dev = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 model = (meta.Transformer if args.arch == "transformer" else meta.LSTM)(args.d).to(dev)
 opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.0)
 sched = torch.optim.lr_scheduler.OneCycleLR(opt, args.lr, total_steps=args.steps, pct_start=0.05)
@@ -40,7 +40,12 @@ name = f"{args.arch}_p{args.p}_r{args.r}_d{args.d}_s{args.seed}"
 t0, run = time.time(), 0.0
 for step in range(1, args.steps + 1):
     batch = meta.sample_batch(args.batch, args.K, args.d, args.a_base, rs, args.p, 0.5, dev)
-    loss = -meta.log_density(model(meta.tokens(batch)), batch["Y"]).mean()
+    lp = meta.log_density(model(meta.tokens(batch)), batch["Y"])
+    # One question per prompt, as in Huang & Ge. The causal mask makes row k
+    # identical to a prompt cut after k - 1 examples, so a random row per prompt
+    # is single-query training at a random length, with fixed tensor shapes.
+    k = torch.randint(0, args.K, (args.batch,), device=dev)
+    loss = -lp.gather(1, k[:, None]).mean()
     opt.zero_grad(set_to_none=True)
     loss.backward()
     torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)

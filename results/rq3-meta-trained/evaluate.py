@@ -40,7 +40,7 @@ cfg = ck["args"]
 d, a0, K, p_train = cfg["d"], cfg["a_base"], cfg["K"], cfg["p"]
 RS = (cfg["r"],)  # each model is trained at one precision
 p_test = p_train if args.p_test is None else args.p_test
-dev = "mps" if torch.backends.mps.is_available() else "cpu"
+dev = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 model = (meta.Transformer if cfg["arch"] == "transformer" else meta.LSTM)(d)
 model.load_state_dict(ck["model"])
 model.to(dev).eval()
