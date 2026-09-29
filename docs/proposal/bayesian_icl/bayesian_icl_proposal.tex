@@ -1,0 +1,92 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{mathptmx}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+\usepackage[authoryear,round]{natbib}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.1ex plus 0.3ex}{0.5ex}
+\setlist{nosep,leftmargin=1.6em}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.2em}
+\setlength{\bibsep}{0pt}
+
+\title{\vspace{-2.2em}\large\bfseries Task Descriptions as Bayesian Priors:\\Quantifying Their Effective Sample Size in In-Context Learning\vspace{-0.4em}}
+\author{\normalsize Research proposal, September 2026}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-2.4em}
+
+\section{Introduction}
+Theories of in-context learning (ICL) have mostly studied prompts made only of input-output examples \citep{garg2022,akyurek2023,xie2022,genewein2025}. Real prompts usually contain more: a natural language task description (an instruction) as well as examples \citep{brown2020,lin2025}. Example-only theories cannot say what the instruction adds, or how it trades off against the examples.
+
+This trade-off matters in practice, and empirical results point both ways. In prompt-based fine-tuning, a prompt can be worth hundreds of labeled examples \citep{lescao2021}, and a short text distilled from a many-shot prompt can nearly match it \citep{honda2025}. Yet models also discount instructions: enough examples outweigh an explicitly stated bias \citep{gupta2025}, and models can do about as well with misleading instructions as with good ones \citep{webson2022}. Theory has only begun to include instructions \citep{huangge2025,lin2025,xuanyuan2025,tong2026} and does not yet say how many examples an instruction is worth.
+
+We propose a simple Bayesian answer. If ICL is Bayesian inference over a latent task \citep{xie2022}, examples are data and the instruction sets the prior. Bayesian statistics already measures what a prior is worth in data: its \textbf{effective sample size (ESS)}, the number of observations the prior is equivalent to \citep{morita2008}. A prior's worth depends on how concentrated it is and on whether it is correct \citep{evans2006}, and the same holds for instructions:
+\begin{enumerate}
+\item \textbf{Precision:} How narrowly the instruction constrains the space of tasks.
+\item \textbf{Reliability:} How often the instruction is actually correct.
+\end{enumerate}
+
+We will compute an instruction's ESS as a function of its precision and reliability in a setting where the Bayes-optimal learner is exact, and test whether trained networks behave the same way.
+
+\section{Theoretical Framework and Model Setup}
+To rigorously isolate and vary precision and reliability, we require a setting where the Bayes-optimal predictor is available in closed form. We adopt in-context linear regression, a standard theoretical testbed for ICL \citep{garg2022,akyurek2023}. A latent task is parameterized by a weight vector $w \in \mathbb{R}^d$, with observations generated as $y = w^\top x + \epsilon$, where $x \sim \mathcal{N}(0, I)$ and $\epsilon \sim \mathcal{N}(0, \sigma_y^2)$.
+
+We formalize the properties of task descriptions through specific modeling choices in the data-generating process:
+\begin{enumerate}
+\item \textbf{Hierarchical Precision:} Real-world instructions vary in specificity (e.g., ``classify'' vs.\ ``classify by sentiment''). We model this via a Gaussian hierarchy of latent tasks, moving from coarse to fine: $m_0 = 0$, $m_k = m_{k-1} + \sigma_k z_k$ for $k = 1, \dots, D$, and $w = m_D + \sigma_{D+1} z_{D+1}$, with $z_k \sim \mathcal{N}(0, I)$. An instruction at level $\ell$---idealized here as a vector, not text---dictates a prior mean $m_\ell$ and variance $s_\ell^2 = \sum_{k>\ell} \sigma_k^2$. Deeper hierarchical levels correspond to priors with tighter variances, representing more precise instructions.
+\item \textbf{Robust Mixtures for Reliability:} Because real-world instructions are not always accurate, we model a description as being correct with probability $p$; with probability $1-p$, it describes an unrelated task and carries no information about $w$. The Bayes-optimal prior is thus a robust mixture \citep{schmidli2014} $p\,\mathcal{N}(m_\ell, s_\ell^2 I) + {(1-p)}\,\mathcal{N}(0, s_0^2 I)$ of the informative prior and the base prior that applies without a description.
+\end{enumerate}
+
+We score a prompt by the learner's cumulative regret $R_N$ over the next $N$ predictions, made one at a time with each answer revealed before the next \citep{genewein2025}. A description's ESS is the smallest number of examples, drawn from the task, whose regret is no larger than that of the description alone \citep{reimherr2021}.
+
+\section{Preliminary Results: The Geometry of Priors vs. Data}
+Our preliminary analysis focuses on fully reliable descriptions ($p=1$). Comparing a description with examples reveals a contrast that depends on the horizon $N$:
+
+\begin{itemize}
+\item \textbf{The Long-Horizon Limit ($N \to \infty$):} As the horizon grows, the ESS converges to the number of examples that leave as much posterior uncertainty as the description \citep{clarke1990}. In the long run, a description is worth exactly the uncertainty it removes.
+\item \textbf{The Single-Query Case ($N = 1$):} For a single prediction---the standard use of an LLM prompt---the ESS is at least this large and often larger (up to three times in our checks). The same holds for any number of predictions whose answers are never revealed.
+\end{itemize}
+
+\textbf{The Causes:} Much of this gap is geometric: a task description reduces uncertainty \textbf{isotropically}, shrinking the hypothesis space evenly across all $d$ dimensions. In contrast, examples reduce uncertainty \textbf{anisotropically}: a small number of examples tightly constrains the space along the observed directions while leaving orthogonal dimensions entirely untouched, and even many examples constrain directions unevenly. Because single-query regret heavily penalizes high variance in any unconstrained direction, the even reduction provided by a general description beats an equally large but uneven reduction provided by examples. A second, smaller source adds to this: random examples vary in how informative they are, which also hurts a single prediction, so a small gap appears even in one dimension.
+
+\section{Proposed Research Agenda}
+Building on these results, our research agenda addresses three key questions:
+
+\textbf{RQ1: How does task dimensionality govern the value of descriptions?} While our preliminary results explain \emph{why} the single-query gap exists, we hypothesize that its size is driven by how unevenly examples shrink the uncertainty. Because a fixed number of examples leaves more dimensions poorly covered as $d$ grows, the ratio of the single-query ESS to the long-horizon ESS should grow with task dimensionality. We will map ESS across dimensions, noise levels, and horizons, with two controls: $d = 1$, where uneven coverage is impossible, and balanced designs ($X^\top X \propto I$), where examples shrink uncertainty evenly and the gap should vanish. Confirming this would indicate for which tasks a description can stand in for many examples.
+
+\textbf{RQ2: What is the cost of unreliability?} Using our robust mixture model, we will compute the ``tipping points'' where accumulating conflicting examples overtake a stated description, that is, the number of examples after which the description no longer changes predictions appreciably. We will also quantify the regret incurred by a model that assumes reliability $p'$, over-trusting ($p' > p$) or under-trusting ($p' < p$) an instruction. This formalizes a candidate explanation for the differences between base and instruction-tuned LLMs \citep{gupta2025}: a base model's trust may be calibrated to noisy pretraining text, where instructions are often unreliable, causing it to under-weight the reliable instructions of deliberate prompts.
+
+\textbf{RQ3: Do neural networks implicitly implement this Bayesian computation?} Our analysis concerns the Bayes-optimal learner, and whether gradient-trained networks behave the same way is an open question. We will meta-train small Transformer and LSTM models on our setup \citep{mikulik2020,genewein2025}, on prompts with and without descriptions, with outputs that are full predictive distributions trained on log loss so they can match the Bayes-optimal predictions. We will then compare their ESS, and their discounting of unreliable descriptions, with those of the Bayes-optimal learner.
+
+\section{Risks and Scope}
+The main risk is that the single-query gap proves small outside the coarsest descriptions; in that case the contribution rests on RQ2, which does not depend on it. Our framework intentionally isolates task identification from task execution to ensure mathematical tractability. Because our setting treats descriptions as continuous vectors, the model must learn how to weight these vectors, but not how to semantically parse them. Consequently, our claims apply strictly to Bayes-optimal predictors and small meta-trained sequence models. Applying these findings to large language models remains a separate, empirical step.
+
+\begin{thebibliography}{99}
+\small
+\bibitem[Aky{\"u}rek et~al.(2023)]{akyurek2023} E.~Aky{\"u}rek, D.~Schuurmans, J.~Andreas, T.~Ma, and D.~Zhou. What learning algorithm is in-context learning? Investigations with linear models. In \emph{ICLR}, 2023.
+\bibitem[Brown et~al.(2020)]{brown2020} T.~B.~Brown, B.~Mann, N.~Ryder, et~al. Language models are few-shot learners. In \emph{NeurIPS}, 2020.
+\bibitem[Clarke and Barron(1990)]{clarke1990} B.~S.~Clarke and A.~R.~Barron. Information-theoretic asymptotics of Bayes methods. \emph{IEEE Transactions on Information Theory}, 36(3):453--471, 1990.
+\bibitem[Evans and Moshonov(2006)]{evans2006} M.~Evans and H.~Moshonov. Checking for prior-data conflict. \emph{Bayesian Analysis}, 1(4):893--914, 2006.
+\bibitem[Garg et~al.(2022)]{garg2022} S.~Garg, D.~Tsipras, P.~Liang, and G.~Valiant. What can transformers learn in-context? A case study of simple function classes. In \emph{NeurIPS}, 2022.
+\bibitem[Genewein et~al.(2025)]{genewein2025} T.~Genewein, L.~K.~Wenliang, J.~Grau-Moya, A.~Ruoss, L.~Orseau, and M.~Hutter. Understanding prompt tuning and in-context learning via meta-learning. In \emph{NeurIPS}, 2025.
+\bibitem[Gupta et~al.(2025)]{gupta2025} R.~Gupta, R.~Corona, J.~Ge, E.~Wang, D.~Klein, T.~Darrell, and D.~M.~Chan. Enough coin flips can make LLMs act Bayesian. In \emph{ACL}, 2025.
+\bibitem[Honda et~al.(2025)]{honda2025} U.~Honda, S.~Murakami, and P.~Zhang. Distilling many-shot in-context learning into a cheat sheet. In \emph{Findings of EMNLP}, 2025.
+\bibitem[Huang and Ge(2025)]{huangge2025} R.~Huang and R.~Ge. Task descriptors help transformers learn linear models in-context. In \emph{ICLR}, 2025.
+\bibitem[Le~Scao and Rush(2021)]{lescao2021} T.~Le~Scao and A.~M.~Rush. How many data points is a prompt worth? In \emph{NAACL}, 2021.
+\bibitem[Lin et~al.(2025)]{lin2025} Z.~Lin, S.~K.~Bharti, and K.~Lee. In-context learning with hypothesis-class guidance. arXiv:2502.19787, 2025.
+\bibitem[Mikulik et~al.(2020)]{mikulik2020} V.~Mikulik, G.~Del{\'e}tang, T.~McGrath, T.~Genewein, M.~Martic, S.~Legg, and P.~Ortega. Meta-trained agents implement Bayes-optimal agents. In \emph{NeurIPS}, 2020.
+\bibitem[Morita et~al.(2008)]{morita2008} S.~Morita, P.~F.~Thall, and P.~M{\"u}ller. Determining the effective sample size of a parametric prior. \emph{Biometrics}, 64(2):595--602, 2008.
+\bibitem[Reimherr et~al.(2021)]{reimherr2021} M.~Reimherr, X.-L.~Meng, and D.~L.~Nicolae. Prior sample size extensions for assessing prior impact and prior-likelihood discordance. \emph{Journal of the Royal Statistical Society: Series B}, 83(3):413--437, 2021.
+\bibitem[Schmidli et~al.(2014)]{schmidli2014} H.~Schmidli, S.~Gsteiger, S.~Roychoudhury, A.~O'Hagan, D.~Spiegelhalter, and B.~Neuenschwander. Robust meta-analytic-predictive priors in clinical trials with historical control information. \emph{Biometrics}, 70(4):1023--1032, 2014.
+\bibitem[Tong et~al.(2026)]{tong2026} X.~Tong, Y.~Zeng, and J.~Zhang. Demonstrations, CoT, and prompting: A theoretical analysis of ICL. arXiv:2603.19611, 2026.
+\bibitem[Webson and Pavlick(2022)]{webson2022} A.~Webson and E.~Pavlick. Do prompt-based models really understand the meaning of their prompts? In \emph{NAACL}, 2022.
+\bibitem[Xie et~al.(2022)]{xie2022} S.~M.~Xie, A.~Raghunathan, P.~Liang, and T.~Ma. An explanation of in-context learning as implicit Bayesian inference. In \emph{ICLR}, 2022.
+\bibitem[Xuanyuan et~al.(2025)]{xuanyuan2025} M.~Xuanyuan, T.~Yang, J.~Fu, S.~Zhao, and Y.~Wang. Insufficient task description can impair in-context learning: A study from information perspective. \emph{Information Fusion}, 120:103116, 2025.
+\end{thebibliography}
+\end{document}
