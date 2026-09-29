@@ -1,0 +1,56 @@
+# RQ3: do meta-trained networks match the Bayes-optimal learner?
+
+**What it shows.** Nothing yet. The pipeline runs end to end; no model has
+been trained to completion.
+
+## Prompt
+
+One description slot followed by one slot per example, after the prefix
+layout of Huang & Ge (2025). Each slot holds $d + 2$ numbers:
+
+| Slot | Vector ($d$) | Previous answer | Has-description flag |
+| --- | --- | --- | --- |
+| 0, with a description | $m$ | 0 | 1 |
+| 0, without | 0 | 0 | 0 |
+| $k \ge 1$ | $x_k$ | $y_{k-1}$ | 0 |
+
+The description states only $m$. Its precision `r` and reliability $p$ are
+fixed for each trained model and never stated. Half the training prompts
+have no description, which gives the network's own examples-only curve.
+
+## Setting
+
+| Quantity | Value |
+| --- | --- |
+| $d$, `a0`, $\sigma_y$ | 8, 10, 1 |
+| Examples per prompt | 32 |
+| `r` | 0.5, 0.05 (one model each) |
+| $p$ | 1, 0.9, 0.7 (one model each) |
+| Model | Transformer, 6 layers, width 128, 4 heads |
+| Output | Mixture of two Gaussians, trained on log loss |
+| Training | 100,000 steps, batch 256, AdamW, learning rate 3e-4 |
+| Seeds | 0, 1, 2 |
+
+## Run
+
+```bash
+uv run python results/rq3-meta-trained/train.py --p 0.7 --r 0.05 --seed 0
+uv run python results/rq3-meta-trained/evaluate.py tmp/rq3/transformer_p0.7_r0.05_d8_s0.pt
+```
+
+Training takes about 3 hours per model on an Apple M4. Checkpoints go to
+`tmp/rq3/` and stay out of Git. `evaluate.py --p-test` evaluates at a
+reliability different from training.
+
+## Outputs of `evaluate.py`
+
+- `<name>_regret.csv`: single-query regret after $n$ examples, network and
+  Bayes, with and without a description.
+- `<name>_ess.csv`: ESS of the description at horizons 1 and 8.
+- `<name>_trust.csv`: the trust $q$ at which the Bayes learner's prediction
+  is closest in KL to the network's.
+
+## Validation
+
+`tests/test_meta.py` checks the prompt layout and the output shape. A
+200-step smoke run of `train.py` and `evaluate.py` completed on 2026-09-29.

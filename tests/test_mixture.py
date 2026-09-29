@@ -11,7 +11,7 @@ def test_log_ml_matches_joint_gaussian():
     X = rng.standard_normal((S, K, d))
     Y = rng.standard_normal((S, K))
     m = rng.standard_normal((S, d))
-    L, _ = mx._component(X, Y, m, a_desc)
+    L, _, _ = mx._component(X, Y, m, a_desc)
     for s in range(S):
         cov = np.eye(K) + a_desc * X[s] @ X[s].T
         assert np.isclose(

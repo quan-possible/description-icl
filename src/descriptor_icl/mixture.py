@@ -30,8 +30,10 @@ class Paths:
     correct: np.ndarray  # (S,) bool, whether the description was correct
     L1: np.ndarray  # (S, K+1) cumulative log ML, description component
     L0: np.ndarray  # (S, K+1) cumulative log ML, base component
-    inc1: np.ndarray  # (S, K) log predictive-variance ratio, description component
+    inc1: np.ndarray  # (S, K) log predictive variance, description component
     inc0: np.ndarray  # (S, K) same, base component
+    mu1: np.ndarray = None  # (S, K) predictive mean, description component
+    mu0: np.ndarray = None  # (S, K) same, base component
 
 
 def simulate(d, a_base, a_desc, p, K, S, seed):
@@ -45,9 +47,13 @@ def simulate(d, a_base, a_desc, p, K, S, seed):
         np.sqrt(a_base) * rng.standard_normal((S, d)),
     )
     Y = np.einsum("skd,sd->sk", X, w) + rng.standard_normal((S, K))
-    L1, inc1 = _component(X, Y, m, a_desc)
-    L0, inc0 = _component(X, Y, np.zeros((S, d)), a_base)
-    return Paths(correct, L1, L0, inc1, inc0)
+    return paths_from_data(X, Y, m, correct, a_base, a_desc)
+
+
+def paths_from_data(X, Y, m, correct, a_base, a_desc):
+    L1, inc1, mu1 = _component(X, Y, m, a_desc)
+    L0, inc0, mu0 = _component(X, Y, np.zeros_like(m), a_base)
+    return Paths(correct, L1, L0, inc1, inc0, mu1, mu0)
 
 
 def _component(X, Y, mu0, a):
@@ -57,16 +63,18 @@ def _component(X, Y, mu0, a):
     Sig = np.broadcast_to(a * np.eye(d), (S, d, d)).copy()
     L = np.zeros((S, K + 1))
     inc = np.empty((S, K))
+    pred = np.empty((S, K))
     for k in range(K):
         x = X[:, k, :]
         u = np.einsum("sij,sj->si", Sig, x)
         var = 1.0 + np.einsum("si,si->s", x, u)
-        err = Y[:, k] - np.einsum("si,si->s", x, mu)
+        pred[:, k] = np.einsum("si,si->s", x, mu)
+        err = Y[:, k] - pred[:, k]
         L[:, k + 1] = L[:, k] - 0.5 * (np.log(2 * np.pi * var) + err**2 / var)
         inc[:, k] = np.log(var)
         mu += u * (err / var)[:, None]
         Sig -= u[:, :, None] * u[:, None, :] / var[:, None, None]
-    return L, inc
+    return L, inc, pred
 
 
 def log_weight_true(paths, q):
