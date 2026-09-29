@@ -106,6 +106,7 @@ learner and then for meta-trained networks.
 
 ## Current owners
 
+- `docs/DESIGN.md`: the experimental design and its decision table.
 - `docs/proposal/bayesian_icl/`: research proposal.
 - `AGENTS.md`: project contract and layout conventions.
 - `docs/jobs/active/neurips-campaign/`: campaign task and research record.
