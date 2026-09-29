@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="1080" viewBox="0 0 940 1080">
+<style>
+svg { background: #ffffff; }
+text { font-family: Inter, "Clear Sans", "Noto Sans", "Helvetica Neue", Arial, sans-serif; fill: #171717; }
+text.muted { fill: #5a5a5a; } text.subtle { fill: #8a8a8a; }
+text.mono { font-family: "DejaVu Sans Mono", "Noto Mono", Menlo, monospace; }
+.box-gray { fill: #f5f5f5; stroke: #b3b3b3; stroke-width: 1.3; }
+.box-green { fill: #edf3e8; stroke: #8a9f7a; stroke-width: 1.3; }
+.box-pink { fill: #f5e7ec; stroke: #bd7c8f; stroke-width: 1.3; }
+.box-blue { fill: #e8f0f9; stroke: #7f9fc4; stroke-width: 1.3; }
+.region { fill: #fafafa; stroke: #ececec; stroke-width: 1; }
+.path-gray { fill: none; stroke: #a8a8a8; stroke-width: 2.4; stroke-linecap: round; }
+.path-pink { fill: none; stroke: #bd7c8f; stroke-width: 2.4; stroke-linecap: round; }
+.path-green { fill: none; stroke: #8a9f7a; stroke-width: 2.4; stroke-linecap: round; }
+.path-weak { stroke-dasharray: 4 3; }
+.axis { stroke: #a8a8a8; stroke-width: 0.9; }
+</style><defs>
+<marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#a8a8a8"/></marker>
+<marker id="arrow-pink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#bd7c8f"/></marker>
+<marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8a9f7a"/></marker>
+</defs>
+<rect x="0" y="0" width="940" height="1080" fill="#ffffff"/>
+<text x="20" y="34" font-size="18" text-anchor="start">How one RQ3 prompt is built, read, and scored</text>
+<text x="20" y="56" font-size="13" text-anchor="start" class="muted">Example with d = 2 and 3 examples, drawn by the project code (meta.sample_batch, seed 3).</text>
+<rect class="region" x="20" y="74" width="900" height="176" rx="13"/>
+<text x="40" y="104" font-size="16" text-anchor="start">1 · Draw a task and its description</text>
+<rect class="box-green" x="40" y="124" width="190" height="104" rx="7"/>
+<text x="135.0" y="163.0" font-size="15" text-anchor="middle">Description</text>
+<text x="135.0" y="181.0" font-size="13" text-anchor="middle" class="muted">m = (2.35, 4.61)</text>
+<text x="135.0" y="199.0" font-size="13" text-anchor="middle" class="muted">one vector about w</text>
+<rect class="box-gray" x="262" y="124" width="190" height="104" rx="7"/>
+<text x="357.0" y="163.0" font-size="15" text-anchor="middle">Is it correct?</text>
+<text x="357.0" y="181.0" font-size="13" text-anchor="middle" class="muted">yes with probability p</text>
+<text x="357.0" y="199.0" font-size="13" text-anchor="middle" class="muted">here: yes</text>
+<rect class="box-gray" x="484" y="124" width="190" height="104" rx="7"/>
+<text x="579.0" y="154.0" font-size="15" text-anchor="middle">Task weights w</text>
+<text x="579.0" y="172.0" font-size="13" text-anchor="middle" class="muted">near m if correct,</text>
+<text x="579.0" y="190.0" font-size="13" text-anchor="middle" class="muted">unrelated if not</text>
+<text x="579.0" y="208.0" font-size="13" text-anchor="middle" class="muted">here (1.69, 4.90)</text>
+<rect class="box-blue" x="706" y="124" width="196" height="46" rx="7"/>
+<text x="804.0" y="151.5" font-size="14" text-anchor="middle">Inputs x_k: random</text>
+<rect class="box-pink" x="706" y="182" width="196" height="46" rx="7"/>
+<text x="804.0" y="209.0" font-size="13" text-anchor="middle">Answers y_k = w · x_k + noise</text>
+<path class="path-gray" d="M 804 170 V 182" marker-end="url(#arrow-gray)"/>
+<path class="path-gray" d="M 230 176.0 H 262" marker-end="url(#arrow-gray)"/>
+<path class="path-gray" d="M 452 176.0 H 484" marker-end="url(#arrow-gray)"/>
+<path class="path-gray" d="M 674 176.0 H 706" marker-end="url(#arrow-gray)"/>
+<rect class="region" x="20" y="270" width="900" height="432" rx="13"/>
+<text x="40" y="300" font-size="16" text-anchor="start">2 · The matrix the model reads: one row (token) per step</text>
+<text x="219" y="332" font-size="13" text-anchor="middle" class="muted">vector</text>
+<text x="219" y="349" font-size="11.5" text-anchor="middle" class="subtle">m in row 0, input x_k after</text>
+<text x="385" y="332" font-size="13" text-anchor="middle" class="muted">previous answer</text>
+<text x="385" y="349" font-size="11.5" text-anchor="middle" class="subtle">y_(k−1)</text>
+<text x="507" y="332" font-size="13" text-anchor="middle" class="muted">has description</text>
+<text x="507" y="349" font-size="11.5" text-anchor="middle" class="subtle">1 or 0</text>
+<text x="750" y="332" font-size="13" text-anchor="middle" class="muted">the model predicts</text>
+<text x="750" y="349" font-size="11.5" text-anchor="middle" class="subtle">a distribution for the next answer</text>
+<text x="40" y="392" font-size="14" text-anchor="start" class="muted">token 0</text>
+<rect class="box-green" x="130" y="366" width="86" height="40" rx="7"/>
+<text x="173.0" y="390.5" font-size="14" text-anchor="middle" class="mono">2.35</text>
+<rect class="box-green" x="222" y="366" width="86" height="40" rx="7"/>
+<text x="265.0" y="390.5" font-size="14" text-anchor="middle" class="mono">4.61</text>
+<rect class="box-gray" x="330" y="366" width="110" height="40" rx="7"/>
+<text x="385.0" y="390.5" font-size="14" text-anchor="middle" class="mono">0.00</text>
+<rect class="box-gray" x="462" y="366" width="90" height="40" rx="7"/>
+<text x="507.0" y="390.5" font-size="14" text-anchor="middle" class="mono">1</text>
+<path class="path-gray" d="M 552 386.0 H 598" marker-end="url(#arrow-gray)"/>
+<rect class="box-gray" x="600" y="366" width="300" height="40" rx="7"/>
+<text x="750.0" y="390.0" font-size="13" text-anchor="middle" class="muted">nothing yet: reads the description</text>
+<text x="40" y="454" font-size="14" text-anchor="start" class="muted">token 1</text>
+<rect class="box-blue" x="130" y="428" width="86" height="40" rx="7"/>
+<text x="173.0" y="452.5" font-size="14" text-anchor="middle" class="mono">0.42</text>
+<rect class="box-blue" x="222" y="428" width="86" height="40" rx="7"/>
+<text x="265.0" y="452.5" font-size="14" text-anchor="middle" class="mono">0.26</text>
+<rect class="box-gray" x="330" y="428" width="110" height="40" rx="7"/>
+<text x="385.0" y="452.5" font-size="14" text-anchor="middle" class="mono">0.00</text>
+<rect class="box-gray" x="462" y="428" width="90" height="40" rx="7"/>
+<text x="507.0" y="452.5" font-size="14" text-anchor="middle" class="mono">0</text>
+<path class="path-gray" d="M 552 448.0 H 598" marker-end="url(#arrow-gray)"/>
+<rect class="box-pink" x="600" y="428" width="300" height="40" rx="7"/>
+<text x="750.0" y="452.5" font-size="14" text-anchor="middle">y1 = ?      (true value 0.80)</text>
+<path class="path-pink" d="M 630 468 V 479 H 385 V 490" marker-end="url(#arrow-pink)"/>
+<text x="40" y="516" font-size="14" text-anchor="start" class="muted">token 2</text>
+<rect class="box-blue" x="130" y="490" width="86" height="40" rx="7"/>
+<text x="173.0" y="514.5" font-size="14" text-anchor="middle" class="mono">−2.39</text>
+<rect class="box-blue" x="222" y="490" width="86" height="40" rx="7"/>
+<text x="265.0" y="514.5" font-size="14" text-anchor="middle" class="mono">−0.50</text>
+<rect class="box-pink" x="330" y="490" width="110" height="40" rx="7"/>
+<text x="385.0" y="514.5" font-size="14" text-anchor="middle" class="mono">0.80</text>
+<rect class="box-gray" x="462" y="490" width="90" height="40" rx="7"/>
+<text x="507.0" y="514.5" font-size="14" text-anchor="middle" class="mono">0</text>
+<path class="path-gray" d="M 552 510.0 H 598" marker-end="url(#arrow-gray)"/>
+<rect class="box-pink" x="600" y="490" width="300" height="40" rx="7"/>
+<text x="750.0" y="514.5" font-size="14" text-anchor="middle">y2 = ?      (true value −7.06)</text>
+<path class="path-pink" d="M 630 530 V 541 H 385 V 552" marker-end="url(#arrow-pink)"/>
+<text x="40" y="578" font-size="14" text-anchor="start" class="muted">token 3</text>
+<rect class="box-blue" x="130" y="552" width="86" height="40" rx="7"/>
+<text x="173.0" y="576.5" font-size="14" text-anchor="middle" class="mono">1.02</text>
+<rect class="box-blue" x="222" y="552" width="86" height="40" rx="7"/>
+<text x="265.0" y="576.5" font-size="14" text-anchor="middle" class="mono">1.05</text>
+<rect class="box-pink" x="330" y="552" width="110" height="40" rx="7"/>
+<text x="385.0" y="576.5" font-size="14" text-anchor="middle" class="mono">−7.06</text>
+<rect class="box-gray" x="462" y="552" width="90" height="40" rx="7"/>
+<text x="507.0" y="576.5" font-size="14" text-anchor="middle" class="mono">0</text>
+<path class="path-gray" d="M 552 572.0 H 598" marker-end="url(#arrow-gray)"/>
+<rect class="box-pink" x="600" y="552" width="300" height="40" rx="7"/>
+<text x="750.0" y="576.5" font-size="14" text-anchor="middle">y3 = ?      (true value 6.46)</text>
+<text x="40" y="624" font-size="13" text-anchor="start" class="muted">Pink arrows: each answer is revealed in the next row, so row k shows the model rows 0 to k and never the answer it predicts.</text>
+<text x="40" y="645" font-size="13" text-anchor="start" class="muted">Without a description, row 0 is all zeros and rows 1–3 are unchanged: the two prompts differ only in row 0.</text>
+<text x="40" y="666" font-size="13" text-anchor="start" class="muted">Not in the matrix: precision r and reliability p. Each model is trained at one value of each and learns them from the prompts.</text>
+<text x="40" y="687" font-size="13" text-anchor="start" class="muted">Real runs: d = 8 and 32 examples, so 33 rows of d + 2 = 10 numbers.</text>
+<rect class="region" x="20" y="722" width="900" height="334" rx="13"/>
+<text x="40" y="752" font-size="16" text-anchor="start">3 · What comes out, and how it is scored</text>
+<text x="40" y="782" font-size="14" text-anchor="start">Ideal prediction for y1 in row 1</text>
+<text x="40" y="801" font-size="13" text-anchor="start" class="muted">for a model trained at p = 0.7 and r = 0.05</text>
+<line class="axis" x1="64" y1="944" x2="392" y2="944"/>
+<line class="axis" x1="91.3" y1="944" x2="91.3" y2="948"/>
+<text x="91.33333333333333" y="962" font-size="11" text-anchor="middle" class="muted">−4</text>
+<line class="axis" x1="146.0" y1="944" x2="146.0" y2="948"/>
+<text x="146.0" y="962" font-size="11" text-anchor="middle" class="muted">−2</text>
+<line class="axis" x1="200.7" y1="944" x2="200.7" y2="948"/>
+<text x="200.66666666666669" y="962" font-size="11" text-anchor="middle" class="muted">0</text>
+<line class="axis" x1="255.3" y1="944" x2="255.3" y2="948"/>
+<text x="255.33333333333334" y="962" font-size="11" text-anchor="middle" class="muted">2</text>
+<line class="axis" x1="310.0" y1="944" x2="310.0" y2="948"/>
+<text x="310.0" y="962" font-size="11" text-anchor="middle" class="muted">4</text>
+<line class="axis" x1="364.7" y1="944" x2="364.7" y2="948"/>
+<text x="364.66666666666663" y="962" font-size="11" text-anchor="middle" class="muted">6</text>
+<path class="path-green path-weak" style="stroke-width:1.6" d="M 64.0 944.0 L 65.4 944.0 L 66.7 944.0 L 68.1 944.0 L 69.5 944.0 L 70.8 944.0 L 72.2 944.0 L 73.6 944.0 L 74.9 944.0 L 76.3 944.0 L 77.7 944.0 L 79.0 944.0 L 80.4 944.0 L 81.8 944.0 L 83.1 944.0 L 84.5 944.0 L 85.9 944.0 L 87.2 944.0 L 88.6 944.0 L 90.0 944.0 L 91.3 944.0 L 92.7 944.0 L 94.1 944.0 L 95.4 944.0 L 96.8 944.0 L 98.2 944.0 L 99.5 944.0 L 100.9 944.0 L 102.3 944.0 L 103.6 944.0 L 105.0 944.0 L 106.4 944.0 L 107.7 944.0 L 109.1 944.0 L 110.5 944.0 L 111.8 944.0 L 113.2 944.0 L 114.6 944.0 L 115.9 944.0 L 117.3 944.0 L 118.7 944.0 L 120.0 944.0 L 121.4 944.0 L 122.8 944.0 L 124.1 944.0 L 125.5 944.0 L 126.9 944.0 L 128.2 944.0 L 129.6 944.0 L 131.0 944.0 L 132.3 944.0 L 133.7 944.0 L 135.1 944.0 L 136.4 944.0 L 137.8 944.0 L 139.2 944.0 L 140.5 944.0 L 141.9 944.0 L 143.3 944.0 L 144.6 944.0 L 146.0 944.0 L 147.4 943.9 L 148.7 943.9 L 150.1 943.9 L 151.5 943.9 L 152.8 943.9 L 154.2 943.9 L 155.6 943.8 L 156.9 943.8 L 158.3 943.8 L 159.7 943.7 L 161.0 943.7 L 162.4 943.6 L 163.8 943.6 L 165.1 943.5 L 166.5 943.4 L 167.9 943.3 L 169.2 943.2 L 170.6 943.1 L 172.0 943.0 L 173.3 942.8 L 174.7 942.7 L 176.1 942.5 L 177.4 942.2 L 178.8 942.0 L 180.2 941.7 L 181.5 941.4 L 182.9 941.0 L 184.3 940.6 L 185.6 940.2 L 187.0 939.7 L 188.4 939.1 L 189.7 938.6 L 191.1 937.9 L 192.5 937.2 L 193.8 936.4 L 195.2 935.5 L 196.6 934.6 L 197.9 933.6 L 199.3 932.5 L 200.7 931.3 L 202.0 930.0 L 203.4 928.6 L 204.8 927.2 L 206.1 925.6 L 207.5 923.9 L 208.9 922.2 L 210.2 920.3 L 211.6 918.3 L 213.0 916.2 L 214.3 914.0 L 215.7 911.7 L 217.1 909.3 L 218.4 906.9 L 219.8 904.3 L 221.2 901.6 L 222.5 898.9 L 223.9 896.1 L 225.3 893.3 L 226.6 890.4 L 228.0 887.4 L 229.4 884.4 L 230.7 881.4 L 232.1 878.4 L 233.5 875.5 L 234.8 872.5 L 236.2 869.6 L 237.6 866.7 L 238.9 863.9 L 240.3 861.1 L 241.7 858.5 L 243.0 856.0 L 244.4 853.6 L 245.8 851.4 L 247.1 849.3 L 248.5 847.4 L 249.9 845.6 L 251.2 844.1 L 252.6 842.7 L 254.0 841.6 L 255.3 840.7 L 256.7 840.0 L 258.1 839.5 L 259.4 839.3 L 260.8 839.3 L 262.2 839.5 L 263.5 840.0 L 264.9 840.7 L 266.3 841.6 L 267.6 842.7 L 269.0 844.0 L 270.4 845.6 L 271.7 847.3 L 273.1 849.2 L 274.5 851.3 L 275.8 853.6 L 277.2 855.9 L 278.6 858.5 L 279.9 861.1 L 281.3 863.8 L 282.7 866.6 L 284.0 869.5 L 285.4 872.4 L 286.8 875.4 L 288.1 878.4 L 289.5 881.4 L 290.9 884.4 L 292.2 887.3 L 293.6 890.3 L 295.0 893.2 L 296.3 896.1 L 297.7 898.9 L 299.1 901.6 L 300.4 904.2 L 301.8 906.8 L 303.2 909.3 L 304.5 911.7 L 305.9 914.0 L 307.3 916.2 L 308.6 918.2 L 310.0 920.2 L 311.4 922.1 L 312.7 923.9 L 314.1 925.6 L 315.5 927.1 L 316.8 928.6 L 318.2 930.0 L 319.6 931.3 L 320.9 932.4 L 322.3 933.6 L 323.7 934.6 L 325.0 935.5 L 326.4 936.4 L 327.8 937.2 L 329.1 937.9 L 330.5 938.5 L 331.9 939.1 L 333.2 939.7 L 334.6 940.2 L 336.0 940.6 L 337.3 941.0 L 338.7 941.4 L 340.1 941.7 L 341.4 942.0 L 342.8 942.2 L 344.2 942.4 L 345.5 942.6 L 346.9 942.8 L 348.3 943.0 L 349.6 943.1 L 351.0 943.2 L 352.4 943.3 L 353.7 943.4 L 355.1 943.5 L 356.5 943.6 L 357.8 943.6 L 359.2 943.7 L 360.6 943.7 L 361.9 943.8 L 363.3 943.8 L 364.7 943.8 L 366.0 943.9 L 367.4 943.9 L 368.8 943.9 L 370.1 943.9 L 371.5 943.9 L 372.9 943.9 L 374.2 944.0 L 375.6 944.0 L 377.0 944.0 L 378.3 944.0 L 379.7 944.0 L 381.1 944.0 L 382.4 944.0 L 383.8 944.0 L 385.2 944.0 L 386.5 944.0 L 387.9 944.0 L 389.3 944.0 L 390.6 944.0 L 392.0 944.0"/>
+<path class="path-gray path-weak" style="stroke-width:1.6" d="M 64.0 943.3 L 65.4 943.3 L 66.7 943.2 L 68.1 943.2 L 69.5 943.1 L 70.8 943.0 L 72.2 943.0 L 73.6 942.9 L 74.9 942.8 L 76.3 942.7 L 77.7 942.6 L 79.0 942.6 L 80.4 942.5 L 81.8 942.4 L 83.1 942.3 L 84.5 942.1 L 85.9 942.0 L 87.2 941.9 L 88.6 941.8 L 90.0 941.6 L 91.3 941.5 L 92.7 941.3 L 94.1 941.2 L 95.4 941.0 L 96.8 940.9 L 98.2 940.7 L 99.5 940.5 L 100.9 940.3 L 102.3 940.1 L 103.6 939.9 L 105.0 939.7 L 106.4 939.5 L 107.7 939.2 L 109.1 939.0 L 110.5 938.7 L 111.8 938.5 L 113.2 938.2 L 114.6 937.9 L 115.9 937.7 L 117.3 937.4 L 118.7 937.1 L 120.0 936.8 L 121.4 936.4 L 122.8 936.1 L 124.1 935.8 L 125.5 935.5 L 126.9 935.1 L 128.2 934.8 L 129.6 934.4 L 131.0 934.0 L 132.3 933.7 L 133.7 933.3 L 135.1 932.9 L 136.4 932.5 L 137.8 932.1 L 139.2 931.7 L 140.5 931.3 L 141.9 930.9 L 143.3 930.5 L 144.6 930.1 L 146.0 929.7 L 147.4 929.2 L 148.7 928.8 L 150.1 928.4 L 151.5 928.0 L 152.8 927.6 L 154.2 927.2 L 155.6 926.7 L 156.9 926.3 L 158.3 925.9 L 159.7 925.5 L 161.0 925.1 L 162.4 924.7 L 163.8 924.3 L 165.1 923.9 L 166.5 923.6 L 167.9 923.2 L 169.2 922.8 L 170.6 922.5 L 172.0 922.2 L 173.3 921.8 L 174.7 921.5 L 176.1 921.2 L 177.4 920.9 L 178.8 920.6 L 180.2 920.4 L 181.5 920.1 L 182.9 919.9 L 184.3 919.7 L 185.6 919.5 L 187.0 919.3 L 188.4 919.1 L 189.7 919.0 L 191.1 918.8 L 192.5 918.7 L 193.8 918.6 L 195.2 918.5 L 196.6 918.4 L 197.9 918.4 L 199.3 918.4 L 200.7 918.4 L 202.0 918.4 L 203.4 918.4 L 204.8 918.4 L 206.1 918.5 L 207.5 918.6 L 208.9 918.7 L 210.2 918.8 L 211.6 919.0 L 213.0 919.1 L 214.3 919.3 L 215.7 919.5 L 217.1 919.7 L 218.4 919.9 L 219.8 920.1 L 221.2 920.4 L 222.5 920.6 L 223.9 920.9 L 225.3 921.2 L 226.6 921.5 L 228.0 921.8 L 229.4 922.2 L 230.7 922.5 L 232.1 922.8 L 233.5 923.2 L 234.8 923.6 L 236.2 923.9 L 237.6 924.3 L 238.9 924.7 L 240.3 925.1 L 241.7 925.5 L 243.0 925.9 L 244.4 926.3 L 245.8 926.7 L 247.1 927.2 L 248.5 927.6 L 249.9 928.0 L 251.2 928.4 L 252.6 928.8 L 254.0 929.2 L 255.3 929.7 L 256.7 930.1 L 258.1 930.5 L 259.4 930.9 L 260.8 931.3 L 262.2 931.7 L 263.5 932.1 L 264.9 932.5 L 266.3 932.9 L 267.6 933.3 L 269.0 933.7 L 270.4 934.0 L 271.7 934.4 L 273.1 934.8 L 274.5 935.1 L 275.8 935.5 L 277.2 935.8 L 278.6 936.1 L 279.9 936.4 L 281.3 936.8 L 282.7 937.1 L 284.0 937.4 L 285.4 937.7 L 286.8 937.9 L 288.1 938.2 L 289.5 938.5 L 290.9 938.7 L 292.2 939.0 L 293.6 939.2 L 295.0 939.5 L 296.3 939.7 L 297.7 939.9 L 299.1 940.1 L 300.4 940.3 L 301.8 940.5 L 303.2 940.7 L 304.5 940.9 L 305.9 941.0 L 307.3 941.2 L 308.6 941.3 L 310.0 941.5 L 311.4 941.6 L 312.7 941.8 L 314.1 941.9 L 315.5 942.0 L 316.8 942.1 L 318.2 942.3 L 319.6 942.4 L 320.9 942.5 L 322.3 942.6 L 323.7 942.6 L 325.0 942.7 L 326.4 942.8 L 327.8 942.9 L 329.1 943.0 L 330.5 943.0 L 331.9 943.1 L 333.2 943.2 L 334.6 943.2 L 336.0 943.3 L 337.3 943.3 L 338.7 943.4 L 340.1 943.4 L 341.4 943.5 L 342.8 943.5 L 344.2 943.5 L 345.5 943.6 L 346.9 943.6 L 348.3 943.6 L 349.6 943.7 L 351.0 943.7 L 352.4 943.7 L 353.7 943.7 L 355.1 943.8 L 356.5 943.8 L 357.8 943.8 L 359.2 943.8 L 360.6 943.8 L 361.9 943.8 L 363.3 943.9 L 364.7 943.9 L 366.0 943.9 L 367.4 943.9 L 368.8 943.9 L 370.1 943.9 L 371.5 943.9 L 372.9 943.9 L 374.2 943.9 L 375.6 943.9 L 377.0 943.9 L 378.3 943.9 L 379.7 943.9 L 381.1 944.0 L 382.4 944.0 L 383.8 944.0 L 385.2 944.0 L 386.5 944.0 L 387.9 944.0 L 389.3 944.0 L 390.6 944.0 L 392.0 944.0"/>
+<path class="path-pink" style="stroke-width:2.2" d="M 64.0 943.3 L 65.4 943.3 L 66.7 943.2 L 68.1 943.2 L 69.5 943.1 L 70.8 943.0 L 72.2 943.0 L 73.6 942.9 L 74.9 942.8 L 76.3 942.7 L 77.7 942.6 L 79.0 942.6 L 80.4 942.5 L 81.8 942.4 L 83.1 942.3 L 84.5 942.1 L 85.9 942.0 L 87.2 941.9 L 88.6 941.8 L 90.0 941.6 L 91.3 941.5 L 92.7 941.3 L 94.1 941.2 L 95.4 941.0 L 96.8 940.9 L 98.2 940.7 L 99.5 940.5 L 100.9 940.3 L 102.3 940.1 L 103.6 939.9 L 105.0 939.7 L 106.4 939.5 L 107.7 939.2 L 109.1 939.0 L 110.5 938.7 L 111.8 938.5 L 113.2 938.2 L 114.6 937.9 L 115.9 937.7 L 117.3 937.4 L 118.7 937.1 L 120.0 936.8 L 121.4 936.4 L 122.8 936.1 L 124.1 935.8 L 125.5 935.5 L 126.9 935.1 L 128.2 934.8 L 129.6 934.4 L 131.0 934.0 L 132.3 933.7 L 133.7 933.3 L 135.1 932.9 L 136.4 932.5 L 137.8 932.1 L 139.2 931.7 L 140.5 931.3 L 141.9 930.9 L 143.3 930.5 L 144.6 930.0 L 146.0 929.6 L 147.4 929.2 L 148.7 928.8 L 150.1 928.3 L 151.5 927.9 L 152.8 927.5 L 154.2 927.0 L 155.6 926.6 L 156.9 926.1 L 158.3 925.7 L 159.7 925.3 L 161.0 924.8 L 162.4 924.4 L 163.8 923.9 L 165.1 923.5 L 166.5 923.0 L 167.9 922.5 L 169.2 922.1 L 170.6 921.6 L 172.0 921.1 L 173.3 920.7 L 174.7 920.2 L 176.1 919.7 L 177.4 919.1 L 178.8 918.6 L 180.2 918.1 L 181.5 917.5 L 182.9 916.9 L 184.3 916.3 L 185.6 915.6 L 187.0 915.0 L 188.4 914.3 L 189.7 913.5 L 191.1 912.7 L 192.5 911.9 L 193.8 911.0 L 195.2 910.0 L 196.6 909.0 L 197.9 908.0 L 199.3 906.8 L 200.7 905.7 L 202.0 904.4 L 203.4 903.0 L 204.8 901.6 L 206.1 900.1 L 207.5 898.5 L 208.9 896.8 L 210.2 895.1 L 211.6 893.2 L 213.0 891.3 L 214.3 889.3 L 215.7 887.2 L 217.1 885.0 L 218.4 882.8 L 219.8 880.4 L 221.2 878.0 L 222.5 875.6 L 223.9 873.0 L 225.3 870.5 L 226.6 867.9 L 228.0 865.2 L 229.4 862.6 L 230.7 859.9 L 232.1 857.3 L 233.5 854.7 L 234.8 852.1 L 236.2 849.5 L 237.6 847.0 L 238.9 844.6 L 240.3 842.3 L 241.7 840.0 L 243.0 837.9 L 244.4 835.9 L 245.8 834.1 L 247.1 832.4 L 248.5 830.9 L 249.9 829.6 L 251.2 828.5 L 252.6 827.6 L 254.0 826.8 L 255.3 826.3 L 256.7 826.1 L 258.1 826.0 L 259.4 826.2 L 260.8 826.6 L 262.2 827.2 L 263.5 828.1 L 264.9 829.2 L 266.3 830.5 L 267.6 832.0 L 269.0 833.7 L 270.4 835.6 L 271.7 837.7 L 273.1 840.0 L 274.5 842.4 L 275.8 845.0 L 277.2 847.7 L 278.6 850.6 L 279.9 853.5 L 281.3 856.6 L 282.7 859.7 L 284.0 862.9 L 285.4 866.1 L 286.8 869.3 L 288.1 872.6 L 289.5 875.8 L 290.9 879.1 L 292.2 882.3 L 293.6 885.5 L 295.0 888.7 L 296.3 891.7 L 297.7 894.7 L 299.1 897.7 L 300.4 900.5 L 301.8 903.3 L 303.2 906.0 L 304.5 908.5 L 305.9 911.0 L 307.3 913.3 L 308.6 915.6 L 310.0 917.7 L 311.4 919.7 L 312.7 921.7 L 314.1 923.5 L 315.5 925.2 L 316.8 926.7 L 318.2 928.2 L 319.6 929.6 L 320.9 930.9 L 322.3 932.1 L 323.7 933.2 L 325.0 934.2 L 326.4 935.2 L 327.8 936.0 L 329.1 936.8 L 330.5 937.6 L 331.9 938.2 L 333.2 938.8 L 334.6 939.4 L 336.0 939.9 L 337.3 940.3 L 338.7 940.7 L 340.1 941.1 L 341.4 941.4 L 342.8 941.7 L 344.2 942.0 L 345.5 942.2 L 346.9 942.4 L 348.3 942.6 L 349.6 942.8 L 351.0 942.9 L 352.4 943.1 L 353.7 943.2 L 355.1 943.3 L 356.5 943.4 L 357.8 943.4 L 359.2 943.5 L 360.6 943.6 L 361.9 943.6 L 363.3 943.7 L 364.7 943.7 L 366.0 943.7 L 367.4 943.8 L 368.8 943.8 L 370.1 943.8 L 371.5 943.8 L 372.9 943.9 L 374.2 943.9 L 375.6 943.9 L 377.0 943.9 L 378.3 943.9 L 379.7 943.9 L 381.1 943.9 L 382.4 943.9 L 383.8 944.0 L 385.2 944.0 L 386.5 944.0 L 387.9 944.0 L 389.3 944.0 L 390.6 944.0 L 392.0 944.0"/>
+<line x1="222.7" y1="944" x2="222.7" y2="822" stroke="#171717" stroke-width="1.2"/>
+<text x="216.6546287536621" y="859.04" font-size="12" text-anchor="end">true y1 = 0.80</text>
+<line x1="64" y1="986" x2="88" y2="986" stroke="#8a9f7a" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="96" y="990" font-size="11.5" text-anchor="start" class="muted">weight 0.7: description right</text>
+<line x1="64" y1="1004" x2="88" y2="1004" stroke="#a8a8a8" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="96" y="1008" font-size="11.5" text-anchor="start" class="muted">weight 0.3: description wrong</text>
+<line x1="64" y1="1022" x2="88" y2="1022" stroke="#bd7c8f" stroke-width="2" stroke-dasharray=""/>
+<text x="96" y="1026" font-size="11.5" text-anchor="start" class="muted">their sum: the prediction</text>
+<rect class="box-gray" x="440" y="770" width="210" height="58" rx="7"/>
+<text x="545.0" y="795.0" font-size="15" text-anchor="middle">Trained Transformer</text>
+<text x="545.0" y="813.0" font-size="13" text-anchor="middle" class="muted">two bell curves per row</text>
+<rect class="box-gray" x="690" y="770" width="210" height="58" rx="7"/>
+<text x="795.0" y="795.0" font-size="15" text-anchor="middle">Ideal learner</text>
+<text x="795.0" y="813.0" font-size="13" text-anchor="middle" class="muted">exact formula, same prompts</text>
+<path class="path-gray" d="M 545 828 V 854" marker-end="url(#arrow-gray)"/>
+<path class="path-gray" d="M 795 828 V 854" marker-end="url(#arrow-gray)"/>
+<rect class="box-gray" x="440" y="856" width="460" height="50" rx="7"/>
+<text x="670.0" y="877.0" font-size="15" text-anchor="middle">Regret per prediction</text>
+<text x="670.0" y="895.0" font-size="13" text-anchor="middle" class="muted">its log loss minus that of an oracle who knows w</text>
+<path class="path-gray" d="M 670 906 V 928" marker-end="url(#arrow-gray)"/>
+<rect class="box-gray" x="440" y="930" width="460" height="74" rx="7"/>
+<text x="670.0" y="954.0" font-size="15" text-anchor="middle">ESS of the description</text>
+<text x="670.0" y="972.0" font-size="13" text-anchor="middle" class="muted">examples, without a description, that give</text>
+<text x="670.0" y="990.0" font-size="13" text-anchor="middle" class="muted">the same regret as the description alone</text>
+<text x="670" y="1032" font-size="13" text-anchor="middle" class="muted">Question: is the network's ESS the same as the ideal learner's?</text>
+</svg>
