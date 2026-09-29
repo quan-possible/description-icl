@@ -114,6 +114,10 @@ after tens of examples, where the exact learner tips after 1 to 3.
 
 ### RQ3 design, simplest version
 
+Superseded later the same day: the current design, with Huang & Ge's prompt
+layout, is in [docs/DESIGN.md](../DESIGN.md). This table records the
+intermediate step.
+
 | Piece | Before | Now | Reason |
 | --- | --- | --- | --- |
 | Precision | Four levels, stated as $\log r$ | One per model, not stated | Nothing for the model to misread; same treatment as reliability |
