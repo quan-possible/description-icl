@@ -3,6 +3,9 @@
 **What it shows.** Nothing yet. The pipeline runs end to end; no model has
 been trained to completion.
 
+The design and the reasons for it are in
+[docs/DESIGN.md](../../docs/DESIGN.md), which is authoritative.
+
 ## Prompt
 
 ![How one prompt is built, read, and scored](prompt.svg)
