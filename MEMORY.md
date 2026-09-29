@@ -13,10 +13,10 @@ flowchart TD
     classDef green fill:#edf3e8,stroke:#8a9f7a,color:#171717,stroke-width:1px
     classDef edgeGreen stroke:#8a9f7a,color:#8a9f7a,stroke-width:2px
 
-    sep["2026-09 · Proposal written"] e1@--> setup["2026-09-29 · Repo and<br/>project records set up"]
+    sep["2026-09 · Proposal written"] e1@--> setup["2026-09-29 · Repo and<br/>project records set up"] e2@--> assess["2026-09-29 · Exact learners, RQ1–RQ2,<br/>NeurIPS assessment, RQ3 design"]
 
-    class sep,setup green
-    class e1 edgeGreen
+    class sep,setup,assess green
+    class e1,e2 edgeGreen
 ```
 
 ## 2026-09-29 | Project set up
@@ -29,6 +29,19 @@ flowchart TD
 - The folder became a Git repository pushed to private GitHub
   `quan-possible/descriptor-icl`, with core project records and layout
   conventions in `AGENTS.md`.
+
+## 2026-09-29 | Exact learners, assessment, and RQ3 design
+
+- Exact Bayes-optimal learners and the RQ1 and RQ2 tables were built and
+  committed. The single-query ratio reaches 8.5, so the proposal's "up to
+  three times" is not a bound.
+- A NeurIPS assessment found the regret-matched ESS, its horizon dependence,
+  the reliability cap, and the horizon reversal unpublished, and the rest of
+  the mathematics classical. See
+  [the assessment](docs/notes/2026-09-29-neurips-assessment.md).
+- Bruce framed the paper on precision and reliability, with dimension as a
+  task property, and chose the simplest RQ3 design, built on Huang & Ge's
+  prefix layout.
 
 ## Rebuild rule
 

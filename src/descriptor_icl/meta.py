@@ -5,8 +5,9 @@ predicts each y_k from x_k and everything before it, as a mixture of
 Gaussians, and is trained on log loss so it can match the Bayes-optimal
 predictive (a two-component Gaussian mixture under the robust prior).
 
-Units: sigma_y = 1. The description states its vector m and its precision
-(through r = a_desc / a_base); its reliability p is never stated.
+Units: sigma_y = 1. The description states only its vector m. Its precision
+r = a_desc / a_base and its reliability p are fixed for each trained model
+and never stated, so the model learns both from the training prompts.
 """
 
 import math
@@ -38,27 +39,18 @@ def sample_batch(B, K, d, a_base, rs, p, p_desc, device, generator=None):
 
 
 def tokens(batch):
-    """Token 0 is the description; token k >= 1 carries x_k and the previous
-    example (x_{k-1}, y_{k-1}), so a causal model at position k has seen
-    examples 1..k-1 and the query x_k."""
+    """Prefix layout of Huang & Ge (2025). Each token is (vector, previous
+    answer, has-description flag). Token 0 is the description (m, 0, flag),
+    all zeros when the prompt has none; token k >= 1 is (x_k, y_{k-1}, 0), so
+    a causal model at position k has seen examples 1..k-1 and the query x_k."""
     X, Y = batch["X"], batch["Y"]
     B, K, d = X.shape
-    h = batch["has_desc"].float()
+    h = batch["has_desc"].float()[:, None]
     z = lambda *s: torch.zeros(*s, device=X.device)
-    desc = torch.cat(
-        [
-            z(B, 2 * d + 1),
-            batch["m"] * h[:, None],
-            (torch.log(batch["r"]) * h)[:, None],
-            h[:, None],
-            torch.ones(B, 1, device=X.device),
-        ],
-        dim=1,
-    )
-    prev_x = torch.cat([z(B, 1, d), X[:, :-1]], dim=1)
+    desc = torch.cat([batch["m"] * h, z(B, 1), h], dim=1)
     prev_y = torch.cat([z(B, 1), Y[:, :-1]], dim=1)
-    ex = torch.cat([X, prev_x, prev_y[..., None], z(B, K, d + 3)], dim=2)
-    return torch.cat([desc[:, None, :], ex], dim=1)  # (B, K+1, 3d+4)
+    ex = torch.cat([X, prev_y[..., None], z(B, K, 1)], dim=2)
+    return torch.cat([desc[:, None, :], ex], dim=1)  # (B, K+1, d+2)
 
 
 class Head(nn.Module):
@@ -72,9 +64,9 @@ class Head(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, d, width=128, layers=6, heads=4, components=3, max_len=64):
+    def __init__(self, d, width=128, layers=6, heads=4, components=2, max_len=64):
         super().__init__()
-        self.embed = nn.Linear(3 * d + 4, width)
+        self.embed = nn.Linear(d + 2, width)
         self.pos = nn.Parameter(torch.zeros(max_len, width))
         layer = nn.TransformerEncoderLayer(
             width, heads, 4 * width, dropout=0.0, batch_first=True, norm_first=True
@@ -91,9 +83,9 @@ class Transformer(nn.Module):
 
 
 class LSTM(nn.Module):
-    def __init__(self, d, width=256, layers=2, components=3):
+    def __init__(self, d, width=256, layers=2, components=2):
         super().__init__()
-        self.embed = nn.Linear(3 * d + 4, width)
+        self.embed = nn.Linear(d + 2, width)
         self.body = nn.LSTM(width, width, layers, batch_first=True)
         self.head = Head(width, components)
 

@@ -1,6 +1,6 @@
 """Meta-train one sequence model on prompts with and without descriptions.
 
-    uv run python results/rq3-meta-trained/train.py --p 0.7 --arch transformer
+    uv run python results/rq3-meta-trained/train.py --p 0.7 --r 0.05
 
 Checkpoints go to tmp/rq3/ (ignored by Git); the training log is printed.
 """
@@ -13,10 +13,10 @@ import torch
 
 from descriptor_icl import meta
 
-RS = (0.5, 0.2, 0.05, 0.01)
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--p", type=float, required=True)
+ap.add_argument("--r", type=float, required=True)
 ap.add_argument("--arch", default="transformer")
 ap.add_argument("--d", type=int, default=8)
 ap.add_argument("--a-base", type=float, default=10.0)
@@ -32,10 +32,10 @@ dev = "mps" if torch.backends.mps.is_available() else "cpu"
 model = (meta.Transformer if args.arch == "transformer" else meta.LSTM)(args.d).to(dev)
 opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.0)
 sched = torch.optim.lr_scheduler.OneCycleLR(opt, args.lr, total_steps=args.steps, pct_start=0.05)
-rs = torch.tensor(RS, device=dev)
+rs = torch.tensor([args.r], device=dev)
 out = pathlib.Path("tmp/rq3")
 out.mkdir(parents=True, exist_ok=True)
-name = f"{args.arch}_p{args.p}_d{args.d}_s{args.seed}"
+name = f"{args.arch}_p{args.p}_r{args.r}_d{args.d}_s{args.seed}"
 
 t0, run = time.time(), 0.0
 for step in range(1, args.steps + 1):
