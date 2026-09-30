@@ -41,8 +41,8 @@ learner and then for meta-trained networks.
   checkpoint in `tmp/rq3/` uses the old prompt layout and cannot be loaded.
 - The paper draft at [docs/paper/paper.tex](docs/paper/paper.tex) is the
   simplest version: one prediction per prompt, precision, reliability, and
-  the network experiment, with pending parts marked. Everything cut from it
-  is listed in [docs/notes/deferred.md](docs/notes/deferred.md).
+  the network experiment, with pending parts marked. Every result, used or not,
+  has a page in [docs/wiki/](docs/wiki/README.md).
 - The novelty, robustness, and venue evidence, with the design decisions, is
   in [docs/notes/2026-09-29-neurips-assessment.md](docs/notes/2026-09-29-neurips-assessment.md).
 - A NeurIPS 2027 campaign job is open at
