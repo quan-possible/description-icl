@@ -1,35 +1,39 @@
 # Reliability: the regret floor and saturation
 
-**Status:** computed in four settings; the floor has a two-line sketch and
-needs a write-up. In the paper.
+**Status:** computed in four settings; the two-sided bound is proved in the
+paper (Proposition 2). In the paper.
 
 **Result.** With no examples the Bayes-optimal predictive is the $p$-mixture
 of the two components' predictives. Its one-step regret satisfies, for every
-$r$,
+$p$ and $r$,
 
-$$R \ge (1-p)\,R^{\mathrm{ex}}(0),$$
+$$p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0) \;\le\; R \;\le\;
+p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0) + H(p).$$
 
-and as $r \to 0$ it lies between that bound and
-$(1-p)\,R^{\mathrm{ex}}(0) + H(p)$. So the ESS of an unreliable description
-is capped at the $n$ where $R^{\mathrm{ex}}(n)$ reaches the lower bound,
-however precise the description.
+The gap is the cost of not knowing whether the description is right, at most
+$H(p)$. Since $R^{\mathrm{desc}}_{p=1}(r) \ge 0$ and $\to 0$ as $r \to 0$,
+$R \ge (1-p)\,R^{\mathrm{ex}}(0)$ for every $r$, and as $r \to 0$ the
+regret lies between that floor and $(1-p)\,R^{\mathrm{ex}}(0) + H(p)$. So
+the ESS of an unreliable description is capped at the $n$ where
+$R^{\mathrm{ex}}(n)$ reaches the floor, however precise the description.
 
-**Why.** Lower bound: a predictor told which component is true has regret
-$p R^{\mathrm{desc}}_{p=1} + (1-p) R^{\mathrm{ex}}(0)$, and conditioning on
-more information cannot raise a Bayes-optimal predictor's expected log loss.
-Upper limit: the mixture density is at least each weighted component, so a
-correct description costs at most $\log(1/p)$ as $r \to 0$ and a wrong one
-at most $R^{\mathrm{ex}}(0) + \log(1/(1-p))$; weighting gives
-$(1-p) R^{\mathrm{ex}}(0) + H(p)$.
+**Why.** Lower bound: given whether the description is correct, the true
+conditional density of $y$ is one component's predictive, and the mixture's
+expected log loss exceeds it by a KL divergence; the two components' regrets
+are $R^{\mathrm{desc}}_{p=1}(r)$ and $R^{\mathrm{ex}}(0)$. Upper bound: the
+mixture density is at least $p$ times the correct component and $(1-p)$
+times the base predictive, so the excess over the informed predictor is at
+most $\log(1/p)$ when the description is correct and $\log(1/(1-p))$ when
+it is wrong; weighting gives $H(p)$.
 
-**Check** ($d = 16$, $a_0 = 10$, $R^{\mathrm{ex}}(0) = 2.51$ nats, computed at
-$r = 0.001$):
+**Check** ($d = 16$, $a_0 = 10$, $R^{\mathrm{ex}}(0) = 2.51$ nats,
+$R^{\mathrm{desc}}_{p=1}(0.001) = 0.07$, computed at $r = 0.001$):
 
-| $p$ | Lower bound | Upper limit | Computed |
+| $p$ | Lower bound | Upper bound | Computed |
 | --- | --- | --- | --- |
-| 0.9 | 0.25 | 0.58 | 0.57 |
-| 0.7 | 0.75 | 1.36 | 1.27 |
-| 0.5 | 1.26 | 1.95 | 1.80 |
+| 0.9 | 0.32 | 0.64 | 0.57 |
+| 0.7 | 0.80 | 1.42 | 1.27 |
+| 0.5 | 1.29 | 1.99 | 1.80 |
 
 The earlier statement that the regret "tends to" the upper expression from
 above was wrong: the computed values sit just below it.

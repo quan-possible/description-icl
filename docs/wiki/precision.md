@@ -1,7 +1,7 @@
 # Precision: ESS of a reliable description
 
-**Status:** computed on the RQ1 grid; the approximation has a two-line sketch
-and needs a write-up with its error term. In the paper.
+**Status:** computed on the RQ1 grid; derived with its error term in the
+paper (Proposition 1). In the paper.
 
 **Result.** For $p = 1$, one prediction, high signal-to-noise ratio, and
 $\mathrm{ESS} < d$:
@@ -12,10 +12,22 @@ A description that removes a fraction $1 - r$ of the prior variance is worth
 that fraction of the dimension in examples.
 
 **Why.** With $n < d$ examples the posterior variance is near zero along the
-$n$ observed directions and $a_0$ along the other $d - n$, so the one-step
-regret is about $\tfrac12 \log(a_0 (d-n))$. The description contracts every
-direction to $r a_0$, giving about $\tfrac12 \log(r a_0 d)$. Equate:
-$d - n = r d$.
+$n$ observed directions and $a_0$ along the other $d - n$, so as
+$a_0 \to \infty$ the one-step regret is
+$\tfrac12 \log a_0 + \tfrac12 \mathbb{E}\log\chi^2_{d-n} + o(1)$. The
+description contracts every direction to $r a_0$, giving
+$\tfrac12 \log(r a_0) + \tfrac12 \mathbb{E}\log\chi^2_{d} + o(1)$. With
+$\mathbb{E}\log\chi^2_k = \psi(k/2) + \log 2$ the ESS solves
+$\psi(\tfrac{d-n}{2}) - \psi(\tfrac d2) = \log r$, and expanding the
+digamma gives
+
+$$\mathrm{ESS}_1 = (d-1)(1-r) + O\!\left(\tfrac{1}{rd}\right).$$
+
+The error term says the rule needs $rd \gg 1$: the description must leave
+well over one example's worth of variance unexplained. At $a_0 = 100$ the
+exact ESS is within 0.1 of $(d-1)(1-r)$ for $d \in \{16, 64\}$,
+$r \in \{0.5, 0.2\}$ (7.50, 12.1, 31.6, 50.5 against 7.5, 12.0, 31.5,
+50.4).
 
 **Numbers** ($a_0 = 10$, from `results/rq1-single-query-gap/ess.csv`):
 

@@ -30,14 +30,19 @@ what is needed to resume the task.
 
 ## Current state
 
-- Environment: `uv` project, Python 3.12; `uv run pytest` passes 10 checks.
+- Environment: `uv` project, Python 3.12; `uv run pytest` passes.
 - Built: `src/descriptor_icl/gaussian.py` (reliable descriptions) and
   `mixture.py` (unreliable descriptions), both exact up to Monte Carlo over
   inputs.
-- Analyses: `results/rq1-single-query-gap/`, `results/rq2-reliability/`.
+- Analyses: `results/rq1-single-query-gap/`, `results/rq2-reliability/`;
+  network pipeline in `results/rq3-meta-trained/`, untrained.
+- Paper: `docs/paper/paper.tex`, sections 3 to 5 done with proofs; section 6
+  pending the loss decision and training.
 - Next action: see "Next moves" in [RESEARCH.md](RESEARCH.md).
 
 ## History
 
 - 2026-09-29: Campaign opened. Chose to rebuild the exact learner rather than
   search for the proposal's lost preliminary code.
+- 2026-09-30: The paper became the plan; Propositions 1 and 2 written out;
+  the design record moved to `docs/wiki/experiments.md`.

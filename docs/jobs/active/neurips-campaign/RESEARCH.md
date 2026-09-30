@@ -1,6 +1,6 @@
 # RESEARCH: what a task description is worth in examples
 
-Task and continuity: [JOB.md](JOB.md). Last updated 2026-09-29.
+Task and continuity: [JOB.md](JOB.md). Last updated 2026-09-30.
 
 ## Question and standard
 
@@ -48,16 +48,21 @@ table).
    the expected rise in the log posterior weight of the true component. Over
    a long horizon it tends to the cross-entropy $H(p, q)$, so mis-set trust
    costs exactly $\mathrm{KL}(p\,\|\,q)$ nats, independent of $d$.
-5. **Reliability caps the single-query worth of precision** (exploratory,
-   $d = 16$, `a0` $= 10$). At $p = 0.9$, making the description 50 times
-   more precise (`r` 0.05 → 0.001) raises the single-query ESS from 14.7 to
-   22.9; at $p = 1$ it rises from 16.9 to 116.9.
+5. **Reliability caps the single-query worth of precision** (computed, four
+   settings, `results/rq2-reliability/ess_map.csv`; derived as the
+   two-sided bound of Proposition 2 in the paper). At $d = 16$, `a0` $= 10$,
+   $p = 0.9$, making the description 50 times more precise (`r` 0.05 →
+   0.001) raises the single-query ESS from 14.8 to 23.1; at $p = 1$ it
+   rises from 16.9 to 116.5.
 6. **The horizon ordering reverses for precise, unreliable descriptions**
-   (exploratory, same setting). At `r` $= 0.001$, $p = 0.9$: single-query
-   ESS 22.9, $N = 200$ ESS 52.6.
-7. **Trust errors are asymmetric for a single query** (exploratory, same
-   setting, $p = 0.7$, `r` $= 0.001$). Regret is 1.27 nats when calibrated,
-   2.51 when the description is ignored, and 40.0 when it is fully trusted.
+   (computed, three of four settings; `docs/wiki/horizon-reliability.md`).
+   Not in the paper.
+7. **Trust errors are asymmetric for a single query** (computed,
+   `results/rq2-reliability/trust.csv`; `docs/wiki/misspecified-reliability.md`).
+   Not in the paper.
+8. **High-SNR ESS of a reliable description** (derived, Proposition 1):
+   $\mathrm{ESS} = (d-1)(1-r) + O(1/(rd))$. Checked at `a0` $= 100$ to
+   within 0.1.
 
 ## Hypotheses not supported
 
@@ -87,18 +92,18 @@ No work found prices an instruction in in-context examples. The inequality
 in item 2 is AM–GM on posterior eigenvalues (A- versus D-optimality), so it
 must be presented as a quantified mechanism, not a new inequality.
 
-## Candidate directions (open set)
+## Direction chosen (Bruce, 2026-09-29; the paper is the plan)
 
-| Direction | Why it could matter | State |
-| --- | --- | --- |
-| A. "Worth depends on whether you can check it": the horizon ordering reverses with reliability | A qualitative, non-obvious law connecting items 2, 5, 6 | Needs the committed RQ2 map and a derivation of the boundary |
-| B. Asymmetric cost of trust | Gives a normative reading of why base models under-weight instructions | Needs the committed trust table; competes with Arora et al. 2024 |
-| C. Closed-form ESS | Turns RQ1 into a formula | Done for $p = 1$; open for the mixture |
-| D. Networks: implied trust and ESS | Tests whether trained models discount correctly | Code written, not yet trained |
-| E. Normative benchmark for LLM transition curves | Links the toy model to LLM data | Needs Bruce's approval for paid calls, or published curves |
+One-step ESS as a function of precision and reliability, then whether small
+meta-trained Transformers reproduce it. Horizon dependence (A), the cost of
+trust (B), and the LLM benchmark (E) are out of the paper and kept in
+`docs/wiki/`. The closed form (C) is done for $p = 1$ in the proportional
+limit and not used by the paper.
 
 ## Next moves
 
-1. Commit the RQ2 tables and confirm items 5–7 across settings.
-2. Standing adversarial review of the direction choice.
-3. Train the RQ3 models.
+1. Bruce decides the network output and loss (squared error as coded, or log
+   loss with a predicted spread, matching the paper's ESS definition).
+2. Train in the paper's readout order (see `STATUS.md`, next actions) and
+   fill section 6.
+3. Standing adversarial review of the draft once section 6 has numbers.

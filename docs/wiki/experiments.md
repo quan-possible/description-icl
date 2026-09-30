@@ -1,4 +1,4 @@
-# Experimental design
+# Experiments
 
 This file is the single description of how the experiments are set up. When
 the code and this file disagree, one of them is wrong and gets fixed. A design
@@ -322,7 +322,10 @@ question. Elements that are neither are listed under Departures.
 
 ## Open questions
 
-None.
+- Output and loss for the networks (2026-09-30, from the paper, section 6):
+  one number with squared error (decision 15, in the code) or a predicted
+  spread with log loss, which matches the paper's ESS definition. Bruce
+  decides.
 
 ## Deferred
 

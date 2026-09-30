@@ -1,7 +1,8 @@
 # Networks
 
-**Status:** design fixed except the loss and the row layout; no model
-trained to completion. Design record: [../DESIGN.md](../DESIGN.md), section 6.
+**Status:** design fixed except the loss (Bruce's decision, see
+[experiments.md](experiments.md), open questions); the row layout is
+fixed. No model trained to completion. Design record: [experiments.md](experiments.md), section 6.
 
 **Design.** Prefix embedding of Huang & Ge (2025): an optional descriptor
 token carrying $m$, example tokens, a query token, two indicator columns. No
@@ -11,8 +12,9 @@ $d = 5$, $a_0 = 10$, up to 15 examples, half the prompts without a
 descriptor. $r$ and $p$ fixed per model and never stated.
 
 **Open:** log loss with a predicted spread (Genewein et al.) or squared error
-with a point prediction (Garg et al.; Huang & Ge); every query position
-scored (Garg et al.) or the final query only (Huang & Ge).
+with a point prediction (Garg et al.; Huang & Ge). The code has the
+latter. One question per prompt, after a random number of examples, is
+fixed.
 
 **Order.** One factor at a time: reliable precise descriptor; the same model
 evaluated at $p = 0.9$; coarse descriptor; three seeds; then training at

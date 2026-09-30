@@ -17,7 +17,7 @@ it. The paper takes what it needs from here; nothing is "deferred".
 | [Language models](llms.md) | What published LLM results say about the predictions |
 | [Literature](literature.md) | Closest work and how each differs |
 
-Design decisions live in [../DESIGN.md](../DESIGN.md); the current paper in
+Design decisions live in [experiments.md](experiments.md); the current paper in
 [../paper/](../paper/paper.tex); the venue assessment in
 [../notes/2026-09-29-neurips-assessment.md](../notes/2026-09-29-neurips-assessment.md).
 

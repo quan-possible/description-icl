@@ -1,6 +1,6 @@
 # STATUS
 
-Last updated: 2026-09-29
+Last updated: 2026-09-30
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Clear Sans, Noto Sans, Helvetica Neue, Arial, Noto Sans CJK JP, sans-serif","fontSize":"16px","primaryTextColor":"#171717","lineColor":"#a8a8a8","mainBkg":"#ffffff","clusterBkg":"#ffffff","clusterBorder":"#ffffff","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"curve":"linear"}}}%%
@@ -11,7 +11,7 @@ flowchart TD
     classDef edgeGreen stroke:#8a9f7a,color:#8a9f7a,stroke-width:2px
     classDef edgeBlue stroke:#7f9fc4,color:#7f9fc4,stroke-width:2px
 
-    done["Exact learners built<br/>RQ1 and RQ2 tables committed"] e1@--> gap["Reversal boundary not derived<br/>networks not trained"] e2@--> next["Derive the boundary<br/>then train RQ3 models"]
+    done["Precision and reliability<br/>derived, computed, in the paper"] e1@--> gap["Network loss undecided<br/>no model trained"] e2@--> next["Decide the loss<br/>then train and fill section 6"]
 
     class done green
     class gap pink
@@ -28,30 +28,36 @@ learner and then for meta-trained networks.
 
 ## Current position
 
-- Exact Bayes-optimal learners exist for reliable descriptions
-  (`src/descriptor_icl/gaussian.py`) and unreliable ones (`mixture.py`).
-  `uv run pytest` passes 11 checks.
-- RQ1 is committed and validated:
-  [results/rq1-single-query-gap/](results/rq1-single-query-gap/README.md).
-- RQ2 tables are committed:
-  [results/rq2-reliability/](results/rq2-reliability/README.md).
-- RQ3 has code and a documented design:
-  [results/rq3-meta-trained/](results/rq3-meta-trained/README.md). The
-  pipeline runs end to end; no model is trained yet. The earlier pilot
-  checkpoint in `tmp/rq3/` uses the old prompt layout and cannot be loaded.
-- The paper draft at [docs/paper/paper.tex](docs/paper/paper.tex) is the
-  simplest version: one prediction per prompt, precision, reliability, and
-  the network experiment, with pending parts marked. Every result, used or not,
-  has a page in [docs/wiki/](docs/wiki/README.md).
-- The novelty, robustness, and venue evidence, with the design decisions, is
-  in [docs/notes/2026-09-29-neurips-assessment.md](docs/notes/2026-09-29-neurips-assessment.md).
-- A NeurIPS 2027 campaign job is open at
+- The plan is the paper, [docs/paper/paper.tex](docs/paper/paper.tex): the
+  one-step ESS of a description as a function of precision and reliability,
+  then whether small meta-trained Transformers reproduce it. Horizon
+  dependence, the dimension sweep, mis-set trust, and tipping points are
+  out of the paper and kept in [docs/wiki/](docs/wiki/README.md).
+- Sections 3 to 5 are done. Proposition 1 ($\ess = (d-1)(1-r) + O(1/(rd))$
+  at high SNR) and Proposition 2 (the two-sided reliability bound) are
+  written out with proofs (2026-09-30). Every number in Tables 1 and 2
+  regenerates from `results/rq1-single-query-gap/ess.csv` and
+  `results/rq2-reliability/ess_map.csv`; the RQ1 folder's horizon columns
+  are unused by the paper.
+- Section 6 (networks) is pending. The pipeline in
+  [results/rq3-meta-trained/](results/rq3-meta-trained/README.md) runs end
+  to end; no model is trained. The design is in
+  [docs/wiki/experiments.md](docs/wiki/experiments.md), section 6.
+- **Open decision (Bruce):** the network's output and loss. The code uses a
+  one-number output with squared error (Garg et al.); the paper's ESS is
+  defined under log loss, which would need a predicted spread (Genewein et
+  al.). The paper marks this as to be finalized.
+- Exact learners: `src/descriptor_icl/gaussian.py` (reliable) and
+  `mixture.py` (unreliable). `uv run pytest` passes.
+- The venue evidence and design decisions are in
+  [docs/notes/2026-09-29-neurips-assessment.md](docs/notes/2026-09-29-neurips-assessment.md);
+  the campaign job is
   [docs/jobs/active/neurips-campaign/](docs/jobs/active/neurips-campaign/JOB.md).
 - The repository is on `main`, tracking private GitHub
   `quan-possible/descriptor-icl`. A second checkout lives on the Mac mini
   (`bruces-mac-mini` on Tailscale) at `~/Projects/descriptor-icl`.
 
-## Findings that contradict the proposal
+## Findings that contradict the proposal (record; not in the paper)
 
 - **"Up to three times" is not a bound.** The single-query to long-horizon
   ESS ratio runs from 1.01 to 8.5 on the RQ1 grid.
@@ -78,7 +84,7 @@ learner and then for meta-trained networks.
   row, $n$ examples each beside its own answer, and one question row. The
   model has the size of Garg et al. (12 layers, width 256), no position
   information, outputs one number, and is trained on squared error with one
-  question per prompt, at $d = 5$. [docs/DESIGN.md](docs/DESIGN.md) is authoritative and walks one
+  question per prompt, at $d = 5$. [docs/wiki/experiments.md](docs/wiki/experiments.md) is authoritative and walks one
   prompt through end to end.
 
 ## Assessment for NeurIPS 2027 (2026-09-29)
@@ -95,17 +101,22 @@ learner and then for meta-trained networks.
 
 ## Next actions
 
-1. Write out the two short derivations in the paper: $\ess \approx d(1-r)$
-   and the reliability floor $(1-p)R^{\mathrm{ex}}(0) + H(p)$.
-2. Finish the RQ3 stage-1 pilot, then train the 12 models in stages
-   (reliable descriptions first, then $p = 0.9$), and evaluate stage-2
-   models at test reliabilities different from training.
+1. Bruce decides the network output and loss; record it in
+   `docs/wiki/experiments.md` and remove the paper's todo in section 6.
+2. Train in the paper's readout order: the precise reliable model
+   ($r = 0.05$, $p = 1$, three seeds); evaluate it at test reliability
+   $p = 0.9$; the coarse reliable model ($r = 0.5$, $p = 1$); then separate
+   models at $p = 0.9$. Step count from the stage-1 pilot, which flattened
+   by about 15k steps.
+3. Fill section 6: the network-versus-Bayes ESS table and the regret figure,
+   regenerated from `results/rq3-meta-trained/`.
 
 ## Risks and blockers
 
-- The reversal boundary may turn out trivial, which would weaken the message.
 - RQ3 may only confirm that networks match the Bayes-optimal learner, which
-  is already known.
+  is already known for examples alone; the new content is the description.
+- If the networks train under squared error, the paper carries two ESS
+  scales (log loss for the theory, squared error for the networks).
 - The novelty check rests on web searches and partly on paper summaries. The
   minimum-description-length literature was not searched in depth.
 - NeurIPS 2027 dates are not announced. ICML 2027 (late January 2027,
@@ -113,7 +124,7 @@ learner and then for meta-trained networks.
 
 ## Current owners
 
-- `docs/DESIGN.md`: the experimental design and its decision table.
+- `docs/wiki/experiments.md`: the experimental design and its decision table.
 - `docs/proposal/bayesian_icl/`: research proposal.
 - `AGENTS.md`: project contract and layout conventions.
 - `docs/jobs/active/neurips-campaign/`: campaign task and research record.

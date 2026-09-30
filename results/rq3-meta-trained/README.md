@@ -6,7 +6,7 @@ been trained to completion.
 ## Design
 
 The design, a worked example, and the reasons are in
-[docs/DESIGN.md](../../docs/DESIGN.md), section 6, which is authoritative.
+[docs/wiki/experiments.md](../../docs/wiki/experiments.md), section 6, which is authoritative.
 
 | Quantity | Value |
 | --- | --- |
@@ -16,7 +16,7 @@ The design, a worked example, and the reasons are in
 | $p$ | 1 in stage 1, 0.9 in stage 2 (one model each) |
 | Model | Transformer, 12 layers, 8 heads, width 256 (Garg et al.), no positions |
 | Output | One number, the answer to the question |
-| Loss | Squared error |
+| Loss | Squared error in the code; the paper leaves the loss to be finalized (see `STATUS.md`) |
 | Training | Adam, learning rate 1e-4, batch 1024; step count set by a pilot |
 | Seeds | 0, 1, 2 |
 

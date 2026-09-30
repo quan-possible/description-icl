@@ -13,10 +13,10 @@ flowchart TD
     classDef green fill:#edf3e8,stroke:#8a9f7a,color:#171717,stroke-width:1px
     classDef edgeGreen stroke:#8a9f7a,color:#8a9f7a,stroke-width:2px
 
-    sep["2026-09 · Proposal written"] e1@--> setup["2026-09-29 · Repo and<br/>project records set up"] e2@--> assess["2026-09-29 · Exact learners, RQ1–RQ2,<br/>NeurIPS assessment, RQ3 design"]
+    sep["2026-09 · Proposal written"] e1@--> setup["2026-09-29 · Repo and<br/>project records set up"] e2@--> assess["2026-09-29 · Exact learners, RQ1–RQ2,<br/>NeurIPS assessment, RQ3 design"] e3@--> paper["2026-09-30 · Paper is the plan;<br/>propositions proved"]
 
-    class sep,setup,assess green
-    class e1,e2 edgeGreen
+    class sep,setup,assess,paper green
+    class e1,e2,e3 edgeGreen
 ```
 
 ## 2026-09-29 | Project set up
@@ -42,6 +42,13 @@ flowchart TD
 - Bruce framed the paper on precision and reliability, with dimension as a
   task property, and chose the simplest RQ3 design, built on Huang & Ge's
   prefix layout.
+
+## 2026-09-30 | The paper became the plan
+
+- Bruce made the compiled paper the plan. Propositions 1 (ESS
+  $= (d-1)(1-r) + O(1/(rd))$) and 2 (two-sided reliability bound) were
+  proved; the design record moved to `docs/wiki/experiments.md`. The network
+  loss is Bruce's open decision. See [2026-09-30](memory/2026-09-30.md).
 
 ## Rebuild rule
 
