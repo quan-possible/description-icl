@@ -1,99 +1,92 @@
-% Draft. Compile with: cd docs/paper && latexmk -pdf paper.tex
-% Uses the article class until the NeurIPS 2027 style file is available; the
-% page layout mimics it so the length is representative.
-\documentclass[10pt]{article}
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage[margin=1in]{geometry}
-\usepackage{times}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage{booktabs}
-\usepackage{microtype}
-\usepackage[authoryear,round]{natbib}
-\usepackage{xcolor}
 \usepackage{hyperref}
-\usepackage{graphicx}
+\usepackage[authoryear,round]{natbib}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\newcommand{\todo}[1]{\textcolor{red}{\textit{[#1]}}}
 
-\newtheorem{proposition}{Proposition}
 \newtheorem{definition}{Definition}
-\newcommand{\todo}[1]{\textcolor{red}{[#1]}}
-\newcommand{\ess}{\mathrm{ESS}}
-\newcommand{\E}{\mathbb{E}}
-\newcommand{\KL}{\mathrm{KL}}
-\newcommand{\R}{\mathbb{R}}
+\newtheorem{proposition}{Proposition}
 
-\title{Task Descriptions as Bayesian Priors:\\The Effective Sample Size of an Instruction in In-Context Learning}
-\author{Bruce Quan Nguyen\\ \todo{affiliation}}
+\title{Task Descriptions as Bayesian Priors:\\ The Effective Sample Size of an Instruction in In-Context Learning}
+\author{Bruce Quan Nguyen \\ \todo{Affiliation}}
 \date{Draft of 30 September 2026}
 
 \begin{document}
+
 \maketitle
 
 \begin{abstract}
-Prompts combine a task description with in-context examples, but theories of in-context learning (ICL) model only the examples. Under the Bayesian account of ICL, in which a sequence model performs posterior inference over a latent task, the examples are observations and the task description specifies the prior. Bayesian statistics quantifies a prior by its \emph{effective sample size} (ESS), the number of observations to which the prior is equivalent. We define the ESS of a task description predictively: the number of in-context examples at which a Bayes-optimal predictor attains the same cumulative log-loss regret over a horizon of $N$ predictions as it attains from the description alone. In in-context linear regression, where the Bayes-optimal predictor is available in closed form, we characterise this ESS as a function of the description's \emph{precision} (the posterior contraction it induces) and \emph{reliability} (the prior probability that it is correct, modelled with a robust mixture prior). Three results. First, the ESS depends on the horizon. As $N\to\infty$ it converges to the information-matching sample size implied by the asymptotics of \citet{clarke1990}; at $N=1$ it is larger, by up to $8.5\times$ on our grid, because a description contracts the posterior isotropically whereas $n<d$ examples contract it only along the observed directions, an A- versus D-optimality gap that we quantify and give in closed form in the proportional limit. Second, reliability bounds the ESS obtainable from precision: at $N=1$ the regret of an unreliable description has a floor of order $(1-p)$ times the no-description regret, so a description that is correct with probability $0.9$ gains little from a fiftyfold increase in precision. Third, the horizon ordering reverses for precise, unreliable descriptions, whose asymptotic ESS is unbounded in precision because sequential feedback identifies the mixture component. Misspecifying the reliability costs $\KL(p\,\|\,q)$ nats asymptotically. \todo{Fourth, on meta-trained Transformers, once obtained.} Our claims concern Bayes-optimal predictors and small meta-trained sequence models, not large language models.
+While in-context learning (ICL) typically employs prompts that pair a natural-language task description with input--output demonstrations, prevailing theoretical models focus exclusively on the demonstrations. In a Bayesian framing of ICL—where a sequence model conducts posterior inference over a latent task—the demonstrations act as observations, and the task description provides the prior. To place instructions and examples on a common scale, we define the predictive \textit{effective sample size} (ESS) of a task description: the number of in-context examples necessary for a Bayes-optimal predictor to achieve the identical cumulative log-loss regret over a horizon of $N$ predictions. 
+
+Analyzing in-context linear regression where Bayes-optimal predictors are mathematically exact, we characterize ESS through the description's \textit{precision} (posterior contraction relative to the base prior) and \textit{reliability} (the prior probability of correctness, modeled as a robust mixture prior). We present three key findings. First, ESS is inherently horizon-dependent: as $N \to \infty$, it converges to the information-matching sample size, but for $N=1$, it can be up to $8.5\times$ larger. This is because descriptions contract the posterior isotropically, whereas $n < d$ examples contract it anisotropically (quantifying an A- versus D-optimality gap). Second, reliability severely limits the ESS gains from precision: at $N=1$, the regret of an unreliable description has a floor of order $(1-p)$ times the no-description regret, so that a 90\% reliable description gains little from a fiftyfold increase in precision. Third, this horizon ordering reverses for precise, unreliable descriptions: asymptotic ESS is unbounded in precision because sequential feedback rapidly identifies the correct mixture component. Misspecifying the reliability costs $\text{KL}(p \parallel q)$ nats asymptotically. \todo{Fourth, on meta-trained Transformers, once obtained.} Our claims concern Bayes-optimal predictors and small meta-trained sequence models, not large language models.
 \end{abstract}
 
 \section{Introduction}
 
-Theoretical accounts of in-context learning have concentrated on prompts consisting of input--output examples alone \citep{garg2022,akyurek2023,xie2022,genewein2025}. Prompts in practice also carry a natural-language task description \citep{brown2020}, and the empirical record on its value is inconsistent. A prompt can substitute for hundreds of labelled examples in prompt-based fine-tuning \citep{lescao2021}, and a short distilled description can match a many-shot prompt \citep{honda2025}; yet models also discount instructions, so that sufficiently many examples override an explicitly stated bias \citep{gupta2025} and misleading instructions perform about as well as informative ones \citep{webson2022}. Recent theory admits instructions into the model \citep{huangge2025,lin2025,tong2026} but does not express their value on the same scale as the examples they accompany.
+Theoretical investigations into in-context learning have largely centered on prompts composed entirely of input--output examples \citep{garg2022, akyurek2023, xie2022, genewein2025}. However, practical prompts almost always feature a natural-language task description \citep{brown2020}. The empirical value of these instructions is complex: they can substitute for hundreds of fine-tuning examples \citep{lescao2021} or effectively compress many-shot prompts \citep{honda2025}, yet models will also discount them in favor of explicitly stated biases \citep{gupta2025} or perform equivalently with misleading instructions \citep{webson2022}. While recent theory has begun incorporating instructions \citep{huangge2025, lin2025, tong2026}, it has not quantified their value on the same numerical scale as the examples they accompany.
 
-We propose that scale. Under the Bayesian account of ICL \citep{xie2022}, a sequence model trained on a distribution over tasks approximates the posterior predictive for the latent task; the in-context examples are observations, and a task description specifies the prior. Bayesian statistics already measures a prior on the scale of observations: the \emph{prior effective sample size} (ESS) of \citet{morita2008} is the number of observations to which a prior is equivalent. Two properties of a prior govern its ESS and its risk: how concentrated it is, and whether it is compatible with the data, the latter studied as prior--data conflict \citep{evans2006}. Instructions have the same two properties:
+We propose such a scale. Under the Bayesian interpretation of ICL \citep{xie2022}, a sequence model approximates the posterior predictive distribution for a latent task. Here, examples act as observations, and the task description establishes the prior. In Bayesian statistics, a prior's weight is quantified by its \textit{prior effective sample size} (ESS) \citep{morita2008}, representing the equivalent number of observations. Two properties of a prior govern its ESS and its risk: how concentrated it is, and whether it is compatible with the data, the latter studied as prior--data conflict \citep{evans2006}. Task descriptions have the same two properties:
 \begin{itemize}
-  \item \textbf{Precision:} the degree to which the description constrains the task, formalised as the posterior contraction the description induces relative to the base prior.
-  \item \textbf{Reliability:} the prior probability that the description is correct, formalised as the weight of the informative component in a robust mixture prior \citep{schmidli2014}.
+    \item \textbf{Precision:} The extent to which the description constrains the task, modeled as the posterior contraction relative to the base prior.
+    \item \textbf{Reliability:} The probability that the description is correct, modeled as the weight of the informative component in a robust mixture prior \citep{schmidli2014}.
 \end{itemize}
 
-We characterise the ESS of a task description as a function of both in a setting where the Bayes-optimal predictor is exact: in-context linear regression \citep{garg2022,akyurek2023} with a Gaussian prior on the regression weights whose mean and covariance the description specifies. Because a prompt may be used for one prediction or for a sequence of predictions with feedback, we define the ESS through cumulative log-loss regret over a horizon of $N$ predictions \citep{genewein2025} and treat the horizon as a variable.
-
-\paragraph{Contributions.}
+We evaluate the ESS predictively via cumulative log-loss regret over a horizon of $N$ predictions, treating $N$ as a variable to reflect sequential feedback. We outline four core contributions:
 \begin{enumerate}
-  \item A predictive definition of the ESS of a task description, in which the description is matched against in-context examples by cumulative log-loss regret at a horizon $N$ (\S\ref{sec:setting}). Prediction-based ESS was posed as an open problem by \citet{reimherr2021}; in the linear-Gaussian setting ours is exact.
-  \item For reliable descriptions, the ESS is decreasing in the horizon (\S\ref{sec:reliable}). Its limit is the information-matching sample size, a consequence of the redundancy asymptotics of \citet{clarke1990}; its one-step value is larger because the description induces isotropic posterior contraction while $n<d$ examples induce anisotropic contraction, the gap between A- and D-optimal designs \citep{chaloner1995}. Both limits have closed forms in the proportional regime through the $\eta$- and Shannon transforms of the Marchenko--Pastur law \citep{tulino2004}. The ratio increases with dimension and signal-to-noise ratio and reaches $8.5$ on our grid.
-  \item For unreliable descriptions, the regret decomposes into a Gaussian term and a component-identification term (\S\ref{sec:unreliable}). Reliability bounds the one-step ESS attainable from precision; the asymptotic ESS is unbounded in precision, so the horizon ordering reverses for precise, unreliable descriptions. A misspecified reliability costs $\KL(p\,\|\,q)$ nats asymptotically, and the posterior weight on an incorrect description falls below $1/2$ within one to three examples.
-  \item \todo{Meta-trained Transformers: whether their ESS and their effective mixture weight match the Bayes-optimal predictor (\S\ref{sec:networks}). Results pending.}
+    \item We formulate a predictive definition for the ESS of a task description by matching cumulative log-loss regret at a horizon $N$ (an approach posed as an open problem by \citet{reimherr2021}, which is exact in our linear-Gaussian setting).
+    \item We demonstrate that for reliable descriptions, ESS decreases with the horizon. The asymptotic limit is the information-matching sample size \citep{clarke1990}, but the one-step ($N=1$) ESS is strictly larger due to the gap between isotropic and anisotropic contraction (A- vs. D-optimality). We provide closed forms for both limits in the proportional regime. The ratio grows with dimension and signal-to-noise ratio, reaching up to $8.5$ on our grid.
+    \item For unreliable descriptions, cumulative regret decomposes into a Gaussian term and a component-identification term. We show that reliability bounds the one-step ESS, and that the horizon ordering reverses for highly precise but unreliable instructions. Furthermore, misspecifying reliability incurs a penalty of $\text{KL}(p \parallel q)$ nats.
+    \item \todo{Pending results.} We design experiments to test whether small meta-trained Transformers mirror this Bayes-optimal predictor in both ESS and effective mixture weight.
 \end{enumerate}
 
-\section{Related work}
+\section{Related Work}
 
-\paragraph{Bayesian accounts of ICL.} \citet{xie2022} derive ICL as implicit Bayesian inference over a latent concept. In linear regression, Transformers meta-trained on Gaussian tasks track the Bayes-optimal ridge predictor \citep{akyurek2023,raventos2023,panwar2024}; \citet{lu2025} obtain the proportional-limit risk of linear attention by random matrix theory. \citet{jeon2024} decompose the cumulative log loss of ICL by mutual information, and \citet{genewein2025} evaluate small meta-trained networks by cumulative log-loss regret against the Bayes-optimal predictor, the criterion we adopt. None of these expresses a prior on the scale of in-context examples or compares prediction horizons.
+\textbf{Bayesian ICL.} \citet{xie2022} introduced ICL as implicit Bayesian inference over latent concepts. In linear regression, Transformers meta-trained on Gaussian tasks approximate the Bayes-optimal ridge predictor \citep{akyurek2023, raventos2023, panwar2024}, and \citet{lu2025} analyze this via random matrix theory. \citet{jeon2024} and \citet{genewein2025} evaluate models using cumulative log-loss regret. None of these works map priors to an equivalent number of examples or compare varying prediction horizons.
 
-\paragraph{Task descriptions in ICL theory.} \citet{huangge2025} add a task descriptor to in-context linear regression, the mean of the input distribution, and show that linear self-attention uses it to centre the inputs. That descriptor is independent of the regression weights, so a Bayes-optimal predictor assigns it zero ESS; ours specifies the prior on the weights. \citet{lin2025} supply a hypothesis class as a prefix and report gains at a fixed number of examples. \citet{tong2026} show that a single incorrect instruction is overridden at a rate exponential in the number of demonstrations, without a reliability parameter. \citet{lin2024} analyse a Gaussian-mixture task prior, whose posterior is the same conjugate computation as ours, and characterise the early-ascent risk of a misleading component. \citet{zhu2026} meta-train Transformers on a prefix of datasets from related tasks and find Bayes-optimal use of it. Exchange rates between instructions and examples exist empirically for fine-tuning \citep{lescao2021,cook2025} and for distilled many-shot prompts \citep{honda2025}, but not against a Bayes-optimal benchmark.
+\textbf{Instructions in ICL Theory.} \citet{huangge2025} model the task descriptor as the mean of the input distribution, which is independent of the regression weights and so receives zero ESS in our framework; ours specifies the prior on the weights. \citet{lin2025} treat instructions as hypothesis class prefixes. \citet{tong2026} demonstrate how models override single incorrect instructions exponentially fast, but lack a continuous reliability parameter. \citet{lin2024} study a Gaussian-mixture task prior, characterizing early-ascent risk, and \citet{zhu2026} explore meta-training on related tasks. Empirically, exchange rates exist \citep{lescao2021, cook2025, honda2025}, but not against a Bayes-optimal benchmark.
 
-\paragraph{Prior effective sample size.} \citet{morita2008} define the ESS of a parametric prior by matching its curvature to that of a posterior under a vague prior; \citet{reimherr2021} define prior sample size through prior--likelihood discordance and identify a prediction-based measure as open; \citet{neuenschwander2020} require predictive consistency of the expected posterior ESS and treat one-parameter models. \citet{clarke1996} and \citet{lin2007} define an information-theoretic prior sample size by relative entropy to a reference posterior. Robust mixture priors \citep{schmidli2014} and their ESS under prior--data conflict \citep{wiesenfarth2020} arise in clinical trials with historical controls. Closest to our unreliable case, \citet{reznik2026} derive the optimal discounting exponent of a power prior under predictive log loss and show that the borrowable sample size is capped by the discrepancy between historical and current data; their ESS is the exponent times the historical sample size, is horizon-independent, and has no mixture component. Ours is defined by regret matching against in-context examples, is horizon-dependent, and treats a two-component mixture.
+\textbf{Prior Effective Sample Size.} \citet{morita2008} define parametric ESS via curvature matching; \citet{reimherr2021} via prior-likelihood discordance. \citet{neuenschwander2020} require predictive consistency, while \citet{clarke1996} and \citet{lin2007} define an information-theoretic sample size. Our use of robust mixture priors stems from clinical trials \citep{schmidli2014, wiesenfarth2020}. \citet{reznik2026} derive discounting exponents for power priors, but their ESS is horizon-independent. Ours is defined by matching regret against in-context examples, is horizon-dependent, and treats a two-component mixture.
 
-\section{Setting}\label{sec:setting}
+\section{Problem Setting}
 
-\paragraph{Task distribution.} A task is a weight vector $w\in\R^d$. An in-context example is an input $x\sim\mathcal{N}(0,I_d)$ with label $y=w^\top x+\epsilon$, $\epsilon\sim\mathcal{N}(0,\sigma_y^2)$. The base prior is $w\sim\mathcal{N}(0,s_0^2I_d)$. We set $\sigma_y=1$ and write $a_0=s_0^2/\sigma_y^2$ for the prior signal-to-noise ratio.
+\textbf{Task Distribution.} A task is defined by a weight vector $w \in \mathbb{R}^d$. An in-context example is an input $x \sim \mathcal{N}(0, I_d)$ with a label $y = w^\top x + \epsilon$, where $\epsilon \sim \mathcal{N}(0, \sigma_y^2)$. The base prior is $w \sim \mathcal{N}(0, s_0^2 I_d)$. We fix $\sigma_y = 1$ and denote the prior signal-to-noise ratio as $a_0 = s_0^2 / \sigma_y^2$.
 
-\paragraph{Task description.} A description is a vector $m\in\R^d$ together with a variance $s_\ell^2=r\,s_0^2$, $r\in(0,1)$: conditional on the description being correct, $w\sim\mathcal{N}(m,s_\ell^2I_d)$. We call $r$ the \emph{precision ratio}; smaller $r$ is a more precise description, and the informative prior's ESS in the sense of \citet{morita2008} scales as $1/r$. The description is generated hierarchically, $m\sim\mathcal{N}(0,(1-r)s_0^2I_d)$, so that the marginal law of $w$ is the base prior whether or not a description is present; coarse descriptions ($r$ near 1) identify a family of tasks and precise ones nearly identify the task. The description is \emph{reliable} with probability $p$; otherwise it refers to an unrelated task and $w\sim\mathcal{N}(0,s_0^2I_d)$ independently of $m$. The Bayes-optimal prior given a description is therefore the robust mixture $p\,\mathcal{N}(m,s_\ell^2I)+(1-p)\,\mathcal{N}(0,s_0^2I)$ of \citet{schmidli2014}. The description is an idealisation of an instruction as a vector: the learner must weight it, not parse it.
+\textbf{Task Description.} A description provides a vector $m \in \mathbb{R}^d$ alongside a variance $s_\ell^2 = r s_0^2$, where $r \in (0, 1)$ is the \textit{precision ratio}. A smaller $r$ represents a more precise description. The description is generated hierarchically, $m \sim \mathcal{N}(0, (1-r)s_0^2 I_d)$, so that the marginal law of $w$ is the base prior whether or not a description is present; coarse descriptions ($r$ near 1) identify a family of tasks and precise ones nearly identify the task. It is \textit{reliable} with probability $p$. If reliable, $w \sim \mathcal{N}(m, s_\ell^2 I_d)$; if unreliable, $w \sim \mathcal{N}(0, s_0^2 I_d)$. Thus, the Bayes-optimal prior conditioned on a description is the robust mixture $p \mathcal{N}(m, s_\ell^2 I) + (1-p) \mathcal{N}(0, s_0^2 I)$ of \citet{schmidli2014}. The description is an idealisation of an instruction as a vector: the learner must weight it, not parse it.
 
-\paragraph{Sequential prediction and regret.} The predictor outputs a predictive distribution for each of $N$ successive labels, observing each true label before the next prediction (the prequential protocol of \citealp{dawid1984}). Its cumulative regret $R_N$ is its cumulative log loss minus that of the oracle predictor that knows $w$, in nats \citep{genewein2025}. $N=1$ is the one-step (single-query) regret; large $N$ is a session with feedback.
+\textbf{Sequential Prediction and Regret.} The predictor iteratively outputs a predictive distribution for $N$ successive labels \citep{dawid1984}. Each true label is revealed before the next prediction. We evaluate its cumulative log-loss regret $R_N$, in nats, relative to an oracle that knows $w$ exactly \citep{genewein2025}; $N=1$ is the one-step regret.
 
-\begin{definition}[Predictive effective sample size]
-Let $R^{\mathrm{desc}}_N$ be the expected cumulative regret over horizon $N$ of the Bayes-optimal predictor conditioned on the description and no examples, and $R^{\mathrm{ex}}_N(n)$ that of the Bayes-optimal predictor under the base prior conditioned on $n$ examples, expectations taken over tasks, inputs, and labels. The ESS of the description at horizon $N$ is the $n$, interpolated linearly between integers, at which $R^{\mathrm{ex}}_N(n)=R^{\mathrm{desc}}_N$.
+\begin{definition}[Predictive Effective Sample Size]
+Let $R_N^{\text{desc}}$ be the expected cumulative regret over horizon $N$ of the Bayes-optimal predictor conditioned \textit{only} on the description. Let $R_N^{\text{ex}}(n)$ be the expected regret of the Bayes-optimal predictor under the base prior conditioned \textit{only} on $n$ examples. The ESS of the description at horizon $N$ is the value $n$ (interpolated linearly) where $R_N^{\text{ex}}(n) = R_N^{\text{desc}}$.
 \end{definition}
 
-Both predictors are the same Bayes-optimal predictor with different conditioning information, so the ESS is a statement about information, not about a learner. The definition follows \citet{reimherr2021} in matching a prior against observations and differs in matching predictive regret at a horizon rather than a posterior functional.
+Both predictors are the same Bayes-optimal predictor with different conditioning information, so the ESS is a statement about information rather than about a learner.
 
-\section{Reliable descriptions: the ESS depends on the horizon}\label{sec:reliable}
+\section{Reliable Descriptions ($p=1$)}
 
-For $p=1$ the analysis reduces to one function. Under a Gaussian prior with signal-to-noise ratio $a$, the posterior covariance after inputs $X_k\in\R^{k\times d}$ is $\sigma_y^2(I/a+X_k^\top X_k)^{-1}$; it is independent of $m$ and of the labels, and the log-loss regret satisfies the chain rule for mutual information, so with
+Assuming a perfectly reliable description ($p=1$), the posterior covariance after inputs $X_k \in \mathbb{R}^{k \times d}$ is $\sigma_y^2(I/a + X_k^\top X_k)^{-1}$. The log-loss regret satisfies the chain rule for mutual information. Letting
 \begin{equation}
-  G_a(k)=\tfrac12\,\E\log\det\!\big(I+aX_k^\top X_k\big)
+G_a(k) = \frac{1}{2} \mathbb{E} \log \det(I + a X_k^\top X_k),
 \end{equation}
-the regret of the description alone over horizon $N$ is $G_{a_\ell}(N)$, $a_\ell=ra_0$, and the regret after $n$ examples is $G_{a_0}(n+N)-G_{a_0}(n)$.
+the regret of the description alone over horizon $N$ is $G_{a_\ell}(N)$ where $a_\ell = r a_0$, and the regret after $n$ examples is $G_{a_0}(n+N) - G_{a_0}(n)$. Neither depends on $m$ or on the labels, so all expectations are over the inputs alone.
 
-\begin{proposition}[Asymptotic ESS]\label{prop:long}
-As $N\to\infty$, $\ess_N\to n^\star$, where $G_{a_0}(n^\star)=\tfrac{d}{2}\log(1/r)$: the number of examples whose expected information gain about $w$ equals the description's.
+\begin{proposition}[Asymptotic ESS]
+As $N \to \infty$, $\text{ESS}_N \to n^\star$, where $G_{a_0}(n^\star) = \frac{d}{2} \log(1/r)$.
 \end{proposition}
-This follows from the redundancy asymptotics of \citet{clarke1990}: the cumulative log-loss regret of the Bayes predictor equals the mutual information between the labels and $w$, both predictors' regrets grow as $\tfrac d2\log N$, and their difference converges to the difference in the information each conditioned on. In the long run a description is worth exactly the information it carries; this is the information-theoretic prior sample size of \citet{clarke1996} obtained predictively.
+By \citet{clarke1990}, the cumulative regret equals the mutual information between the labels and $w$. In the long run, the description is worth exactly the information it carries.
 
-\begin{proposition}[One-step ESS]\label{prop:single}
-$\ess_1\ge\ess_\infty$, with equality under balanced designs $X^\top X\propto I$, and near-equality in $d=1$.
+\begin{proposition}[One-Step ESS]
+$\text{ESS}_1 \geq \text{ESS}_\infty$, with equality under balanced designs $X^\top X \propto I$, and near-equality for $d=1$.
 \end{proposition}
-The one-step regret is $\tfrac12\E\log(1+x^\top\Sigma x)$ for posterior covariance $\Sigma$ and is governed by $\operatorname{tr}\Sigma$, the A-optimality criterion, whereas the information gain is governed by $\log\det\Sigma$, the D-optimality criterion \citep{chaloner1995}. A description contracts every eigenvalue of the posterior covariance by the factor $r$; $n<d$ random examples contract $n$ eigenvalues almost to zero and leave $d-n$ unchanged. By the arithmetic--geometric mean inequality, isotropic contraction attains the smaller trace at equal log-determinant, so more examples are needed to match the description's one-step regret than its information gain. The inequality is classical; our contribution is its magnitude. At high signal-to-noise ratio and $n<d$, $\ess_1\approx d(1-r)$: a description that removes a fraction $1-r$ of the prior variance is equivalent to that fraction of $d$ examples.
+The one-step regret is governed by the A-optimality criterion ($\operatorname{tr} \Sigma$), while the asymptotic information gain is governed by D-optimality ($\log \det \Sigma$) \citep{chaloner1995}. A description contracts every eigenvalue of the posterior covariance isotropically by a factor of $r$, whereas $n < d$ random examples contract $n$ eigenvalues to near zero and leave $d-n$ unchanged. By the arithmetic--geometric mean inequality, isotropic contraction attains the smaller trace at equal log-determinant, so more examples are needed to match the description's one-step regret than its information gain. The inequality is classical; our contribution is its magnitude. At high SNR and $n < d$, $\text{ESS}_1 \approx d(1-r)$: a description that removes a fraction $1-r$ of the prior variance is equivalent to that fraction of $d$ examples.
 
-\begin{proposition}[Proportional limit]\label{prop:mp}
-As $d,n\to\infty$ with $n/d=\gamma$ and $d\,a_0=\rho$ fixed, $\ess_1/d$ solves $\eta(\gamma)=r$ and $\ess_\infty/d$ solves $\mathcal V(\gamma)=\log(1/r)$, where $\eta$ and $\mathcal V$ are the $\eta$-transform and Shannon transform of the Marchenko--Pastur law \citep[eqs.~2.52, 2.62]{tulino2004}.
+\begin{proposition}[Proportional Limit]
+As $d, n \to \infty$ with $n/d = \gamma$ and $d a_0 = \rho$ fixed, $\text{ESS}_1/d$ solves $\eta(\gamma) = r$ and $\text{ESS}_\infty/d$ solves $\mathcal{V}(\gamma) = \log(1/r)$, where $\eta$ and $\mathcal{V}$ are the $\eta$-transform and Shannon transform of the Marchenko-Pastur law \citep{tulino2004}.
 \end{proposition}
+
 The closed forms agree with simulation to within about 2\% at $d=64$.
 
 \begin{table}[t]
@@ -102,7 +95,7 @@ The closed forms agree with simulation to within about 2\% at $d=64$.
 \label{tab:rq1}
 \begin{tabular}{rrrrr}
 \toprule
-$d$ & $r$ & $\ess_1$ & $\ess_\infty$ & ratio \\
+$d$ & $r$ & $\text{ESS}_1$ & $\text{ESS}_\infty$ & ratio \\
 \midrule
 1 & 0.5 & 0.50 & 0.40 & 1.26 \\
 4 & 0.5 & 1.77 & 0.80 & 2.21 \\
@@ -115,24 +108,28 @@ $d$ & $r$ & $\ess_1$ & $\ess_\infty$ & ratio \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:rq1} reports the grid. The ratio $\ess_1/\ess_\infty$ increases with $d$ and $a_0$ and decreases with precision; over $d\in\{1,\dots,64\}$, $a_0\in\{1,10,100\}$, and $r\in\{0.9,\dots,0.01\}$ it ranges from $1.01$ to $8.5$, the maximum at $d=64$, $a_0=100$, $r=0.9$. In $d=1$ it lies between $1.01$ and $1.35$; under balanced designs it equals $1$. \todo{Figure: $\ess_N/d$ against $N$ for several $d$, with both limits.}
+Table~\ref{tab:rq1} reports part of the grid ($d \in \{1, \dots, 64\}$, $a_0 \in \{1, 10, 100\}$, $r \in \{0.9, \dots, 0.01\}$). The ratio $\text{ESS}_1 / \text{ESS}_\infty$ increases with $d$ and $a_0$ and decreases with precision, ranging from $1.01$ to $8.5$ with the maximum at $d=64, a_0=100, r=0.9$. In $d=1$ it lies between $1.01$ and $1.35$; under balanced designs it equals $1$. 
+\todo{Figure: $\text{ESS}_N/d$ against $N$ for several $d$, with both limits.}
 
-\section{Unreliable descriptions}\label{sec:unreliable}
+\section{Unreliable Descriptions ($p < 1$)}
 
-Let the predictor assume reliability $q$ when the true reliability is $p$; $q=p$ is the calibrated predictor. Its marginal likelihood is $q\,\mathrm{ML}_1+(1-q)\,\mathrm{ML}_0$ in terms of the two Gaussian components, so with $c$ the true component and $\pi_c(k)$ the predictor's posterior weight on it after $k$ observations,
+Let $p$ be the true reliability and $q$ be the predictor's assumed reliability. The cumulative regret over $N$ observations decomposes into two terms:
 \begin{equation}
-  R_N = \E\Big[\tfrac12\textstyle\sum_{k=n+1}^{n+N}\text{information gain of component }c\text{ at step }k\Big] + \E\big[\log\pi_c(n+N)-\log\pi_c(n)\big],
-  \label{eq:split}
+R_N = \mathbb{E} \left[ \tfrac{1}{2} \sum_{k=n+1}^{n+N} \text{info. gain of component } c \text{ at step } k \right] + \mathbb{E} \big[ \log \pi_c(n+N) - \log \pi_c(n) \big],
 \end{equation}
-a Gaussian term as in \S\ref{sec:reliable} plus a component-identification term, the expected increase in the log posterior weight of the true component. As $N\to\infty$ the identification term converges to the cross-entropy $H(p,q)$, so a misspecified reliability costs $\KL(p\,\|\,q)$ nats asymptotically, independently of $d$; this is the redundancy of coding under a wrong prior \citep{cover2006}. We validate equation~\eqref{eq:split} against the joint Gaussian likelihood and the $\KL$ prediction: at $p=0.7$, $q=0.999$, $d=16$, the asymptotic excess regret is $1.46$ nats, as predicted.
+where $c$ is the true mixture component and $\pi_c(k)$ is the posterior weight on it. The first term is standard Gaussian regret, while the second is a component-identification term.
 
-\paragraph{Asymptotic ESS.} Combining the decomposition with Proposition~\ref{prop:long}, the asymptotic ESS of an unreliable description is the number of examples whose information gain is
+\textbf{Asymptotic Cost of Misspecification.} As $N \to \infty$, the identification term converges to the cross-entropy $H(p, q)$. Thus, a misspecified reliability incurs an asymptotic penalty of $\text{KL}(p \parallel q)$ nats, independently of $d$; this is the redundancy of coding under a wrong prior \citep{cover2006}. We validate the decomposition against the joint Gaussian likelihood and the $\text{KL}$ prediction: at $p=0.7$, $q=0.999$, $d=16$, the asymptotic excess regret is $1.46$ nats, as predicted.
+
+\textbf{Asymptotic ESS.} By combining this decomposition with Proposition 1, the asymptotic ESS of an unreliable description solves for the number of examples whose information gain equals:
 \begin{equation}
-  p\,\tfrac d2\log(1/r) - H(p),\label{eq:longmix}
+p \frac{d}{2} \log(1/r) - H(p).
 \end{equation}
-the reliability-weighted information of the description less the entropy of the reliability. \todo{Derivation to be written out; verified numerically at one point ($d=16$, $a_0=10$, $r=0.05$, $p=0.9$: predicted $9.2$, computed $9.22$).} It is unbounded in precision.
+This is unbounded in precision. \todo{Derivation to be written out; verified numerically at one point ($d=16$, $a_0=10$, $r=0.05$, $p=0.9$: predicted $9.2$, computed $9.22$).}
 
-\paragraph{One-step ESS.} With no examples the mixture component cannot be identified, so the predictive distribution is the $p$-mixture of the two components' predictives and the one-step regret has a floor of order $(1-p)$ times the no-description regret. The one-step ESS therefore saturates as $r\to0$.
+\textbf{The Regret Floor and Horizon Reversal.} 
+At $N=1$, with no examples to identify the true component, the predictive distribution is the $p$-mixture of the two components' predictives, and the one-step regret has a floor of order $(1-p)$ times the no-description regret. 
+Consequently, \textbf{reliability bounds the one-step ESS attainable from precision}. For a system where $d=16$ and $a_0=10$, a fiftyfold increase in precision ($r=0.05 \to 0.001$) raises the one-step ESS from $16.9$ to $116.5$ at $p=1$. At $p=0.9$ the same increase raises it only from $14.8$ to $23.1$ (Table~\ref{tab:rq2}), and a reliability of $0.99$ already halves the ESS of the most precise description ($64.2$). The effect is present in all four settings computed ($d \in \{4, 16, 64\}$, $a_0 \in \{10, 100\}$).
 
 \begin{table}[t]
 \centering\small
@@ -150,34 +147,31 @@ $r$ & & $p=1$ & $p=0.9$ & $p=1$ & $p=0.9$ \\
 \end{tabular}
 \end{table}
 
-\paragraph{Reliability bounds the ESS attainable from precision.} In Table~\ref{tab:rq2}, a fiftyfold increase in precision ($r$ from $0.05$ to $0.001$) raises the one-step ESS from $16.9$ to $116.5$ for a reliable description but only from $14.8$ to $23.1$ at $p=0.9$. A reliability of $0.99$ already halves the ESS of the most precise description ($64.2$). The effect is present in all four settings computed ($d\in\{4,16,64\}$, $a_0\in\{10,100\}$).
+Because the asymptotic ESS is unbounded in precision while the one-step ESS saturates, \textbf{the horizon ordering reverses for precise, unreliable descriptions}. For example, at $d=16, a_0=10, p=0.9, r=0.001$, the asymptotic ESS is $49.8$ against a one-step ESS of $23.1$. The reversal occurs in three of the four settings computed and not at $d=16$, $a_0=100$, so it is conditional on the setting. \todo{Derive the boundary from the asymptotic formula and the one-step floor.}
 
-\paragraph{The horizon ordering reverses.} For the precise unreliable description the asymptotic ESS ($49.8$) exceeds the one-step ESS ($23.1$), the reverse of \S\ref{sec:reliable}: sequential feedback identifies the mixture component, after which the predictor exploits the description's full precision, whereas the one-step predictor must average over both components. The reversal occurs in three of the four settings and not at $d=16$, $a_0=100$, so it is conditional on the setting. \todo{Derive the boundary from equation~\eqref{eq:longmix} and the one-step floor.}
+\textbf{Component Identification.} The posterior weight on an incorrect description falls below $1/2$ after a median of one to three examples for precise descriptions ($r \leq 0.05$), at every assumed reliability up to $q = 1 - 10^{-6}$. For coarse descriptions ($r=0.5$), it takes up to 23 examples at $d=64$.
 
-\paragraph{Misspecified reliability.} At $d=16$, $r=0.001$, $p=0.7$, the one-step regret is $1.27$ nats for the calibrated predictor, $1.95$ at $q=0.1$, $1.90$ at $q=0.99$, $2.51$ for the predictor that ignores the description ($q=0$), and $40.5$ at $q=1$. Asymptotically the excess regret follows $\KL(p\,\|\,q)$ and remains below $1.5$ nats for $q\in[0.1,0.999]$. A Bayes-optimal predictor is therefore robust to misspecified reliability except at $q=1$, where the wrong-component likelihood is unbounded.
+\textbf{Misspecified Reliability Example.} At $d=16, r=0.001, p=0.7$, the one-step regret is $1.27$ nats for a calibrated predictor ($q=0.7$). It is $1.95$ nats at $q=0.1$, $1.90$ at $q=0.99$, $2.51$ when the description is ignored ($q=0$), and $40.5$ at $q=1$. Asymptotically the excess regret follows $\text{KL}(p \parallel q)$ and remains below $1.5$ nats for $q \in [0.1, 0.999]$. A Bayes-optimal predictor is therefore robust to misspecified reliability except at $q=1$, where the likelihood under the wrong component is unbounded.
 
-\paragraph{Identification of an incorrect description.} The posterior weight on an incorrect description falls below $1/2$ after a median of one to three examples for $r\le0.05$ at every assumed reliability up to $q=1-10^{-6}$; for coarse descriptions ($r=0.5$) the median reaches $23$ examples at $d=64$. This is an order of magnitude faster than the crossover points reported for language models \citep{camassa2026}, to which we return in \S\ref{sec:discussion}.
-
-\section{Meta-trained Transformers}\label{sec:networks}
+\section{Meta-Trained Transformers}
 
 \todo{Results pending. The design below is fixed except where marked.}
 
-\paragraph{Design.} We meta-train Transformers on prompts sampled from the generative process of \S\ref{sec:setting} and evaluate them against the Bayes-optimal predictor on held-out prompts, following \citet{genewein2025}. The prompt uses the prefix embedding of \citet{huangge2025}: an optional descriptor token carrying $m$, followed by example tokens and a query token, with two indicator coordinates distinguishing the three token types. The model has no positional encoding, so the examples are exchangeable, as they are for the Bayes-optimal predictor. Architecture and optimisation follow \citet{garg2022}: 12 layers, 8 heads, embedding width 256, Adam with learning rate $10^{-4}$, and fresh prompts at every step. \todo{Output and loss (a predictive distribution trained by log loss, as in \citet{genewein2025}, or a point prediction trained by squared error, as in \citet{garg2022}) and the scoring of prompt positions (every query position or the final query only) to be fixed.} The descriptor token carries only $m$; the precision ratio and reliability are fixed per model and never stated, so the network must infer both from the meta-training distribution, as a language model would from pretraining. Setting: $d=5$, $a_0=10$, up to 15 examples, half of the training prompts without a descriptor.
+\textbf{Design.} We meta-train Transformers on prompts sampled from the generative process of Section 3 and evaluate them against the Bayes-optimal predictor on held-out prompts, following \citet{genewein2025}. The prompt uses the prefix embedding of \citet{huangge2025}: an optional descriptor token carrying $m$, followed by up to 15 example tokens and a query token, with two indicator coordinates distinguishing the three token types. The model has no positional encoding, so the examples are exchangeable, as they are for the Bayes-optimal predictor. Architecture and optimisation follow \citet{garg2022}: 12 layers, 8 heads, embedding width 256, Adam with learning rate $10^{-4}$, and fresh prompts at every step. \todo{Output and loss (a predictive distribution trained by log loss, as in \citet{genewein2025}, or a point prediction trained by squared error, as in \citet{garg2022}) and the scoring of prompt positions (every query position or the final query only) to be fixed.} The descriptor token carries only $m$; the precision ratio and reliability are fixed per model and never stated, so the network must infer both from the meta-training distribution, as a language model would from pretraining. We use $d=5$, $a_0=10$, and half of the training prompts carry no descriptor.
 
-\paragraph{Readouts.} For each model we report the regret after $n$ examples with and without a descriptor, the descriptor's ESS, and the \emph{effective reliability}: the $q$ at which the Bayes-optimal predictor's prediction is closest to the network's. The experiments vary one factor at a time: a reliable precise descriptor; the same model evaluated on descriptors with $p=0.9$; a coarse descriptor; seeds; and only then meta-training at $p=0.9$.
+\textbf{Readouts.} For each model we report the regret after $n$ examples with and without a descriptor, the descriptor's ESS, and the \textit{effective reliability}: the $q$ at which the Bayes-optimal predictor's prediction is closest to the network's. The experiments vary one factor at a time: a reliable precise descriptor; the same model evaluated on descriptors with $p=0.9$; a coarse descriptor; seeds; and only then meta-training at $p=0.9$. 
 
-\paragraph{Bayes-optimal targets.} At this setting the ESS of the precise descriptor ($r=0.05$) is $6.7$ and of the coarse descriptor ($r=0.5$) is $2.2$ under log loss ($7.4$ and $2.7$ under squared error); at $p=0.9$ these become $5.0$ and $1.8$ ($4.4$ and $2.1$).
+\textbf{Bayes-Optimal Targets.} We benchmark against the exact Bayes-optimal limits. For this setting, the precise descriptor ($r=0.05$) ESS is $6.7$ under log-loss (7.4 under squared error). For a coarse descriptor ($r=0.5$), it is $2.2$ (2.7 under squared error). At $p=0.9$ these become $5.0$ and $1.8$ ($4.4$ and $2.1$ under squared error). \todo{Table: network versus Bayes-optimal ESS and regret curves, per setting and seed. Figure: regret against $n$.}
 
-\todo{Table: network versus Bayes-optimal ESS and regret curves, per setting and seed. Figure: regret against $n$.}
+\section{Discussion}
 
-\section{Discussion}\label{sec:discussion}
+\textbf{Interpretation.} The ESS of a task description is a dynamic, horizon-dependent quantity. In one-step predictions, precise descriptions are disproportionately powerful because they shrink uncertainty across all dimensions simultaneously. Over longer sessions with feedback, unreliability dictates the value regime: precise but fallible descriptions are heavily discounted in the short term, and recover their full value asymptotically once feedback identifies the correct mixture component. Precision is valuable when the description can be trusted or tested. 
 
-\paragraph{Interpretation.} The ESS of a task description is not a single number. For a one-step prediction, the ordinary use of a prompt, it exceeds the information-matching sample size by a factor that grows with the dimension of the task, because the description contracts the posterior in every direction. Over a session with feedback it equals the information-matching sample size. Unreliability changes which regime values the description more: a precise description that may be incorrect has a small one-step ESS, since the predictor must average over the possibility of error, and a large asymptotic ESS, since feedback identifies whether it is correct. Precision is valuable when the description can be trusted or tested.
+\textbf{Relation to Language Models.} The predictors studied here are Bayes-optimal and the description is a vector; language models are neither. The published record is qualitatively consistent with two of our predictions, a crossover point under conflicting demonstrations \citep{camassa2026, bigelow2025} and lower effective reliability in models whose training corpus made instructions unreliable \citep{gupta2025}, and silent on saturation and on horizon dependence. Two discrepancies are informative: in-context evidence accumulates sublinearly in language models \citep{bigelow2025}, and their crossover points lie at tens of demonstrations where the Bayes-optimal predictor's lie at one to three, so any quantitative correspondence would require a discounted count of examples.
 
-\paragraph{Relation to language models.} The predictors studied here are Bayes-optimal and the description is a vector; language models are neither. The published record is qualitatively consistent with two of our predictions, a crossover point under conflicting demonstrations and lower effective reliability in models whose training corpus made instructions unreliable \citep{gupta2025,camassa2026,bigelow2025}, and silent on saturation and on horizon dependence. Two discrepancies are informative: in-context evidence accumulates sublinearly in language models \citep{bigelow2025}, and their crossover points lie at tens of demonstrations where the Bayes-optimal predictor's lie at one to three, so a quantitative correspondence would require a discounted count of examples. Whether small meta-trained networks match the Bayes-optimal predictor is the question of \S\ref{sec:networks}.
+\textbf{Limitations.} Our formulation treats the description as a continuous vector rather than parsed natural language text, evaluated within the confines of linear regression with Gaussian inputs to ensure the exactness of the Bayes-optimal predictor. The results for unreliable descriptions are exact up to Monte Carlo error, with derivations for the asymptotic ESS and the misspecification cost; the boundary of the horizon reversal is not yet derived. \todo{Network results pending.}
 
-\paragraph{Limitations.} The description is a vector rather than text, so the model must weight it, not parse it. The setting is linear regression with Gaussian inputs, chosen because the Bayes-optimal predictor is exact. The results for unreliable descriptions are computed exactly up to Monte Carlo error, with derivations for the asymptotic ESS and the misspecification cost; the boundary of the horizon reversal is not yet derived. \todo{Network results pending.}
-
-\bibliographystyle{plainnat}
 \bibliography{refs}
+\bibliographystyle{plainnat}
+
 \end{document}
