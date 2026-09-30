@@ -82,30 +82,12 @@ R^{\mathrm{ex}}(n) = \tfrac12\log a_0 + \tfrac12\log 2 + \tfrac12\psi\!\left(\tf
 \qquad
 R^{\mathrm{desc}} = \tfrac12\log (r a_0) + \tfrac12\log 2 + \tfrac12\psi\!\left(\tfrac{d}{2}\right) + o(1),
 \]
-so the high-SNR ESS solves $\psi\big(\tfrac{d-n}{2}\big) - \psi\big(\tfrac d2\big) = \log r$, whose solution is
+so the high-SNR ESS, with $R^{\mathrm{ex}}(n)$ extended to non-integer $n$ through the digamma function, solves $\psi\big(\tfrac{d-n}{2}\big) - \psi\big(\tfrac d2\big) = \log r$. As $rd \to \infty$ its solution is
 \[
 \ess = (d-1)(1-r) + O\!\left(\tfrac{1}{rd}\right).
 \]
 \end{proposition}
-\begin{proof}
-Write $X_n^\top X_n = \sum_{i \le n} \lambda_i u_i u_i^\top$; almost surely all $n$ eigenvalues $\lambda_i$ are positive. Let $P_\perp$ project onto the orthogonal complement of the $u_i$. Then
-\[
-1 + x^\top \Sigma x = a_0 \|P_\perp x\|^2 + T, \qquad T = 1 + \sum_{i \le n} \frac{(u_i^\top x)^2}{1/a_0 + \lambda_i} \le 1 + \sum_{i \le n} \frac{(u_i^\top x)^2}{\lambda_i}.
-\]
-Since $x$ is isotropic and independent of $X_n$, $\|P_\perp x\|^2 \sim \chi^2_{d-n}$ independently of $X_n$. Hence
-\[
-R^{\mathrm{ex}}(n) = \tfrac12 \log a_0 + \tfrac12\E \log \chi^2_{d-n} + \tfrac12 \E \log\!\left(1 + \frac{T}{a_0 \|P_\perp x\|^2}\right).
-\]
-The last term is nonnegative, decreases pointwise to zero as $a_0 \to \infty$, and is finite at any finite $a_0$ because $R^{\mathrm{ex}}(n)$ is, so it is $o(1)$ by monotone convergence. With $\E\log\chi^2_k = \psi(k/2) + \log 2$ this gives the first display. The description has $n = 0$ and $a = r a_0$, so $1 + x^\top\Sigma x = 1 + r a_0 \|x\|^2$ with $\|x\|^2 \sim \chi^2_d$, and the same argument gives the second display.
-
-Equating the two limits and writing $k = d - n$ gives $\psi(k/2) - \psi(d/2) = \log r$. Using $\psi(z) = \log z - \tfrac{1}{2z} + O(z^{-2})$,
-\[
-\log\frac{k}{d} - \frac1k + \frac1d + O(k^{-2}) = \log r
-\quad\Longrightarrow\quad
-k = rd\left(1 + \frac1k - \frac1d + O(k^{-2})\right).
-\]
-For $rd \to \infty$ this forces $k = rd\,(1 + o(1))$, so $rd/k = 1 + O(1/k)$ and $k = rd + 1 - r + O(1/(rd))$. Then $n = d - k = (d-1)(1-r) + O(1/(rd))$.
-\end{proof}
+\emph{Proof sketch.} With $n < d$ examples the posterior variance vanishes along the $n$ observed directions as $a_0 \to \infty$ and stays $a_0$ along the other $d - n$, so the regret is $\tfrac12\E\log(a_0\|x_\perp\|^2)$ with $\|x_\perp\|^2 \sim \chi^2_{d-n}$. A description shrinks all $d$ directions to $r a_0$, giving $\tfrac12\E\log(r a_0 \|x\|^2)$ with $\|x\|^2 \sim \chi^2_d$. Equating the two and expanding the digamma function gives the result. The full proof is in Appendix~\ref{app:precision}.
 
 The error term makes the range of validity precise: the approximation needs $rd \gg 1$, that is, the description must leave many more than one example's worth of variance unexplained, which is the condition $\ess < d$ in the first-order form $\ess \approx d(1-r)$. At $a_0 = 100$ the exact ESS is within $0.1$ of $(d-1)(1-r)$ for $d \in \{16, 64\}$ and $r \in \{0.5, 0.2\}$ (values $7.50$, $12.1$, $31.6$, $50.5$ against $7.5$, $12.0$, $31.5$, $50.4$).
 
@@ -146,19 +128,7 @@ p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0) + H(p),
 \]
 where $H(p)$ is the binary entropy in nats. In particular $R^{\mathrm{desc}}(p, r) \ge (1-p)\,R^{\mathrm{ex}}(0)$ for every $r$, and as $r \to 0$ the regret lies between $(1-p)\,R^{\mathrm{ex}}(0)$ and $(1-p)\,R^{\mathrm{ex}}(0) + H(p)$.
 \end{proposition}
-\begin{proof}
-Let $Z = 1$ if the description is correct and $Z = 0$ otherwise. With no examples nothing updates the weight on $Z$, so the Bayes-optimal predictive is the mixture $q(y) = p\,f_1(y) + (1-p)\,f_0(y)$, where $f_1 = \mathcal{N}(m^\top x,\, 1 + r a_0\|x\|^2)$ is the predictive of the reliable-description learner and $f_0 = \mathcal{N}(0,\, 1 + a_0\|x\|^2)$ is the predictive under the base prior. Write $f^* = \mathcal{N}(w^\top x, 1)$ for the oracle. Conditional on $Z = 1$, $f_1$ is the true conditional density of $y$ given $(x, m)$ and its regret is $R^{\mathrm{desc}}_{p=1}(r)$; conditional on $Z = 0$, $f_0$ is the true conditional density and its regret is $R^{\mathrm{ex}}(0)$.
-
-\emph{Lower bound.} Given $(x, m, Z)$, the expected log loss of $q$ exceeds that of the true conditional density $f_Z$ by $\mathrm{KL}(f_Z \,\|\, q) \ge 0$. Taking expectations over $Z$,
-\begin{align*}
-R^{\mathrm{desc}}(p, r) = \E[\log f^* - \log q] &\ge p\,\E[\log f^* - \log f_1 \mid Z = 1] + (1-p)\,\E[\log f^* - \log f_0 \mid Z = 0] \\
-&= p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0).
-\end{align*}
-
-\emph{Upper bound.} Pointwise $q \ge p f_1$ and $q \ge (1-p) f_0$, so $-\log q \le -\log f_1 + \log(1/p)$ on $Z = 1$ and $-\log q \le -\log f_0 + \log(1/(1-p))$ on $Z = 0$. Taking expectations and weighting by $p$ and $1-p$ adds $p\log(1/p) + (1-p)\log(1/(1-p)) = H(p)$ to the lower bound.
-
-Finally $R^{\mathrm{desc}}_{p=1}(r) = \tfrac12\E\log(1 + r a_0\|x\|^2) \ge 0$ gives the weaker floor, and it tends to $0$ as $r \to 0$ by monotone convergence, which gives the limits.
-\end{proof}
+\emph{Proof sketch.} With no examples the predictive is the $p$-mixture of the two components' predictives. A predictor told which component is true has regret $p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0)$, and the mixture cannot beat it; that is the lower bound. The mixture density is at least $p$ times the correct component and $1-p$ times the base predictive, so the mixture loses at most $\log(1/p)$ or $\log(1/(1-p))$ against the told predictor, which averages to $H(p)$; that is the upper bound. The full proof is in Appendix~\ref{app:floor}.
 
 The gap between the two bounds is the cost of not knowing whether the description is correct, and it is at most $H(p)$ however precise the description. For $d=16$ and $a_0=10$, $R^{\mathrm{ex}}(0) = 2.51$ nats and $R^{\mathrm{desc}}_{p=1}(0.001) = 0.07$; at $p=0.9$ the two bounds are $0.32$ and $0.64$, and the computed regret at $r=0.001$ is $0.57$.
 
@@ -206,4 +176,42 @@ Our theoretical claims are restricted to Bayes-optimal predictors and small-scal
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
+
+\appendix
+\section{Proof of Proposition~\ref{prop:precision}}\label{app:precision}
+\begin{proof}
+Write $X_n^\top X_n = \sum_{i \le n} \lambda_i u_i u_i^\top$; almost surely all $n$ eigenvalues $\lambda_i$ are positive. Let $P_\perp$ project onto the orthogonal complement of the $u_i$. Then
+\[
+1 + x^\top \Sigma x = a_0 \|P_\perp x\|^2 + T, \qquad T = 1 + \sum_{i \le n} \frac{(u_i^\top x)^2}{1/a_0 + \lambda_i}.
+\]
+Since $x$ is isotropic and independent of $X_n$, $\|P_\perp x\|^2 \sim \chi^2_{d-n}$ independently of $X_n$. Hence
+\[
+R^{\mathrm{ex}}(n) = \tfrac12 \log a_0 + \tfrac12\E \log \chi^2_{d-n} + \tfrac12 \E \log\!\left(1 + \frac{T}{a_0 \|P_\perp x\|^2}\right).
+\]
+The last term is nonnegative. Its argument $T / a_0 = 1/a_0 + \sum_{i \le n} (u_i^\top x)^2 / (1 + a_0 \lambda_i)$ decreases pointwise to zero as $a_0 \to \infty$, and the term is finite at any finite $a_0$ because $R^{\mathrm{ex}}(n)$ is, so it is $o(1)$ by monotone convergence. With $\E\log\chi^2_k = \psi(k/2) + \log 2$ this gives the first display. The description has $n = 0$ and $a = r a_0$, so $1 + x^\top\Sigma x = 1 + r a_0 \|x\|^2$ with $\|x\|^2 \sim \chi^2_d$, and the same argument gives the second display.
+
+Equating the two limits, with $\psi((d-n)/2)$ as the extension of $R^{\mathrm{ex}}(n)$ to non-integer $n$, and writing $k = d - n$ gives $\psi(k/2) - \psi(d/2) = \log r$, which has a unique root in $(0, d)$ since $\psi$ is increasing and $\log r < 0$. Using $\psi(z) = \log z - \tfrac{1}{2z} + O(z^{-2})$,
+\[
+\log\frac{k}{d} - \frac1k + \frac1d + O(k^{-2}) = \log r
+\quad\Longrightarrow\quad
+k = rd\left(1 + \frac1k - \frac1d + O(k^{-2})\right).
+\]
+As $rd \to \infty$, $\psi(k/2) = \psi(d/2) + \log r \to \infty$ forces $k \to \infty$ and then $k = rd\,(1 + o(1))$, so $rd/k = 1 + O(1/k)$ and $k = rd + 1 - r + O(1/(rd))$. Then $n = d - k = (d-1)(1-r) + O(1/(rd))$.
+\end{proof}
+
+\section{Proof of Proposition~\ref{prop:floor}}\label{app:floor}
+\begin{proof}
+Let $Z = 1$ if the description is correct and $Z = 0$ otherwise. With no examples nothing updates the weight on $Z$, so the Bayes-optimal predictive is the mixture $q(y) = p\,f_1(y) + (1-p)\,f_0(y)$, where $f_1 = \mathcal{N}(m^\top x,\, 1 + r a_0\|x\|^2)$ is the predictive of the reliable-description learner and $f_0 = \mathcal{N}(0,\, 1 + a_0\|x\|^2)$ is the predictive under the base prior. Write $f^* = \mathcal{N}(w^\top x, 1)$ for the oracle. Conditional on $Z = 1$, $f_1$ is the true conditional density of $y$ given $(x, m)$ and its regret is $R^{\mathrm{desc}}_{p=1}(r)$; conditional on $Z = 0$, $f_0$ is the true conditional density and its regret is $R^{\mathrm{ex}}(0)$.
+
+\emph{Lower bound.} Given $(x, m, Z)$, the expected log loss of $q$ exceeds that of the true conditional density $f_Z$ by $\mathrm{KL}(f_Z \,\|\, q) \ge 0$. Taking expectations over $Z$,
+\begin{align*}
+R^{\mathrm{desc}}(p, r) = \E[\log f^* - \log q] &\ge p\,\E[\log f^* - \log f_1 \mid Z = 1] + (1-p)\,\E[\log f^* - \log f_0 \mid Z = 0] \\
+&= p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0).
+\end{align*}
+
+\emph{Upper bound.} Pointwise $q \ge p f_1$ and $q \ge (1-p) f_0$, so $-\log q \le -\log f_1 + \log(1/p)$ on $Z = 1$ and $-\log q \le -\log f_0 + \log(1/(1-p))$ on $Z = 0$. Taking expectations and weighting by $p$ and $1-p$ adds $p\log(1/p) + (1-p)\log(1/(1-p)) = H(p)$ to the lower bound.
+
+Finally $R^{\mathrm{desc}}_{p=1}(r) = \tfrac12\E\log(1 + r a_0\|x\|^2) \ge 0$ gives the weaker floor, and it tends to $0$ as $r \to 0$ by monotone convergence, which gives the limits.
+\end{proof}
+
 \end{document}
