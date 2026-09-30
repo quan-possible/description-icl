@@ -33,7 +33,9 @@ learner and then for meta-trained networks.
   then whether small meta-trained Transformers reproduce it. Horizon
   dependence, the dimension sweep, mis-set trust, and tipping points are
   out of the paper and kept in [docs/wiki/](docs/wiki/README.md).
-- Sections 3 to 5 are done. Proposition 1 ($\ess = (d-1)(1-r) + O(1/(rd))$
+- Sections 3 to 5 are done. Full proofs are in Appendices A and B with
+  sketches in the main text; `tests/test_propositions.py` checks both
+  numerically and an independent referee pass found no defect. Proposition 1 ($\ess = (d-1)(1-r) + O(1/(rd))$
   at high SNR) and Proposition 2 (the two-sided reliability bound) are
   written out with proofs (2026-09-30). Every number in Tables 1 and 2
   regenerates from `results/rq1-single-query-gap/ess.csv` and
