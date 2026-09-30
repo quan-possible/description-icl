@@ -39,9 +39,10 @@ learner and then for meta-trained networks.
   [results/rq3-meta-trained/](results/rq3-meta-trained/README.md). The
   pipeline runs end to end; no model is trained yet. The earlier pilot
   checkpoint in `tmp/rq3/` uses the old prompt layout and cannot be loaded.
-- A paper draft exists at [docs/paper/paper.tex](docs/paper/paper.tex) with
-  everything computed so far; network results and the reversal boundary are
-  marked as pending.
+- The paper draft at [docs/paper/paper.tex](docs/paper/paper.tex) is the
+  simplest version: one prediction per prompt, precision, reliability, and
+  the network experiment, with pending parts marked. Everything cut from it
+  is listed in [docs/notes/deferred.md](docs/notes/deferred.md).
 - The novelty, robustness, and venue evidence, with the design decisions, is
   in [docs/notes/2026-09-29-neurips-assessment.md](docs/notes/2026-09-29-neurips-assessment.md).
 - A NeurIPS 2027 campaign job is open at
@@ -94,7 +95,8 @@ learner and then for meta-trained networks.
 
 ## Next actions
 
-1. Derive the boundary of the horizon reversal.
+1. Write out the two short derivations in the paper: $\ess \approx d(1-r)$
+   and the reliability floor $(1-p)R^{\mathrm{ex}}(0) + H(p)$.
 2. Finish the RQ3 stage-1 pilot, then train the 12 models in stages
    (reliable descriptions first, then $p = 0.9$), and evaluate stage-2
    models at test reliabilities different from training.
