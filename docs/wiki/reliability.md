@@ -4,29 +4,35 @@
 needs a write-up. In the paper.
 
 **Result.** With no examples the Bayes-optimal predictive is the $p$-mixture
-of the two components' predictives. As $r \to 0$ its one-step regret tends to
+of the two components' predictives. Its one-step regret satisfies, for every
+$r$,
 
-$$(1-p)\,R^{\mathrm{ex}}(0) + H(p),$$
+$$R \ge (1-p)\,R^{\mathrm{ex}}(0),$$
 
-where $R^{\mathrm{ex}}(0)$ is the regret with neither description nor
-examples and $H$ is the binary entropy. So the ESS of an unreliable
-description saturates in precision at the $n$ where $R^{\mathrm{ex}}(n)$
-reaches the floor.
+and as $r \to 0$ it lies between that bound and
+$(1-p)\,R^{\mathrm{ex}}(0) + H(p)$. So the ESS of an unreliable description
+is capped at the $n$ where $R^{\mathrm{ex}}(n)$ reaches the lower bound,
+however precise the description.
 
-**Why.** As $r \to 0$ the components separate. Correct description: the
-mixture gives the label $p$ times the oracle's density, cost $\log(1/p)$.
-Wrong description: it gives $(1-p)$ times the base predictive's density,
-cost $R^{\mathrm{ex}}(0) + \log(1/(1-p))$. Weight by $p$ and $1 - p$.
+**Why.** Lower bound: a predictor told which component is true has regret
+$p R^{\mathrm{desc}}_{p=1} + (1-p) R^{\mathrm{ex}}(0)$, and conditioning on
+more information cannot raise a Bayes-optimal predictor's expected log loss.
+Upper limit: the mixture density is at least each weighted component, so a
+correct description costs at most $\log(1/p)$ as $r \to 0$ and a wrong one
+at most $R^{\mathrm{ex}}(0) + \log(1/(1-p))$; weighting gives
+$(1-p) R^{\mathrm{ex}}(0) + H(p)$.
 
-**Check** ($d = 16$, $a_0 = 10$, $R^{\mathrm{ex}}(0) = 2.51$ nats):
+**Check** ($d = 16$, $a_0 = 10$, $R^{\mathrm{ex}}(0) = 2.51$ nats, computed at
+$r = 0.001$):
 
-| $p$ | Formula | Computed at $r = 0.001$ |
-| --- | --- | --- |
-| 0.9 | 0.58 | 0.57 |
-| 0.7 | 1.36 | 1.27 |
-| 0.5 | 1.95 | 1.80 |
+| $p$ | Lower bound | Upper limit | Computed |
+| --- | --- | --- | --- |
+| 0.9 | 0.25 | 0.58 | 0.57 |
+| 0.7 | 0.75 | 1.36 | 1.27 |
+| 0.5 | 1.26 | 1.95 | 1.80 |
 
-The limit is approached from above as $r \to 0$.
+The earlier statement that the regret "tends to" the upper expression from
+above was wrong: the computed values sit just below it.
 
 **Numbers** (one-step ESS, $d = 16$, $a_0 = 10$, calibrated predictor, from
 `results/rq2-reliability/ess_map.csv`):
