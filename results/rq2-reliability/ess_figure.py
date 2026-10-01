@@ -1,5 +1,5 @@
 """ess.pdf, the paper's figure of the ESS of a description against its
-precision, with n = 0, 1, 10, 100 examples in hand, one panel per
+precision, with n = 0, 1, 10, 100 demonstrations in hand, one panel per
 reliability p = 1, 0.99, 0.9; d = 16, a0 = 10, a dense log-spaced grid of r,
 one seed of 8,000 prompts. The dotted line is the limit of the n = 0 ESS as
 r -> 0, where the identification term is all of H(p); in ess_curve.csv the
@@ -60,7 +60,7 @@ for ax, p in zip(axes, PS):
     ax.text(0.04, 0.95, f"$p = {p:g}$", transform=ax.transAxes, va="top")
     ax.grid(True, axis="y", color=fs.MUTED, lw=0.5)
 for ax in axes:
-    ax.set_ylabel("ESS (examples)")
+    ax.set_ylabel("ESS (demonstrations)")
 fs.panel_labels(axes)
 fig.legend(*axes[0].get_legend_handles_labels(), loc="outside lower center", ncol=4, frameon=False)
 fs.save(fig, str(here / "ess"))
