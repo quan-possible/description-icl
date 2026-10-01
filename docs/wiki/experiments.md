@@ -236,8 +236,8 @@ network reaching the exact learner's regret.
 
 | Factor | Values | Count | Reason for the values |
 | --- | --- | --- | --- |
-| Precision $r$ | 0.5, 0.05 | 2 | A coarse description that removes half the prior variance, and a precise one that removes 95% |
-| Reliability $p$ | 1 (stage 1), 0.9 (stage 2) | 2 | The reliable case, and one level at which the description is usually right |
+| Precision $r$ | 0.5, 0.05 | 2 | A coarse description that pins each weight to 71% of its typical size (worth about $d/2$ alone) and a precise one that pins it to 22% (worth more than $d$ alone, past where the $d(1-r)$ rule holds) |
+| Reliability $p$ | 1 (stage 1), 0.9 (stage 2) | 2 | The reliable case, and the 10% vague weight of Schmidli et al.'s robust-prior example (RBesT's default is 20%); on the RQ2 grid, where the cap is visible but not extreme |
 | Seed | 0 | 1 | One model per configuration (decision 20) |
 | Setting | $d = 5$, $a_0 = 10$, $K = 16$ | 1 | $d$ from Huang & Ge; $K$ covers the largest ESS, 7.4, twice over |
 | Prompts with a description | Half | | Equal practice with and without |
