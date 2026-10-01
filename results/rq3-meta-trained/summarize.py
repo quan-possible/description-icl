@@ -2,7 +2,7 @@
 the body of the paper's network table: the ESS of the network, of the exact
 learner with the network's training reliability (the predictor the network
 was trained toward), and of the calibrated exact learner (targets.csv), plus
-the mean gap in regret (nats) over n = 0..15 with and without a description.
+the mean gap in regret (nats) over n = 0..20 with and without a description.
 
     uv run python results/rq3-meta-trained/summarize.py
 """
@@ -12,8 +12,8 @@ import pathlib
 
 here = pathlib.Path(__file__).parent
 targets = {(x["r"], x["p"]): x["ess"] for x in csv.DictReader((here / "targets.csv").open()) if x["ess"]}
-ORDER = ["p1.0_r0.05_d5_s0", "p1.0_r0.5_d5_s0", "p0.9_r0.05_d5_s0", "p0.9_r0.5_d5_s0",
-         "p1.0_r0.05_d5_s0_ptest0.9", "p1.0_r0.5_d5_s0_ptest0.9"]
+ORDER = ["p1.0_r0.01_d5_s0", "p1.0_r0.1_d5_s0", "p0.9_r0.01_d5_s0", "p0.9_r0.1_d5_s0",
+         "p1.0_r0.01_d5_s0_ptest0.9", "p1.0_r0.1_d5_s0_ptest0.9"]
 rows = []
 for stem in ORDER:
     f = here / f"{stem}_ess.csv"
@@ -21,7 +21,8 @@ for stem in ORDER:
         continue
     e = next(csv.DictReader(f.open()))
     reg = list(csv.DictReader((here / f"{stem}_regret.csv").open()))
-    gap = {d: sum(float(x["net"]) - float(x["bayes"]) for x in reg if x["desc"] == d) / 16 for d in ("1", "0")}
+    K = len(reg) // 2
+    gap = {d: sum(float(x["net"]) - float(x["bayes"]) for x in reg if x["desc"] == d) / K for d in ("1", "0")}
     rows.append(dict(model=stem, r=e["r"], p_train=e["p_train"], p_test=e["p_test"],
                      net_ess=float(e["net_ess"]), trained_ess=float(e["bayes_ess"]),
                      calibrated_ess=float(targets[(e["r"], e["p_test"])]),

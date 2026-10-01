@@ -15,8 +15,8 @@ import numpy as np
 import orx_figstyle as fs
 
 here = pathlib.Path(__file__).parent
-MODELS = [("p1.0_r0.05_d5_s0", "$r = 0.05$, $p = 1$"), ("p1.0_r0.5_d5_s0", "$r = 0.5$, $p = 1$"),
-          ("p0.9_r0.05_d5_s0", "$r = 0.05$, $p = 0.9$"), ("p0.9_r0.5_d5_s0", "$r = 0.5$, $p = 0.9$")]
+MODELS = [("p1.0_r0.01_d5_s0", "$r = 0.01$, $p = 1$"), ("p1.0_r0.1_d5_s0", "$r = 0.1$, $p = 1$"),
+          ("p0.9_r0.01_d5_s0", "$r = 0.01$, $p = 0.9$"), ("p0.9_r0.1_d5_s0", "$r = 0.1$, $p = 0.9$")]
 COLOR = {"1": fs.PALETTE["blue"], "0": fs.PALETTE["orange"]}
 NAME = {"1": "with description", "0": "without"}
 
@@ -41,7 +41,7 @@ for ax, (model, label) in zip(axes.flat, MODELS):
 fs.panel_labels(axes.flat)
 for ax in axes[1]:
     ax.set_xlabel("examples in the prompt, $n$")
-    ax.set_xticks([0, 5, 10, 15])
+    ax.set_xticks([0, 5, 10, 15, 20])
 for ax in axes[:, 0]:
     ax.set_ylabel("regret (nats)")
 from matplotlib.lines import Line2D

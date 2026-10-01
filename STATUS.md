@@ -1,6 +1,6 @@
 # STATUS
 
-Last updated: 2026-10-01 (early morning)
+Last updated: 2026-10-01 (morning)
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Clear Sans, Noto Sans, Helvetica Neue, Arial, Noto Sans CJK JP, sans-serif","fontSize":"16px","primaryTextColor":"#171717","lineColor":"#a8a8a8","mainBkg":"#ffffff","clusterBkg":"#ffffff","clusterBorder":"#ffffff","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"curve":"linear"}}}%%
@@ -66,20 +66,15 @@ learner and then for meta-trained networks.
   worth-against-$n$ figure is gone. The abstract and contributions lead
   with the reliability result; Tables 1 and 2 moved to Appendix A
   (Bruce, 2026-10-01).
-- Section 6 (networks) describes the four trained models that exist (one
-  per setting, 40k steps, log loss, Colab L4, 2026-09-30) at the old grid
-  ($r \in \{0.5, 0.05\}$, prompts to 15 examples); its scripts, table, and
-  figure are consistent with them (restored 2026-10-01). Decision 23 moves
-  the models to $r \in \{0.1, 0.01\}$ with prompts to 20 examples
-  (`one_model.sh` is ready); when retrained, switch the model names in
-  `figure.py` and `summarize.py`, rerun `targets.py` with K = 21, and
-  rewrite the prose. Exact $d = 5$ targets for the new grid are in
-  `results/rq3-meta-trained/targets.csv`: ESS 5.2/4.3 at $r = 0.1$ and
-  15.6/6.9 at $r = 0.01$ for $p = 1$/$0.9$; the unreliable $r = 0.01$
-  description rises from 6.7 to 10.6 over $n = 0$ to 20. Three reproduce the
-  exact learner's ESS within 0.1 examples; the precise unreliable model
-  gives 3.9 against 5.0 with implied trust 0.85, unchanged after 80k steps,
-  so it is under-trust on one seed, reported as an observation.
+- Section 6 (networks) is done from the four models of decision 23 (one
+  training run each, 40k steps, prompts to 20 examples, Colab L4,
+  2026-10-01). Reliable descriptions are reproduced (14.7 vs 15.4 at
+  $r = 0.01$; 5.24 vs 5.28 at $r = 0.1$); unreliable ones are under-valued
+  alone at both precisions (4.3 vs 6.8; 3.6 vs 4.2; implied trust 0.85),
+  converging as examples arrive. Transfer: the precise reliable-trained
+  model is hurt by a description on $p = 0.9$ prompts (ESS 0 vs 6.9); the
+  coarse one keeps 2.3 of 4.3. Table 1 and Figure 3 regenerate from
+  `summarize.py` and `figure.py`; `targets.py` is on the new grid.
 - Proposition 3 (2026-09-30, Bruce's point): the reliability floor with
   $n$ examples in hand is $(1-p)R^{\mathrm{ex}}(n)$ plus an identification
   term that starts at $H(p)$ and never rises, so a precise unreliable
@@ -152,17 +147,10 @@ learner and then for meta-trained networks.
 
 ## Next actions
 
-1. On Bruce's explicit go only (he stopped a relaunch on 2026-10-01 at
-   00:45: "no Colab yet"): train the four networks on Colab (three L4 VMs,
-   `one_model.sh` with `(1.0 0.1, 0.9 0.1)`, `(1.0 0.01)`, `(0.9 0.01)`,
-   about 80 minutes), with each `detached.py` heartbeat runner inside
-   `tmux`. Three such jobs were lost on 2026-09-30 when the conversation
-   restarted with the runners in its foreground shell.
-2. Rewrite Section 6 from the new models: `summarize.py`, `figure.py`,
-   then the Results and Transfer paragraphs. The old worth-against-$n$
-   figure is gone (Figure 2 carries $n$); decide then whether a network
-   worth panel adds anything beyond Table 3 and the regret curves.
-3. Affiliation; final read of the compiled PDF.
+1. Affiliation; final read of the compiled PDF.
+2. Campaign close-out under `autonomous-research`: no further research
+   move recommended; the under-trust rests on one run per setting at two
+   settings and is reported as an observation.
 
 Decided 2026-09-30 (Bruce: add only what is necessary): no three-regime
 ESS table, since the abstract, Proposition 3, and the limitations already
@@ -171,7 +159,8 @@ a one-model observation, not a finding.
 
 ## Risks and blockers
 
-- The under-trust of the precise unreliable network rests on one seed.
+- The under-trust of the networks trained at $p = 0.9$ rests on one run
+  per setting, at two precisions (and an earlier third at $r = 0.05$).
 - The novelty check (2026-09-30, second pass): no 2025 to 2026 paper prices a
   description in examples; Zhu, Oermann & Cho 2026 and Reznik 2026 are cited
   with their scope. Schmidli et al. 2014 could not be read in full; the

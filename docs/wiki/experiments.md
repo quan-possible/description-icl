@@ -328,7 +328,7 @@ question. Elements that are neither are listed under Departures.
 | 20 | One seed per configuration. Supersedes three seeds. | 2026-09-30 | Bruce. Compute; each model is compared with the exact learner on 20,000 prompts, so the comparison itself has small error. |
 | 21 | Grids are powers of ten: precision $r \in \{0.1, 0.01, 0.001\}$ (a description worth 1, 10, 100 examples in the long run at $a_0 = 10$), reliability $p \in \{1, 0.99, 0.9\}$ (wrong never, one time in 100, one time in 10). Supersedes the five-value grids of section 5. | 2026-09-30 | Bruce: pick the ends that matter, a factor of 10 apart, instead of many nearby values. |
 | 22 | Examples in hand are reported at $n \in \{0, 1, 10, 100\}$: alone, after identification, below the dimension, verified. | 2026-10-01 | Bruce. Each value is a different regime of Proposition 3. |
-| 23 | Networks: prompts hold up to $20 = 4d$ examples and the models cover $r \in \{0.1, 0.01\}$. Supersedes decision 10's 15 examples and the $r \in \{0.5, 0.05\}$ models. | 2026-09-30 | Decision 21. A description worth 100 examples has no crossing within a 20-example prompt at $d = 5$, so the networks take the two ends they can resolve; 20 examples cover the $r = 0.01$ reliable ESS of 15.6. |
+| 23 | Networks: prompts hold up to $20 = 4d$ examples and the models cover $r \in \{0.1, 0.01\}$. Supersedes decision 10's 15 examples and the $r \in \{0.5, 0.05\}$ models. Executed 2026-10-01. | 2026-09-30 | Decision 21. A description worth 100 examples has no crossing within a 20-example prompt at $d = 5$, so the networks take the two ends they can resolve; 20 examples cover the $r = 0.01$ reliable ESS of 15.6. |
 
 ## Open questions
 
