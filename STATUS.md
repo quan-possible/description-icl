@@ -11,7 +11,7 @@ flowchart TD
     classDef edgeGreen stroke:#8a9f7a,color:#8a9f7a,stroke-width:2px
     classDef edgeBlue stroke:#7f9fc4,color:#7f9fc4,stroke-width:2px
 
-    done["Full draft reviewed:<br/>three propositions, four networks"] e1@--> gap["Two scope calls open<br/>(worth table, seeds)"] e2@--> next["Bruce decides,<br/>then final pass"]
+    done["Full draft reviewed:<br/>three propositions, four networks"] e1@--> gap["Affiliation and a final<br/>read of the PDF"] e2@--> next["Submission-ready draft"]
 
     class done green
     class gap pink
@@ -117,13 +117,12 @@ learner and then for meta-trained networks.
 
 ## Next actions
 
-1. Bruce decides two scope items raised by the full-draft review
-   (2026-09-30): a table of ESS alone, with $d$ examples in hand, and in
-   the long-horizon limit, making "worth alone versus worth once examples
-   are in hand" the stated message; and two to four more seeds of the
-   $r = 0.05$, $p = 0.9$ network so the under-trust observation can become
-   a finding (or be dropped).
-2. Affiliation; final read of the compiled PDF.
+1. Affiliation; final read of the compiled PDF.
+
+Decided 2026-09-30 (Bruce: add only what is necessary): no three-regime
+ESS table, since the abstract, Proposition 3, and the limitations already
+carry the point; no extra seeds, since the under-trust row is reported as
+a one-model observation, not a finding.
 
 ## Risks and blockers
 
