@@ -111,18 +111,32 @@ half the expected log of the predictive variance left over, in units of the nois
 
 <div id="prop:precision" class="proposition">
 
-**Proposition 1** (ESS of a reliable description; informal). Let $`p = 1`$ and let $`c = 1/(r a_0) = \sigma_y^2/s_\ell^2`$ be the ESS of the description’s prior in the conjugate sense, noise variance over prior variance (Neuenschwander et al. 2020). Then
-``` math
-\begin{equation}
-\label{eq:additive}
-\mathrm{ESS}\;\approx\; (d-1)(1-r) + c,
-\end{equation}
-```
-within about two examples on the grid of this paper. The first term is the share of the $`d`$ directions of $`w`$ that the description pins down; the second, which we call the conjugate-prior ESS, is its prior’s own sample size, and it is all that remains once examples are plentiful: $`\mathrm{ESS}_n \to c`$ (§[5](#sec:reliability)). Appendix [B](#app:precision) states the result in its coarse and precise regimes with error terms, and the bound $`\mathrm{ESS}\le c + d + 2`$ that holds everywhere.
+**Proposition 1** (ESS of a reliable description). *Let $`p = 1`$ and $`c = 1/(r a_0) = \sigma_y^2/s_\ell^2`$, where $`s_\ell^2 = r s_0^2`$. Then:*
+
+1.  *(coarse descriptions)* if $`c \le 1`$, then as $`rd \to \infty`$, uniformly in $`c \le 1`$,
+    ``` math
+    \mathrm{ESS}= (d-1)(1-r) + (1-r)\,c + O\big(1/(rd)\big);
+    ```
+
+2.  *(precise descriptions)* if $`c \ge d`$, then as $`c/d \to \infty`$, uniformly in $`a_0 \ge 1`$,
+    ``` math
+    \mathrm{ESS}= c + d + 1 - 1/a_0 + O(d/c);
+    ```
+
+3.  *for every $`d`$, $`a_0`$, and $`r`$, $`\mathrm{ESS}\le c + d + 2`$.*
 
 </div>
 
-*Proof idea.* A description shrinks the prior variance by the factor $`r`$ in all $`d`$ directions. Examples remove variance differently. At high SNR each of the first $`d`$ examples removes the variance along the one direction it probes, so $`n < d`$ examples leave $`d - n`$ directions untouched; matching that leftover to the description’s gives $`d - n \approx rd`$, the first term. Once every direction has been probed, examples and the description compete on variance alone, and there the description’s prior counts for $`c`$ examples. The two contributions add.
+*Proof idea.* A description shrinks the prior variance by the factor $`r`$ in all $`d`$ directions. Examples remove variance differently. At high SNR each of the first $`d`$ examples removes the variance along the one direction it probes, so $`n < d`$ examples leave $`d - n`$ directions untouched; matching that leftover to the description’s gives $`d - n \approx rd`$, the high-SNR term $`(d-1)(1-r)`$. Once $`n \ge d`$ every direction has been probed and the leftover decays like $`d/(n - d - 1)`$; matching it to the description’s $`d/c`$ gives $`n \approx c + d + 1`$. The base prior has conjugate-prior ESS $`1/a_0`$ of its own, which both sides share; it is the $`-1/a_0`$ in (ii) and, through $`(1-r)c = c - 1/a_0`$, the correction in (i).
+
+The constant $`c = \sigma_y^2/s_\ell^2`$ is the ESS of the description’s own prior $`\mathcal{N}(m, s_\ell^2 I_d)`$ in the conjugate sense, noise variance over prior variance (Neuenschwander et al. 2020), and §[5](#sec:reliability) shows it is also the limit of $`\mathrm{ESS}_n`$ as $`n \to \infty`$; we call it the conjugate-prior ESS. Both regimes say the same thing: the ESS of a reliable description is its high-SNR term plus its conjugate-prior ESS,
+``` math
+\begin{equation}
+\label{eq:additive}
+\mathrm{ESS}\approx (d-1)(1-r) + \frac{1}{r a_0},
+\end{equation}
+```
+within about two examples: on the grid of Table [2](#tab:precision) (Appendix [A](#app:tables)) the rule is within $`2.2`$ examples of the exact ESS in every cell with $`a_0 \ge 10`$. The regimes meet at $`c = 1`$, where the description pins $`w`$ down as tightly as one label’s noise does, and the ESS passes $`d`$ near $`c = d`$. Appendix [B](#app:precision) gives the regret expansions behind (i) and (ii) and the constants in each regime.
 
 In words, a description that removes nine tenths of the prior variance is worth nine tenths of the dimension plus one example, $`14.9`$ examples at $`d = 16`$ and $`57.7`$ at $`d = 64`$; one that leaves a thousandth of the variance is worth its conjugate-prior ESS of $`100`$ plus $`d + 1`$, or $`117`$ examples at $`d = 16`$. Figure [2](#fig:ess)(a) traces the full curve at $`d = 16`$.
 
@@ -257,7 +271,7 @@ Tables [2](#tab:precision) and [3](#tab:reliability) give the exact one-step E
 
 ## B Proof of Proposition [1](#prop:precision)
 
-Proposition [1](#prop:precision) summarises the following statement, which gives the two regimes, their error terms, and the regret expansions behind them.
+We prove Proposition [1](#prop:precision) in the following fuller form, which adds the regret expansions behind (i) and (ii); its final sentence is (iii).
 
 **Proposition [1](#prop:precision) (full statement).**
 
