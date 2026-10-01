@@ -18,7 +18,7 @@ The design, a worked example, and the reasons are in
 | Output | A mean and a log variance for the answer to the question |
 | Loss | Log loss (Genewein et al.) |
 | Training | Adam, learning rate 1e-4, batch 1024; step count set by a pilot |
-| Seeds | 0, 1, 2 |
+| Seeds | 0 (one model per configuration) |
 
 ## Run
 

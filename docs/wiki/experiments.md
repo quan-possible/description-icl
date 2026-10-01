@@ -238,11 +238,11 @@ network reaching the exact learner's regret.
 | --- | --- | --- | --- |
 | Precision $r$ | 0.5, 0.05 | 2 | A coarse description that removes half the prior variance, and a precise one that removes 95% |
 | Reliability $p$ | 1 (stage 1), 0.9 (stage 2) | 2 | The reliable case, and one level at which the description is usually right |
-| Seed | 0, 1, 2 | 3 | |
+| Seed | 0 | 1 | One model per configuration (decision 20) |
 | Setting | $d = 5$, $a_0 = 10$, $K = 16$ | 1 | $d$ from Huang & Ge; $K$ covers the largest ESS, 7.4, twice over |
 | Prompts with a description | Half | | Equal practice with and without |
 
-12 models, 6 per stage. Each model handles every number of examples from
+4 models, 2 per stage. Each model handles every number of examples from
 0 to 15; there is not one model per $n$.
 
 ### 6.11 Pilot
@@ -296,7 +296,7 @@ question. Elements that are neither are listed under Departures.
 | With and without a descriptor | Separate models (Huang & Ge) | One model; the description row is present or hidden | Kept by Bruce. The ESS then compares a learner with itself |
 | Number of examples | Fixed (Huang & Ge); every row scored (Garg et al.) | One question after a random number of examples | Kept by Bruce. The ESS needs regret at every number of examples |
 | Examples per prompt | 40 (Garg et al.), 50 (Huang & Ge) | Up to 15 | Kept by Bruce. Covers the largest ESS twice over |
-| Seeds | 5 (Huang & Ge) | 3 | Kept by Bruce |
+| Seeds | 5 (Huang & Ge) | 1 | Bruce, 2026-09-30: one training per configuration; the exact learner's comparison does not need a spread across seeds |
 
 ## Decisions
 

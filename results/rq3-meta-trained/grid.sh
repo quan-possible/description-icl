@@ -1,7 +1,6 @@
 #!/bin/zsh
-# Train the grid seed-major: seed 0 of every configuration first, so every
-# readout exists early, then seeds 1 and 2 for the spread. Each model is
-# evaluated after training; p = 1 models are also evaluated at p = 0.9.
+# Train the four models, one seed each (decision 20), and evaluate them;
+# p = 1 models are also evaluated at p = 0.9. SEEDS="0 1 2" adds seeds.
 # Usage: results/rq3-meta-trained/grid.sh <steps>
 #   (run inside tmux: tmux new -d -s rq3grid "results/rq3-meta-trained/grid.sh 30000")
 set -e
@@ -25,7 +24,7 @@ run() {  # p r seed
   [[ $1 == 1.0 ]] && $PY $R/evaluate.py tmp/rq3/$name.pt --p-test 0.9 >> tmp/rq3/grid.log 2>&1
   touch tmp/rq3/$name.done
 }
-for s in 0 1 2; do
+for s in ${SEEDS:-0}; do
   run 1.0 0.05 $s   # precise, reliable (+ evaluated at p = 0.9)
   run 1.0 0.5 $s    # coarse, reliable
   run 0.9 0.05 $s   # trained at p = 0.9

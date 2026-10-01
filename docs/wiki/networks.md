@@ -15,8 +15,8 @@ decided by Bruce on 2026-09-30. One question per prompt, after a random
 number of examples.
 
 **Order.** One factor at a time: reliable precise descriptor; the same model
-evaluated at $p = 0.9$; coarse descriptor; three seeds; then training at
-$p = 0.9$.
+evaluated at $p = 0.9$; coarse descriptor; then training at $p = 0.9$. One seed per
+configuration (decision 20).
 
 **Targets** (`results/rq3-meta-trained/targets.csv`, squared error; log-loss
 values in parentheses):
