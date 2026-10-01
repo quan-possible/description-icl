@@ -7,7 +7,7 @@ Bruce Quan Nguyen
 
 ## Abstract
 
-Theories of in-context learning (ICL) model a prompt’s examples, not its task description. We ask how many examples a description is worth. In a Bayesian reading of ICL both are data about a latent task. In in-context linear regression, a description’s effective sample size (ESS) is how many examples lower a Bayes-optimal predictor’s one-step regret as much as it does. Its precision ratio $`r`$ is the fraction of prior variance it leaves, its reliability $`p`$ the probability that it is correct. A reliable description is worth about $`d(1-r)`$ examples in $`d`$ dimensions while that is below $`d`$. Reliability caps precision only while nothing can check the description. Alone, an unreliable description keeps at least $`1-p`$ of an empty prompt’s regret, so its ESS saturates: at $`p = 0.9`$ in sixteen dimensions, a hundredfold gain in precision adds ten examples, a hundred when reliable. Examples verify it, and its worth rises toward a fraction $`p`$ of a reliable description’s. Small meta-trained Transformers reproduce the Bayes-optimal ESS of a description alone, except that one trained on precise unreliable descriptions under-values them; one trained only on reliable descriptions trusts an unreliable one fully, so a precise one is worth almost nothing. Our claims concern Bayes-optimal predictors and small meta-trained sequence models, not large language models.
+Theories of in-context learning (ICL) model a prompt’s examples, not its task description. We ask how many examples a description is worth. In a Bayesian reading of ICL both are data about a latent task. In in-context linear regression, a description’s effective sample size (ESS) is how many examples lower a Bayes-optimal predictor’s one-step regret as much as it does. Its precision ratio $`r`$ is the fraction of prior variance it leaves, its reliability $`p`$ the probability that it is correct. A reliable description is worth about $`d(1-r) + 1/(r a_0)`$ examples in $`d`$ dimensions, with $`a_0`$ the prior signal-to-noise ratio: its high-SNR worth plus the long-run worth that remains once examples accumulate. Reliability caps precision only while nothing can check the description. Alone, an unreliable description keeps at least $`1-p`$ of an empty prompt’s regret, so its ESS saturates: at $`p = 0.9`$ in sixteen dimensions, a hundredfold gain in precision adds ten examples, a hundred when reliable. Examples verify it, and its worth rises toward a fraction $`p`$ of a reliable description’s. Small meta-trained Transformers reproduce the Bayes-optimal ESS of a description alone, except that one trained on precise unreliable descriptions under-values them; one trained only on reliable descriptions trusts an unreliable one fully, so a precise one is worth almost nothing. Our claims concern Bayes-optimal predictors and small meta-trained sequence models, not large language models.
 
 ## 1 Introduction
 
@@ -25,7 +25,7 @@ We quantify a task description’s value as the number of in-context examples it
 
 2.  An unreliable description induces a hard floor on regret, set by its error probability $`1-p`$ and its entropy $`H(p)`$, so its ESS saturates however precise it is. Examples verify the description and lift the cap: its worth with $`n`$ examples in hand rises with $`n`$ toward a fraction $`p`$ of a reliable description’s, whose own worth falls (§[5](#sec:reliability)).
 
-3.  A perfectly reliable description is worth $`\mathrm{ESS}\approx d(1-r)`$ examples, with $`d`$ the dimension and $`r`$ its precision ratio, while that is below $`d`$ (§[4](#sec:precision)).
+3.  A perfectly reliable description is worth $`\mathrm{ESS}\approx (d-1)(1-r) + 1/(r a_0)`$ examples, with $`d`$ the dimension, $`r`$ its precision ratio, and $`a_0`$ the prior SNR: its high-SNR worth plus its long-run worth, within two examples across the grid (§[4](#sec:precision)).
 
 4.  Small Transformers meta-trained on this process, one per setting, reproduce the Bayes-optimal ESS of a description alone in three of four settings and under-value a precise unreliable description in the fourth; trained only on reliable descriptions, they do not discount an unreliable one (§[6](#sec:networks)).
 
@@ -71,24 +71,29 @@ We first analyze a perfectly reliable description ($`p=1`$). Given $`n`$ example
 
 <div id="prop:precision" class="proposition">
 
-**Proposition 1**. Let $`\psi`$ be the digamma function. As $`a_0 \to \infty`$, for $`n < d`$,
-``` math
-R^{\mathrm{ex}}(n) = \tfrac12\log a_0 + \tfrac12\log 2 + \tfrac12\psi\!\left(\tfrac{d-n}{2}\right) + o(1),
-\qquad
-R^{\mathrm{desc}} = \tfrac12\log (r a_0) + \tfrac12\log 2 + \tfrac12\psi\!\left(\tfrac{d}{2}\right) + o(1),
-```
-so the high-SNR ESS, with $`R^{\mathrm{ex}}(n)`$ extended to non-integer $`n`$ through the digamma function, solves $`\psi\big(\tfrac{d-n}{2}\big) - \psi\big(\tfrac d2\big) = \log r`$. As $`d \to \infty`$ with $`rd \to \infty`$, its solution is
-``` math
-\mathrm{ESS}= (d-1)(1-r) + O\!\left(\tfrac{1}{rd}\right).
-```
+**Proposition 1** (Worth of a reliable description). *Let $`\psi`$ be the digamma function and $`c = 1/(r a_0)`$, the long-run worth of the description (§[5](#sec:reliability)).*
+
+1.  *Coarse descriptions, $`c \le 1`$.* For $`n < d`$, $`R^{\mathrm{ex}}(n) \ge \tfrac12\big[\log(2a_0) + \psi\big(\tfrac{d-n}{2}\big)\big]`$, with equality as $`a_0 \to \infty`$, and as $`rd \to \infty`$, uniformly in $`c \le 1`$,
+    ``` math
+    \mathrm{ESS}= (d-1)(1-r) + (1-r)\,c + O\!\left(\tfrac{1}{rd}\right).
+    ```
+
+2.  *Precise descriptions, $`c \ge d`$.* For $`n \ge d`$, $`R^{\mathrm{ex}}(n) \le \Phi(n) := \tfrac12\big[\psi\big(\tfrac{n+1}{2}\big) - \psi\big(\tfrac{n-d+1}{2}\big)\big]`$, with equality as $`a_0 \to \infty`$, and as $`c/d \to \infty`$, uniformly in $`a_0 \ge 1`$,
+    ``` math
+    \mathrm{ESS}= c + d + 1 - \tfrac{1}{a_0} + O\!\left(\tfrac{d}{c}\right).
+    ```
+
+*In every setting, $`\mathrm{ESS}\le c + d + 2`$.*
 
 </div>
 
-*Idea.* Regret is half the log of the leftover variance in the prediction. At high SNR each example removes all the variance along the one direction it looks at, so $`n < d`$ examples leave $`d - n`$ directions untouched; a description shrinks all $`d`$ directions by the factor $`r`$. Matching the two leftovers gives $`d - n \approx rd`$. The proof, with the error term, is in Appendix [B](#app:precision).
+*Idea.* paragraph =====
 
-The error term makes the range of validity precise: the approximation needs $`rd \gg 1`$, that is, the description must leave many more than one example’s worth of variance unexplained, which is the condition $`\mathrm{ESS}< d`$ in the first-order form $`\mathrm{ESS}\approx d(1-r)`$. At $`a_0 = 100`$ and $`r = 0.1`$ the exact ESS is within $`0.3`$ of $`(d-1)(1-r)`$ for $`d \in \{16, 64\}`$ ($`13.7`$ and $`56.9`$ against $`13.5`$ and $`56.7`$).
+*Idea.* Regret is half the log of the leftover variance in the prediction, and a description with precision ratio $`r`$ leaves $`r a_0 = 1/c`$ of the noise variance in each of $`d`$ directions. Examples remove variance in two ways. The first $`n < d`$ of them each kill one direction outright at high SNR, so the leftover is $`a_0`$ times a $`\chi^2_{d-n}`$; matching it to the description’s $`r a_0 \chi^2_d`$ gives $`d - n \approx rd`$, the high-SNR term $`(d-1)(1-r)`$. Beyond $`n = d`$ every direction is seen and the leftover is $`\chi^2_d / \chi^2_{n-d+1}`$, with mean $`d/(n-d-1)`$; matching it to $`d/c`$ gives $`n \approx c + d + 1`$. The prior itself is worth $`1/a_0`$ examples, which is the $`-1/a_0`$ in (ii) and, after the factor $`1-r`$, the $`c - 1/a_0`$ in (i). The proof, with the error terms, is in Appendix [B](#app:precision).
 
-Table [2](#tab:precision) (Appendix [A](#app:tables)) lists exact values. A description that removes nine tenths of the prior variance is worth about nine tenths of the dimension in examples at $`d = 16`$ and $`64`$. At $`d = 4`$ the error term $`1/(rd)`$ is already $`2.5`$, and the exact ESS exceeds the approximation by $`1.7`$. Once the description is precise enough that its ESS surpasses $`d`$, the approximation breaks down for every $`d`$: the true ESS scales beyond $`d`$ because $`d`$ noisy examples cannot pinpoint $`w`$ perfectly. The $`n = 0`$ curve of Figure [2](#fig:ess)(a) traces the whole relationship at $`d = 16`$: the ESS follows $`(d-1)(1-r)`$ until it reaches about $`d`$ and then leaves it, growing without bound as $`r \to 0`$.
+Both regimes say the same thing: the worth of a description alone is its high-SNR worth plus its long-run worth, $`\mathrm{ESS}\approx (d-1)(1-r) + c`$, within two examples. In (i) the long-run term enters as $`(1-r)c`$, which is less than $`c`$ by $`1/a_0 < 1`$; in (ii) the exact constant is $`c + d + 1 - 1/a_0`$, which exceeds $`(d-1)(1-r) + c`$ by $`2 - 1/a_0 + (d-1)r \in [1, 2)`$ up to the stated error. The two regimes meet at $`c = 1`$, where the description pins $`w`$ down as tightly as the label noise does, and at $`c \approx d`$ its worth passes $`d`$: below that, each unit of precision removes directions and the worth stays under $`d`$; above it, every direction is already seen and the worth grows like $`c`$, the examples needed to match the description’s variance, plus the $`d + 1`$ that $`d`$ noisy examples cannot supply, minus the $`1/a_0`$ examples the prior is already worth. The universal bound $`\mathrm{ESS}\le c + d + 2`$ holds everywhere, including the crossover $`1 < c < d`$ where neither expansion applies. On the grid of Table [2](#tab:precision) and Figure [2](#fig:ess)(a), the additive rule is within $`2.2`$ examples of the exact ESS in every cell with $`a_0 \ge 10`$; at $`d = 64`$, $`a_0 = 100`$, $`r = 0.1`$ the exact ESS is $`56.85`$ against $`56.79`$ from (i), and at $`d = 16`$, $`a_0 = 10`$, $`r = 0.001`$ it is $`116.8`$ against $`116.9`$ from (ii).
+
+In words: a description that removes nine tenths of the prior variance is worth nine tenths of the dimension plus its long-run worth of one example, $`14.9`$ at $`d = 16`$ and $`57.7`$ at $`d = 64`$; one that leaves a thousandth is worth its long-run $`100`$ plus $`d + 1`$, $`117`$ at $`d = 16`$. Table [2](#tab:precision) (Appendix [A](#app:tables)) lists the exact values and Figure [2](#fig:ess)(a) traces the curve at $`d = 16`$.
 
 ## 5 The Bottleneck of Reliability
 
@@ -167,7 +172,7 @@ The models trained at $`p=1`$ behave like a Bayes-optimal predictor that trusts 
 
 ## 7 Discussion
 
-For a Bayes-optimal predictor, a task description is worth a definite number of in-context examples. When the description is reliable, its worth grows linearly with the share of prior variance it removes. Otherwise the predictor must hedge against its being wrong, so a very precise description’s worth saturates. The hedge is forced only while nothing can check the description; a few examples lift it, and a precise unreliable description is then worth more than alone. Reliability is not a fixed discount but a cost that examples pay down, to a factor $`p`$. This holds for a learner calibrated to the description’s reliability; to one that cannot doubt it, a precise description that is sometimes wrong is worse than none, and examples repair the damage slowly.
+For a Bayes-optimal predictor, a task description is worth a definite number of in-context examples. When the description is reliable, its worth is the share of the dimension it pins down plus its long-run worth, the examples that would match its variance. Otherwise the predictor must hedge against its being wrong, so a very precise description’s worth saturates. The hedge is forced only while nothing can check the description; a few examples lift it, and a precise unreliable description is then worth more than alone. Reliability is not a fixed discount but a cost that examples pay down, to a factor $`p`$. This holds for a learner calibrated to the description’s reliability; to one that cannot doubt it, a precise description that is sometimes wrong is worse than none, and examples repair the damage slowly.
 
 #### Limitations and Future Work.
 
@@ -179,19 +184,19 @@ Tables [2](#tab:precision) and [3](#tab:reliability) give the exact one-step E
 
 <div id="tab:precision">
 
-| $`d`$ | $`r`$ | $`\mathrm{ESS}`$ | $`(d-1)(1-r)`$ |
-|------:|------:|-----------------:|---------------:|
-|     4 |   0.1 |             4.41 |            2.7 |
-|     4 |  0.01 |             14.5 |           2.97 |
-|     4 | 0.001 |              105 |              3 |
-|    16 |   0.1 |             14.9 |           13.5 |
-|    16 |  0.01 |             26.1 |           14.8 |
-|    16 | 0.001 |              117 |             15 |
-|    64 |   0.1 |             57.7 |           56.7 |
-|    64 |  0.01 |             73.3 |           62.4 |
-|    64 | 0.001 |              164 |           62.9 |
+| $`d`$ | $`r`$ | $`\mathrm{ESS}`$ | $`(d-1)(1-r) + 1/(r a_0)`$ |
+|------:|------:|-----------------:|---------------------------:|
+|     4 |   0.1 |             4.41 |                        3.7 |
+|     4 |  0.01 |             14.5 |                         13 |
+|     4 | 0.001 |              105 |                        103 |
+|    16 |   0.1 |             14.9 |                       14.5 |
+|    16 |  0.01 |             26.1 |                       24.9 |
+|    16 | 0.001 |              117 |                        115 |
+|    64 |   0.1 |             57.7 |                       57.7 |
+|    64 |  0.01 |             73.3 |                       72.4 |
+|    64 | 0.001 |              164 |                        163 |
 
-**Table 2.** Exact ESS of a reliable description ($`p=1`$) for $`a_0=10`$, three seeds (standard deviation across seeds below 2% of each value), against $`(d-1)(1-r)`$ of Proposition [1](#prop:precision). The approximation holds while the description is worth fewer than $`d`$ examples, $`r \gtrsim 1/(a_0 d)`$; below that the exact ESS keeps growing because $`d`$ noisy examples cannot pin $`w`$ down.
+**Table 2.** Exact ESS of a reliable description ($`p=1`$) for $`a_0=10`$, three seeds (standard deviation across seeds below 2% of each value), against the additive rule $`(d-1)(1-r) + 1/(r a_0)`$ of Proposition [1](#prop:precision), which is within $`2.2`$ examples of every cell.
 
 </div>
 
@@ -211,33 +216,84 @@ Tables [2](#tab:precision) and [3](#tab:reliability) give the exact one-step E
 
 <div class="proof">
 
-*Proof.* *Step 1: regret is leftover variance.* The Bayes predictive for $`y`$ is the true conditional law of $`y`$ given the data, a Gaussian with variance $`1 + x^\top \Sigma x`$ where $`\Sigma`$ is the posterior covariance of $`w`$. The expected log loss of a true conditional law is its entropy, $`\tfrac12 \log(2\pi e (1 + x^\top \Sigma x))`$; the oracle’s predictive is $`\mathcal{N}(w^\top x, 1)`$ with entropy $`\tfrac12 \log(2\pi e)`$. So the regret is $`\tfrac12 \mathbb{E}\log(1 + x^\top \Sigma x)`$: half the log of the leftover variance.
+*Proof.* Throughout, $`\varepsilon = 1/a_0`$, $`x`$ is the fresh query with $`A = \|x\|^2 \sim \chi^2_d`$, and $`\Sigma = (\varepsilon I + X_n^\top X_n)^{-1}`$. We use $`\mathbb{E}\log \chi^2_k = \psi(k/2) + \log 2`$, $`\mathbb{E}[1/\chi^2_k] = 1/(k-2)`$, $`\mathbb{E}[1/\chi^4_k] = 1/((k-2)(k-4))`$, and the Wishart facts that for $`W \sim W_q(p, I)`$ with $`p \ge q`$ and $`z \sim \mathcal{N}(0, I_q)`$ independent of $`W`$, $`z^\top W^{-1} z`$ is distributed as $`\chi^2_q / \chi^2_{p-q+1}`$ with independent numerator and denominator (Muirhead 1982, Theorem 3.2.12), $`\mathbb{E}W^{-1} = I/(p-q-1)`$, and $`\mathbb{E}\operatorname{tr} W^{-2} = q(p-1)/((p-q)(p-q-1)(p-q-3))`$ (Rosen 1988).
 
-*Step 2: examples.* Write $`X_n^\top X_n = \sum_{i \le n} \lambda_i u_i u_i^\top`$ with $`\lambda_i > 0`$ almost surely, and let $`P_\perp`$ project onto the $`d - n`$ directions the examples did not look at. Then $`\Sigma = (I/a_0 + X_n^\top X_n)^{-1}`$ has eigenvalue $`a_0`$ on those directions and $`1/(1/a_0 + \lambda_i)`$ on the others, so
+*Step 1: regret is leftover variance.* The Bayes predictive for $`y`$ is the true conditional law of $`y`$ given the data, a Gaussian with variance $`1 + x^\top \Sigma x`$. The expected log loss of a true conditional law is its entropy, $`\tfrac12 \log(2\pi e (1 + x^\top \Sigma x))`$; the oracle’s predictive is $`\mathcal{N}(w^\top x, 1)`$ with entropy $`\tfrac12 \log(2\pi e)`$. So $`R^{\mathrm{ex}}(n) = \tfrac12 \mathbb{E}\log(1 + x^\top \Sigma x)`$, and since $`\Sigma`$ shrinks pathwise as $`n`$ grows, $`R^{\mathrm{ex}}`$ is nonincreasing in $`n`$. For the description, $`n = 0`$ and $`\Sigma = r a_0 I`$, so with $`g(t) := \mathbb{E}\log(1 + At)`$,
 ``` math
-1 + x^\top \Sigma x = a_0\,\|P_\perp x\|^2 + T, \qquad T = 1 + \sum_{i \le n} \frac{(u_i^\top x)^2}{1/a_0 + \lambda_i}.
+2R^{\mathrm{desc}} = g(1/c) = \log(2 r a_0) + \psi(d/2) + \delta^{\mathrm{desc}},
+\qquad
+\delta^{\mathrm{desc}} = \mathbb{E}\log(1 + c/A) = \frac{c}{d-2} + O\!\left(\frac{c^2}{d^2}\right),
 ```
-Because $`x`$ is a fresh isotropic Gaussian, $`\|P_\perp x\|^2 \sim \chi^2_{d-n}`$, independent of $`X_n`$. Hence
-``` math
-R^{\mathrm{ex}}(n) = \tfrac12 \log a_0 + \tfrac12 \mathbb{E}\log \chi^2_{d-n} + \tfrac12 \mathbb{E}\log\!\left(1 + \frac{T / a_0}{\|P_\perp x\|^2}\right).
-```
-The last term is nonnegative, and $`T / a_0 = 1/a_0 + \sum_{i \le n} (u_i^\top x)^2 / (1 + a_0 \lambda_i)`$ decreases to $`0`$ as $`a_0 \to \infty`$, so by monotone convergence the term is $`o(1)`$. (It is finite at any finite $`a_0`$ because $`R^{\mathrm{ex}}(n)`$ is.)
+the last from $`y - y^2/2 \le \log(1+y) \le y`$ with $`y = c/A`$ ($`d \ge 5`$).
 
-*Step 3: description.* Here $`n = 0`$ and $`\Sigma = r a_0 I`$, so $`1 + x^\top \Sigma x = 1 + r a_0 \|x\|^2`$ with $`\|x\|^2 \sim \chi^2_d`$, and the same argument gives $`R^{\mathrm{desc}} = \tfrac12 \log(r a_0) + \tfrac12 \mathbb{E}\log \chi^2_d + o(1)`$.
-
-*Step 4: match them.* The $`\log a_0`$ terms cancel, and $`\mathbb{E}\log \chi^2_k = \psi(k/2) + \log 2`$. Taking $`\psi((d-n)/2)`$ as the extension of $`R^{\mathrm{ex}}(n)`$ to non-integer $`n`$, the high-SNR ESS solves
+*Step 2: fewer than $`d`$ examples.* Write $`X_n^\top X_n = \sum_{i \le n} \lambda_i u_i u_i^\top`$ with $`\lambda_i > 0`$ almost surely, let $`P_\perp`$ project onto the $`k = d - n`$ directions the examples did not look at, and $`Q = \|P_\perp x\|^2 \sim \chi^2_k`$. Then $`\Sigma`$ has eigenvalue $`a_0`$ on those directions and $`1/(\varepsilon + \lambda_i)`$ on the others, so
 ``` math
-\psi\!\left(\tfrac{d-n}{2}\right) - \psi\!\left(\tfrac d2\right) = \log r,
+1 + x^\top \Sigma x = a_0 Q + T, \qquad T = 1 + V, \quad V = \sum_{i \le n} \frac{z_i^2}{\varepsilon + \lambda_i}, \quad z_i = u_i^\top x .
 ```
-which has one root in $`(0, d)`$ because $`\psi`$ is increasing and $`\log r < 0`$. Read it as: $`d - n`$ untouched directions must be as big, on a log scale, as $`d`$ directions each shrunk by $`r`$. Replacing $`\mathbb{E}\log \chi^2_k`$ by $`\log k`$ gives the first-order answer $`d - n = rd`$, that is $`\mathrm{ESS}\approx d(1-r)`$.
-
-*Step 5: the error term.* Let $`k = d - n`$. As $`rd \to \infty`$, $`\psi(k/2) = \psi(d/2) + \log r \to \infty`$ forces $`k \to \infty`$. The log of a $`\chi^2_k`$ variable averages a little below the log of its mean: $`\psi(z) = \log z - \tfrac{1}{2z} + O(z^{-2})`$ as $`z \to \infty`$. Hence
+Given $`X_n`$, the $`z_i`$ are i.i.d. standard normal and independent of $`Q`$, and the $`\lambda_i`$ are the eigenvalues of $`X_n X_n^\top \sim W_n(d, I)`$. Hence
 ``` math
-\log\frac{k}{d} - \frac1k + \frac1d + O(k^{-2}) = \log r
-\quad\Longrightarrow\quad
-k = rd\left(1 + \frac1k - \frac1d + O(k^{-2})\right).
+2R^{\mathrm{ex}}(n) = \log(2a_0) + \psi(k/2) + \delta^{\mathrm{ex}}, \qquad \delta^{\mathrm{ex}} = \mathbb{E}\log\!\left(1 + \frac{\varepsilon T}{Q}\right) \ge 0,
 ```
-So $`k = rd\,(1 + o(1))`$ and $`rd / k = 1 + O(1/k)`$. Multiplying out, $`k = rd + 1 - r + O(1/(rd))`$, and $`\mathrm{ESS}= d - k = (d-1)(1-r) + O(1/(rd))`$. The correction $`-(1-r)`$ comes from the $`-1/k + 1/d`$ term: the $`d - n`$ untouched directions are fewer, so their chi-square sits further below its mean on the log scale. ◻
+which is the lower bound in (i); $`\varepsilon T \to 0`$ as $`a_0 \to \infty`$, so $`\delta^{\mathrm{ex}} \to 0`$ by monotone convergence, which is the equality.
+
+For the finite-$`a_0`$ term, let $`F = \sum_i z_i^2 / \lambda_i = z^\top (X_n X_n^\top)^{-1} z \sim \chi^2_n / \chi^2_{k+1}`$, so $`\mathbb{E}F = n/(k-1)`$ and $`\mathbb{E}F^2 = n(n+2)/((k-1)(k-3))`$. Then $`F - \varepsilon \sum_i z_i^2/\lambda_i^2 \le V \le F`$, and $`\mathbb{E}\sum_i z_i^2/\lambda_i^2 = \mathbb{E}\operatorname{tr}(X_n X_n^\top)^{-2} = n(d-1)/(k(k-1)(k-3))`$. Applying $`y - y^2/2 \le \log(1+y) \le y`$ with $`y = \varepsilon T / Q`$ and the independence of $`Q`$ from $`T`$,
+``` math
+\frac{\varepsilon\,(1 + \mathbb{E}V)}{k-2} - \frac{\varepsilon^2 \mathbb{E}T^2}{2(k-2)(k-4)} \le \delta^{\mathrm{ex}} \le \frac{\varepsilon\,(1 + \mathbb{E}F)}{k-2},
+\qquad\text{so}\qquad
+\delta^{\mathrm{ex}} = \frac{\varepsilon (d-1)}{(k-1)(k-2)} + O\!\left(\frac{\varepsilon^2 d^2}{k^4}\right), \qquad k \ge 5 .
+```
+
+*Step 3: solve (i).* Matching $`R^{\mathrm{ex}}(n) = R^{\mathrm{desc}}`$ cancels $`\log a_0`$:
+``` math
+\psi(k/2) - \psi(d/2) = \log r + \delta^{\mathrm{desc}} - \delta^{\mathrm{ex}} .
+```
+Read it as in the high-SNR case: the $`k`$ untouched directions must be as big, on a log scale, as $`d`$ directions each shrunk by $`r`$, with the finite-SNR leftovers $`\delta^{\mathrm{desc}}`$ and $`\delta^{\mathrm{ex}}`$ as corrections. Treat $`k`$ as real; the paper’s ESS interpolates $`R^{\mathrm{ex}}`$ linearly between integers, and since the right side of the display is, as a function of $`n`$, smooth with second derivative $`O(1/k^2)`$ and slope of order $`1/k`$, that moves the root by $`O(1/k)`$, which the error term absorbs. With $`\psi(z) = \log z - 1/(2z) + O(z^{-2})`$,
+``` math
+k = rd \, \exp\!\big(\eta\big), \qquad \eta = \frac1k - \frac1d + \delta^{\mathrm{desc}} - \delta^{\mathrm{ex}} + O(k^{-2}) .
+```
+As $`rd \to \infty`$ every term of $`\eta`$ vanishes, so $`k = rd(1 + o(1))`$ as in the high-SNR proof, and then $`1/k = O(1/(rd))`$, $`\delta^{\mathrm{desc}} = O(c/d)`$, and $`\delta^{\mathrm{ex}} = O(\varepsilon d / k^2) = O(c/(rd))`$ because $`\varepsilon = rc`$. So $`\eta = O((1+c)/(rd))`$ and $`k = rd + rd\,\eta + O((1+c)^2/(rd))`$. In $`rd\,\eta`$: $`rd/k = 1 + O((1+c)/(rd))`$; $`rd\,\delta^{\mathrm{desc}} = rc + O(rc(1+c)/d) = 1/a_0 + O((1+c)^2/(rd))`$; and $`rd\,\delta^{\mathrm{ex}} = (\varepsilon/r)(rd/k)^2(1 + O(1/k)) + O(\varepsilon^2 r d^3/k^4) = c + O(c(1+c)/(rd)) + O(c^2/(rd))`$. Hence
+``` math
+k = rd + 1 - r + \frac{1}{a_0} - c + O\!\left(\frac{(1+c)^2}{rd}\right),
+\qquad
+\mathrm{ESS}= d - k = (d-1)(1-r) + c - \frac{1}{a_0} + O\!\left(\frac{(1+c)^2}{rd}\right),
+```
+and $`c - 1/a_0 = c - rc = (1-r)c`$. For $`c \le 1`$ the error is $`O(1/(rd))`$, which is (i). As $`a_0 \to \infty`$ with $`r`$ fixed, $`c \to 0`$ and this is the high-SNR rule $`(d-1)(1-r) + O(1/(rd))`$.
+
+*Step 4: at least $`d`$ examples, an exact representation.* Rotate coordinates so that $`x = \|x\| e_1`$; the rows of the rotated $`X_n`$ are still i.i.d. $`\mathcal{N}(0, I_d)`$ and independent of $`\|x\|`$. Then $`x^\top \Sigma x = A\,\Sigma_{11} = A/S`$, where by the Schur complement and the Woodbury identity, with $`X_1`$ the first column of $`X_n`$ and $`X_{-1}`$ the other $`d-1`$ columns,
+``` math
+S = \varepsilon + X_1^\top \big(I_n + a_0 X_{-1} X_{-1}^\top\big)^{-1} X_1 .
+```
+Given $`X_{-1}`$, the matrix in the middle has eigenvalue $`1`$ on the $`m = n - d + 1`$ directions orthogonal to the columns of $`X_{-1}`$ and $`1/(1 + a_0 \mu_j)`$ on the other $`d - 1`$, where $`\mu_j`$ are the eigenvalues of $`M = X_{-1}^\top X_{-1} \sim W_{d-1}(n, I)`$. Since $`X_1 \sim \mathcal{N}(0, I_n)`$ is independent of $`X_{-1}`$, its coordinates in that eigenbasis are i.i.d. standard normal, and
+``` math
+S = \varepsilon + Q + \sum_{j < d} \frac{z_j^2}{1 + a_0 \mu_j}, \qquad Q \sim \chi^2_m,
+\quad\text{so}\quad
+Q \le S \le Q + \varepsilon (1 + F), \quad F = z^\top M^{-1} z \sim \frac{\chi^2_{d-1}}{\chi^2_{n-d+2}},
+```
+with $`A`$, $`Q`$, and $`(z, M)`$ independent, $`\mathbb{E}F = (d-1)/(n-d)`$ and $`\mathbb{E}F^2 = (d-1)(d+1)/((n-d)(n-d-2))`$.
+
+At $`a_0 = \infty`$, $`S = Q`$ and $`1 + A/Q = (A + Q)/Q`$ with $`A + Q \sim \chi^2_{n+1}`$, so $`\mathbb{E}\log(1 + A/Q) = \psi\big(\tfrac{n+1}{2}\big) - \psi\big(\tfrac{m}{2}\big) = 2\Phi(n)`$. Since $`S \ge Q`$ for every $`a_0`$, $`R^{\mathrm{ex}}(n) \le \Phi(n)`$, with equality as $`a_0 \to \infty`$ by monotone convergence: the first claim of (ii).
+
+*Step 5: the universal bound.* Conditionally on $`A`$, $`\log(1 + A/Q)`$ is concave in $`1/Q`$, so Jensen gives $`2\Phi(n) \le \mathbb{E}\log\big(1 + A/(m-2)\big) = g(1/(m-2))`$ for $`m > 2`$. If $`m - 2 \ge c`$, that is $`n \ge c + d + 1`$, then $`g(1/(m-2)) \le g(1/c) = 2R^{\mathrm{desc}}`$, so $`R^{\mathrm{ex}}(n) \le \Phi(n) \le R^{\mathrm{desc}}`$. The smallest such integer is at most $`c + d + 2`$, and $`R^{\mathrm{ex}}`$ is nonincreasing, so $`\mathrm{ESS}\le c + d + 2`$ in every setting.
+
+*Step 6: solve (ii).* Two sandwiches. First, finite $`a_0`$: with $`D = \log(1 + A/Q) - \log(1 + A/S) = \log\big(1 + \tfrac{A(S-Q)}{Q(S+A)}\big) \ge 0`$, the bounds $`0 \le S - Q \le \varepsilon(1+F)`$, $`1/(S+A) \ge 1/Q - (S + A - Q)/Q^2`$, and $`y - y^2/2 \le \log(1+y) \le y`$ give, for $`a_0 \ge 1`$ and $`n \ge d + 6`$,
+``` math
+\mathbb{E}D = \frac{\varepsilon d}{m^2}\Big(1 + O\big(\tfrac{d+1}{m}\big)\Big),
+\qquad\text{so}\qquad
+2R^{\mathrm{ex}}(n) = 2\Phi(n) - \frac{\varepsilon d}{m^2} + O\!\left(\frac{\varepsilon d^2}{m^3}\right).
+```
+(The upper bound is $`\mathbb{E}[\varepsilon A (1+F)/Q^2] = \varepsilon d (n-1)/((n-d)(n-d-1)(n-d-3))`$; the lower bound subtracts $`\mathbb{E}[\varepsilon A (\varepsilon(1+F) + A)/Q^3]`$ and $`\tfrac12 \mathbb{E}[\varepsilon^2 A^2 (1+F)^2 / Q^4]`$, both $`O(\varepsilon d^2 / m^3)`$.) Second, $`\Phi`$ against its mean: $`g''(t) = -\mathbb{E}[A^2/(1+At)^2] \ge -(d^2 + 2d)`$ and $`\operatorname{Var}(1/Q) = 2/((m-2)^2(m-4))`$, so a second-order Taylor bound around $`\mathbb{E}[1/Q] = 1/(m-2)`$ gives
+``` math
+2\Phi(n) = g\!\left(\tfrac{1}{m-2}\right) - \vartheta\,\frac{d^2 + 2d}{(m-2)^2 (m-4)}, \qquad \vartheta \in [0, 1] .
+```
+Together,
+``` math
+2R^{\mathrm{ex}}(n) - 2R^{\mathrm{desc}} = g\!\left(\tfrac{1}{m-2}\right) - g\!\left(\tfrac1c\right) - \frac{\varepsilon d}{m^2} + O\!\left(\frac{d^2}{m^3}\right).
+```
+Now $`d(1 - (d+2)t) \le g'(t) \le d`$ because $`A - A^2 t \le A/(1+At) \le A`$. Put $`m - 2 = c + s`$ with $`|s| \le c/2`$. Then $`g(1/(m-2)) - g(1/c) = -\frac{ds}{c(c+s)}\big(1 + O(d/c)\big)`$ and $`\varepsilon d/m^2 = \frac{\varepsilon d}{c^2}\big(1 + O((|s|+1)/c)\big)`$, so
+``` math
+2R^{\mathrm{ex}}(n) - 2R^{\mathrm{desc}} = -\frac{d}{c^2}\Big[s + \varepsilon + O\!\Big(\frac{(1 + |s|)(d + |s|)}{c}\Big)\Big].
+```
+At $`s = -\varepsilon \pm K d/c`$ the bracket has the sign $`\pm`$ once $`K`$ exceeds the constant in the $`O`$ (for $`c/d`$ large, $`|s| = O(1)`$). So $`R^{\mathrm{ex}} - R^{\mathrm{desc}}`$ changes sign between $`n = c + d + 1 - \varepsilon - Kd/c`$ and $`n = c + d + 1 - \varepsilon + Kd/c`$; linear interpolation between integers moves the crossing by $`O(1/c)`$, and the moment conditions $`n \ge d + 6`$ hold since $`n \ge c`$. Hence $`\mathrm{ESS}= c + d + 1 - 1/a_0 + O(d/c)`$, which is (ii). ◻
 
 </div>
 
@@ -349,6 +405,12 @@ Morita, Satoshi, Peter F. Thall, and Peter Müller. 2008. “Determining the Eff
 
 </div>
 
+<div id="ref-muirhead1982" class="csl-entry">
+
+Muirhead, Robb J. 1982. *Aspects of Multivariate Statistical Theory*. Wiley.
+
+</div>
+
 <div id="ref-neuenschwander2020" class="csl-entry">
 
 Neuenschwander, Beat, Sebastian Weber, Heinz Schmidli, and Anthony O’Hagan. 2020. “Predictively Consistent Prior Effective Sample Sizes.” *Biometrics* 76 (2): 578–87.
@@ -376,6 +438,12 @@ Reimherr, Matthew, Xiao-Li Meng, and Dan L. Nicolae. 2021. “Prior Sample Size 
 <div id="ref-reznik2026" class="csl-entry">
 
 Reznik, Yuriy A. 2026. “The Optimal Discounting Parameter of the Power Prior Under Predictive Log-Loss.” *arXiv:2608.12159*.
+
+</div>
+
+<div id="ref-vonrosen1988" class="csl-entry">
+
+Rosen, Dietrich von. 1988. “Moments for the Inverted Wishart Distribution.” *Scandinavian Journal of Statistics* 15 (2): 97–109.
 
 </div>
 
