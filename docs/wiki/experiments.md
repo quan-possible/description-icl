@@ -197,14 +197,14 @@ from that file):
 
 | Examples, no description | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Regret | 49.8 | 40.4 | 30.7 | 22.0 | 13.9 | 7.9 | 4.6 | 2.9 | 2.0 |
+| Regret | 1.87 | 1.74 | 1.58 | 1.38 | 1.13 | 0.88 | 0.68 | 0.55 | 0.45 |
 
 | Description alone | Regret | Falls on the curve at | ESS |
 | --- | --- | --- | --- |
-| $r = 0.5$, $p = 1$ | 25.0 | between 2 and 3 examples | 2.7 |
-| $r = 0.5$, $p = 0.9$ | 29.7 | between 2 and 3 examples | 2.1 |
-| $r = 0.05$, $p = 1$ | 2.5 | between 7 and 8 examples | 7.4 |
-| $r = 0.05$, $p = 0.9$ | 11.4 | between 4 and 5 examples | 4.4 |
+| $r = 0.5$, $p = 1$ | 1.53 | between 2 and 3 examples | 2.24 |
+| $r = 0.5$, $p = 0.9$ | 1.60 | between 1 and 2 examples | 1.85 |
+| $r = 0.05$, $p = 1$ | 0.58 | between 6 and 7 examples | 6.76 |
+| $r = 0.05$, $p = 0.9$ | 0.87 | between 5 and 6 examples | 5.04 |
 
 These four ESS values are the targets for the networks. The same
 calculation is done with the network's regrets in place of the exact
@@ -239,7 +239,7 @@ network reaching the exact learner's regret.
 | Precision $r$ | 0.5, 0.05 | 2 | A coarse description that pins each weight to 71% of its typical size (worth about $d/2$ alone) and a precise one that pins it to 22% (worth more than $d$ alone, past where the $d(1-r)$ rule holds) |
 | Reliability $p$ | 1 (stage 1), 0.9 (stage 2) | 2 | The reliable case, and the 10% vague weight of Schmidli et al.'s robust-prior example (RBesT's default is 20%); on the RQ2 grid, where the cap is visible but not extreme |
 | Seed | 0 | 1 | One model per configuration (decision 20) |
-| Setting | $d = 5$, $a_0 = 10$, $K = 16$ | 1 | $d$ from Huang & Ge; $K$ covers the largest ESS, 7.4, twice over |
+| Setting | $d = 5$, $a_0 = 10$, $K = 16$ | 1 | $d$ from Huang & Ge; $K$ covers the largest ESS, 6.8, twice over |
 | Prompts with a description | Half | | Equal practice with and without |
 
 4 models, 2 per stage. Each model handles every number of examples from
@@ -293,7 +293,7 @@ question. Elements that are neither are listed under Departures.
 | --- | --- | --- | --- |
 | What the descriptor describes | The mean of the inputs | The weights | Required: it must carry information about the task to have a worth in examples |
 | Reliability | None | Right with probability $p$ | Required: second axis of the study |
-| Noise in the answers | None | Variance 0.1 | Required: without noise, $d$ examples determine $w$ exactly, so no description could be worth more than $d = 5$ examples; the precise description is worth 7.4 |
+| Noise in the answers | None | Variance 0.1 | Required: without noise, $d$ examples determine $w$ exactly, so no description could be worth more than $d = 5$ examples; the precise description is worth 6.8 |
 | Attention | Linear (Huang & Ge) | Standard (Garg et al.) | Required: weighing two hypotheses is not linear in the examples |
 | With and without a descriptor | Separate models (Huang & Ge) | One model; the description row is present or hidden | Kept by Bruce. The ESS then compares a learner with itself |
 | Number of examples | Fixed (Huang & Ge); every row scored (Garg et al.) | One question after a random number of examples | Kept by Bruce. The ESS needs regret at every number of examples |

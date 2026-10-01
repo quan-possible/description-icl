@@ -73,14 +73,14 @@ def test_reliability_with_examples_sandwich():
     p R_1(n) + (1-p) R_ex(n) <= R_desc(n) <= that + E[-log pi_n(Z)], and the
     identification term starts at H(p) and never rises."""
     rows = list(csv.DictReader((ROOT / "results/rq2-reliability/worth.csv").open()))
-    rows = [{k: float(v) for k, v in x.items()} for x in rows]
+    rows = [{k: (float(v) if v != "" else float("nan")) for k, v in x.items()} for x in rows]
     p = 0.9
     H = -p * math.log(p) - (1 - p) * math.log(1 - p)
     checked = 0
     for seed in (0.0, 1.0, 2.0):
         for r in (0.1, 0.01, 0.001):
             one = {x["n"]: x for x in rows if x["seed"] == seed and x["r"] == r and x["p"] == 1.0}
-            mix = {x["n"]: x for x in rows if x["seed"] == seed and x["r"] == r and x["p"] == p}
+            mix = {x["n"]: x for x in rows if x["seed"] == seed and x["r"] == r and x["p"] == p and x["q"] == p}
             assert abs(mix[0.0]["ident"] - H) < 0.03  # sample fraction of correct descriptions
             for n in range(101):
                 lo = p * one[n]["R_desc"] + (1 - p) * mix[n]["R_ex"]
