@@ -28,16 +28,23 @@ learner and then for meta-trained networks.
 
 ## Current position
 
-- The paper was rewritten by Bruce for writing quality on 2026-10-01
-  (`docs/paper/archive/rewritten_paper_2026-10-01.tex`, 5 pages, no
-  citations, figures, tables, numbers, or full proofs) and adopted as
-  `paper.tex` with all of those restored in its style and its sentences
-  kept verbatim except four factual fixes; the previous version is
-  `archive/paper_pre_rewrite_2026-10-01.tex`. Terms: task description
-  (Brown et al. 2020's term; "descriptor" only for Huang & Ge's object),
-  demonstrations, reliance $q$, correctly specified / misspecified,
-  oracle-calibrated / overconfident predictors. Three more models are
-  training (p = 0.99 at both precisions; seed 1 of p = 0.9, r = 0.01).
+- The paper is Bruce's 2026-10-01 rewrite
+  (`docs/paper/archive/rewritten_paper_2026-10-01.tex`) plus only what a
+  submission cannot do without: citations, the ESS and reliance figures,
+  the network table, one or two numbers per claim, a compact network
+  setup, the hedges that keep claims true (one run per setting; not LLMs),
+  and the full proofs. A first merge had restored everything from the
+  pre-rewrite paper (7,000 words); Bruce: "bring back only things that
+  are absolutely necessary", so it is now 3,500 words and 11 pages. Left
+  out, in `archive/paper_pre_rewrite_2026-10-01.tex` if wanted: the
+  overview figure, the contributions list, the detailed related-work
+  comparisons, the exact-value tables, and the network regret figure.
+  Project renamed to `description-icl` (package `description_icl`).
+  Terms: task description (Brown et al. 2020's term; "descriptor" only
+  for Huang & Ge's object), demonstrations, reliance $q$, correctly
+  specified / misspecified, oracle-calibrated / overconfident predictors.
+  Three more models are training (p = 0.99 at both precisions; seed 1 of
+  p = 0.9, r = 0.01).
 
 - The paper is the v2 rewrite of 2026-10-01 03:37 ("in the style of NeurIPS
   ICL papers": numbered equations, descriptive paragraph headings, Proof
