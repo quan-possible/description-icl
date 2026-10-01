@@ -12,6 +12,7 @@
 
 \newtheorem{proposition}{Proposition}
 \newtheorem{definition}{Definition}
+\newtheorem*{proposition*}{Proposition}
 \newcommand{\todo}[1]{\textcolor{red}{\textit{[#1]}}}
 \newcommand{\ess}{\mathrm{ESS}}
 \newcommand{\E}{\mathbb{E}}
@@ -82,25 +83,14 @@ The ESS compares prompts of two kinds, the description alone against examples al
 
 We first analyze a reliable description ($p=1$). Given $n$ examples $X_n \in \R^{n \times d}$, the posterior covariance under a Gaussian prior with SNR $a$ is $\Sigma = \sigma_y^2(I/a + X_n^\top X_n)^{-1}$. This is independent of the examples' labels and of the description $m$. The one-step regret simplifies to $\frac{1}{2}\E\log(1 + x^\top \Sigma x)$. A reliable description corresponds to $n=0$ and $a = r a_0$, whereas examples alone use $a = a_0$.
 
-\begin{proposition}[ESS of a reliable description]\label{prop:precision}
-Let $p = 1$, let $\psi$ be the digamma function, and let $c = 1/(r a_0) = \sigma_y^2 / s_\ell^2$: the ESS of the description's prior $\mathcal{N}(m, s_\ell^2 I_d)$ in the conjugate sense, noise variance over prior variance \citep{neuenschwander2020}, and the limit of $\ess_n$ as $n \to \infty$ (\S\ref{sec:reliability}). We call it the conjugate-prior ESS.
-\begin{enumerate}
-\item[(i)] \emph{Coarse descriptions.} Suppose $c \le 1$. Then for every $n < d$,
-$R^{\mathrm{ex}}(n) \ge \tfrac12\big[\log(2a_0) + \psi\big(\tfrac{d-n}{2}\big)\big]$, with equality in the limit $a_0 \to \infty$, and as $rd \to \infty$, uniformly in $c \le 1$,
+\begin{proposition}[ESS of a reliable description; informal]\label{prop:precision}
+Let $p = 1$ and let $c = 1/(r a_0) = \sigma_y^2 / s_\ell^2$ be the ESS of the description's prior in the conjugate sense, noise variance over prior variance \citep{neuenschwander2020}. Then
 \[
-\ess = (d-1)(1-r) + (1-r)\,c + O\!\left(\tfrac{1}{rd}\right).
+\ess \;\approx\; (d-1)(1-r) + c,
 \]
-\item[(ii)] \emph{Precise descriptions.} Suppose $c \ge d$. Then for every $n \ge d$,
-$R^{\mathrm{ex}}(n) \le \Phi(n) := \tfrac12\big[\psi\big(\tfrac{n+1}{2}\big) - \psi\big(\tfrac{n-d+1}{2}\big)\big]$, with equality in the limit $a_0 \to \infty$, and as $c/d \to \infty$, uniformly in $a_0 \ge 1$,
-\[
-\ess = c + d + 1 - \tfrac{1}{a_0} + O\!\left(\tfrac{d}{c}\right).
-\]
-\end{enumerate}
-For every $d$, $a_0$, and $r$, $\ess \le c + d + 2$.
+within about two examples on the grid of this paper. The first term is the share of the $d$ directions of $w$ that the description pins down; the second is its prior's own sample size, and it is all that remains once examples are plentiful, $\ess_n \to c$ (\S\ref{sec:reliability}). Appendix~\ref{app:precision} states the result in its two regimes with error terms, and the bound $\ess \le c + d + 2$ that holds everywhere.
 \end{proposition}
-\emph{Idea.} Regret is half the log of the leftover variance in the prediction, and a description with precision $r$ leaves $r a_0 = 1/c$ of the noise variance in each of $d$ directions. Examples remove variance in two ways. The first $n < d$ of them each kill one direction outright at high SNR, so the leftover is $a_0$ times a $\chi^2_{d-n}$; matching it to the description's $r a_0 \chi^2_d$ gives $d - n \approx rd$, the high-SNR term $(d-1)(1-r)$. Beyond $n = d$ every direction is seen and the leftover is $\chi^2_d / \chi^2_{n-d+1}$, with mean $d/(n-d-1)$; matching it to $d/c$ gives $n \approx c + d + 1$. The base prior itself has conjugate-prior ESS $1/a_0$, which is the $-1/a_0$ in (ii) and, after the factor $1-r$, the $c - 1/a_0$ in (i). The proof, with the error terms, is in Appendix~\ref{app:precision}.
-
-Both regimes say the same thing: the ESS of a description alone is its high-SNR term plus its conjugate-prior ESS, $\ess \approx (d-1)(1-r) + c$, within two examples. In (i) the conjugate term enters as $(1-r)c$, which is less than $c$ by $1/a_0 < 1$; in (ii) the exact constant is $c + d + 1 - 1/a_0$, which exceeds $(d-1)(1-r) + c$ by $2 - 1/a_0 + (d-1)r \in [1, 2)$ up to the stated error. The two regimes meet at $c = 1$, where the description pins $w$ down as tightly as the label noise does, and at $c \approx d$ the ESS passes $d$: below that, each gain in precision removes directions and the ESS stays under $d$; above it, every direction is already seen and the ESS grows like $c$, the examples needed to match the description's variance, plus the $d + 1$ that $d$ noisy examples cannot supply, minus the $1/a_0$ examples the base prior is already worth. The universal bound $\ess \le c + d + 2$ holds everywhere, including the crossover $1 < c < d$ where neither expansion applies. On the grid of Table~\ref{tab:precision} and Figure~\ref{fig:ess}(a), the additive rule is within $2.2$ examples of the exact ESS in every cell with $a_0 \ge 10$; at $d = 64$, $a_0 = 100$, $r = 0.1$ the exact ESS is $56.85$ against $56.79$ from (i), and at $d = 16$, $a_0 = 10$, $r = 0.001$ it is $116.8$ against $116.9$ from (ii).
+\emph{Idea.} Regret is half the log of the leftover variance in the prediction. At high SNR each example removes all the variance along the one direction it looks at, so $n < d$ examples leave $d - n$ directions untouched, while the description shrinks all $d$ directions by the factor $r$; matching the two gives $d - n \approx rd$. Once every direction has been seen, examples and the description compete on variance alone, and there the description's prior counts for $c$ examples. The two contributions add.
 
 In words: a description that removes nine tenths of the prior variance has an ESS of nine tenths of the dimension plus its conjugate-prior ESS of one example, $14.9$ at $d = 16$ and $57.7$ at $d = 64$; one that leaves a thousandth has its conjugate-prior ESS of $100$ plus $d + 1$, $117$ at $d = 16$. Table~\ref{tab:precision} (Appendix~\ref{app:tables}) lists the exact values and Figure~\ref{fig:ess}(a) traces the curve at $d = 16$.
 
@@ -108,14 +98,14 @@ In words: a description that removes nine tenths of the prior variance has an ES
 
 In reality, descriptions can be flawed or ambiguous. With an unreliable description the Bayes-optimal predictor's posterior predictive is a mixture of two components, one that trusts the description and one that ignores it, weighted by the posterior probability that the description is correct. The following bounds measure what the hedge costs, with and without examples to check the description against.
 
-\begin{proposition}\label{prop:floor}
-Fix $n \ge 0$, $p \in (0,1)$, and $r \in (0, 1)$. Let $R^{\mathrm{desc}}(n)$ be the regret of the Bayes-optimal predictor given a description with reliability $p$ and precision $r$ and $n$ examples, $R^{\mathrm{desc}}_{p=1}(n)$ the same for a reliable description, and $R^{\mathrm{ex}}(n)$ its regret given $n$ examples and no description. Let $Z$ indicate that the description is correct, $D_n$ be the prompt (the description, the $n$ examples, and the query), $\pi_n = P(Z = 1 \mid D_n)$ the predictor's posterior probability that the description is correct, and $\pi_n(Z)$ the posterior weight on the true component, $\pi_n$ if $Z = 1$ and $1 - \pi_n$ otherwise. Then
+\begin{proposition}[ESS of an unreliable description]\label{prop:floor}
+Fix $n \ge 0$, $p \in (0,1)$, and $r \in (0,1)$. Write $R^{\mathrm{desc}}(n)$ for the regret of the Bayes-optimal predictor given the description and $n$ examples, $R^{\mathrm{desc}}_{p=1}(n)$ for the same with a reliable description, $R^{\mathrm{ex}}(n)$ for $n$ examples alone, and $\pi_n(Z)$ for the posterior weight the predictor puts on the truth about whether the description is correct. The predictor does no better than a twin who is told whether the description is correct, and no worse than that twin plus the cost of not knowing:
 \[
 p\,R^{\mathrm{desc}}_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n)
 \;\le\; R^{\mathrm{desc}}(n) \;\le\;
 p\,R^{\mathrm{desc}}_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n) + \E[-\log \pi_n(Z)].
 \]
-The last term, the identification term, is the conditional entropy $H(Z \mid D_n)$ of the component indicator given the prompt, the cost of not knowing which component is right: it equals $H(p)$, the binary entropy in nats, at $n = 0$ and is non-increasing in $n$. In particular, alone ($n = 0$) the regret is at least $(1-p)\,R^{\mathrm{ex}}(0)$ for every $r$, so the ESS cannot exceed the $n$ at which $R^{\mathrm{ex}}(n) = (1-p)\,R^{\mathrm{ex}}(0)$, and as $r \to 0$ the regret lies between $(1-p)\,R^{\mathrm{ex}}(0)$ and $(1-p)\,R^{\mathrm{ex}}(0) + H(p)$.
+The last term, the identification cost, is the entropy of ``is the description correct?'' given the prompt: $H(p)$ with no examples, and never rising as examples arrive. Alone, the regret is therefore at least $(1-p)\,R^{\mathrm{ex}}(0)$ however precise the description, so its ESS cannot exceed the $n$ at which $R^{\mathrm{ex}}(n) = (1-p)\,R^{\mathrm{ex}}(0)$, and as $r \to 0$ the regret lies between $(1-p)\,R^{\mathrm{ex}}(0)$ and $(1-p)\,R^{\mathrm{ex}}(0) + H(p)$.
 \end{proposition}
 \emph{Idea.} Compare the predictor with a twin that is also told whether the description is correct. The twin's regret is $p\,R^{\mathrm{desc}}_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n)$. The predictor cannot beat the twin, since extra information never hurts a Bayes-optimal predictor. And its posterior predictive puts weight $\pi_n$ on the twin's answer, so it loses at most $-\log \pi_n(Z)$: with no examples, $\log(1/p)$ nats when the description is correct and $\log(1/(1-p))$ when it is wrong, which average to $H(p)$; more examples can only sharpen the posterior on $Z$ in expectation. The upper bound is the standard bound for a mixture forecaster under log loss, which pays at most the log of one over the weight it put on the right component \citep[Cor.~3.1 and \S9.2]{cesabianchi2006} \citep[\S V]{merhav1998}, applied to the two components, and the lower bound is the Bayes-optimality of the informed twin; what is new is what they say about the ESS. The proof is in Appendix~\ref{app:floor}.
 
@@ -197,6 +187,25 @@ Tables~\ref{tab:precision} and~\ref{tab:reliability} give the exact one-step ESS
 \end{table}
 
 \section{Proof of Proposition~\ref{prop:precision}}\label{app:precision}
+
+\begin{proposition*}[Proposition~\ref{prop:precision}, full version]
+Let $p = 1$, let $\psi$ be the digamma function, and let $c = 1/(r a_0) = \sigma_y^2 / s_\ell^2$: the ESS of the description's prior $\mathcal{N}(m, s_\ell^2 I_d)$ in the conjugate sense, noise variance over prior variance \citep{neuenschwander2020}, and the limit of $\ess_n$ as $n \to \infty$ (\S\ref{sec:reliability}). We call it the conjugate-prior ESS.
+\begin{enumerate}
+\item[(i)] \emph{Coarse descriptions.} Suppose $c \le 1$. Then for every $n < d$,
+$R^{\mathrm{ex}}(n) \ge \tfrac12\big[\log(2a_0) + \psi\big(\tfrac{d-n}{2}\big)\big]$, with equality in the limit $a_0 \to \infty$, and as $rd \to \infty$, uniformly in $c \le 1$,
+\[
+\ess = (d-1)(1-r) + (1-r)\,c + O\!\left(\tfrac{1}{rd}\right).
+\]
+\item[(ii)] \emph{Precise descriptions.} Suppose $c \ge d$. Then for every $n \ge d$,
+$R^{\mathrm{ex}}(n) \le \Phi(n) := \tfrac12\big[\psi\big(\tfrac{n+1}{2}\big) - \psi\big(\tfrac{n-d+1}{2}\big)\big]$, with equality in the limit $a_0 \to \infty$, and as $c/d \to \infty$, uniformly in $a_0 \ge 1$,
+\[
+\ess = c + d + 1 - \tfrac{1}{a_0} + O\!\left(\tfrac{d}{c}\right).
+\]
+\end{enumerate}
+For every $d$, $a_0$, and $r$, $\ess \le c + d + 2$.
+\end{proposition*}
+
+Both regimes say the same thing: the ESS of a description alone is its high-SNR term plus its conjugate-prior ESS, $\ess \approx (d-1)(1-r) + c$, within two examples. In (i) the conjugate term enters as $(1-r)c$, which is less than $c$ by $1/a_0 < 1$; in (ii) the exact constant is $c + d + 1 - 1/a_0$, which exceeds $(d-1)(1-r) + c$ by $2 - 1/a_0 + (d-1)r \in [1, 2)$ up to the stated error. The two regimes meet at $c = 1$, where the description pins $w$ down as tightly as the label noise does, and at $c \approx d$ the ESS passes $d$: below that, each gain in precision removes directions and the ESS stays under $d$; above it, every direction is already seen and the ESS grows like $c$, the examples needed to match the description's variance, plus the $d + 1$ that $d$ noisy examples cannot supply, minus the $1/a_0$ examples the base prior is already worth. The universal bound $\ess \le c + d + 2$ holds everywhere, including the crossover $1 < c < d$ where neither expansion applies. On the grid of Table~\ref{tab:precision} and Figure~\ref{fig:ess}(a), the additive rule is within $2.2$ examples of the exact ESS in every cell with $a_0 \ge 10$; at $d = 64$, $a_0 = 100$, $r = 0.1$ the exact ESS is $56.85$ against $56.79$ from (i), and at $d = 16$, $a_0 = 10$, $r = 0.001$ it is $116.8$ against $116.9$ from (ii).
 
 \begin{proof}
 Throughout, $\varepsilon = 1/a_0$, $x$ is the fresh query with $A = \|x\|^2 \sim \chi^2_d$, and $\Sigma = (\varepsilon I + X_n^\top X_n)^{-1}$. We use $\E \log \chi^2_k = \psi(k/2) + \log 2$, $\E[1/\chi^2_k] = 1/(k-2)$, $\E[1/\chi^4_k] = 1/((k-2)(k-4))$, and the Wishart facts that for $W \sim W_q(p, I)$ with $p \ge q$ and $z \sim \mathcal{N}(0, I_q)$ independent of $W$, $z^\top W^{-1} z$ is distributed as $\chi^2_q / \chi^2_{p-q+1}$ with independent numerator and denominator \citep[Theorem~3.2.12]{muirhead1982}, $\E W^{-1} = I/(p-q-1)$, and $\E \operatorname{tr} W^{-2} = q(p-1)/((p-q)(p-q-1)(p-q-3))$ \citep{vonrosen1988}.
