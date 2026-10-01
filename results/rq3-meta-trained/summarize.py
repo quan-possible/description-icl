@@ -37,6 +37,6 @@ with (here / "networks_table.tex").open("w") as f:
     for x in rows:
         cal = f"{x['calibrated_ess']:.1f}" if x["p_train"] != x["p_test"] else "---"
         f.write(f"{x['r']} & {float(x['p_train']):g} & {float(x['p_test']):g} & {x['net_ess']:.1f} & "
-                f"{x['trained_ess']:.1f} & {cal} & {x['gap_desc']:.3f} & {x['gap_plain']:.3f} \\\\\n")
+                f"{x['trained_ess']:.1f} & {cal} & {abs(x['gap_desc']) if abs(x['gap_desc']) < 5e-4 else x['gap_desc']:.3f} & {x['gap_plain']:.3f} \\\\\n")
     f.write("\\bottomrule\n\\end{tabular}\n")
 print(open(here / "networks_table.tex").read())
