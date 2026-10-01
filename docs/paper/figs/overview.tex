@@ -80,7 +80,7 @@
   \node[panel] at (0,0) {(a)};
   \node[header] at (6mm,0) {A PROMPT, READ AS BAYESIAN INFERENCE};
 
-  \node[box-green, anchor=north west] (d) at (0,-4.5mm) {descriptor: $w \approx m$};
+  \node[box-green, anchor=north west] (d) at (0,-4.5mm) {description: $w \approx m$};
   \node[box-blue, right=1.2mm of d]  (e1) {$x_1, y_1$};
   \node[box-blue, right=1.2mm of e1] (e2) {$x_2, y_2$};
   \node[right=0.3mm of e2, text=inkmuted] (ed) {$\cdots$};
@@ -91,14 +91,14 @@
   \draw[brace] (en.south east) -- node[below=9pt, lbl] {demonstrations that\\update the posterior} (e1.south west);
   \draw[brace] (q.south east) -- node[below=9pt, lbl] {predict $y$} (q.south west);
 
-  \node[box-green, right=9mm of q] (d2) {descriptor};
+  \node[box-green, right=9mm of q] (d2) {description};
   \node[right=1.2mm of d2, font=\normalsize] (eq) {$=$};
   \node[box-blue, right=1.2mm of eq] (k1) {$x_1, y_1$};
   \node[right=0.3mm of k1, text=inkmuted] (kd) {$\cdots$};
   \node[box-blue, right=0.3mm of kd] (kk) {$x_k, y_k$};
   \node[header] at (d2.west |- 0,0) {THE DESCRIPTION'S ESS};
   \draw[brace] (kk.south east) -- node[below=9pt, lbl]
-    {$k$ = ESS: the number of demonstrations\\that cut one\hy{}step regret as much\\as the descriptor does}
+    {$k$ = ESS: the number of demonstrations\\that cut one\hy{}step regret as much\\as the description does}
     (d2.south west);
   \draw[grid, line width=0.65pt] ($(q.east)!0.5!(d2.west) + (0,1mm)$) -- ++(0,-20mm);
 

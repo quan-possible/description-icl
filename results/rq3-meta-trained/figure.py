@@ -50,8 +50,8 @@ for ax in axes[1]:
 for ax in axes[:, 0]:
     ax.set_ylabel("regret (nats)")
 from matplotlib.lines import Line2D
-handles = [Line2D([], [], color=COLOR["1"], lw=1.2, label="Bayes-optimal, with descriptor"),
-           Line2D([], [], color=COLOR["1"], lw=1.2, ls="--", label="best single Gaussian, with descriptor"),
+handles = [Line2D([], [], color=COLOR["1"], lw=1.2, label="Bayes-optimal, with description"),
+           Line2D([], [], color=COLOR["1"], lw=1.2, ls="--", label="best single Gaussian, with description"),
            Line2D([], [], color=COLOR["0"], lw=1.2, label="Bayes-optimal, without"),
            Line2D([], [], color=fs.BASELINE, marker="o", mfc="white", ms=3, lw=0, label="network")]
 fig.legend(handles=handles, loc="outside lower center", ncol=2, frameon=False)
