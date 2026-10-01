@@ -68,11 +68,9 @@ the next prediction.
 | $N = 1$ | One question, one answer |
 | $N$ large | A long session with feedback |
 
-The trained networks of section 6 are scored by squared error instead, as in
-Garg et al. and Huang & Ge: regret is the squared error of the prediction
-minus the oracle's, in units of the noise variance. The exact learner is
-computed under both losses, so each network is compared with the exact
-learner under the loss it was trained on.
+The trained networks of section 6 are scored by the same log loss, as in
+Genewein et al.: the network predicts a Gaussian for the answer, and its
+regret is its log loss minus the oracle's, in nats.
 
 ## 4. Effective sample size
 
@@ -160,19 +158,20 @@ prompt, with $K = 16$. Hidden rows keep every prompt the same shape.
 | --- | --- | --- |
 | Model | Transformer, 12 layers, 8 heads, width 256, GELU, no dropout; 9.5M parameters | Garg et al., Section 2 |
 | Positions | None; the marker columns tell the rows apart | Huang & Ge |
-| Output | One number, read at the question row | Garg et al.; Huang & Ge |
+| Output | A mean and a log variance for the answer, read at the question row | Genewein et al.; decision 19 |
 
 ### 6.5 Loss
 
-Squared error between the model's number and the true answer to the
-question, as in Garg et al. and Huang & Ge. In the example the model outputs
-one number for the blank in row 3 and is scored against $2.04$. Each prompt
-contributes one question.
+Log loss: the negative log density of the true answer under the model's
+Gaussian, as in Genewein et al. In the example the model outputs a mean and
+a spread for the blank in row 3, say $2.14 \pm 0.3$, and is scored by the
+log density at $2.04$. Each prompt contributes one question.
 
 ### 6.6 What the exact learner predicts for the same prompt
 
-Under squared error the best prediction is the exact learner's average
-belief about the answer.
+The exact learner's predictive is a Gaussian (stage 1) or a mixture of two
+(stage 2); the table shows its mean. Under log loss the regret also counts
+how well the spread is set.
 
 | Learner | How it predicts the blank in row 3 | Prediction | Squared error against 2.04 |
 | --- | --- | --- | --- |
@@ -185,15 +184,16 @@ In stage 2 the weight 0.97 is the learner's belief that the description is
 right. It starts at the reliability, 0.90, and rises because the description
 predicted the two examples well.
 
-**Regret** is a learner's squared error minus the oracle's. For this one
-prompt the learners with a description happen to beat the oracle, because
-the noise in $y_3$ fell their way. Results use the average over 20,000
-prompts, where the oracle is best.
+**Regret** is a learner's log loss minus the oracle's. For this one
+prompt the learners with a description happen to beat the oracle on the
+mean, because the noise in $y_3$ fell their way. Results use the average
+over 20,000 prompts, where the oracle is best.
 
 ### 6.7 From regret to ESS
 
 Averaged over prompts at the experimental setting ($d = 5$, $a_0 = 10$), in
-units of the noise variance (`results/rq3-meta-trained/targets.csv`):
+nats (`results/rq3-meta-trained/targets.csv`; the table below is refreshed
+from that file):
 
 | Examples, no description | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -277,10 +277,10 @@ question. Elements that are neither are listed under Departures.
 | Design element | Source |
 | --- | --- |
 | In-context linear regression, $x \sim \mathcal{N}(0, I)$, $w \sim \mathcal{N}(0, I)$ | Garg et al. 2022; Huang & Ge 2025 |
-| Model size, optimiser, learning rate, squared error, one-number output | Garg et al. 2022 |
+| Model size, optimiser, learning rate | Garg et al. 2022 |
+| Gaussian output and log loss against the exact learner | Genewein et al. 2025 |
 | Prefix layout, marker columns, no positions, one question per prompt, $d = 5$, gradient clipping | Huang & Ge 2025 |
 | One model for every number of examples | Garg et al. 2022 |
-| Comparison with the exact learner by regret | Genewein et al. 2025 |
 | Robust mixture prior for reliability | Schmidli et al. 2014 |
 | ESS by matching a prior against observations | Morita et al. 2008; Reimherr et al. 2021 |
 
@@ -319,18 +319,14 @@ question. Elements that are neither are listed under Departures.
 | 16 | Model size of Garg et al.: 12 layers, 8 heads, width 256. Supersedes 6 layers, width 128. | 2026-09-29 | Decision 14. |
 | 17 | Adam at a constant learning rate of $10^{-4}$. Supersedes warm-up and decay at 3e-4. | 2026-09-29 | Decision 14. Garg et al. |
 | 18 | The model sees $w \sim \mathcal{N}(0, I)$. Supersedes weights of variance 10. | 2026-09-29 | Decision 14. The same task in the units of Garg et al. and Huang & Ge. |
+| 19 | The networks output a mean and a log variance and train on log loss. Supersedes decision 15. | 2026-09-30 | Bruce. One ESS definition through the paper; Genewein et al. is the evaluation the paper follows; the earlier log-loss pilot learned the task. |
 
 ## Open questions
 
-- Output and loss for the networks (2026-09-30, from the paper, section 6):
-  one number with squared error (decision 15, in the code) or a predicted
-  spread with log loss, which matches the paper's ESS definition. Bruce
-  decides.
+None.
 
 ## Deferred
 
 - The input-mean descriptor of Huang & Ge as a second condition.
 - An LLM experiment.
 - An LSTM, which the proposal names.
-- A distribution output with log loss, which would let the network's trust
-  be read directly and match the loss of the exact results in RQ1 and RQ2.

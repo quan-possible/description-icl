@@ -90,6 +90,16 @@ def log_weight_true(paths, q):
     return np.where(paths.correct[:, None], l1, l0) - mix
 
 
+def log_predictive(paths, q):
+    """The learner's log predictive density of each y_{k+1} given the first k
+    observations, (S, K). The mixture's cumulative log marginal likelihood is
+    M(k) = logaddexp(log q + L1(k), log(1 - q) + L0(k)); the predictive is
+    its increment."""
+    with np.errstate(divide="ignore"):
+        M = np.logaddexp(np.log(q) + paths.L1, np.log1p(-q) + paths.L0)
+    return M[:, 1:] - M[:, :-1]
+
+
 def mean_prediction(paths, q):
     """The learner's point prediction of each y_{k+1} from the first k
     observations, (S, K): its posterior mean, which is optimal under squared

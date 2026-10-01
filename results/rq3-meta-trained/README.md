@@ -15,8 +15,8 @@ The design, a worked example, and the reasons are in
 | `r` | 0.5, 0.05 (one model each) |
 | $p$ | 1 in stage 1, 0.9 in stage 2 (one model each) |
 | Model | Transformer, 12 layers, 8 heads, width 256 (Garg et al.), no positions |
-| Output | One number, the answer to the question |
-| Loss | Squared error in the code; the paper leaves the loss to be finalized (see `STATUS.md`) |
+| Output | A mean and a log variance for the answer to the question |
+| Loss | Log loss (Genewein et al.) |
 | Training | Adam, learning rate 1e-4, batch 1024; step count set by a pilot |
 | Seeds | 0, 1, 2 |
 
@@ -33,14 +33,13 @@ evaluates at a reliability different from training.
 
 ## Targets
 
-`targets.csv` holds the exact learner's regret and ESS under squared error
-at this setting. The ESS targets are 2.7 and 7.4 for reliable descriptions
-($r = 0.5$, $0.05$) and 2.1 and 4.4 at $p = 0.9$.
+`targets.csv` holds the exact learner's log-loss regret (nats) and ESS at
+this setting; see the file for the values.
 
 ## Outputs of `evaluate.py`
 
-- `<name>_regret.csv`: regret after $n$ examples, network and Bayes, with
-  and without a description, in units of the noise variance.
+- `<name>_regret.csv`: log-loss regret after $n$ examples, network and
+  Bayes, with and without a description, in nats.
 - `<name>_ess.csv`: ESS of the description.
 - `<name>_trust.csv`: the trust $q$ at which the Bayes learner's prediction
   is closest to the network's.
