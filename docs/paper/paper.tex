@@ -4,6 +4,7 @@
 \usepackage{times}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage{microtype}
 \usepackage[authoryear,round]{natbib}
 \usepackage{xcolor}
@@ -28,6 +29,17 @@ While prompts in modern language models typically consist of both a task descrip
 \end{abstract}
 
 \section{Introduction}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../../results/fig1-overview/overview.pdf}
+\caption{\textbf{A task description is worth a number of in-context examples, set by its precision and capped by its reliability.}
+(a) A Bayes-optimal predictor sees either a description or $n$ examples; the description's effective sample size (ESS) is the $n$ at which their one-step log-loss regrets match. The description acts as a prior on the task $w$: with probability $p$ (reliability) it is correct and leaves a fraction $r$ of the prior variance (precision $1/r$); otherwise $w$ follows the base prior (sketch, not to scale).
+(b) Regret after $n$ examples (black) and regret of a description with $r = 0.001$ (dashed). The crossings give its ESS: 116 examples if it is always correct, 23 if it is correct 90\% of the time.
+(c) ESS against precision. A reliable description keeps gaining from precision; an unreliable one saturates (Proposition~\ref{prop:floor}).
+Panels (b, c): $d = 16$, $a_0 = 10$; mean of three seeds, standard deviation at most 2\% of each ESS.}
+\label{fig:overview}
+\end{figure}
 
 In-context learning (ICL) allows models to adapt to new tasks from a prompt \citep{brown2020}. In practice, a prompt generally comprises a natural language task description paired with a few input-output demonstrations. However, formal theories of ICL largely abstract prompts as mere collections of demonstrations \citep{garg2022, akyurek2023, xie2022, genewein2025}. This leaves a significant gap in our understanding, as empirical evidence on the value of task descriptions remains mixed. Some studies show that a good description can be worth hundreds of data points \citep{lescao2021, honda2025}, whereas others find that misleading descriptions perform about as well as informative ones \citep{webson2022} and that enough examples override an explicitly stated bias \citep{gupta2025}. Even recent theoretical models that incorporate descriptors \citep{huangge2025, lin2025, tong2026} fail to express the utility of these descriptions on a commensurate scale with the examples themselves.
 
@@ -136,7 +148,7 @@ Because $R^{\mathrm{ex}}(n)$ decreases with $n$, the lower bound caps the ESS at
 
 \begin{table}[t]
 \centering\small
-\caption{ESS of unreliable descriptions ($d=16$, $a_0=10$), three seeds; standard deviation across seeds at most 1\% of each value. As precision increases (smaller $r$), the ESS is capped by the reliability $p$.}
+\caption{ESS of unreliable descriptions ($d=16$, $a_0=10$), three seeds; standard deviation across seeds at most 2\% of each value. As precision increases (smaller $r$), the ESS is capped by the reliability $p$.}
 \label{tab:reliability}
 \begin{tabular}{rrrrr}
 \toprule

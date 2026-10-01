@@ -40,7 +40,8 @@ learner and then for meta-trained networks.
   written out with proofs (2026-09-30). Every number in Tables 1 and 2
   regenerates from `results/rq1-single-query-gap/ess.csv` and
   `results/rq2-reliability/ess_map.csv`; the RQ1 folder's horizon columns
-  are unused by the paper.
+  are unused by the paper. Figure 1 (overview) regenerates from
+  `results/fig1-overview/overview.py`.
 - Section 6 (networks) is pending. The pipeline in
   [results/rq3-meta-trained/](results/rq3-meta-trained/README.md) runs end
   to end; no model is trained. The design is in
