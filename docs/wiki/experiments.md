@@ -298,6 +298,8 @@ question. Elements that are neither are listed under Departures.
 | With and without a descriptor | Separate models (Huang & Ge) | One model; the description row is present or hidden | Kept by Bruce. The ESS then compares a learner with itself |
 | Number of examples | Fixed (Huang & Ge); every row scored (Garg et al.) | One question after a random number of examples | Kept by Bruce. The ESS needs regret at every number of examples |
 | Examples per prompt | 40 (Garg et al.), 50 (Huang & Ge) | Up to 15 | Kept by Bruce. Covers the largest ESS twice over |
+| Batch, steps, curriculum | Garg et al.: batch 64, 500k steps, a curriculum over dimension and prompt length | Batch 1024, 40k steps, no curriculum | One GPU per model and a fixed budget confirmed by the pilot (decision 20); $d = 5$ needs no curriculum |
+| Prior SNR $a_0$ | 1 (Garg et al.), 4 (Raventós et al., Panwar et al.), 2.25 to 16 (Akyürek et al.) | 10 | A precise description must be worth many examples; within Akyürek et al.'s range |
 | Seeds | 5 (Huang & Ge) | 1 | Bruce, 2026-09-30: one training per configuration; the exact learner's comparison does not need a spread across seeds |
 
 ## Decisions
