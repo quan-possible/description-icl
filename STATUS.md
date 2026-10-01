@@ -141,7 +141,8 @@ learner and then for meta-trained networks.
 
 ## Next actions
 
-1. On Bruce's go: train the four networks on Colab (three L4 VMs,
+1. On Bruce's explicit go only (he stopped a relaunch on 2026-10-01 at
+   00:45: "no Colab yet"): train the four networks on Colab (three L4 VMs,
    `one_model.sh` with `(1.0 0.1, 0.9 0.1)`, `(1.0 0.01)`, `(0.9 0.01)`,
    about 80 minutes), with each `detached.py` heartbeat runner inside
    `tmux`. Three such jobs were lost on 2026-09-30 when the conversation
