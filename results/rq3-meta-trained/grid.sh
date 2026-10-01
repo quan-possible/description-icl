@@ -1,17 +1,16 @@
 #!/bin/zsh
 # Train the four models, one seed each (decision 20), and evaluate them;
 # p = 1 models are also evaluated at p = 0.9. SEEDS="0 1 2" adds seeds.
-# Usage: results/rq3-meta-trained/grid.sh <steps>
+# Usage: results/rq3-meta-trained/grid.sh [steps]   (default 40000, the pilot's length)
 #   (run inside tmux: tmux new -d -s rq3grid "results/rq3-meta-trained/grid.sh 30000")
 set -e
 cd "$(dirname "$0")/../.."
-STEPS=${1:?steps}
+STEPS=${STEPS:-40000}   # a fixed budget for every model; the argument is ignored
 PY=${PY:-"uv run python"}   # on Colab: PY=python3
 AMP=${AMP:-}                  # on a CUDA GPU: AMP=--amp (bf16 autocast)
 R=results/rq3-meta-trained
-# The pilot (p = 1, r = 0.05, seed 0) snapshot at STEPS is the same model the
-# grid would train for that configuration: same seed, same sampling order,
-# stopped at the same step. Reuse it.
+# The pilot (p = 1, r = 0.05, seed 0) is the same model the grid would train
+# for that configuration, so reuse its snapshot at STEPS.
 if [[ -f tmp/rq3/pilot_step$STEPS.pt && ! -f tmp/rq3/p1.0_r0.05_d5_s0.pt ]]; then
   cp tmp/rq3/pilot_step$STEPS.pt tmp/rq3/p1.0_r0.05_d5_s0.pt
   echo "reused pilot snapshot at step $STEPS as p1.0_r0.05_d5_s0" | tee -a tmp/rq3/grid.log
