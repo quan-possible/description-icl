@@ -321,6 +321,7 @@ question. Elements that are neither are listed under Departures.
 | 17 | Adam at a constant learning rate of $10^{-4}$. Supersedes warm-up and decay at 3e-4. | 2026-09-29 | Decision 14. Garg et al. |
 | 18 | The model sees $w \sim \mathcal{N}(0, I)$. Supersedes weights of variance 10. | 2026-09-29 | Decision 14. The same task in the units of Garg et al. and Huang & Ge. |
 | 19 | The networks output a mean and a log variance and train on log loss. Supersedes decision 15. | 2026-09-30 | Bruce. One ESS definition through the paper; Genewein et al. is the evaluation the paper follows; the earlier log-loss pilot learned the task. |
+| 20 | One seed per configuration. Supersedes three seeds. | 2026-09-30 | Bruce. Compute; each model is compared with the exact learner on 20,000 prompts, so the comparison itself has small error. |
 
 ## Open questions
 
