@@ -2,8 +2,8 @@
 
     uv run python results/rq3-meta-trained/evaluate.py tmp/rq3/<name>.pt
 
-Regret is the squared error of a prediction minus the squared error of an
-oracle that knows w, averaged over prompts, in units of the noise variance.
+Regret is the log loss of a predictive distribution minus the log loss of
+an oracle that knows w, averaged over prompts, in nats.
 Writes, next to this script and named after the checkpoint:
 
   <name>_regret.csv   regret after n examples, network and Bayes, with and
@@ -42,11 +42,22 @@ def bayes_paths(batch, a0, r):
     return mx.paths_from_data(n("X"), n("Y"), n("m"), batch["correct"].numpy(), a0, r * a0)
 
 
-def regret(pred, batch):
-    """(mean, standard error) over prompts, for each number of examples."""
+def regret(mean, log_var, batch):
+    """Log-loss regret of the predictive N(mean, exp(log_var)) against the
+    oracle N(w^T x, 1), in the exact learner's units: (mean, standard error)
+    over prompts, for each number of examples."""
     y = batch["Y"].double().numpy()
     oracle = torch.einsum("bkd,bd->bk", batch["X"], batch["w"]).double().numpy()
-    x = (pred - y) ** 2 - (oracle - y) ** 2
+    nll = 0.5 * (np.log(2 * np.pi) + log_var + (y - mean) ** 2 * np.exp(-log_var))
+    x = nll - 0.5 * (np.log(2 * np.pi) + (y - oracle) ** 2)
+    return x.mean(0), x.std(0, ddof=1) / np.sqrt(len(x))
+
+
+def bayes_regret(paths, q, batch):
+    """Log-loss regret of the exact learner with trust q, (mean,) per n."""
+    y = batch["Y"].double().numpy()
+    oracle = torch.einsum("bkd,bd->bk", batch["X"], batch["w"]).double().numpy()
+    x = -mx.log_predictive(paths, q) - 0.5 * (np.log(2 * np.pi) + (y - oracle) ** 2)
     return x.mean(0), x.std(0, ddof=1) / np.sqrt(len(x))
 
 
@@ -69,9 +80,9 @@ if __name__ == "__main__":
     here = pathlib.Path(__file__).parent
 
     def predict(batch):
-        """The network's prediction of y_{n+1} after n examples, (S, K), in the
-        exact learner's units."""
-        out = []
+        """The network's predictive for y_{n+1} after n examples: mean and log
+        variance, each (S, K), converted to the exact learner's units."""
+        means, lvs = [], []
         with torch.no_grad():
             for i in range(0, args.S, 2000):
                 part = {k: v[i : i + 2000].to(dev) if torch.is_tensor(v) else v
@@ -79,9 +90,12 @@ if __name__ == "__main__":
                 per_n = []
                 for n in range(K):
                     count = torch.full((len(part["X"]),), n, device=dev)
-                    per_n.append(model(*meta.tokens(part, count), count))
-                out.append(torch.stack(per_n, 1).cpu())
-        return torch.cat(out).double().numpy() * a0**0.5
+                    per_n.append(torch.stack(model(*meta.tokens(part, count), count), 1))
+                out = torch.stack(per_n, 1).cpu()  # (B, K, 2)
+                means.append(out[..., 0]); lvs.append(out[..., 1])
+        mean = torch.cat(means).double().numpy() * a0**0.5
+        log_var = torch.cat(lvs).double().numpy() + np.log(a0)
+        return mean, log_var
 
     def write(suffix, rows):
         with (here / f"{name}_{suffix}.csv").open("w", newline="") as f:
@@ -91,13 +105,14 @@ if __name__ == "__main__":
 
     # prompts without a description: the examples-only curves
     plain = draw(args.S, K, d, a0, r, p_test, 0.0, seed=1)
-    net_plain, net_plain_se = regret(predict(plain), plain)
-    bayes_plain, _ = regret(bayes_paths(plain, a0, r).mu0, plain)
+    net_plain, net_plain_se = regret(*predict(plain), plain)
+    plain["correct"] = torch.zeros_like(plain["correct"])  # w came from the base prior
+    bayes_plain, _ = bayes_regret(bayes_paths(plain, a0, r), 0.0, plain)
 
     batch = draw(args.S, K, d, a0, r, p_test, 1.0, seed=10)
-    pred, paths = predict(batch), bayes_paths(batch, a0, r)
-    net, net_se = regret(pred, batch)
-    bayes, _ = regret(mx.mean_prediction(paths, p_train), batch)
+    (pred, pred_lv), paths = predict(batch), bayes_paths(batch, a0, r)
+    net, net_se = regret(pred, pred_lv, batch)
+    bayes, _ = bayes_regret(paths, p_train, batch)
 
     rows = [dict(desc=0, n=n, net=round(net_plain[n], 4), net_se=round(net_plain_se[n], 4),
                  bayes=round(bayes_plain[n], 4)) for n in range(K)]

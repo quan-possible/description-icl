@@ -41,12 +41,19 @@ def test_model_reads_only_the_prompt():
     b = batch([True] * 4)
     n = torch.tensor([2, 2, 2, 2])
     tok, hidden = meta.tokens(b, n)
-    pred = model(tok, hidden, n)
-    assert pred.shape == (4,)
+    pred = torch.stack(model(tok, hidden, n), 1)
+    assert pred.shape == (4, 2)
 
     changed = tok.clone()
     changed[:, 4] = 7.0  # a hidden row
     swapped = tok.clone()
     swapped[:, [1, 2]] = tok[:, [2, 1]]  # the two examples
     for other in (changed, swapped):
-        assert torch.allclose(pred, model(other, hidden, n), atol=1e-5)
+        assert torch.allclose(pred, torch.stack(model(other, hidden, n), 1), atol=1e-5)
+
+
+def test_log_loss_matches_torch():
+    """The training loss is the Gaussian negative log density."""
+    mean, lv, y = torch.tensor([0.5, -1.0]), torch.tensor([0.0, 1.5]), torch.tensor([0.2, 0.3])
+    want = -torch.distributions.Normal(mean, torch.exp(lv / 2)).log_prob(y)
+    assert torch.allclose(meta.log_loss(mean, lv, y), want)

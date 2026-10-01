@@ -1,9 +1,10 @@
 """Meta-trained sequence models for in-context regression with descriptions.
 
 A prompt is an optional description, n examples, and one question, in the
-prefix layout of Huang & Ge (2025). The model predicts the answer to the
-question as one number and is trained on squared error, as in Garg et al.
-(2022) and Huang & Ge, so its target is the Bayes-optimal posterior mean.
+prefix layout of Huang & Ge (2025). The model predicts a Gaussian for the
+answer to the question, a mean and a log variance, and is trained on log
+loss as in Genewein et al. (2025), so its target is the Bayes-optimal
+predictive distribution.
 
 Units: prompts are drawn with sigma_y = 1 and w of variance a_base, the units
 of the exact learner. The model sees them in the units of Garg et al. and
@@ -70,15 +71,22 @@ class Transformer(nn.Module):
 
     def __init__(self, d, width=256, layers=12, heads=8):
         super().__init__()
-        self.embed = nn.Linear(d + 3, width)
+        self.embed = nn.Linear(d + 3, width)  # one linear layer reads each row
         layer = nn.TransformerEncoderLayer(
             width, heads, 4 * width, dropout=0.0, activation="gelu", batch_first=True,
             norm_first=True,
         )
         self.body = nn.TransformerEncoder(layer, layers, enable_nested_tensor=False)
         self.norm = nn.LayerNorm(width)
-        self.head = nn.Linear(width, 1)
+        self.head = nn.Linear(width, 2)  # mean and log variance
 
     def forward(self, tok, hidden, n):
+        """(mean, log variance) of the answer to the question, each (B,)."""
         h = self.norm(self.body(self.embed(tok), src_key_padding_mask=hidden))
-        return self.head(h[torch.arange(len(n), device=n.device), n + 1])[:, 0]  # the question row
+        out = self.head(h[torch.arange(len(n), device=n.device), n + 1])  # the question row
+        return out[:, 0], out[:, 1].clamp(-12.0, 12.0)
+
+
+def log_loss(mean, log_var, y):
+    """Negative log density of y under N(mean, exp(log_var)), per prompt."""
+    return 0.5 * (math.log(2 * math.pi) + log_var + (y - mean) ** 2 * torch.exp(-log_var))

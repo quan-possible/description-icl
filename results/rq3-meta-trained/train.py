@@ -40,9 +40,9 @@ for step in range(1, args.steps + 1):
     # One question per prompt, after a random number of examples.
     batch = meta.sample_batch(args.batch, args.K, args.d, args.a_base, rs, args.p, 0.5, dev)
     n = torch.randint(0, args.K, (args.batch,), device=dev)
-    pred = model(*meta.tokens(batch, n), n)
+    mean, log_var = model(*meta.tokens(batch, n), n)
     y = batch["Y"].gather(1, n[:, None])[:, 0] / args.a_base**0.5  # the model's units
-    loss = ((pred - y) ** 2).mean()
+    loss = meta.log_loss(mean, log_var, y).mean()
     opt.zero_grad(set_to_none=True)
     loss.backward()
     torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -50,5 +50,5 @@ for step in range(1, args.steps + 1):
     run = loss.item() if step == 1 else 0.99 * run + 0.01 * loss.item()
     if step % 1000 == 0:
         print(f"{name} step {step} loss {run:.4f} {time.time() - t0:.0f}s", flush=True)
-    if step % 10_000 == 0 or step == args.steps:
+    if step % 5_000 == 0 or step == args.steps:
         torch.save({"model": model.state_dict(), "args": vars(args), "step": step}, out / f"{name}.pt")
