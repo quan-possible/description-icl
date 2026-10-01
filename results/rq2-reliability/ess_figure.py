@@ -14,8 +14,8 @@ import pathlib
 
 import orx_figstyle as fs
 
-from descriptor_icl import gaussian as g
-from descriptor_icl import mixture as mx
+from description_icl import gaussian as g
+from description_icl import mixture as mx
 
 here = pathlib.Path(__file__).parent
 D, A0, K, S = 16, 10.0, 260, 8000

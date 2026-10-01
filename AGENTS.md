@@ -1,4 +1,4 @@
-# Agent instructions for descriptor-icl
+# Agent instructions for description-icl
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Clear Sans, Noto Sans, Helvetica Neue, Arial, Noto Sans CJK JP, sans-serif","fontSize":"16px","primaryTextColor":"#171717","lineColor":"#a8a8a8","mainBkg":"#ffffff","clusterBkg":"#ffffff","clusterBorder":"#ffffff","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"curve":"linear"}}}%%
@@ -81,7 +81,7 @@ scaffolding.
 
 | Role | Home |
 | --- | --- |
-| Shared code: priors, Bayes-optimal predictors, regret, ESS, models | `src/descriptor_icl/`, tests in `tests/` |
+| Shared code: priors, Bayes-optimal predictors, regret, ESS, models | `src/description_icl/`, tests in `tests/` |
 | One analysis: its script or notebook, config, figures, tables, and a `README.md` stating what it shows | `results/<rq>-<slug>/`, e.g. `results/rq1-dimension-sweep/` |
 | Hand-written prose: proposal, notes, paper | `docs/` (`docs/proposal/`, `docs/paper/`) |
 | Resumable multi-session work | `docs/jobs/active/<slug>/JOB.md` |
@@ -109,5 +109,5 @@ scaffolding.
 ## Close-out
 
 - Commit completed work locally. Pushing to the private GitHub remote
-  `quan-possible/descriptor-icl` needs Bruce's approval unless he asked for it.
+  `quan-possible/description-icl` needs Bruce's approval unless he asked for it.
 - No Drive replication or deployment is configured.

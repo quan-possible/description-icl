@@ -22,7 +22,7 @@ interpolated between integers. Both are the same predictor with different
 conditioning information. Prediction-based ESS was left open by Reimherr et
 al. (2021).
 
-**Code.** `src/descriptor_icl/gaussian.py` ($p = 1$),
-`src/descriptor_icl/mixture.py` ($p < 1$). Validated against a direct
+**Code.** `src/description_icl/gaussian.py` ($p = 1$),
+`src/description_icl/mixture.py` ($p < 1$). Validated against a direct
 log-determinant, $d = 1$ quadrature, the Wishart limit, balanced designs, the
 long-horizon limit, and the joint Gaussian likelihood (`tests/`).

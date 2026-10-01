@@ -13,7 +13,7 @@ import pathlib
 
 import numpy as np
 
-from descriptor_icl import gaussian as g
+from description_icl import gaussian as g
 
 here = pathlib.Path(__file__).parent
 D, A0, P, K, S = 5, 10.0, 0.9, 21, 20_000

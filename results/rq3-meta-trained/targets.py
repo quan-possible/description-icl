@@ -7,7 +7,7 @@ which the trained networks should reproduce. Writes targets.csv next to this scr
 import csv
 import pathlib
 
-from descriptor_icl import gaussian as g
+from description_icl import gaussian as g
 import torch
 
 from evaluate import bayes_paths, bayes_regret, draw

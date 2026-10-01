@@ -3,19 +3,19 @@
 **Status:** four models trained (2026-09-30, one per setting, 40k steps on
 Colab L4); results in the paper's section 6. One continuation run pending. Design record: [experiments.md](experiments.md), section 6.
 
-**Design.** Prefix embedding of Huang & Ge (2025): an optional descriptor
+**Design.** Prefix embedding of Huang & Ge (2025): an optional description
 token carrying $m$, example tokens, a query token, two indicator columns. No
 positional encoding. Architecture and optimisation of Garg et al. (2022):
 12 layers, 8 heads, width 256, Adam at $10^{-4}$, fresh prompts every step.
 $d = 5$, $a_0 = 10$, up to 15 examples, half the prompts without a
-descriptor. $r$ and $p$ fixed per model and never stated.
+description. $r$ and $p$ fixed per model and never stated.
 
 **Loss.** Log loss with a predicted mean and spread (Genewein et al.),
 decided by Bruce on 2026-09-30. One question per prompt, after a random
 number of examples.
 
-**Order.** One factor at a time: reliable precise descriptor; the same model
-evaluated at $p = 0.9$; coarse descriptor; then training at $p = 0.9$. One seed per
+**Order.** One factor at a time: reliable precise description; the same model
+evaluated at $p = 0.9$; coarse description; then training at $p = 0.9$. One seed per
 configuration (decision 20).
 
 **Targets** (`results/rq3-meta-trained/targets.csv`, squared error; log-loss

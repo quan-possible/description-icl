@@ -15,8 +15,8 @@ import pathlib
 
 import numpy as np
 
-from descriptor_icl import gaussian as g
-from descriptor_icl import mixture as mx
+from description_icl import gaussian as g
+from description_icl import mixture as mx
 
 D, A0, K, S = 16, 10.0, 260, 8000
 NS = list(range(0, 101))

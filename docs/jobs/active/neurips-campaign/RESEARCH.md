@@ -18,9 +18,9 @@ the horizon.
 
 | Asset | Where |
 | --- | --- |
-| Exact learner, reliable descriptions | `src/descriptor_icl/gaussian.py` |
-| Exact learner, unreliable descriptions | `src/descriptor_icl/mixture.py` |
-| Meta-trained models | `src/descriptor_icl/meta.py` |
+| Exact learner, reliable descriptions | `src/description_icl/gaussian.py` |
+| Exact learner, unreliable descriptions | `src/description_icl/mixture.py` |
+| Meta-trained models | `src/description_icl/meta.py` |
 | RQ1 sweep | `results/rq1-single-query-gap/` |
 | RQ2 tables | `results/rq2-reliability/` |
 | RQ3 training | `results/rq3-meta-trained/` |
@@ -79,10 +79,10 @@ I have not yet read any of them myself.
 | Work | What it has | What it lacks relative to this project |
 | --- | --- | --- |
 | Tong et al. 2026 † | Examples overwhelm one wrong instruction exponentially fast (finite task set) | Exact counts, precision, mis-set trust, ESS |
-| Zhu, Oermann & Cho 2026 † | Transformers use a prior-carrying prefix Bayes-optimally in linear regression | Descriptor vectors, reliability, ESS |
+| Zhu, Oermann & Cho 2026 † | Transformers use a prior-carrying prefix Bayes-optimally in linear regression | Description vectors, reliability, ESS |
 | Bigelow et al. 2025 † | Fitted crossover points between prior and examples in LLMs | Derivation, precision, instructions |
 | Camassa & Shiller 2026 † | LLM instruction-versus-demonstration transition curves | A normative benchmark |
-| Lin & Lee 2024 † | Gaussian-mixture task priors, closed-form posterior | Descriptor selects component; ESS |
+| Lin & Lee 2024 † | Gaussian-mixture task priors, closed-form posterior | Description selects component; ESS |
 | Reimherr et al. 2021 † | ESS depends on the discrepancy; prediction-based ESS left open | The prediction-based comparison itself |
 | Neuenschwander et al. 2020 † | ESS for mixture priors, one parameter | Multi-parameter, prediction loss |
 | Huang & Ge 2025 | Descriptor = input mean; training dynamics | Prior on $w$, ESS, reliability |

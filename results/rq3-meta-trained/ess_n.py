@@ -10,7 +10,7 @@ import pathlib
 
 import numpy as np
 
-from descriptor_icl import gaussian as g
+from description_icl import gaussian as g
 
 here = pathlib.Path(__file__).parent
 rows = []

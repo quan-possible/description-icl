@@ -27,7 +27,7 @@ flowchart TD
   repository, so they must be reproduced before they count as project
   evidence.
 - The folder became a Git repository pushed to private GitHub
-  `quan-possible/descriptor-icl`, with core project records and layout
+  `quan-possible/description-icl`, with core project records and layout
   conventions in `AGENTS.md`.
 
 ## 2026-09-29 | Exact learners, assessment, and RQ3 design

@@ -118,15 +118,15 @@ learner and then for meta-trained networks.
 - Decisions today: log loss with a Gaussian output (19), one seed per
   setting (20), a fixed 40k-step budget confirmed by the pilot; see
   [docs/wiki/experiments.md](docs/wiki/experiments.md).
-- Exact learners: `src/descriptor_icl/gaussian.py` (reliable) and
+- Exact learners: `src/description_icl/gaussian.py` (reliable) and
   `mixture.py` (unreliable). `uv run pytest` passes.
 - The venue evidence and design decisions are in
   [docs/notes/2026-09-29-neurips-assessment.md](docs/notes/2026-09-29-neurips-assessment.md);
   the campaign job is
   [docs/jobs/active/neurips-campaign/](docs/jobs/active/neurips-campaign/JOB.md).
 - The repository is on `main`, tracking private GitHub
-  `quan-possible/descriptor-icl`. A second checkout lives on the Mac mini
-  (`bruces-mac-mini` on Tailscale) at `~/Projects/descriptor-icl`.
+  `quan-possible/description-icl`. A second checkout lives on the Mac mini
+  (`bruces-mac-mini` on Tailscale) at `~/Projects/description-icl`.
 
 ## Findings that contradict the proposal (record; not in the paper)
 

@@ -31,7 +31,7 @@ what is needed to resume the task.
 ## Current state
 
 - Environment: `uv` project, Python 3.12; `uv run pytest` passes.
-- Built: `src/descriptor_icl/gaussian.py` (reliable descriptions) and
+- Built: `src/description_icl/gaussian.py` (reliable descriptions) and
   `mixture.py` (unreliable descriptions), both exact up to Monte Carlo over
   inputs.
 - Analyses: `results/rq1-single-query-gap/`, `results/rq2-reliability/`;

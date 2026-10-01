@@ -1,6 +1,6 @@
 import torch
 
-from descriptor_icl import meta
+from description_icl import meta
 
 D, K = 3, 4
 

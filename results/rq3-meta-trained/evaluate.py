@@ -24,9 +24,9 @@ import pathlib
 import numpy as np
 import torch
 
-from descriptor_icl import gaussian as g
-from descriptor_icl import meta
-from descriptor_icl import mixture as mx
+from description_icl import gaussian as g
+from description_icl import meta
+from description_icl import mixture as mx
 
 QS = np.round(np.concatenate([[0.001, 0.01], np.arange(0.05, 1.0, 0.05), [0.99, 0.999]]), 3)
 TRUST_STEPS = (0, 2, 8)

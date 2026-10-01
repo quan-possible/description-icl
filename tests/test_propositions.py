@@ -16,7 +16,7 @@ from scipy.optimize import brentq
 from scipy.special import digamma
 from scipy.stats import chi2
 
-from descriptor_icl import gaussian as g
+from description_icl import gaussian as g
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 

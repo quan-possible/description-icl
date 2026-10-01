@@ -86,7 +86,7 @@ formula; the only randomness is the draw of inputs and tasks.
 
 | | RQ1 | RQ2 |
 | --- | --- | --- |
-| Code | `src/descriptor_icl/gaussian.py` | `src/descriptor_icl/mixture.py` |
+| Code | `src/description_icl/gaussian.py` | `src/description_icl/mixture.py` |
 | Script | `results/rq1-single-query-gap/run.py` | `results/rq2-reliability/run.py` |
 | Reliability | $p = 1$ | $p \in \{1, 0.99, 0.9\}$ |
 | Settings $(d, a_0)$ | $d \in \{1, \dots, 64\}$, $a_0 \in \{1, 10, 100\}$ | (4, 10), (16, 10), (16, 100), (64, 10) |
@@ -133,7 +133,7 @@ row 3:        0              0        1.02   1.05      0.00     question: x3, an
 ```
 
 This is the prefix embedding of Huang & Ge (2025, their eq. 2), row for row:
-two marker columns, the descriptor in the first token, each input beside its
+two marker columns, the description in the first token, each input beside its
 own answer, and a final question with a blank answer.
 
 | Variation | What changes |
@@ -291,11 +291,11 @@ question. Elements that are neither are listed under Departures.
 
 | Piece | Related work | Ours | Reason |
 | --- | --- | --- | --- |
-| What the descriptor describes | The mean of the inputs | The weights | Required: it must carry information about the task to have a worth in examples |
+| What the description describes | The mean of the inputs | The weights | Required: it must carry information about the task to have a worth in examples |
 | Reliability | None | Right with probability $p$ | Required: second axis of the study |
 | Noise in the answers | None | Variance 0.1 | Required: without noise, $d$ examples determine $w$ exactly, so no description could be worth more than $d = 5$ examples; the precise description is worth 6.8 |
 | Attention | Linear (Huang & Ge) | Standard (Garg et al.) | Required: weighing two hypotheses is not linear in the examples |
-| With and without a descriptor | Separate models (Huang & Ge) | One model; the description row is present or hidden | Kept by Bruce. The ESS then compares a learner with itself |
+| With and without a description | Separate models (Huang & Ge) | One model; the description row is present or hidden | Kept by Bruce. The ESS then compares a learner with itself |
 | Number of examples | Fixed (Huang & Ge); every row scored (Garg et al.) | One question after a random number of examples | Kept by Bruce. The ESS needs regret at every number of examples |
 | Examples per prompt | 40 (Garg et al.), 50 (Huang & Ge) | Up to 15 | Kept by Bruce. Covers the largest ESS twice over |
 | Batch, steps, curriculum | Garg et al.: batch 64, 500k steps, a curriculum over dimension and prompt length | Batch 1024, 40k steps, no curriculum | One GPU per model and a fixed budget confirmed by the pilot (decision 20); $d = 5$ needs no curriculum |
