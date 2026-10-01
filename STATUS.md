@@ -28,6 +28,17 @@ learner and then for meta-trained networks.
 
 ## Current position
 
+- The paper was rewritten by Bruce for writing quality on 2026-10-01
+  (`docs/paper/archive/rewritten_paper_2026-10-01.tex`, 5 pages, no
+  citations, figures, tables, numbers, or full proofs) and adopted as
+  `paper.tex` with all of those restored in its style and its sentences
+  kept verbatim except four factual fixes; the previous version is
+  `archive/paper_pre_rewrite_2026-10-01.tex`. Terms: task description
+  (Brown et al. 2020's term; "descriptor" only for Huang & Ge's object),
+  demonstrations, reliance $q$, correctly specified / misspecified,
+  oracle-calibrated / overconfident predictors. Three more models are
+  training (p = 0.99 at both precisions; seed 1 of p = 0.9, r = 0.01).
+
 - The paper is the v2 rewrite of 2026-10-01 03:37 ("in the style of NeurIPS
   ICL papers": numbered equations, descriptive paragraph headings, Proof
   idea paragraphs), adopted at 13:30 with the retrained Section 6, the
