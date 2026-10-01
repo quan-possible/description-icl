@@ -1,14 +1,18 @@
 # RQ3: do meta-trained networks match the Bayes-optimal learner?
 
 **What it shows.** Networks trained on the matching distribution reproduce
-the Bayes-optimal predictor's ESS for reliable descriptions (6.7 vs 6.7; 2.2 vs 2.3)
-and for the coarse unreliable one (1.8 vs 1.9). The precise unreliable
-model under-values its description (ESS 3.9 vs 5.0, implied trust 0.85);
-a continuation to 80k steps left it unchanged (3.9, trust 0.85), so it is not under-training.
-Models trained on reliable descriptions do not discount an unreliable one:
-on p = 0.9 prompts the precise model's description is worth 0.7 examples
-against a calibrated 5.0. See `summary.csv`, `networks_table.tex`, and
-`regret.pdf`.
+the Bayes-optimal predictor's ESS for reliable descriptions (14.7 vs 15.4 at
+`r` $= 0.01$; 5.24 vs 5.28 at `r` $= 0.1$) and under-value an unreliable one
+alone at both precisions (4.3 vs 6.8; 3.6 vs 4.2; implied trust 0.85 against
+0.9), converging to the Bayes-optimal predictor as examples arrive. An
+earlier model at `r` $= 0.05$, $p = 0.9$ (files kept here) showed the same
+under-trust and a continuation to 80k steps left it unchanged (3.9 vs 5.0,
+trust 0.85), so it is not under-training. Models trained on reliable
+descriptions do not discount an unreliable one: on $p = 0.9$ prompts the
+precise model is hurt by a description (ESS 0 against a calibrated 6.9,
+implied trust 0.999) and the coarse one keeps 2.3 of 4.3. See `summary.csv`,
+`networks_table.tex`, and `regret.pdf`. Models trained 2026-10-01 on Colab
+L4s (`one_model.sh`, 40k steps, prompts with 0 to 20 examples).
 
 ## Design
 
@@ -18,8 +22,8 @@ The design, a worked example, and the reasons are in
 | Quantity | Value |
 | --- | --- |
 | $d$, `a0` | 5, 10; the model sees $w \sim \mathcal{N}(0, I)$ and noise variance 0.1 |
-| Prompt | Optional description, 0 to 15 examples, one question |
-| `r` | 0.5, 0.05 (one model each) |
+| Prompt | Optional description, 0 to 20 examples, one question |
+| `r` | 0.1, 0.01 (one model each; the earlier 0.5 and 0.05 models' files are kept) |
 | $p$ | 1 in stage 1, 0.9 in stage 2 (one model each) |
 | Model | Transformer, 12 layers, 8 heads, width 256 (Garg et al.), no positions |
 | Output | A mean and a log variance for the answer to the question |
