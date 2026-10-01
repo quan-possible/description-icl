@@ -33,11 +33,15 @@ learner and then for meta-trained networks.
   then whether small meta-trained Transformers reproduce it. Horizon
   dependence, the dimension sweep, mis-set trust, and tipping points are
   out of the paper and kept in [docs/wiki/](docs/wiki/README.md).
-- Sections 3 to 5 are done. Full proofs are in Appendices A and B with
-  sketches in the main text; `tests/test_propositions.py` checks both
-  numerically and an independent referee pass found no defect. Proposition 1 ($\ess = (d-1)(1-r) + O(1/(rd))$
-  at high SNR) and Proposition 2 (the two-sided reliability bound) are
-  written out with proofs (2026-09-30). Every number in Tables 1 and 2
+- Sections 3 to 5 are done and were simplified on 2026-10-01 (Bruce: the
+  simplest coherent formulation, following the sources). Two propositions:
+  Proposition 1, the additive rule $\ess \approx (d-1)(1-r) + 1/(r a_0)$ in
+  two regimes with error terms and the universal bound $\ess \le c + d + 2$;
+  Proposition 2, the reliability sandwich with $n$ examples in hand (the old
+  Propositions 2 and 3 merged). Definitions are stated in the sources' form:
+  Reimherr et al.'s prior sample size with regret as the uncertainty,
+  Genewein et al.'s per-step regret, Schmidli et al.'s robust mixture.
+  `tests/test_propositions.py` checks both propositions on the grids. Every number in Tables 1 and 2
   regenerates from `results/rq1-single-query-gap/ess.csv` and
   `results/rq2-reliability/ess_map.csv`; the RQ1 folder's horizon columns
   are unused by the paper. Figure 1 is a TikZ diagram,
@@ -53,7 +57,11 @@ learner and then for meta-trained networks.
   ESS against precision on a dense log grid: the $(d-1)(1-r)$ regime and
   its break at ESS $\approx d$, and the saturation toward the reliability
   limit (25 examples at $p = 0.9$, 135 at $p = 0.99$, $d = 16$; the floor
-  alone would allow 40 and 325). It now
+  alone would allow 40 and 325).
+- A fully trusting learner ($q = 1$ at $p = 0.9$, Bruce's question of
+  2026-10-01) is in Section 5: a precise description is then worse than
+  none (6.3 and 13.4 nats alone at $r = 0.01$, $0.001$) and examples repair
+  it slowly; `worth.csv` rows with `q = 1`. It now
   carries $n \in \{0, 1, 10, 100\}$ as well, one panel per reliability; the
   worth-against-$n$ figure is gone. The abstract and contributions lead
   with the reliability result; Tables 1 and 2 moved to Appendix A
