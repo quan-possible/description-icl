@@ -36,6 +36,11 @@ for ax, (model, label) in zip(axes.flat, MODELS):
         ax.plot(n, [float(x["bayes"]) for x in sub], color=COLOR[d], lw=1.2, zorder=1)
         ax.errorbar(n, [float(x["net"]) for x in sub], yerr=[float(x["net_se"]) for x in sub], fmt="o",
                     ms=3, mfc="white", mec=COLOR[d], ecolor=COLOR[d], color=COLOR[d], lw=0.8, zorder=2)
+    sg = here / "single_gaussian.csv"
+    if "p0.9" in model and sg.exists():  # the best single Gaussian, all a mean-and-variance head can represent
+        r = model.split("_")[1][1:]
+        rows_sg = [x for x in csv.DictReader(sg.open()) if x["who"] == "single" and float(x["r"]) == float(r)]
+        ax.plot([int(x["n"]) for x in rows_sg], [float(x["regret"]) for x in rows_sg], "--", color=COLOR["1"], lw=1.2, zorder=1)
     ax.text(0.97, 0.95, label, ha="right", va="top", transform=ax.transAxes)
     ax.grid(True, axis="y", color=fs.MUTED, lw=0.5)
 fs.panel_labels(axes.flat)
@@ -46,7 +51,8 @@ for ax in axes[:, 0]:
     ax.set_ylabel("regret (nats)")
 from matplotlib.lines import Line2D
 handles = [Line2D([], [], color=COLOR["1"], lw=1.2, label="Bayes-optimal, with description"),
+           Line2D([], [], color=COLOR["1"], lw=1.2, ls="--", label="best single Gaussian, with description"),
            Line2D([], [], color=COLOR["0"], lw=1.2, label="Bayes-optimal, without"),
            Line2D([], [], color=fs.BASELINE, marker="o", mfc="white", ms=3, lw=0, label="network")]
-fig.legend(handles=handles, loc="outside lower center", ncol=3, frameon=False)
+fig.legend(handles=handles, loc="outside lower center", ncol=2, frameon=False)
 fs.save(fig, str(here / "regret"))
