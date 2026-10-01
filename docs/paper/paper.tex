@@ -107,7 +107,7 @@ The error term makes the range of validity precise: the approximation needs $rd 
 \input{../../results/rq1-single-query-gap/precision_table.tex}
 \end{table}
 
-Table~\ref{tab:precision} illustrates this alignment. A description that removes nine tenths of the prior variance is worth about nine tenths of the dimension in examples at $d = 16$ and $64$. At $d = 4$ the error term $1/(rd)$ is already $2.5$ and the approximation is off by that much. Once the description is precise enough that its ESS surpasses $d$, the approximation breaks down for every $d$: the true ESS scales beyond $d$ because $d$ noisy examples cannot pinpoint $w$ perfectly. Figure~\ref{fig:ess}(a) traces the whole curve: the ESS follows $(d-1)(1-r)$ until it reaches about $d$ and then leaves it, growing without bound as $r \to 0$.
+Table~\ref{tab:precision} illustrates this alignment. A description that removes nine tenths of the prior variance is worth about nine tenths of the dimension in examples at $d = 16$ and $64$. At $d = 4$ the error term $1/(rd)$ is already $2.5$ and the approximation is off by that much. Once the description is precise enough that its ESS surpasses $d$, the approximation breaks down for every $d$: the true ESS scales beyond $d$ because $d$ noisy examples cannot pinpoint $w$ perfectly. The $p = 1$ curve of Figure~\ref{fig:ess} traces the whole relationship at $d = 16$: the ESS follows $(d-1)(1-r)$ until it reaches about $d$ and then leaves it, growing without bound as $r \to 0$.
 
 \section{The Bottleneck of Reliability}\label{sec:reliability}
 
@@ -135,12 +135,12 @@ Because $R^{\mathrm{ex}}(n)$ decreases with $n$, the lower bound caps the ESS at
 \input{../../results/rq2-reliability/reliability_table.tex}
 \end{table}
 
-Table~\ref{tab:reliability} demonstrates this saturation. For a perfectly reliable description, refining $r$ from $0.1$ to $0.001$ raises the ESS from $14.9$ to $116$. However, if $p=0.9$, the ESS only grows from $13.1$ to $23.1$. Even a 1\% unreliability ($p=0.99$) nearly halves the ESS of the most precise description, $64$ against $116$, while leaving the coarse one almost untouched. The same saturation patterns manifest at $d \in \{4, 64\}$ and $a_0=100$. Figure~\ref{fig:ess}(b) shows the saturation across precision: at $p = 0.9$ the ESS bends toward its cap of $40$ examples, the $n$ at which $R^{\mathrm{ex}}(n) = (1-p)\,R^{\mathrm{ex}}(0)$, while the reliable description's keeps rising; at $p = 0.99$ the cap is $327$ and the bend begins only below $r = 0.005$.
+Table~\ref{tab:reliability} demonstrates this saturation. For a perfectly reliable description, refining $r$ from $0.1$ to $0.001$ raises the ESS from $14.9$ to $116$. However, if $p=0.9$, the ESS only grows from $13.1$ to $23.1$. Even a 1\% unreliability ($p=0.99$) nearly halves the ESS of the most precise description, $64$ against $116$, while leaving the coarse one almost untouched. The same saturation patterns manifest at $d \in \{4, 64\}$ and $a_0=100$. Figure~\ref{fig:ess} shows the saturation across precision: at $p = 0.9$ the ESS bends toward its cap of $40$ examples, the $n$ at which $R^{\mathrm{ex}}(n) = (1-p)\,R^{\mathrm{ex}}(0)$, while the reliable description's keeps rising; at $p = 0.99$ the cap is $327$ and the bend begins only below $r = 0.005$.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{../../results/rq2-reliability/ess.pdf}
-\caption{\textbf{Precision pays linearly until the description is worth about $d$ examples, and reliability caps it.} ESS of a description alone against its precision; $a_0 = 10$, log scales, one seed. (a) Reliable descriptions at $d = 4, 16, 64$ against $(d-1)(1-r)$ of Proposition~\ref{prop:precision} (dashed). (b) $d = 16$ at three reliabilities; the dotted line is the cap of Proposition~\ref{prop:floor} at $p = 0.9$.}
+\includegraphics{../../results/rq2-reliability/ess.pdf}
+\caption{\textbf{Precision pays linearly until the description is worth about $d$ examples, and reliability caps it.} ESS of a description alone against its precision at three reliabilities; $d = 16$, $a_0 = 10$, log scales, one seed. Dashed: $(d-1)(1-r)$ of Proposition~\ref{prop:precision}. Dotted: the cap of Proposition~\ref{prop:floor} at $p = 0.9$.}
 \label{fig:ess}
 \end{figure}
 
