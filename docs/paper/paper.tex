@@ -25,7 +25,7 @@
 \maketitle
 
 \begin{abstract}
-While prompts in modern language models typically consist of both a task description and in-context examples, theoretical frameworks for in-context learning (ICL) predominantly focus on the latter. In this work, we adopt a Bayesian perspective on ICL to formally quantify the value of task descriptions. The pretraining distribution is the prior over tasks; a description and the examples are both data about the task, the description a direct but imperfect observation of it and the examples indirect observations through inputs. We measure the description's value by its effective sample size (ESS): the number of examples that carry the same information. We analyze this in the setting of in-context linear regression, where Bayes-optimal predictions can be computed exactly. We define the ESS of a description by matching the one-step log-loss regret of a Bayes-optimal predictor using only the description to one using only examples. Our analysis reveals that a description's worth is governed by two factors: its precision (how much it reduces prior variance) and its reliability (the probability it is correct). We show that a reliable description that removes a fraction $1-r$ of the prior variance in a $d$-dimensional task is worth approximately $d(1-r)$ examples when it stands alone; once examples are present its worth falls toward $1/(r a_0)$, the balanced-design value. For unreliable descriptions the ESS saturates: unreliability imposes a regret floor, so beyond a point more precision buys little: at $p = 0.9$, a fiftyfold increase in precision adds eight examples where a reliable description gains a hundred. The cap lifts once examples can check the description: with $n$ examples in hand the floor falls with $n$, and a precise unreliable description gains worth as examples verify it, from a small fraction of a reliable description's worth alone to a fraction $p$ of it. Finally, small meta-trained Transformers (one per setting) reproduce these ESS values when trained on the matching distribution, except that the one trained on precise unreliable descriptions under-values them; and a Transformer trained only on reliable descriptions treats an unreliable one as a Bayes-optimal predictor with full trust would: a precise description becomes worth almost nothing. Our claims concern Bayes-optimal predictors and small meta-trained sequence models, not large language models.
+Prompts hold a task description and in-context examples, but theories of in-context learning (ICL) model only the examples. We quantify a description's value as the number of examples it can replace. Reading ICL as Bayesian inference over a latent task under the pretraining prior, the description and the examples are both data about the task: the description a direct but imperfect observation of it, the examples indirect observations through inputs. We define the description's effective sample size (ESS) by matching the one-step log-loss regret of a Bayes-optimal predictor given the description to its regret given $n$ examples, in in-context linear regression, where the predictor is exact. Two properties of the description govern its ESS: its precision, the fraction $1-r$ of the prior variance it removes, and its reliability, the probability $p$ that it is correct. Our main result is that reliability caps precision only while nothing can check the description. Alone, an unreliable description faces a regret floor of $1-p$ times the no-information regret, so its ESS saturates: at $p = 0.9$ in sixteen dimensions, a hundredfold increase in precision adds ten examples where a reliable description gains a hundred. With $n$ examples in hand the floor falls with $n$: the examples verify the description, and its worth rises from a small fraction of a reliable description's to a fraction $p$ of it. For a reliable description the ESS is approximately $d(1-r)$ in $d$ dimensions while that is below $d$, and falls toward $1/(r a_0)$, its long-run worth, as examples accumulate. Small meta-trained Transformers, one per setting, reproduce these values when trained on the matching distribution, except that the one trained on precise unreliable descriptions under-values them; and a Transformer trained only on reliable descriptions treats an unreliable one as a fully trusting Bayes-optimal predictor would, so a precise description becomes worth almost nothing. Our claims concern Bayes-optimal predictors and small meta-trained sequence models, not large language models.
 \end{abstract}
 
 \section{Introduction}
@@ -35,7 +35,7 @@ While prompts in modern language models typically consist of both a task descrip
 \includegraphics[width=\linewidth]{figs/overview.pdf}
 \caption{\textbf{A task description is worth a number of in-context examples, set by its precision and capped by its reliability.}
 (a) We read a prompt as Bayesian inference over a latent task $w$ under the pretraining prior: the description is a direct noisy observation of $w$ and the examples are indirect ones. The description's effective sample size (ESS) is the number of examples $k$ that lowers a Bayes-optimal predictor's one-step regret as much as the description does.
-(b) Three descriptions and their ESS. Precision $1/r$ sets how narrowly the prior concentrates around the stated $m$; reliability $p$ is the chance the description is correct, and otherwise $w$ follows the base prior (dashed; its share $1-p$ shaded pink). Prior shapes are sketches; ESS values are from Table~\ref{tab:reliability} ($d = 16$, $a_0 = 10$).}
+(b) Three descriptions and their ESS. Precision $1/r$ sets how narrowly the prior concentrates around the stated $m$; reliability $p$ is the chance the description is correct, and otherwise $w$ follows the base prior (dashed; its share $1-p$ shaded pink). Prior shapes are sketches; ESS values are from Table~\ref{tab:reliability} in Appendix~\ref{app:tables} ($d = 16$, $a_0 = 10$).}
 \label{fig:overview}
 \end{figure}
 
@@ -47,9 +47,9 @@ We compute the ESS as a function of precision and reliability within in-context 
 
 \paragraph{Contributions.}
 \begin{enumerate}
-    \item We introduce a formal definition for the ESS of a task description by equating the one-step log-loss regret of a description to that of $n$ examples (\S\ref{sec:setting}).
-    \item We establish that for a perfectly reliable description, the ESS scales linearly as $\ess \approx d(1-r)$, where $d$ is the dimensionality and $r$ is the precision ratio (\S\ref{sec:precision}).
-    \item We demonstrate that unreliable descriptions induce a hard floor on regret, governed by the description's error probability $1-p$ and its entropy $H(p)$. Consequently, the ESS saturates; making an unreliable description infinitely precise yields diminishing returns. The cap lifts as examples verify the description: its worth with $n$ examples in hand rises with $n$, where a reliable description's does not (\S\ref{sec:reliability}).
+    \item We define the ESS of a task description by equating the one-step log-loss regret of a Bayes-optimal predictor given the description to that of $n$ examples, with or without further examples in hand (\S\ref{sec:setting}).
+    \item We show that an unreliable description induces a hard floor on regret, governed by its error probability $1-p$ and its entropy $H(p)$, so its ESS saturates and making it more precise yields diminishing returns. The cap lifts as examples verify the description: its worth with $n$ examples in hand rises with $n$ toward a fraction $p$ of a reliable description's, where a reliable description's worth falls (\S\ref{sec:reliability}).
+    \item We establish that a perfectly reliable description is worth $\ess \approx d(1-r)$ examples, where $d$ is the dimension and $r$ the fraction of prior variance it leaves, while that is below $d$ (\S\ref{sec:precision}).
     \item We meta-train small Transformers on this process, one per setting, and show that they reproduce the Bayes-optimal ESS when trained on the matching distribution in three of four settings, under-valuing a precise unreliable description in the fourth, and that a model trained on reliable descriptions does not discount an unreliable one (\S\ref{sec:networks}).
 \end{enumerate}
 
@@ -100,14 +100,7 @@ so the high-SNR ESS, with $R^{\mathrm{ex}}(n)$ extended to non-integer $n$ throu
 
 The error term makes the range of validity precise: the approximation needs $rd \gg 1$, that is, the description must leave many more than one example's worth of variance unexplained, which is the condition $\ess < d$ in the first-order form $\ess \approx d(1-r)$. At $a_0 = 100$ and $r = 0.1$ the exact ESS is within $0.3$ of $(d-1)(1-r)$ for $d \in \{16, 64\}$ ($13.7$ and $56.9$ against $13.5$ and $56.7$).
 
-\begin{table}[t]
-\centering\small
-\caption{Exact ESS of a reliable description ($p=1$) for $a_0=10$, three seeds (standard deviation across seeds below 2\% of each value), against $(d-1)(1-r)$ of Proposition~\ref{prop:precision}. The approximation holds while the description is worth fewer than $d$ examples, $r \gtrsim 1/(a_0 d)$; below that the exact ESS keeps growing because $d$ noisy examples cannot pin $w$ down.}
-\label{tab:precision}
-\input{../../results/rq1-single-query-gap/precision_table.tex}
-\end{table}
-
-Table~\ref{tab:precision} illustrates this alignment. A description that removes nine tenths of the prior variance is worth about nine tenths of the dimension in examples at $d = 16$ and $64$. At $d = 4$ the error term $1/(rd)$ is already $2.5$ and the approximation is off by that much. Once the description is precise enough that its ESS surpasses $d$, the approximation breaks down for every $d$: the true ESS scales beyond $d$ because $d$ noisy examples cannot pinpoint $w$ perfectly. The $n = 0$ curve of Figure~\ref{fig:ess}(a) traces the whole relationship at $d = 16$: the ESS follows $(d-1)(1-r)$ until it reaches about $d$ and then leaves it, growing without bound as $r \to 0$.
+Table~\ref{tab:precision} (Appendix~\ref{app:tables}) lists exact values. A description that removes nine tenths of the prior variance is worth about nine tenths of the dimension in examples at $d = 16$ and $64$. At $d = 4$ the error term $1/(rd)$ is already $2.5$ and the approximation is off by that much. Once the description is precise enough that its ESS surpasses $d$, the approximation breaks down for every $d$: the true ESS scales beyond $d$ because $d$ noisy examples cannot pinpoint $w$ perfectly. The $n = 0$ curve of Figure~\ref{fig:ess}(a) traces the whole relationship at $d = 16$: the ESS follows $(d-1)(1-r)$ until it reaches about $d$ and then leaves it, growing without bound as $r \to 0$.
 
 \section{The Bottleneck of Reliability}\label{sec:reliability}
 
@@ -128,14 +121,7 @@ The gap between the two bounds is the cost of not knowing whether the descriptio
 
 Because $R^{\mathrm{ex}}(n)$ decreases with $n$, the lower bound caps the ESS at the $n$ where $R^{\mathrm{ex}}(n) = (1-p)\,R^{\mathrm{ex}}(0)$, however precise the description. An unreliable description can replace only a bounded number of examples, and the identification cost, up to $H(p)$, lowers the cap further.
 
-\begin{table}[t]
-\centering\small
-\caption{ESS of unreliable descriptions ($d=16$, $a_0=10$), three seeds; standard deviation across seeds at most 2\% of each value. Down a column precision rises tenfold per row; across a row the description is wrong never, one time in a hundred, and one time in ten.}
-\label{tab:reliability}
-\input{../../results/rq2-reliability/reliability_table.tex}
-\end{table}
-
-Table~\ref{tab:reliability} demonstrates this saturation. For a perfectly reliable description, refining $r$ from $0.1$ to $0.001$ raises the ESS from $14.9$ to $116$. However, if $p=0.9$, the ESS only grows from $13.1$ to $23.1$. Even a 1\% unreliability ($p=0.99$) nearly halves the ESS of the most precise description, $64$ against $116$, while leaving the coarse one almost untouched. The same saturation patterns manifest at $d \in \{4, 64\}$ and $a_0=100$. The $n = 0$ curves of Figure~\ref{fig:ess} show the saturation across precision: at $p = 0.9$ the ESS bends toward its cap of $40$ examples, the $n$ at which $R^{\mathrm{ex}}(n) = (1-p)\,R^{\mathrm{ex}}(0)$, while the reliable description's keeps rising; at $p = 0.99$ the cap is $327$ and the bend begins only below $r = 0.005$.
+Figure~\ref{fig:ess} and Table~\ref{tab:reliability} (Appendix~\ref{app:tables}) show this saturation. For a perfectly reliable description, refining $r$ from $0.1$ to $0.001$ raises the ESS from $14.9$ to $116$. However, if $p=0.9$, the ESS only grows from $13.1$ to $23.1$. Even a 1\% unreliability ($p=0.99$) nearly halves the ESS of the most precise description, $64$ against $116$, while leaving the coarse one almost untouched. The same saturation patterns manifest at $d \in \{4, 64\}$ and $a_0=100$. The $n = 0$ curves of Figure~\ref{fig:ess} show the saturation across precision: at $p = 0.9$ the ESS bends toward its cap of $40$ examples, the $n$ at which $R^{\mathrm{ex}}(n) = (1-p)\,R^{\mathrm{ex}}(0)$, while the reliable description's keeps rising; at $p = 0.99$ the cap is $327$ and the bend begins only below $r = 0.005$.
 
 \begin{figure}[t]
 \centering
@@ -203,6 +189,24 @@ Our theoretical claims are restricted to Bayes-optimal predictors and small-scal
 \bibliography{refs}
 
 \appendix
+\section{Exact values}\label{app:tables}
+
+Tables~\ref{tab:precision} and~\ref{tab:reliability} give the exact one-step ESS behind \S\ref{sec:precision} and \S\ref{sec:reliability} at the ends of the grids; Figure~\ref{fig:ess} shows the relationships between them.
+
+\begin{table}[t]
+\centering\small
+\caption{Exact ESS of a reliable description ($p=1$) for $a_0=10$, three seeds (standard deviation across seeds below 2\% of each value), against $(d-1)(1-r)$ of Proposition~\ref{prop:precision}. The approximation holds while the description is worth fewer than $d$ examples, $r \gtrsim 1/(a_0 d)$; below that the exact ESS keeps growing because $d$ noisy examples cannot pin $w$ down.}
+\label{tab:precision}
+\input{../../results/rq1-single-query-gap/precision_table.tex}
+\end{table}
+
+\begin{table}[t]
+\centering\small
+\caption{ESS of unreliable descriptions ($d=16$, $a_0=10$), three seeds; standard deviation across seeds at most 2\% of each value. Down a column precision rises tenfold per row; across a row the description is wrong never, one time in a hundred, and one time in ten.}
+\label{tab:reliability}
+\input{../../results/rq2-reliability/reliability_table.tex}
+\end{table}
+
 \section{Proof of Proposition~\ref{prop:precision}}\label{app:precision}
 
 \emph{Idea.} Regret is half the log of the leftover variance in the prediction. At high SNR each example removes all the variance along the one direction it looks at and none elsewhere, so $n < d$ examples leave $d - n$ directions untouched. A description instead shrinks every one of the $d$ directions by the factor $r$. The ESS is the $n$ at which the two leftovers match.

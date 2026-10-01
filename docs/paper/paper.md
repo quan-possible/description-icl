@@ -1,7 +1,4 @@
-# How Many In-Context Examples Is a Task Description Worth?
-
-Bruce Quan Nguyen  
-*\[Affiliation\]*
+# How Many In-Context Examples Is a Task Description Worth? 
 
 *Draft of 30 September 2026*
 

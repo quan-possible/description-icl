@@ -52,7 +52,11 @@ learner and then for meta-trained networks.
   Figure 2 (`results/rq2-reliability/ess_figure.py`, 2026-10-01) plots the
   ESS against precision on a dense log grid: the $(d-1)(1-r)$ regime and
   its break at ESS $\approx d$, and the saturation toward the reliability
-  cap (40 examples at $p = 0.9$, 327 at $p = 0.99$, $d = 16$).
+  cap (40 examples at $p = 0.9$, 327 at $p = 0.99$, $d = 16$). It now
+  carries $n \in \{0, 1, 10, 100\}$ as well, one panel per reliability; the
+  worth-against-$n$ figure is gone. The abstract and contributions lead
+  with the reliability result; Tables 1 and 2 moved to Appendix A
+  (Bruce, 2026-10-01).
 - Section 6 (networks) was done from four trained models (one per
   setting, 40k steps, log loss, Colab L4, 2026-09-30) at the old grid
   ($r \in \{0.5, 0.05\}$, prompts to 15 examples). It is stale: the models
