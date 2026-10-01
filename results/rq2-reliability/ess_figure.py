@@ -54,7 +54,7 @@ for ax, p in zip(axes, PS):
     ax.text(0.04, 0.95, f"$p = {p:g}$", transform=ax.transAxes, va="top")
     ax.grid(True, axis="y", color=fs.MUTED, lw=0.5)
 for ax in axes:
-    ax.set_ylabel("worth of the description (examples)")
+    ax.set_ylabel("worth (examples)")
 fs.panel_labels(axes)
 fig.legend(*axes[0].get_legend_handles_labels(), loc="outside lower center", ncol=4, frameon=False)
 fs.save(fig, str(here / "ess"))
