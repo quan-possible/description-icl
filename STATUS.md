@@ -28,6 +28,11 @@ learner and then for meta-trained networks.
 
 ## Current position
 
+- The paper is the v2 rewrite of 2026-10-01 03:37 ("in the style of NeurIPS
+  ICL papers": numbered equations, descriptive paragraph headings, Proof
+  idea paragraphs), adopted at 13:30 with the retrained Section 6, the
+  network $\ess_n$ sentence, the prior-alone wording, and an informal
+  Proposition 1 ported onto it; `paper_v2.*` retired.
 - The plan is the paper, [docs/paper/paper.tex](docs/paper/paper.tex): the
   one-step ESS of a description as a function of precision and reliability,
   then whether small meta-trained Transformers reproduce it. Horizon
