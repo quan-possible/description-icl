@@ -14,7 +14,7 @@ from descriptor_icl import gaussian as g
 
 here = pathlib.Path(__file__).parent
 rows = []
-for stem in ("p1.0_r0.01_d5_s0", "p1.0_r0.1_d5_s0", "p0.9_r0.01_d5_s0", "p0.9_r0.1_d5_s0"):
+for stem in sorted(f.name[:-11] for f in here.glob("p*_d5_s*_regret.csv") if "_ptest" not in f.name and "_cont" not in f.name and f.name.split("_")[1] in ("r0.1", "r0.01")):
     reg = list(csv.DictReader((here / f"{stem}_regret.csv").open()))
     for who in ("net", "bayes"):
         plain = np.array([float(x[who]) for x in reg if x["desc"] == "0"])

@@ -12,8 +12,10 @@ import pathlib
 
 here = pathlib.Path(__file__).parent
 targets = {(x["r"], x["p"]): x["ess"] for x in csv.DictReader((here / "targets.csv").open()) if x["ess"]}
-ORDER = ["p1.0_r0.01_d5_s0", "p1.0_r0.1_d5_s0", "p0.9_r0.01_d5_s0", "p0.9_r0.1_d5_s0",
-         "p1.0_r0.01_d5_s0_ptest0.9", "p1.0_r0.1_d5_s0_ptest0.9", "p0.9_r0.01_d5_s0_ptest1.0", "p0.9_r0.1_d5_s0_ptest1.0"]
+def _key(f):  # training reliability descending, precision descending, seed, then test reliability descending
+    stem = f.name[:-8]; head, _, ptest = stem.partition("_ptest")
+    p, r, _, s = head.split("_"); return (-float(p[1:]), -float(r[1:]), int(s[1:]), -(float(ptest) if ptest else float(p[1:])))
+ORDER = [f.name[:-8] for f in sorted(here.glob("p*_d5_s*_ess.csv"), key=_key) if not f.name.startswith("p0.9_r0.05") and not f.name.startswith("p0.9_r0.5") and not f.name.startswith("p1.0_r0.05") and not f.name.startswith("p1.0_r0.5") and "_cont" not in f.name]
 single = {x["r"]: x["ess_n"] for x in csv.DictReader((here / "single_gaussian.csv").open()) if x["who"] == "single" and x["n"] == "0"}
 rows = []
 for stem in ORDER:
@@ -24,10 +26,10 @@ for stem in ORDER:
     reg = list(csv.DictReader((here / f"{stem}_regret.csv").open()))
     K = len(reg) // 2
     gap = {d: sum(float(x["net"]) - float(x["bayes"]) for x in reg if x["desc"] == d) / K for d in ("1", "0")}
-    rows.append(dict(model=stem, r=e["r"], p_train=e["p_train"], p_test=e["p_test"],
+    rows.append(dict(model=stem, seed=stem.split("_")[3][1:2], r=e["r"], p_train=e["p_train"], p_test=e["p_test"],
                      net_ess=float(e["net_ess"]), trained_ess=float(e["bayes_ess"]),
                      calibrated_ess=float(targets[(e["r"], e["p_test"])]),
-                     single_ess=float(single[e["r"]]) if e["p_train"] == "0.9" and e["p_test"] == "0.9" else "",
+                     single_ess=float(single[e["r"]]) if e["p_train"] == "0.9" and e["p_test"] == "0.9" and e["r"] in single else "",
                      gap_desc=round(gap["1"], 3), gap_plain=round(gap["0"], 3)))
 with (here / "summary.csv").open("w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
