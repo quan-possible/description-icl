@@ -2,8 +2,9 @@
 precision, with n = 0, 1, 10, 100 examples in hand, one panel per
 reliability p = 1, 0.99, 0.9; d = 16, a0 = 10, a dense log-spaced grid of r,
 one seed of 8,000 prompts. The dotted line is the p < 1 cap with no examples,
-the ESS at which R_ex(n) = (1-p) R_ex(0); the r = 0 rows of ess_curve.csv hold
-the caps for every p < 1. Computes ess_curve.csv first and reuses it if present.
+the ESS at which R_ex(n) = (1-p) R_ex(0), is a bound; the dotted line is the
+limit of the n = 0 ESS as r -> 0, where the identification cost is all of H(p).
+In ess_curve.csv the r = 0 rows hold that limit and the r = -1 rows the floor cap. Computes ess_curve.csv first and reuses it if present.
 
     uv run python results/rq2-reliability/ess_figure.py
 """
@@ -26,8 +27,12 @@ out = here / "ess_curve.csv"
 if not out.exists():
     plain = mx.simulate(D, A0, A0 * 0.999, 1.0, K, S, seed=100)
     R_ex = mx.regret(plain, 0.0, 1)
-    R_cap = mx.regret(mx.simulate(D, A0, A0 * 0.999, 1.0, 400, S // 4, seed=101), 0.0, 1)  # longer grid: the p = 0.99 cap is near 330
-    rows = [dict(p=p, r=0, n=0, worth=round(float(g.first_crossing(R_cap, (1 - p) * R_cap[0])[1]), 3)) for p in PS if p < 1]
+    R_cap = mx.regret(mx.simulate(D, A0, A0 * 0.999, 1.0, 400, S // 4, seed=101), 0.0, 1)  # longer grid: the p = 0.99 floor cap is near 330
+    rows = [dict(p=p, r=-1, n=0, worth=round(float(g.first_crossing(R_cap, (1 - p) * R_cap[0])[1]), 3)) for p in PS if p < 1]  # floor cap
+    for p in PS:
+        if p < 1:  # the limit as r -> 0: the description pins w exactly or is wrong
+            R_lim = mx.regret(mx.simulate(D, A0, 1e-6 * A0, p, K, S, seed=200), p, 1)
+            rows.append(dict(p=p, r=0, n=0, worth=round(float(g.first_crossing(R_ex, R_lim[0])[1]), 3)))
     for p in PS:
         for r in RS:
             R_desc = mx.regret(mx.simulate(D, A0, r * A0, p, K, S, seed=200), p, 1)
@@ -50,7 +55,7 @@ for ax, p in zip(axes, PS):
         ax.axhline(cap(p), color=fs.BASELINE, lw=1, ls=":")
     ax.set_xscale("log"); ax.set_yscale("log"); ax.invert_xaxis()
     ax.set_xticks([0.5, 0.1, 0.01, 0.001]); ax.set_xticklabels(["0.5", "0.1", "0.01", "0.001"]); ax.minorticks_off()
-    ax.set_yticks([1, 3, 10, 30, 100]); ax.set_yticklabels(["1", "3", "10", "30", "100"]); ax.set_ylim(0.7, 200)
+    ax.set_yticks([1, 3, 10, 30, 100]); ax.set_yticklabels(["1", "3", "10", "30", "100"]); ax.set_ylim(0.3, 400)
     ax.set_xlabel("precision $r$")
     ax.text(0.04, 0.95, f"$p = {p:g}$", transform=ax.transAxes, va="top")
     ax.grid(True, axis="y", color=fs.MUTED, lw=0.5)

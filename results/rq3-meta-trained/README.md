@@ -4,7 +4,7 @@
 the exact learner's ESS for reliable descriptions (6.7 vs 6.7; 2.2 vs 2.3)
 and for the coarse unreliable one (1.8 vs 1.9). The precise unreliable
 model under-values its description (ESS 3.9 vs 5.0, implied trust 0.85);
-a continuation to 80k steps is checking whether that is under-training.
+a continuation to 80k steps left it unchanged (3.9, trust 0.85), so it is not under-training.
 Models trained on reliable descriptions do not discount an unreliable one:
 on p = 0.9 prompts the precise model's description is worth 0.7 examples
 against a calibrated 5.0. See `summary.csv`, `networks_table.tex`, and

@@ -79,10 +79,12 @@ wrong description is nearly compatible with the data.
 `ess_figure.py` computes `ess_curve.csv`, the worth of the description
 with $n \in \{0, 1, 10, 100\}$ examples in hand on a dense log-spaced grid
 of `r` (0.5 to 0.001) at $p \in \{1, 0.99, 0.9\}$, $d = 16$, `a0` $= 10$,
-one seed of 8,000 prompts, plus the $p = 0.9$ cap with no examples (40;
-the $p = 0.99$ cap is 325, from a longer examples-only grid), and draws `ess.pdf`, the
-paper's Figure 2: alone, $p = 0.9$ saturates at 23 while $p = 1$ reaches
-117 at `r` $= 0.001$; with 100 examples in hand the worths are 88 and 109.
+one seed of 8,000 prompts. Its `r` $= 0$ rows hold the limit of the $n = 0$
+ESS as `r` $\to 0$ (25 at $p = 0.9$, 135 at $p = 0.99$) and its `r` $= -1$
+rows the floor cap $R^{\mathrm{ex}}(n) = (1-p) R^{\mathrm{ex}}(0)$ (40 and
+325, from a longer examples-only grid). It draws `ess.pdf`, the paper's
+Figure 2: alone, $p = 0.9$ saturates at 23 while $p = 1$ reaches 117 at
+`r` $= 0.001$; with 100 examples in hand the worths are 88 and 109.
 
 ## Worth with examples in hand
 
@@ -94,7 +96,11 @@ unreliable description gains worth
 as examples verify it (23 alone, 30 after one, 29 after ten, 88 after a
 hundred at `r` $= 0.001$, $p = 0.9$); a reliable one drifts from 117 to
 108. The grid is $n = 0, \dots, 100$ with 8,000 prompts per seed; the table
-reports $n \in \{0, 1, 10, 100\}$.
+reports $n \in \{0, 1, 10, 100\}$. Rows with `q` $= 1$ at $p = 0.9$ are the
+fully trusting learner: regret alone 2.2, 6.3, 13.4 nats at `r` $= 0.1$,
+0.01, 0.001 (no description: 2.51), and after 100 examples the `r` $= 0.01$
+description is still worth $-58$ examples; an empty `worth` means the
+description is worse than no information at all.
 
 ## Validation
 
