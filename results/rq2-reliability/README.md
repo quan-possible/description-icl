@@ -120,3 +120,8 @@ with the tables: the long-horizon cost of mis-set trust equals
 $\mathrm{KL}(p\,\|\,q)$, and the long-horizon ESS matches the examples whose
 information gain is $p\,\tfrac{d}{2}\log(1/r) - H(p)$ (9.2 predicted, 9.22
 computed, at $d = 16$, `a0` $= 10$, `r` $= 0.05$, $p = 0.9$).
+
+`overconfident_exact.py` gives the closed-form $n = 0$ regrets quoted in the
+overconfidence paragraph (q = 1 at $p = 0.9$: $2.23$, $6.38$, $13.65$ nats at
+$r = 0.1, 0.01, 0.001$; no description $2.51$; $d = 16$, $a_0 = 10$), checked
+against a direct simulation.

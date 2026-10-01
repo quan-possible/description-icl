@@ -18,14 +18,16 @@ rows = []
 for r in (0.1, 0.01):
     plain = draw(S, K, D, A0, r, 1.0, 0.0, seed=1)
     plain["correct"] = torch.zeros_like(plain["correct"])  # w came from the base prior
-    curve = bayes_regret(bayes_paths(plain, A0, r), 0.0, plain)[0]
+    curve, curve_se = bayes_regret(bayes_paths(plain, A0, r), 0.0, plain)
     for p in (1.0, 0.99, 0.9):
         batch = draw(S, K, D, A0, r, p, 1.0, seed=10)
         reg, se = bayes_regret(bayes_paths(batch, A0, r), p, batch)
-        rows.append(dict(d=D, a0=A0, r=r, p=p, regret=round(reg[0], 3), regret_se=round(se[0], 3),
-                         ess=round(g.first_crossing(curve, reg[0])[1], 2)))
-rows.append(dict(d=D, a0=A0, r="", p="", regret="", regret_se="", ess=""))
-rows += [dict(d=D, a0=A0, r="none", p=f"n={n}", regret=round(curve[n], 3), regret_se="", ess="")
+        ess = g.first_crossing(curve, reg[0])[1]
+        k = min(int(ess), K - 2)  # ESS standard error: both regrets' standard errors over the local slope of the curve
+        rows.append(dict(d=D, a0=A0, r=r, p=p, regret=round(reg[0], 3), regret_se=round(se[0], 3), ess=round(ess, 2),
+                         ess_se=round((se[0] ** 2 + curve_se[k] ** 2) ** 0.5 / abs(curve[k] - curve[k + 1]), 2)))
+rows.append(dict(d=D, a0=A0, r="", p="", regret="", regret_se="", ess="", ess_se=""))
+rows += [dict(d=D, a0=A0, r="none", p=f"n={n}", regret=round(curve[n], 3), regret_se="", ess="", ess_se="")
          for n in range(K)]
 with (pathlib.Path(__file__).parent / "targets.csv").open("w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0]))
