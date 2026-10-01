@@ -76,12 +76,13 @@ wrong description is nearly compatible with the data.
 
 ## ESS against precision
 
-`ess_figure.py` computes `ess_curve.csv`, the one-step ESS on a dense
-log-spaced grid of `r` (0.5 to 0.001, one seed, `a0` $= 10$) for $d \in
-\{4, 16, 64\}$ at $p = 1$ and $d = 16$ at $p \in \{1, 0.99, 0.9\}$, plus
-each reliability's cap (the $n$ at which $R^{\mathrm{ex}}(n) = (1-p)
-R^{\mathrm{ex}}(0)$: 40 at $p = 0.9$, 327 at $p = 0.99$), and draws
-`ess.pdf`, the paper's figure of the two relationships.
+`ess_figure.py` computes `ess_curve.csv`, the worth of the description
+with $n \in \{0, 1, 10, 100\}$ examples in hand on a dense log-spaced grid
+of `r` (0.5 to 0.001) at $p \in \{1, 0.99, 0.9\}$, $d = 16$, `a0` $= 10$,
+one seed of 8,000 prompts, plus the $p = 0.9$ cap with no examples (40;
+the $p = 0.99$ cap, 327, is beyond the grid), and draws `ess.pdf`, the
+paper's Figure 2: alone, $p = 0.9$ saturates at 23 while $p = 1$ reaches
+117 at `r` $= 0.001$; with 100 examples in hand the worths are 88 and 109.
 
 ## Worth with examples in hand
 
