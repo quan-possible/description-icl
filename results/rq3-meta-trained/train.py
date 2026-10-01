@@ -24,9 +24,12 @@ ap.add_argument("--steps", type=int, default=100_000)
 ap.add_argument("--batch", type=int, default=1024)
 ap.add_argument("--lr", type=float, default=1e-4)
 ap.add_argument("--seed", type=int, default=0)
+ap.add_argument("--amp", action="store_true", help="bf16 autocast on CUDA")
+ap.add_argument("--snapshots", action="store_true", help="also keep a copy of every checkpoint, tagged by step")
 args = ap.parse_args()
 
 torch.manual_seed(args.seed)
+torch.backends.cuda.matmul.allow_tf32 = True  # TF32 matmuls on Ampere and later
 dev = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 model = meta.Transformer(args.d).to(dev)
 opt = torch.optim.Adam(model.parameters(), lr=args.lr)
@@ -40,9 +43,10 @@ for step in range(1, args.steps + 1):
     # One question per prompt, after a random number of examples.
     batch = meta.sample_batch(args.batch, args.K, args.d, args.a_base, rs, args.p, 0.5, dev)
     n = torch.randint(0, args.K, (args.batch,), device=dev)
-    mean, log_var = model(*meta.tokens(batch, n), n)
+    with torch.autocast("cuda", dtype=torch.bfloat16, enabled=args.amp and dev == "cuda"):
+        mean, log_var = model(*meta.tokens(batch, n), n)
     y = batch["Y"].gather(1, n[:, None])[:, 0] / args.a_base**0.5  # the model's units
-    loss = meta.log_loss(mean, log_var, y).mean()
+    loss = meta.log_loss(mean.float(), log_var.float(), y).mean()
     opt.zero_grad(set_to_none=True)
     loss.backward()
     torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -51,4 +55,7 @@ for step in range(1, args.steps + 1):
     if step % 1000 == 0:
         print(f"{name} step {step} loss {run:.4f} {time.time() - t0:.0f}s", flush=True)
     if step % 5_000 == 0 or step == args.steps:
-        torch.save({"model": model.state_dict(), "args": vars(args), "step": step}, out / f"{name}.pt")
+        state = {"model": model.state_dict(), "args": vars(args), "step": step}
+        torch.save(state, out / f"{name}.pt")
+        if args.snapshots:
+            torch.save(state, out / f"{name}_step{step}.pt")
