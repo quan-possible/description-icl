@@ -55,7 +55,7 @@ The full plan is in the
 | --- | --- |
 | `docs/proposal/bayesian_icl/` | Research proposal (LaTeX source and PDF). |
 | `docs/wiki/` | One page per result or topic, kept current whether or not the paper uses it. |
-| `docs/paper/` | The paper draft; earlier versions in `archive/`. |
+| `docs/paper/` | The paper draft (`paper.tex`, with a generated Markdown copy `paper.md`); earlier versions in `archive/`. |
 | `docs/wiki/experiments.md` | The experimental design and its decision table. |
 | `src/descriptor_icl/` | Shared code (created with the first implementation). |
 | `results/<rq>-<slug>/` | One self-contained analysis each: code, config, figures, and a short README. |
@@ -70,3 +70,14 @@ cd docs/proposal/bayesian_icl && latexmk -pdf bayesian_icl_proposal.tex
 ```
 
 This needs the `titlesec` and `enumitem` LaTeX packages.
+
+## Build the paper
+
+```bash
+cd docs/paper && latexmk -pdf paper.tex
+docs/paper/to_md.sh
+```
+
+The second command writes `paper.md`, a Markdown copy for reading on GitHub,
+with the figures as SVG. It needs `pandoc` and `pdftocairo` (Poppler). Rerun
+it after editing `paper.tex`.
