@@ -217,8 +217,8 @@ learner's. RQ3 asks whether the two agree.
 | Optimiser | Adam, learning rate $10^{-4}$, constant | Garg et al., Appendix A |
 | Gradient clipping | Norm 1 | Huang & Ge |
 | Batch | 1024 prompts | Ours; one question per prompt carries less signal than Garg et al.'s every-row loss at batch 64 |
-| Steps | Set by the pilot (6.11) | |
-| Hardware | Colab L4 | |
+| Steps | Set by the pilot (6.11): the first 5k-step snapshot whose mean gap to the exact learner is within 0.01 nats of the best snapshot's (`choose_steps.py`) | |
+| Hardware | Colab L4, one process; TF32 matmuls and bf16 autocast for the forward pass, loss in fp32 (about 10 steps/s; fp32 gives 4) | Numerics only; the model, data, loss, and optimiser are unchanged |
 
 ### 6.9 Stages
 
@@ -247,10 +247,11 @@ network reaching the exact learner's regret.
 
 ### 6.11 Pilot
 
-One stage-1 model ($p = 1$, $r = 0.05$, seed 0) is trained first. Its regret
-is compared with the exact learner's on the same kind of prompts. The step
-count for the grid is the point where the gap stops shrinking. If the gap
-does not close, the design is revisited before the grid runs.
+One stage-1 model ($p = 1$, $r = 0.05$, seed 0) is trained for 40k steps
+with a snapshot every 5k. Each snapshot's regret is compared with the exact
+learner's on the same prompts, and the grid's step count is the first
+snapshot within 0.01 nats of the best mean gap (`choose_steps.py`; the gaps
+are in `pilot.csv`). If the gap does not close, the design is revisited.
 
 An earlier pilot with a distribution output and log loss (6 layers, width
 128) came within 0.03 to 0.05 nats of the exact learner after 10,000 steps.
