@@ -76,3 +76,19 @@ this setting; see the file for the values.
 `tests/test_meta.py` checks the prompt layout, and that the prediction
 ignores hidden rows and the order of the examples. A
 200-step smoke run of `train.py` and `evaluate.py` completed on 2026-09-29.
+
+**Third reliability and second seed (2026-10-01).** Two models at $p = 0.99$
+(`p0.99_r0.01_d5_s0`, `p0.99_r0.1_d5_s0`) and a second seed of the precise
+$p = 0.9$ model (`p0.9_r0.01_d5_s1`), each evaluated at all three
+reliabilities. The precise $p = 0.99$ network lands on the best single
+Gaussian again (ESS $8.9 \pm 0.2$; single Gaussian $8.54$, mixture $12.88$),
+the coarse one is within noise of both ($5.01$; $4.93$, $5.08$), and both read
+an implied reliance of $0.95$. Tested at $p = 0.9$, the precise $p = 0.99$
+model gets nothing from the description ($0.1 \pm 0.4$ against $6.9$
+calibrated). Seed 1 reproduces seed 0 ($4.26 \pm 0.08$ against $4.30$ alone;
+$6.6$ against $6.4$ on $p = 1$ prompts; reliance $0.9$ against $0.85$ on a grid
+of step $0.05$). `networks_table.tex` now takes every reference from
+`targets.csv` (200,000 prompts, with ESS standard errors) and
+`single_gaussian.csv` (100,000 prompts, $p \in \{0.9, 0.99\}$), gives the
+network ESS a standard error (both regrets' standard errors over the local
+slope of its demonstrations-only curve), and has a reliance column.

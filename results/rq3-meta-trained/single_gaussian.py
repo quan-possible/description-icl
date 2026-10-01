@@ -1,4 +1,4 @@
-"""Write single_gaussian.csv: on the p = 0.9 prompts of the network setting
+"""Write single_gaussian.csv: on the p = 0.9 and p = 0.99 prompts of the network setting
 (d = 5, a0 = 10), the one-step regret with a description and n examples of
 the Bayes-optimal mixture predictive and of the best single Gaussian, the one
 matching the mixture's mean and variance, which is all a mean-and-variance
@@ -16,7 +16,7 @@ import numpy as np
 from description_icl import gaussian as g
 
 here = pathlib.Path(__file__).parent
-D, A0, P, K, S = 5, 10.0, 0.9, 21, 20_000
+D, A0, K, S = 5, 10.0, 21, 100_000
 R_ex = np.array([float(x["regret"]) for x in csv.DictReader((here / "targets.csv").open()) if x["r"] == "none"])
 ORACLE = 0.5 * np.log(2 * np.pi * np.e)
 
@@ -34,7 +34,7 @@ def nll(y, mu, v):
 
 
 rows = []
-for r in (0.01, 0.1):
+for P, r in [(p, r) for p in (0.9, 0.99) for r in (0.01, 0.1)]:
     rng = np.random.default_rng(300)
     X = rng.standard_normal((S, K, D))
     m = np.sqrt(A0 - r * A0) * rng.standard_normal((S, D))
@@ -57,7 +57,7 @@ for r in (0.01, 0.1):
         for n in range(K):
             e = float(g.first_crossing(R_ex, c[n])[1]) - n
             rows.append(dict(r=r, p=P, who=who, n=n, regret=round(c[n], 4), ess_n="" if np.isnan(e) else round(e, 2)))
-    print(f"r={r}: alone mixture {curves['mixture'][0]:.3f} single {curves['single'][0]:.3f}; ESS alone",
-          {w: [x["ess_n"] for x in rows if x["r"] == r and x["who"] == w and x["n"] == 0][0] for w in curves}, flush=True)
+    print(f"p={P} r={r}: alone mixture {curves['mixture'][0]:.3f} single {curves['single'][0]:.3f}; ESS alone",
+          {w: [x["ess_n"] for x in rows if x["r"] == r and x["p"] == P and x["who"] == w and x["n"] == 0][0] for w in curves}, flush=True)
 with (here / "single_gaussian.csv").open("w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)

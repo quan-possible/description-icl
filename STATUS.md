@@ -43,8 +43,15 @@ learner and then for meta-trained networks.
   Terms: task description (Brown et al. 2020's term; "descriptor" only
   for Huang & Ge's object), demonstrations, reliance $q$, correctly
   specified / misspecified, oracle-calibrated / overconfident predictors.
-  Three more models are training (p = 0.99 at both precisions; seed 1 of
-  p = 0.9, r = 0.01).
+  The $p = 0.99$ models and the second seed are in (Section 6, Table 1):
+  the single-Gaussian reading holds at $p = 0.99$ and seed 1 reproduces
+  seed 0. An outside review (2026-10-01) called the math sound and the
+  paper a workshop-level submission as it stands; its fixable points are
+  applied (one reference per quantity with standard errors, closed-form
+  overconfident regrets, the heuristic status of $\ess_n \to pc$, the
+  no-root convention, notation clashes). Its structural asks are open for
+  Bruce: an LLM experiment, a mixture-output head, and matching $d$
+  between theory ($16$) and networks ($5$).
 
 - The paper is the v2 rewrite of 2026-10-01 03:37 ("in the style of NeurIPS
   ICL papers": numbered equations, descriptive paragraph headings, Proof
