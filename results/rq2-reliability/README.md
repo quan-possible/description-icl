@@ -80,7 +80,7 @@ wrong description is nearly compatible with the data.
 with $n \in \{0, 1, 10, 100\}$ examples in hand on a dense log-spaced grid
 of `r` (0.5 to 0.001) at $p \in \{1, 0.99, 0.9\}$, $d = 16$, `a0` $= 10$,
 one seed of 8,000 prompts, plus the $p = 0.9$ cap with no examples (40;
-the $p = 0.99$ cap, 327, is beyond the grid), and draws `ess.pdf`, the
+the $p = 0.99$ cap is 325, from a longer examples-only grid), and draws `ess.pdf`, the
 paper's Figure 2: alone, $p = 0.9$ saturates at 23 while $p = 1$ reaches
 117 at `r` $= 0.001$; with 100 examples in hand the worths are 88 and 109.
 

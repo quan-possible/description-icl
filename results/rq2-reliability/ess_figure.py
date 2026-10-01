@@ -2,8 +2,8 @@
 precision, with n = 0, 1, 10, 100 examples in hand, one panel per
 reliability p = 1, 0.99, 0.9; d = 16, a0 = 10, a dense log-spaced grid of r,
 one seed of 8,000 prompts. The dotted line is the p < 1 cap with no examples,
-the ESS at which R_ex(n) = (1-p) R_ex(0). Computes ess_curve.csv first and
-reuses it if present.
+the ESS at which R_ex(n) = (1-p) R_ex(0); the r = 0 rows of ess_curve.csv hold
+the caps for every p < 1. Computes ess_curve.csv first and reuses it if present.
 
     uv run python results/rq2-reliability/ess_figure.py
 """
@@ -26,7 +26,8 @@ out = here / "ess_curve.csv"
 if not out.exists():
     plain = mx.simulate(D, A0, A0 * 0.999, 1.0, K, S, seed=100)
     R_ex = mx.regret(plain, 0.0, 1)
-    rows = [dict(p=p, r=0, n=0, worth=round(float(g.first_crossing(R_ex, (1 - p) * R_ex[0])[1]), 3)) for p in PS if p < 1]
+    R_cap = mx.regret(mx.simulate(D, A0, A0 * 0.999, 1.0, 400, S // 4, seed=101), 0.0, 1)  # longer grid: the p = 0.99 cap is near 330
+    rows = [dict(p=p, r=0, n=0, worth=round(float(g.first_crossing(R_cap, (1 - p) * R_cap[0])[1]), 3)) for p in PS if p < 1]
     for p in PS:
         for r in RS:
             R_desc = mx.regret(mx.simulate(D, A0, r * A0, p, K, S, seed=200), p, 1)
