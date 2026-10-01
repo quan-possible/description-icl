@@ -211,7 +211,7 @@ We evaluate each network on $`20{,}000`$ fresh prompts for every $`n`$ from $`0`
 | 0.01 | 1 | 0.9 | 0.00 | $`\le 0`$ | 6.92 | -0.186 | 0.030 |
 | 0.1 | 1 | 0.9 | 2.32 | 2.05 | 4.26 | 0.010 | 0.016 |
 
-**Table 1.** Networks against the Bayes-optimal predictor ($`d=5`$, $`a_0=10`$, one training run per row, 20,000 evaluation prompts). “Trained” is the Bayes-optimal predictor with trust equal to the training reliability $`p_{\mathrm{train}}`$, the predictor each network is trained toward; “calibrated” is the predictor with trust equal to the test reliability, shown where the two differ. The last two columns are the mean regret gap, network minus the “trained” predictor, over $`n = 0, \dots, 20`$, with and without a description.
+**Table 1.** Networks against the Bayes-optimal predictor ($`d=5`$, $`a_0=10`$, one training run per row, 20,000 evaluation prompts). “Trained” is the Bayes-optimal predictor with trust equal to the training reliability $`p_{\mathrm{train}}`$, the predictor each network is trained toward; “calibrated” is the predictor with trust equal to the test reliability, shown where the two differ. In the last two rows the models trained on reliable descriptions meet unreliable ones: the precise model is hurt by a description it trusts fully, so its ESS is zero, while the coarse model’s wide predictive survives a wrong description. The last two columns are the mean regret gap, network minus the “trained” predictor, over $`n = 0, \dots, 20`$, with and without a description.
 
 </div>
 
