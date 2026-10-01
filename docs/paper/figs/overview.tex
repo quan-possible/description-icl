@@ -1,4 +1,4 @@
-% Figure 1: how the paper reads a prompt, and what sets a description's worth.
+% Figure 1: how the paper reads a prompt, and what sets a description's ESS.
 % Compile: latexmk -cd -pdf -interaction=nonstopmode -halt-on-error docs/paper/figs/overview.tex
 % ESS values in (b) are copied from the reliability table (results/rq2-reliability/ess_map.csv,
 % d = 16, a0 = 10, N = 1): 14.9, 116, 23.1. Prior shapes are sketches.
@@ -96,7 +96,7 @@
   \node[box-blue, right=1.2mm of eq] (k1) {$x_1, y_1$};
   \node[right=0.3mm of k1, text=inkmuted] (kd) {$\cdots$};
   \node[box-blue, right=0.3mm of kd] (kk) {$x_k, y_k$};
-  \node[header] at (d2.west |- 0,0) {WHAT A DESCRIPTION IS WORTH};
+  \node[header] at (d2.west |- 0,0) {THE DESCRIPTION'S ESS};
   \draw[brace] (kk.south east) -- node[below=9pt, lbl]
     {$k$ = ESS: the number of examples that\\cut one\hy{}step regret as much as the\\description does}
     (d2.south west);
@@ -105,7 +105,7 @@
   % ---------- (b) what sets the worth ----------
   \node[panel] at (0,-28mm) {(b)};
   \node[header] at (6mm,-28mm) {PRIOR ON $w$};
-  \node[header] at (56mm,-28mm) {WORTH IN EXAMPLES (ESS)};
+  \node[header] at (56mm,-28mm) {ESS (EXAMPLES)};
   \node[note, text=inksubtle, anchor=east] at (140mm,-28mm)
     {each \tikz[baseline=0.3mm]\fill[bluestroke] (0,0) rectangle (\sq,\tick); is one example};
 
@@ -131,8 +131,8 @@
   \node[note] at ($(b2)+(116.5*\pitch+1mm,0)$) {116};
   \node[note] at ($(b3)+(23.1*\pitch+1mm,0)$) {23};
 
-  \node[note, text=inkmuted] at ($(b1)+(20mm,0)$) {100$\times$ more precise $\rightarrow$ 8$\times$ the worth};
-  \node[note, text=inkmuted] at ($(b3)+(23mm,0)$) {\textcolor{pinkstroke}{wrong 10\% of the time} $\rightarrow$ worth falls by 80\%};
+  \node[note, text=inkmuted] at ($(b1)+(20mm,0)$) {100$\times$ more precise $\rightarrow$ 8$\times$ the ESS};
+  \node[note, text=inkmuted] at ($(b3)+(23mm,0)$) {\textcolor{pinkstroke}{wrong 10\% of the time} $\rightarrow$ ESS falls by 80\%};
   \node[lbl, text=inksubtle, anchor=north east] at ($(b3)+(84mm,-5mm)$) {$d = 16$, $a_0 = 10$, one query};
 
 \end{tikzpicture}

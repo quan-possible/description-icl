@@ -1,7 +1,7 @@
-# RQ2: worth of an unreliable description
+# RQ2: ESS of an unreliable description
 
 **What it shows.** When a description is sometimes wrong ($p < 1$), extra
-precision stops adding single-query worth, and for precise descriptions the
+precision stops adding single-query ESS, and for precise descriptions the
 long-horizon ESS can exceed the single-query ESS. Mis-set trust is cheap
 unless it is extreme. A wrong description is abandoned after a few examples.
 
@@ -36,7 +36,7 @@ uv run python results/rq2-reliability/table.py  # reliability_table.tex, the pap
 
 ## Findings
 
-**Reliability caps the worth of precision.** Single-query ESS as `r` goes
+**Reliability caps the value of precision.** Single-query ESS as `r` goes
 from 0.1 to 0.001:
 
 | $d$ | `a0` | $p = 1$ | $p = 0.99$ | $p = 0.9$ |
@@ -76,30 +76,31 @@ wrong description is nearly compatible with the data.
 
 ## ESS against precision
 
-`ess_figure.py` computes `ess_curve.csv`, the worth of the description
+`ess_figure.py` computes `ess_curve.csv`, the ESS of the description
 with $n \in \{0, 1, 10, 100\}$ examples in hand on a dense log-spaced grid
 of `r` (0.5 to 0.001) at $p \in \{1, 0.99, 0.9\}$, $d = 16$, `a0` $= 10$,
 one seed of 8,000 prompts. Its `r` $= 0$ rows hold the limit of the $n = 0$
 ESS as `r` $\to 0$ (25 at $p = 0.9$, 135 at $p = 0.99$) and its `r` $= -1$
-rows the floor cap $R^{\mathrm{ex}}(n) = (1-p) R^{\mathrm{ex}}(0)$ (40 and
+rows the lower-bound cap $R^{\mathrm{ex}}(n) = (1-p) R^{\mathrm{ex}}(0)$ (40 and
 325, from a longer examples-only grid). It draws `ess.pdf`, the paper's
 Figure 2: alone, $p = 0.9$ saturates at 23 while $p = 1$ reaches 117 at
-`r` $= 0.001$; with 100 examples in hand the worths are 88 and 109.
+`r` $= 0.001$; with 100 examples in hand the ESS values are 88 and 109.
 
-## Worth with examples in hand
+## ESS with examples in hand
 
-`worth.py` computes the description's worth as further examples saved when
-$n$ examples are already present (paper, Definition 2 and Proposition 3) at
+`worth.py` computes the description's ESS with $n$ examples in hand, the further
+examples it saves when $n$ are already present (paper, Definition 1 and
+Proposition 2) at
 $d = 16$, `a0` $= 10$, three seeds, into `worth.csv`, the source of the
 paper's $n$-in-hand numbers and of `tests/test_propositions.py`. A precise
-unreliable description gains worth
+unreliable description gains ESS
 as examples verify it (23 alone, 30 after one, 29 after ten, 88 after a
 hundred at `r` $= 0.001$, $p = 0.9$); a reliable one drifts from 117 to
 108. The grid is $n = 0, \dots, 100$ with 8,000 prompts per seed; the table
 reports $n \in \{0, 1, 10, 100\}$. Rows with `q` $= 1$ at $p = 0.9$ are the
 fully trusting learner: regret alone 2.2, 6.3, 13.4 nats at `r` $= 0.1$,
 0.01, 0.001 (no description: 2.51), and after 100 examples the `r` $= 0.01$
-description is still worth $-58$ examples; an empty `worth` means the
+description is still worth $-58$ examples; an empty `worth` column means the
 description is worse than no information at all.
 
 ## Validation
