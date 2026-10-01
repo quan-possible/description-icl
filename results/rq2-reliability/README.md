@@ -86,6 +86,16 @@ rows the lower-bound cap $R^{\mathrm{ex}}(n) = (1-p) R^{\mathrm{ex}}(0)$ (40 and
 Figure 2: alone, $p = 0.9$ saturates at 23 while $p = 1$ reaches 117 at
 `r` $= 0.001$; with 100 examples in hand the ESS values are 88 and 109.
 
+## Regret against trust
+
+`trust_figure.py` computes `trust_curve.csv`, the Bayes-optimal predictor's
+one-step regret against the trust `q` it places in a description of true
+reliability $p = 0.9$ at $d = 16$, `a0` $= 10$, for `r` $\in \{0.1, 0.01,
+0.001\}$, alone and with 10 examples in hand (one seed of 8,000 prompts),
+and draws `trust.pdf`, the paper's Figure 3: flat for a wide band below
+$p$, a cliff at $q = 1$ (12.5 nats at `r` $= 0.001$ alone, 10.8 with ten
+examples) that examples do not remove.
+
 ## ESS with examples in hand
 
 `worth.py` computes the description's ESS with $n$ examples in hand, the further
