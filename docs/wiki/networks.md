@@ -1,7 +1,7 @@
 # Networks
 
-**Status:** design fixed (log loss, decision 19 in
-[experiments.md](experiments.md)). No model trained to completion. Design record: [experiments.md](experiments.md), section 6.
+**Status:** four models trained (2026-09-30, one per setting, 40k steps on
+Colab L4); results in the paper's section 6. One continuation run pending. Design record: [experiments.md](experiments.md), section 6.
 
 **Design.** Prefix embedding of Huang & Ge (2025): an optional descriptor
 token carrying $m$, example tokens, a query token, two indicator columns. No
@@ -26,10 +26,29 @@ values in parentheses):
 | 0.5 | 2.7 (2.2) | 2.1 (1.8) |
 | 0.05 | 7.4 (6.7) | 4.4 (5.0) |
 
-**Evidence so far.** An earlier pilot with the offset layout, a 6-layer
-model, and log loss reached within 0.03 to 0.05 nats of the Bayes-optimal
-predictor after 10,000 steps (ESS 6.68 against 6.55). It used a design since
-replaced and is not a result.
+**Results** (`results/rq3-meta-trained/summary.csv`; ESS network vs exact):
+
+| $r$ | $p_{\text{train}}$ | $p_{\text{test}}$ | Network | Exact (trained trust) | Exact (calibrated) |
+| --- | --- | --- | --- | --- | --- |
+| 0.05 | 1 | 1 | 6.7 | 6.7 | |
+| 0.5 | 1 | 1 | 2.2 | 2.3 | |
+| 0.05 | 0.9 | 0.9 | 3.9 | 5.0 | |
+| 0.5 | 0.9 | 0.9 | 1.8 | 1.9 | |
+| 0.05 | 1 | 0.9 | 0.7 | 0.0 | 5.0 |
+| 0.5 | 1 | 0.9 | 1.6 | 1.7 | 1.9 |
+
+Three of four matching-distribution models sit on the exact learner's regret
+curve within 0.02 nats. The precise unreliable model under-values its
+description (implied trust 0.85, regret 0.3 nats above Bayes from the
+description alone); its training loss was still falling at 40k, and a
+continuation to 80k steps is pending. Models trained on reliable
+descriptions trust fully: on $p = 0.9$ prompts the precise one gets 0.7
+examples' worth from a description that a calibrated learner would value
+at 5.0.
+
+**Pilot.** The gap to the exact learner fell from 0.07 nats at 5k steps to
+0.02 at 20k and stayed there to 40k (`pilot.csv`). An earlier pilot with a
+since-replaced design is not a result.
 
 **Compute.** One old-layout model trained at 54 steps/s on a Colab L4 and 24
 on a T4 at batch 256; 18 models in parallel gave no more total throughput.
