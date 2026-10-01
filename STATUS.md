@@ -71,7 +71,9 @@ learner and then for meta-trained networks.
   2026-10-01). Reliable descriptions are reproduced (14.7 vs 15.4 at
   $r = 0.01$; 5.24 vs 5.28 at $r = 0.1$); unreliable ones are under-valued
   alone at both precisions (4.3 vs 6.8; 3.6 vs 4.2; implied trust 0.85),
-  converging as examples arrive. Transfer: the precise reliable-trained
+  converging as examples arrive; their $\ess_n$ rises at $r = 0.01$ (4.3 to
+  8.1 by $n = 10$) and falls at $r = 0.1$, as Proposition 2 says
+  (`ess_n.py`). Transfer: the precise reliable-trained
   model is hurt by a description on $p = 0.9$ prompts (ESS 0 vs 6.9); the
   coarse one keeps 2.3 of 4.3. Table 1 and Figure 3 regenerate from
   `summarize.py` and `figure.py`; `targets.py` is on the new grid.

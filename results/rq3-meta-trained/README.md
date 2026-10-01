@@ -4,7 +4,10 @@
 the Bayes-optimal predictor's ESS for reliable descriptions (14.7 vs 15.4 at
 `r` $= 0.01$; 5.24 vs 5.28 at `r` $= 0.1$) and under-value an unreliable one
 alone at both precisions (4.3 vs 6.8; 3.6 vs 4.2; implied trust 0.85 against
-0.9), converging to the Bayes-optimal predictor as examples arrive. An
+0.9), converging to the Bayes-optimal predictor as examples arrive; with $n$
+examples in hand the precise unreliable network's ESS rises (4.3, 7.3, 8.1
+at $n = 0, 5, 10$; Bayes-optimal 6.8, 8.7, 9.0) and the coarse one's falls
+(`ess_n.py`, `ess_n.csv`). An
 earlier model at `r` $= 0.05$, $p = 0.9$ (files kept here) showed the same
 under-trust and a continuation to 80k steps left it unchanged (3.9 vs 5.0,
 trust 0.85), so it is not under-training. Models trained on reliable
