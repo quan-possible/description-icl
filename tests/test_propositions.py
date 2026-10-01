@@ -91,3 +91,16 @@ def test_reliability_with_examples_sandwich():
                     assert mix[n]["ident"] <= mix[n - 1.0]["ident"] + 0.01
                 checked += 1
     assert checked == 3 * 3 * 101
+
+
+def test_precision_additive_rule():
+    """Proposition 1 on the full RQ1 grid: the additive rule (d-1)(1-r) + 1/(r a0)
+    is within 2.2 examples of the exact one-step ESS at a0 >= 10, and the
+    universal bound ESS <= 1/(r a0) + d + 2 holds in every cell."""
+    rows = [{k: float(v) for k, v in x.items()} for x in csv.DictReader((ROOT / "results/rq1-single-query-gap/ess.csv").open())]
+    assert len(rows) == 63
+    for x in rows:
+        c = 1 / (x["r"] * x["a0"])
+        assert x["ess_N1"] <= c + x["d"] + 2 + 0.5, x  # 0.5 for Monte Carlo
+        if x["a0"] >= 10:
+            assert abs(x["ess_N1"] - ((x["d"] - 1) * (1 - x["r"]) + c)) <= 2.2, x
