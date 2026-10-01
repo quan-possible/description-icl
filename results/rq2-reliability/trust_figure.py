@@ -12,7 +12,7 @@ import pathlib
 import numpy as np
 import orx_figstyle as fs
 
-from description_icl import mixture as mx
+from descriptor_icl import mixture as mx
 
 here = pathlib.Path(__file__).parent
 D, A0, P, K, S = 16, 10.0, 0.9, 40, 8000
