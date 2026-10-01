@@ -20,8 +20,8 @@ from descriptor_icl import mixture as mx
 
 HERE = pathlib.Path(__file__).parent
 SETTINGS = ((4, 10.0), (16, 10.0), (16, 100.0), (64, 10.0))  # (d, a0)
-PS = (1.0, 0.99, 0.9, 0.7, 0.5, 0.3)
-RS = (0.5, 0.2, 0.05, 0.01, 0.001)
+PS = (1.0, 0.99, 0.9)
+RS = (0.1, 0.01, 0.001)
 HORIZONS = (1, 16, 200)
 SEEDS = (0, 1, 2)
 

@@ -1,16 +1,21 @@
 #!/bin/bash
-# Train and evaluate one model on a Colab VM, then bundle its outputs.
-# Usage: one_model.sh <p> <r>    (seed 0, 40k steps, bf16 autocast)
+# Train and evaluate models on a Colab VM, one after another, then bundle
+# their outputs. Usage: one_model.sh <p> <r> [<p> <r> ...]
+# Seed 0, 40k steps, bf16 autocast, prompts with 0 to 20 examples (K = 21).
 set -eo pipefail
 cd /content/work
 export PYTHONPATH=/content/work/src
 mkdir -p tmp/rq3
 R=results/rq3-meta-trained
-name="p$1_r$2_d5_s0"
-echo "gpu: $(nvidia-smi --query-gpu=name --format=csv,noheader)  model: $name"
-python3 $R/train.py --p $1 --r $2 --seed 0 --steps 40000 --amp 2>&1 | tee tmp/rq3/$name.log
-python3 $R/evaluate.py tmp/rq3/$name.pt | tee -a tmp/rq3/$name.log
-[[ $1 == 1.0 ]] && python3 $R/evaluate.py tmp/rq3/$name.pt --p-test 0.9 | tee -a tmp/rq3/$name.log
-tar czf /content/${name}_results.tgz $R/${name}_*.csv tmp/rq3/$name.log
-tar czf /content/${name}_ckpt.tgz tmp/rq3/$name.pt
-ls -la /content/${name}_*.tgz
+echo "gpu: $(nvidia-smi --query-gpu=name --format=csv,noheader)"
+while (( $# )); do
+  p=$1; r=$2; shift 2
+  name="p${p}_r${r}_d5_s0"
+  echo "model: $name"
+  python3 $R/train.py --p $p --r $r --seed 0 --steps 40000 --K 21 --amp 2>&1 | tee tmp/rq3/$name.log
+  python3 $R/evaluate.py tmp/rq3/$name.pt | tee -a tmp/rq3/$name.log
+  [[ $p == 1.0 ]] && python3 $R/evaluate.py tmp/rq3/$name.pt --p-test 0.9 | tee -a tmp/rq3/$name.log
+  tar czf /content/${name}_results.tgz $R/${name}_*.csv tmp/rq3/$name.log
+  tar czf /content/${name}_ckpt.tgz tmp/rq3/$name.pt
+done
+ls -la /content/*_results.tgz /content/*_ckpt.tgz
