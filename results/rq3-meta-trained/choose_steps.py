@@ -1,8 +1,8 @@
-"""Pick the grid's step count from the pilot's snapshots: the first snapshot
-whose mean gap to the exact learner (net minus Bayes regret, averaged over
-n and over prompts with and without a description) is within 0.01 nats of
-the best snapshot's. Prints the step count; writes pilot.csv next to this
-script with the gap at every snapshot.
+"""Record the pilot's convergence: the mean gap to the exact learner (net
+minus Bayes regret, averaged over n and over prompts with and without a
+description) at every snapshot, written to pilot.csv next to this script.
+Also prints the first snapshot within 0.01 nats of the best, for the record;
+the grid trains every model for the fixed budget of 40k steps regardless.
 
     python choose_steps.py pilot_step5000_regret.csv pilot_step10000_regret.csv ...
 """

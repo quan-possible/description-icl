@@ -217,7 +217,7 @@ learner's. RQ3 asks whether the two agree.
 | Optimiser | Adam, learning rate $10^{-4}$, constant | Garg et al., Appendix A |
 | Gradient clipping | Norm 1 | Huang & Ge |
 | Batch | 1024 prompts | Ours; one question per prompt carries less signal than Garg et al.'s every-row loss at batch 64 |
-| Steps | Set by the pilot (6.11): the first 5k-step snapshot whose mean gap to the exact learner is within 0.01 nats of the best snapshot's (`choose_steps.py`) | |
+| Steps | 40,000 for every model, a fixed budget. The pilot (6.11) checks that training loss has flattened by then | Garg et al. train for a fixed budget; a fixed budget avoids choosing the stopping point by the comparison being reported |
 | Hardware | Colab L4, one process; TF32 matmuls and bf16 autocast for the forward pass, loss in fp32 (about 10 steps/s; fp32 gives 4) | Numerics only; the model, data, loss, and optimiser are unchanged |
 
 ### 6.9 Stages
@@ -248,10 +248,12 @@ network reaching the exact learner's regret.
 ### 6.11 Pilot
 
 One stage-1 model ($p = 1$, $r = 0.05$, seed 0) is trained for 40k steps
-with a snapshot every 5k. Each snapshot's regret is compared with the exact
-learner's on the same prompts, and the grid's step count is the first
-snapshot within 0.01 nats of the best mean gap (`choose_steps.py`; the gaps
-are in `pilot.csv`). If the gap does not close, the design is revisited.
+with a snapshot every 5k. The training loss, on fresh prompts every step,
+must have flattened by 40k; that confirms the budget. Each snapshot's gap
+to the exact learner is recorded in `pilot.csv` as evidence of convergence,
+not as a stopping rule: stopping a model when it looks most Bayes-optimal
+would select the result being reported. The pilot is the grid's $p = 1$,
+$r = 0.05$ model. If the gap does not close, the design is revisited.
 
 An earlier pilot with a distribution output and log loss (6 layers, width
 128) came within 0.03 to 0.05 nats of the exact learner after 10,000 steps.
