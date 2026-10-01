@@ -2,97 +2,124 @@
 % Compile: latexmk -cd -pdf -interaction=nonstopmode -halt-on-error docs/paper/figs/overview.tex
 % ESS values in (b) are copied from Table 2 (results/rq2-reliability/ess_map.csv,
 % d = 16, a0 = 10, N = 1): 7.6, 116.5, 23.1. Prior shapes are sketches.
+%
+% Style: the Editorial Neutral system ($visualization-design DESIGN.md), its SVG
+% binding translated to TikZ at 0.5 pt per px (16 px node text = 8 pt).
+% Color roles: green = the description and its prior, blue = examples,
+% pink = the branch where the description is wrong. Everything else is gray.
 \documentclass[border=0pt]{standalone}
-\usepackage[scaled=0.92]{helvet}
-\usepackage{sansmath}
-\usepackage{amsmath}
+\usepackage[sfdefault]{inter}
+\usepackage[T1]{fontenc}
+\usepackage[italic]{mathastext}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta, positioning, calc, decorations.pathreplacing}
+\usetikzlibrary{positioning, calc, decorations.pathreplacing}
 
-\definecolor{orxblue}{HTML}{0072B2}
-\definecolor{orxorange}{HTML}{E69F00}
+\definecolor{ink}{HTML}{171717}
+\definecolor{inkmuted}{HTML}{5A5A5A}
+\definecolor{inksubtle}{HTML}{8A8A8A}
+\definecolor{axis}{HTML}{A8A8A8}
+\definecolor{grid}{HTML}{ECECEC}
+\definecolor{gray}{HTML}{F5F5F5}
+\definecolor{graystroke}{HTML}{B3B3B3}
+\definecolor{green}{HTML}{EDF3E8}
+\definecolor{greenstroke}{HTML}{8A9F7A}
+\definecolor{pink}{HTML}{F5E7EC}
+\definecolor{pinkstroke}{HTML}{BD7C8F}
+\definecolor{blue}{HTML}{E8F0F9}
+\definecolor{bluestroke}{HTML}{7F9FC4}
 
 \tikzset{
-  orx/.style={font=\sffamily\sansmath\footnotesize, >={Stealth[round, length=4pt, width=3pt]},
-    line width=0.5pt},
-  tok/.style={draw=black!45, fill=white, rounded corners=1.5pt, minimum height=6mm,
-    minimum width=10mm, inner sep=2pt},
-  desc/.style={tok, draw=orxorange, fill=orxorange!14, line width=0.7pt},
-  ex/.style={tok, draw=orxblue!70, fill=orxblue!8},
-  brace/.style={decorate, decoration={brace, amplitude=3pt, raise=1.5mm}, draw=black!50},
-  lbl/.style={font=\sffamily\sansmath\scriptsize, text=black!65, align=center},
-  panel/.style={font=\sffamily\bfseries\footnotesize, anchor=north west, inner sep=0pt},
-  note/.style={font=\sffamily\sansmath\scriptsize, anchor=west, align=left},
+  vd/.style={font=\footnotesize, text=ink, line width=0.65pt},
+  node/.style={rounded corners=3.5pt, line width=0.65pt, minimum height=6mm,
+    minimum width=10mm, inner sep=2pt, text=ink},
+  box-gray/.style={node, fill=gray, draw=graystroke},
+  box-green/.style={node, fill=green, draw=greenstroke},
+  box-blue/.style={node, fill=blue, draw=bluestroke},
+  brace/.style={decorate, decoration={brace, amplitude=3pt, raise=1.5mm}, draw=axis, line width=0.6pt},
+  lbl/.style={font=\scriptsize, text=inkmuted, align=center},
+  header/.style={font=\scriptsize, text=inkmuted, anchor=west, inner sep=0pt},
+  panel/.style={font=\footnotesize, text=ink, anchor=west, inner sep=0pt},
+  note/.style={font=\scriptsize, anchor=west, align=left},
 }
 
-% One example = one square. #1 anchor coordinate, #2 whole examples, #3 fraction of the last.
-\newcommand{\pitch}{0.66mm}
-\newcommand{\sq}{0.46mm}
+% Inter's Type 1 hyphen carries wide side bearings at small sizes; tighten it.
+\newcommand{\hy}{\kern-0.09em-\kern-0.09em}
+
+% One example = one tick. #1 anchor, #2 whole examples, #3 fraction of the last.
+\newcommand{\pitch}{0.63mm}
+\newcommand{\sq}{0.44mm}
 \newcommand{\tick}{2.4mm}
 \newcommand{\exbar}[3]{%
-  \foreach \i in {1,...,#2} {\fill[orxblue] ($(#1)+({(\i-1)*\pitch}, -\tick/2)$) rectangle +(\sq, \tick);}
-  \fill[orxblue] ($(#1)+({#2*\pitch}, -\tick/2)$) rectangle +({#3*\sq}, \tick);
+  \foreach \i in {1,...,#2} {\fill[bluestroke] ($(#1)+({(\i-1)*\pitch}, -\tick/2)$) rectangle +(\sq, \tick);}
+  \fill[bluestroke] ($(#1)+({#2*\pitch}, -\tick/2)$) rectangle +({#3*\sq}, \tick);
 }
 
-% A prior sketch on a 24 mm axis (w from -3 to 3), mean of the description at w = 1.2.
-% #1 anchor (left end of the axis), #2 the description's density as a function of \x.
-\newcommand{\prior}[2]{%
+% A prior sketch on a 24 mm axis (w from -3 to 3); the description states m = 1.2.
+% #1 anchor (left end of the axis), #2 the correct-description component,
+% #3 the wrong-description component (0 when reliable).
+\newcommand{\prior}[3]{%
   \begin{scope}[shift={(#1)}, x=4mm, y=1mm]
-    \draw[black!30, dashed, line width=0.4pt, domain=-3:3, samples=60, smooth]
+    \fill[green, domain=-3:3, samples=160, smooth] plot ({\x+3}, {#2 + #3}) -- (6,0) -- (0,0) -- cycle;
+    \fill[pink, domain=-3:3, samples=60, smooth] plot ({\x+3}, {#3}) -- (6,0) -- (0,0) -- cycle;
+    \draw[axis, dash pattern=on 2pt off 1.5pt, line width=0.6pt, domain=-3:3, samples=60, smooth]
       plot ({\x+3}, {3*exp(-\x*\x/2)});
-    \fill[orxorange!25, domain=-3:3, samples=160, smooth]
-      plot ({\x+3}, {#2}) -- (6,0) -- (0,0) -- cycle;
-    \draw[orxorange, line width=0.7pt, domain=-3:3, samples=160, smooth] plot ({\x+3}, {#2});
-    \draw[black!60] (0,0) -- (6,0);
-    \draw[black!60] (4.2,0) -- (4.2,-0.8) node[below, lbl, inner sep=1pt] {$m$};
+    \draw[greenstroke, line width=0.65pt, domain=-3:3, samples=160, smooth] plot ({\x+3}, {#2 + #3});
+    \def\wrong{#3}\def\none{0}%
+    \ifx\wrong\none\else
+      \draw[pinkstroke, line width=0.65pt, domain=-3:3, samples=60, smooth] plot ({\x+3}, {#3});
+    \fi
+    \draw[axis, line width=0.6pt] (0,0) -- (6,0);
+    \draw[axis, line width=0.6pt] (4.2,0) -- (4.2,-0.8) node[below, lbl, inner sep=1pt] {$m$};
   \end{scope}
 }
 
 \begin{document}
-\begin{tikzpicture}[orx]
+\begin{tikzpicture}[vd]
 
   % ---------- (a) the prompt as Bayesian inference, and the ESS ----------
-  \node[panel] (pa) at (0,0) {(a)};
+  \node[panel] at (0,0) {(a)};
+  \node[header] at (6mm,0) {A PROMPT, READ AS BAYESIAN INFERENCE};
 
-  \node[desc, anchor=north west] (d) at (0,-4.5mm) {description: $w \approx m$};
-  \node[ex, right=1.2mm of d]  (e1) {$x_1, y_1$};
-  \node[ex, right=1.2mm of e1] (e2) {$x_2, y_2$};
-  \node[right=0.3mm of e2]     (ed) {$\cdots$};
-  \node[ex, right=0.3mm of ed] (en) {$x_n, y_n$};
-  \node[tok, right=1.2mm of en, minimum width=8mm] (q) {$x \;\; ?$};
+  \node[box-green, anchor=north west] (d) at (0,-4.5mm) {description: $w \approx m$};
+  \node[box-blue, right=1.2mm of d]  (e1) {$x_1, y_1$};
+  \node[box-blue, right=1.2mm of e1] (e2) {$x_2, y_2$};
+  \node[right=0.3mm of e2, text=inkmuted] (ed) {$\cdots$};
+  \node[box-blue, right=0.3mm of ed] (en) {$x_n, y_n$};
+  \node[box-gray, right=1.2mm of en, minimum width=8mm] (q) {$x \;\; ?$};
 
   \draw[brace] (d.south east) -- node[below=9pt, lbl] {sets the prior\\on the task $w$} (d.south west);
   \draw[brace] (en.south east) -- node[below=9pt, lbl] {data that update\\the posterior} (e1.south west);
   \draw[brace] (q.south east) -- node[below=9pt, lbl] {predict $y$} (q.south west);
 
-  % right half: the exchange rate
-  \node[desc, right=9mm of q] (d2) {description};
-  \node[right=1.2mm of d2, font=\sffamily\sansmath\normalsize] (eq) {$=$};
-  \node[ex, right=1.2mm of eq] (k1) {$x_1, y_1$};
-  \node[right=0.3mm of k1]     (kd) {$\cdots$};
-  \node[ex, right=0.3mm of kd] (kk) {$x_k, y_k$};
+  \node[box-green, right=9mm of q] (d2) {description};
+  \node[right=1.2mm of d2, font=\normalsize] (eq) {$=$};
+  \node[box-blue, right=1.2mm of eq] (k1) {$x_1, y_1$};
+  \node[right=0.3mm of k1, text=inkmuted] (kd) {$\cdots$};
+  \node[box-blue, right=0.3mm of kd] (kk) {$x_k, y_k$};
+  \node[header] at (d2.west |- 0,0) {WHAT A DESCRIPTION IS WORTH};
   \draw[brace] (kk.south east) -- node[below=9pt, lbl]
-    {$k$ = ESS: the number of examples that\\cut one-step regret as much as the\\description does}
-    ($(d2.south west)$);
-  \draw[black!25] ($(q.east)!0.5!(d2.west) + (0,4mm)$) -- ++(0,-19mm);
+    {$k$ = ESS: the number of examples that\\cut one\hy{}step regret as much as the\\description does}
+    (d2.south west);
+  \draw[grid, line width=0.65pt] ($(q.east)!0.5!(d2.west) + (0,1mm)$) -- ++(0,-20mm);
 
   % ---------- (b) what sets the worth ----------
-  \node[panel] (pb) at (0,-28mm) {(b)};
-  \node[lbl, anchor=west] at (4mm,-28mm-1.3mm) {prior on $w$ (dashed: without the description)};
-  \node[lbl, anchor=west] at (56mm,-28mm-1.3mm) {worth in examples (ESS); each \tikz[baseline=0.3mm]\fill[orxblue] (0,0) rectangle (\sq,\tick); is one example};
+  \node[panel] at (0,-28mm) {(b)};
+  \node[header] at (6mm,-28mm) {PRIOR ON $w$};
+  \node[header] at (56mm,-28mm) {WORTH IN EXAMPLES (ESS)};
+  \node[note, text=inksubtle, anchor=east] at (140mm,-28mm)
+    {each \tikz[baseline=0.3mm]\fill[bluestroke] (0,0) rectangle (\sq,\tick); is one example};
 
-  % rows: prior sketch at x = 0..24 mm, labels at 26 mm, bars from 56 mm
   \coordinate (r1) at (0,-41mm);
   \coordinate (r2) at (0,-55mm);
   \coordinate (r3) at (0,-69mm);
 
-  \prior{r1}{6*exp(-(\x-1.2)*(\x-1.2)/(2*0.36))}
-  \prior{r2}{9*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144))}
-  \prior{r3}{8.1*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144)) + 1.2*exp(-\x*\x/2)}
+  \prior{r1}{6*exp(-(\x-1.2)*(\x-1.2)/(2*0.36))}{0}
+  \prior{r2}{9*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144))}{0}
+  \prior{r3}{8.1*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144))}{1.6*exp(-\x*\x/2)}
 
-  \node[note] at ($(r1)+(26mm,3mm)$) {\textbf{coarse, reliable}\\$r = 0.5$, $p = 1$};
-  \node[note] at ($(r2)+(26mm,3mm)$) {\textbf{precise, reliable}\\$r = 0.001$, $p = 1$};
-  \node[note] at ($(r3)+(26mm,3mm)$) {\textbf{precise, 90\% reliable}\\$r = 0.001$, $p = 0.9$};
+  \node[note] at ($(r1)+(26mm,3mm)$) {coarse, reliable\\\textcolor{inkmuted}{$r = 0.5$, $p = 1$}};
+  \node[note] at ($(r2)+(26mm,3mm)$) {precise, reliable\\\textcolor{inkmuted}{$r = 0.001$, $p = 1$}};
+  \node[note] at ($(r3)+(26mm,3mm)$) {precise, \textcolor{pinkstroke}{90\% reliable}\\\textcolor{inkmuted}{$r = 0.001$, $p = 0.9$}};
 
   \coordinate (b1) at ($(r1)+(56mm,3mm)$);
   \coordinate (b2) at ($(r2)+(56mm,3mm)$);
@@ -100,13 +127,13 @@
   \exbar{b1}{7}{0.6}
   \exbar{b2}{116}{0.5}
   \exbar{b3}{23}{0.1}
-  \node[note, text=orxblue] at ($(b1)+(7.6*\pitch+1mm,0)$) {\textbf{7.6}};
-  \node[note, text=orxblue] at ($(b2)+(116.5*\pitch+1mm,0)$) {\textbf{117}};
-  \node[note, text=orxblue] at ($(b3)+(23.1*\pitch+1mm,0)$) {\textbf{23}};
+  \node[note] at ($(b1)+(7.6*\pitch+1mm,0)$) {7.6};
+  \node[note] at ($(b2)+(116.5*\pitch+1mm,0)$) {117};
+  \node[note] at ($(b3)+(23.1*\pitch+1mm,0)$) {23};
 
-  \node[note, text=black!65] at ($(b1)+(16mm,0)$) {500$\times$ more precise $\rightarrow$ 15$\times$ the worth};
-  \node[note, text=black!65] at ($(b3)+(23mm,0)$) {wrong 10\% of the time $\rightarrow$ worth falls by 80\%};
-  \node[lbl, anchor=north east] at ($(b3)+(84mm,-5mm)$) {$d = 16$, $a_0 = 10$, one query};
+  \node[note, text=inkmuted] at ($(b1)+(16mm,0)$) {500$\times$ more precise $\rightarrow$ 15$\times$ the worth};
+  \node[note, text=inkmuted] at ($(b3)+(23mm,0)$) {\textcolor{pinkstroke}{wrong 10\% of the time} $\rightarrow$ worth falls by 80\%};
+  \node[lbl, text=inksubtle, anchor=north east] at ($(b3)+(84mm,-5mm)$) {$d = 16$, $a_0 = 10$, one query};
 
 \end{tikzpicture}
 \end{document}
