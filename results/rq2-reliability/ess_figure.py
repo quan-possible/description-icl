@@ -52,7 +52,7 @@ ax.text(0.0011, 150, f"cap at $p = 0.99$: {cap(16, 0.99):.0f}", color=PCOL[0.99]
 ax.set_xscale("log"); ax.set_yscale("log"); ax.invert_xaxis()
 ax.set_xticks([0.5, 0.1, 0.01, 0.001]); ax.set_xticklabels(["0.5", "0.1", "0.01", "0.001"]); ax.minorticks_off()
 ax.set_yticks([3, 10, 30, 100]); ax.set_yticklabels(["3", "10", "30", "100"]); ax.set_ylim(3, 200)
-ax.set_xlabel("precision ratio $r$ (fraction of prior variance left)")
+ax.set_xlabel("precision $r$")
 ax.set_ylabel("ESS of the description (examples)")
 ax.grid(True, axis="y", color=fs.MUTED, lw=0.5)
 ax.legend(loc="lower right", frameon=False)
