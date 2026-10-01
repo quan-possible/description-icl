@@ -35,7 +35,7 @@ While prompts in modern language models typically consist of both a task descrip
 \includegraphics[width=\linewidth]{figs/overview.pdf}
 \caption{\textbf{A task description is worth a number of in-context examples, set by its precision and capped by its reliability.}
 (a) We read a prompt as Bayesian inference over a latent task $w$: the description sets the prior and the examples are data. The description's effective sample size (ESS) is the number of examples $k$ that lowers a Bayes-optimal predictor's one-step regret as much as the description does.
-(b) Three descriptions and their ESS. Precision $1/r$ sets how narrowly the prior concentrates around the stated $m$; reliability $p$ is the chance the description is correct, and otherwise $w$ follows the base prior (dashed). Prior shapes are sketches; ESS values are from Table~\ref{tab:reliability} ($d = 16$, $a_0 = 10$).}
+(b) Three descriptions and their ESS. Precision $1/r$ sets how narrowly the prior concentrates around the stated $m$; reliability $p$ is the chance the description is correct, and otherwise $w$ follows the base prior (dashed; its share $1-p$ shaded pink). Prior shapes are sketches; ESS values are from Table~\ref{tab:reliability} ($d = 16$, $a_0 = 10$).}
 \label{fig:overview}
 \end{figure}
 
