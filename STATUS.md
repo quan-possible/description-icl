@@ -82,7 +82,11 @@ learner and then for meta-trained networks.
   4.31; 3.57 vs 3.62; `single_gaussian.py`), merging with the mixture as
   examples identify the description. The earlier "under-trust" (implied
   trust 0.85) was a posterior-mean readout of that unimodality. Finding 2,
-  inherited trust: the precise reliable-trained
+  inherited trust (full train-by-test matrix; the exact regret-against-trust
+  curve, Figure 3, `trust_figure.py`, says under-trust is cheap and full
+  trust ruinous). The two reference predictors and implied trust are
+  named once in Section 3, as the ICL theory papers do (template in
+  `tmp/exemplars.md`). Inherited trust: the precise reliable-trained
   model is hurt by a description on $p = 0.9$ prompts (ESS 0 vs 6.9); the
   coarse one keeps 2.3 of 4.3. Table 1 and Figure 3 regenerate from
   `summarize.py` and `figure.py`; `targets.py` is on the new grid.
