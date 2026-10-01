@@ -57,12 +57,14 @@ learner and then for meta-trained networks.
   worth-against-$n$ figure is gone. The abstract and contributions lead
   with the reliability result; Tables 1 and 2 moved to Appendix A
   (Bruce, 2026-10-01).
-- Section 6 (networks) was done from four trained models (one per
-  setting, 40k steps, log loss, Colab L4, 2026-09-30) at the old grid
-  ($r \in \{0.5, 0.05\}$, prompts to 15 examples). It is stale: the models
-  must be retrained at $r \in \{0.1, 0.01\}$ with prompts to 20 examples
-  (`one_model.sh`), and its prose, Table 3, Figure 3, and panel (b) of the
-  worth figure follow. Exact $d = 5$ targets for the new grid are in
+- Section 6 (networks) describes the four trained models that exist (one
+  per setting, 40k steps, log loss, Colab L4, 2026-09-30) at the old grid
+  ($r \in \{0.5, 0.05\}$, prompts to 15 examples); its scripts, table, and
+  figure are consistent with them (restored 2026-10-01). Decision 23 moves
+  the models to $r \in \{0.1, 0.01\}$ with prompts to 20 examples
+  (`one_model.sh` is ready); when retrained, switch the model names in
+  `figure.py` and `summarize.py`, rerun `targets.py` with K = 21, and
+  rewrite the prose. Exact $d = 5$ targets for the new grid are in
   `results/rq3-meta-trained/targets.csv`: ESS 5.2/4.3 at $r = 0.1$ and
   15.6/6.9 at $r = 0.01$ for $p = 1$/$0.9$; the unreliable $r = 0.01$
   description rises from 6.7 to 10.6 over $n = 0$ to 20. Three reproduce the

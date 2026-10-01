@@ -12,10 +12,10 @@ import torch
 
 from evaluate import bayes_paths, bayes_regret, draw
 
-D, A0, K, S = 5, 10.0, 21, 200_000
+D, A0, K, S = 5, 10.0, 16, 200_000
 
 rows = []
-for r in (0.1, 0.01):
+for r in (0.5, 0.05):
     plain = draw(S, K, D, A0, r, 1.0, 0.0, seed=1)
     plain["correct"] = torch.zeros_like(plain["correct"])  # w came from the base prior
     curve = bayes_regret(bayes_paths(plain, A0, r), 0.0, plain)[0]
