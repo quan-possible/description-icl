@@ -73,12 +73,16 @@ learner and then for meta-trained networks.
   (Bruce, 2026-10-01).
 - Section 6 (networks) is done from the four models of decision 23 (one
   training run each, 40k steps, prompts to 20 examples, Colab L4,
-  2026-10-01). Reliable descriptions are reproduced (14.7 vs 15.4 at
-  $r = 0.01$; 5.24 vs 5.28 at $r = 0.1$); unreliable ones are under-valued
-  alone at both precisions (4.3 vs 6.8; 3.6 vs 4.2; implied trust 0.85),
-  converging as examples arrive; their $\ess_n$ rises at $r = 0.01$ (4.3 to
-  8.1 by $n = 10$) and falls at $r = 0.1$, as Proposition 2 says
-  (`ess_n.py`). Transfer: the precise reliable-trained
+  2026-10-01) and reframed the same day in the argument style of the ICL
+  theory papers: networks between reference predictors, findings named.
+  Finding 1, networks are Bayes-optimal within their output class: reliable
+  descriptions reproduced (14.7 vs 15.4; 5.24 vs 5.28); with an unreliable
+  description alone the Bayes-optimal predictive is a two-component mixture
+  and the networks match the best single Gaussian to two decimals (4.30 vs
+  4.31; 3.57 vs 3.62; `single_gaussian.py`), merging with the mixture as
+  examples identify the description. The earlier "under-trust" (implied
+  trust 0.85) was a posterior-mean readout of that unimodality. Finding 2,
+  inherited trust: the precise reliable-trained
   model is hurt by a description on $p = 0.9$ prompts (ESS 0 vs 6.9); the
   coarse one keeps 2.3 of 4.3. Table 1 and Figure 3 regenerate from
   `summarize.py` and `figure.py`; `targets.py` is on the new grid.

@@ -1,13 +1,19 @@
 # RQ3: do meta-trained networks match the Bayes-optimal learner?
 
-**What it shows.** Networks trained on the matching distribution reproduce
-the Bayes-optimal predictor's ESS for reliable descriptions (14.7 vs 15.4 at
-`r` $= 0.01$; 5.24 vs 5.28 at `r` $= 0.1$) and under-value an unreliable one
-alone at both precisions (4.3 vs 6.8; 3.6 vs 4.2; implied trust 0.85 against
-0.9), converging to the Bayes-optimal predictor as examples arrive; with $n$
-examples in hand the precise unreliable network's ESS rises (4.3, 7.3, 8.1
-at $n = 0, 5, 10$; Bayes-optimal 6.8, 8.7, 9.0) and the coarse one's falls
-(`ess_n.py`, `ess_n.csv`). An
+**What it shows.** Networks are Bayes-optimal within their output class.
+They reproduce the Bayes-optimal ESS for reliable descriptions (14.7 vs 15.4
+at `r` $= 0.01$; 5.24 vs 5.28 at `r` $= 0.1$). With an unreliable description
+alone the Bayes-optimal predictive is a two-component mixture that a
+mean-and-variance head cannot express; the networks match the best single
+Gaussian instead (ESS 4.30 vs 4.31 at `r` $= 0.01$; 3.57 vs 3.62 at
+`r` $= 0.1$; mixture 6.8 and 4.2; `single_gaussian.py`), and the three
+merge as examples identify the description (`ess_n.py`). The implied trust
+of 0.85 is a posterior-mean readout of that unimodality, not a belief.
+Trust is inherited from training: models trained at $p = 1$ meet unreliable
+descriptions as fully trusting learners (precise: ESS 0 vs calibrated 6.9),
+and models trained at $p = 0.9$ keep hedging on reliable prompts (6.4 vs
+15.6; `*_ptest1.0_*`). `trust_curve.py` gives the exact regret against the
+learner's trust. An
 earlier model at `r` $= 0.05$, $p = 0.9$ (files kept here) showed the same
 under-trust and a continuation to 80k steps left it unchanged (3.9 vs 5.0,
 trust 0.85), so it is not under-training. Models trained on reliable
