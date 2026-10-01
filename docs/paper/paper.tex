@@ -25,7 +25,7 @@
 \maketitle
 
 \begin{abstract}
-Prompts usually pair a task description with in-context examples, yet theories of in-context learning (ICL) model only the examples. We ask how many examples a description is worth. Reading ICL as Bayesian inference over a latent task, we treat the description and the examples as two kinds of data about the task, and define the description's effective sample size (ESS) as the number of examples that lower a Bayes-optimal predictor's one-step log-loss regret by as much as the description does. In in-context linear regression, where this predictor is exact, the ESS is governed by two properties of the description: its precision, the fraction $r$ of prior variance it leaves, and its reliability, the probability $p$ that it is correct. A reliable description is worth about $(d-1)(1-r) + 1/(r a_0)$ examples in $d$ dimensions at prior signal-to-noise ratio $a_0$. An unreliable description keeps at least a fraction $1-p$ of the regret of predicting from the prior alone, so its ESS saturates: at $p = 0.9$ in sixteen dimensions, a hundredfold gain in precision adds ten examples, against a hundred for a reliable description. Examples lift this cap by verifying the description, and the ESS then approaches $p$ times that of a reliable one. In one training run per setting, small meta-trained Transformers are Bayes-optimal within their output class: they reproduce the ESS of a reliable description, and with an unreliable description alone, where the Bayes-optimal predictive is a two-component mixture, they match the best single Gaussian instead. Their trust is inherited from training: a network trained only on correct descriptions trusts an unreliable one fully, and a precise one then hurts it. Our claims concern Bayes-optimal predictors and small meta-trained models, not large language models.
+Prompts usually pair a task description with in-context examples, yet theories of in-context learning (ICL) model only the examples. We ask how many examples a description is worth. Reading ICL as Bayesian inference over a latent task, we treat the description and the examples as two kinds of data about the task, and define the description's effective sample size (ESS) as the number of examples that lower a Bayes-optimal predictor's one-step log-loss regret by as much as the description does. In in-context linear regression, where this predictor is exact, the ESS is governed by two properties of the description: its precision, the fraction $r$ of prior variance it leaves, and its reliability, the probability $p$ that it is correct. A reliable description is worth about $(d-1)(1-r) + 1/(r a_0)$ examples in $d$ dimensions at prior signal-to-noise ratio $a_0$. An unreliable description keeps at least a fraction $1-p$ of the regret of predicting from the prior alone, so its ESS saturates: at $p = 0.9$ in sixteen dimensions, a hundredfold gain in precision adds ten examples, against a hundred for a reliable description. Examples lift this cap by verifying the description, and the ESS then approaches $p$ times that of a reliable one; the regime that matters is a precise but imperfect description with few examples. In one training run per setting, small meta-trained Transformers are Bayes-optimal within their output class: they reproduce the ESS of a reliable description, and with an unreliable description alone, where the Bayes-optimal predictive is a two-component mixture, they match the best single Gaussian instead. Their trust is inherited from training: a network trained only on correct descriptions trusts an unreliable one fully, and a precise one then hurts it. Our claims concern Bayes-optimal predictors and small meta-trained models, not large language models.
 \end{abstract}
 
 \section{Introduction}
@@ -268,85 +268,110 @@ The two regimes say the same thing. In both regimes the ESS of a reliable descri
 $\ess \approx (d-1)(1-r) + 1/(r a_0)$,
 to within about two examples. In (i) the conjugate term enters as $(1-r)c$, which falls short of $c$ by $1/a_0 < 1$; in (ii) the constant $c + d + 1 - 1/a_0$ exceeds the rule by $2 - 1/a_0 + (d-1)r \in [1, 2)$, up to the stated error. The regimes meet at $c = 1$, where the description pins $w$ down as tightly as one label's noise does, and the ESS passes $d$ near $c = d$. Below that point each gain in precision removes directions; above it every direction has already been probed, and the ESS grows like $c$, the examples needed to match the description's variance, plus the $d + 1$ that $d$ noisy examples cannot supply. The bound (iii) holds throughout, including the crossover $1 < c < d$ where neither expansion applies. On the grid of Table~\ref{tab:precision} (Appendix~\ref{app:tables}) the rule~\eqref{eq:additive} is within $2.2$ examples of the exact ESS in every cell with $a_0 \ge 10$; at $d = 64$, $a_0 = 100$, $r = 0.1$ the exact ESS is $56.85$ against $56.79$ from (i), and at $d = 16$, $a_0 = 10$, $r = 0.001$ it is $116.8$ against $116.9$ from (ii).
 
-\begin{proof}
-Throughout, $\varepsilon = 1/a_0$, $x$ is the fresh query with $A = \|x\|^2 \sim \chi^2_d$, and $\Sigma = (\varepsilon I + X_n^\top X_n)^{-1}$. We use $\E \log \chi^2_k = \psi(k/2) + \log 2$, $\E[1/\chi^2_k] = 1/(k-2)$, $\E[1/\chi^4_k] = 1/((k-2)(k-4))$, and the Wishart facts that for $W \sim W_q(p, I)$ with $p \ge q$ and $z \sim \mathcal{N}(0, I_q)$ independent of $W$, $z^\top W^{-1} z$ is distributed as $\chi^2_q / \chi^2_{p-q+1}$ with independent numerator and denominator \citep[Theorem~3.2.12]{muirhead1982}, $\E W^{-1} = I/(p-q-1)$, and $\E \operatorname{tr} W^{-2} = q(p-1)/((p-q)(p-q-1)(p-q-3))$ \citep{vonrosen1988}.
+\newtheorem{lemma}{Lemma}[section]
 
-\emph{Step 1: regret is leftover variance.} The posterior predictive for $y$ is the true conditional law of $y$ given the data, a Gaussian with variance $1 + x^\top \Sigma x$. The expected log loss of a true conditional law is its entropy, $\tfrac12 \log(2\pi e (1 + x^\top \Sigma x))$; the oracle's predictive is $\mathcal{N}(w^\top x, 1)$ with entropy $\tfrac12 \log(2\pi e)$. So $R^{\mathrm{ex}}(n) = \tfrac12 \E \log(1 + x^\top \Sigma x)$, and since $\Sigma$ shrinks pathwise as $n$ grows, $R^{\mathrm{ex}}$ is nonincreasing in $n$. For the description, $n = 0$ and $\Sigma = r a_0 I$, so with $g(t) := \E \log(1 + At)$,
-\[
+\paragraph{Standard facts.}
+Throughout, $\varepsilon = 1/a_0$, $A = \|x\|^2 \sim \chi^2_d$ for the query $x$, $\Sigma = (\varepsilon I + X_n^\top X_n)^{-1}$, and $g(t) = \E \log(1 + At)$, which is increasing and concave with
+\begin{equation}\label{eq:g-derivs}
+d\,(1 - (d+2)t) \le g'(t) = \E \frac{A}{1 + At} \le d,
+\qquad
+-(d^2 + 2d) \le g''(t) \le 0 .
+\end{equation}
+We use (a) $\E \log \chi^2_k = \psi(k/2) + \log 2$, $\E[\chi_k^{-2j}] = \prod_{i=1}^{j} (k - 2i)^{-1}$ for $k > 2j$, and $\psi(z) = \log z - 1/(2z) + O(z^{-2})$; (b) for $W \sim W_q(p, I)$ with $p \ge q$ and $z \sim \mathcal{N}(0, I_q)$ independent of $W$, $z^\top W^{-1} z$ is distributed as $\chi^2_q / \chi^2_{p-q+1}$ with independent numerator and denominator \citep[Theorem~3.2.12]{muirhead1982}, and $\E \operatorname{tr} W^{-2} = q(p-1)/((p-q)(p-q-1)(p-q-3))$ for $p - q \ge 4$ \citep{vonrosen1988}; (c) $y - y^2/2 \le \log(1 + y) \le y$ for $y \ge 0$.
+
+\paragraph{Regret.}
+The posterior predictive is the true conditional law of $y$, a Gaussian with variance $1 + x^\top \Sigma x$, so its expected log loss is its entropy and $R^{\mathrm{ex}}(n) = \tfrac12 \E \log(1 + x^\top \Sigma x)$, as in~\eqref{eq:gaussian-regret}. It is strictly decreasing in $n$, since by the Sherman--Morrison formula each new example lowers $x^\top \Sigma x$ almost surely. For the description, $n = 0$ and $\Sigma = r a_0 I = I/c$, so by (a) and (c) with $y = c/A$,
+\begin{equation}\label{eq:rdesc}
 2R^{\mathrm{desc}} = g(1/c) = \log(2 r a_0) + \psi(d/2) + \delta^{\mathrm{desc}},
 \qquad
-\delta^{\mathrm{desc}} = \E \log(1 + c/A) = \frac{c}{d-2} + O\!\left(\frac{c^2}{d^2}\right),
-\]
-the last from $y - y^2/2 \le \log(1+y) \le y$ with $y = c/A$ ($d \ge 5$).
+\delta^{\mathrm{desc}} = \E \log(1 + c/A) = \frac{c}{d-2} + O\!\left(\frac{c^2}{d^2}\right) \quad (d \ge 5).
+\end{equation}
 
-\emph{Step 2: fewer than $d$ examples.} Write $X_n^\top X_n = \sum_{i \le n} \lambda_i u_i u_i^\top$ with $\lambda_i > 0$ almost surely, let $P_\perp$ project onto the $k = d - n$ directions the examples did not look at, and $Q = \|P_\perp x\|^2 \sim \chi^2_k$. Then $\Sigma$ has eigenvalue $a_0$ on those directions and $1/(\varepsilon + \lambda_i)$ on the others, so
-\[
-1 + x^\top \Sigma x = a_0 Q + T, \qquad T = 1 + V, \quad V = \sum_{i \le n} \frac{z_i^2}{\varepsilon + \lambda_i}, \quad z_i = u_i^\top x .
-\]
-Given $X_n$, the $z_i$ are i.i.d.\ standard normal and independent of $Q$, and the $\lambda_i$ are the eigenvalues of $X_n X_n^\top \sim W_n(d, I)$. Hence
-\[
-2R^{\mathrm{ex}}(n) = \log(2a_0) + \psi(k/2) + \delta^{\mathrm{ex}}, \qquad \delta^{\mathrm{ex}} = \E \log\!\left(1 + \frac{\varepsilon T}{Q}\right) \ge 0,
-\]
-which is the lower bound in (i); $\varepsilon T \to 0$ as $a_0 \to \infty$, so $\delta^{\mathrm{ex}} \to 0$ by monotone convergence, which is the equality.
+\paragraph{Locating the root.}
+Let $h(n) = 2R^{\mathrm{ex}}(n) - 2R^{\mathrm{desc}}$ on integers $n \ge 0$, with linear interpolant $\bar h$. Then $\ess$ is the unique root of $\bar h$, and $h(0) = g(a_0) - g(r a_0) > 0$. In (i) and (ii) we show, for some $n_0 \ge 0$, $\alpha > 0$, and $\theta \to 0$ along the stated limit,
+\begin{equation}\label{eq:root}
+h(n) = \alpha\,(n_0 - n) + O(\alpha\theta)
+\qquad \text{uniformly over integers $n \ge 0$ with $|n - n_0| \le 3$.}
+\end{equation}
+Being a convex combination of two such values, $\bar h(t)$ obeys the same expansion at real $t \ge 0$ with $|t - n_0| \le 2$; so for small $\theta$ the root lies within $2$ of $n_0$, and $0 = \bar h(\ess) = \alpha(n_0 - \ess) + O(\alpha\theta)$ gives $\ess = n_0 + O(\theta)$.
 
-For the finite-$a_0$ term, let $F = \sum_i z_i^2 / \lambda_i = z^\top (X_n X_n^\top)^{-1} z \sim \chi^2_n / \chi^2_{k+1}$, so $\E F = n/(k-1)$ and $\E F^2 = n(n+2)/((k-1)(k-3))$. Then $F - \varepsilon \sum_i z_i^2/\lambda_i^2 \le V \le F$, and $\E \sum_i z_i^2/\lambda_i^2 = \E \operatorname{tr}(X_n X_n^\top)^{-2} = n(d-1)/(k(k-1)(k-3))$. Applying $y - y^2/2 \le \log(1+y) \le y$ with $y = \varepsilon T / Q$ and the independence of $Q$ from $T$,
+\begin{lemma}[fewer than $d$ examples]\label{lem:few}
+Let $n < d$ and $k = d - n$. Then $2R^{\mathrm{ex}}(n) = \log(2a_0) + \psi(k/2) + \delta^{\mathrm{ex}}$ with $\delta^{\mathrm{ex}} \ge 0$, $\delta^{\mathrm{ex}} \to 0$ as $a_0 \to \infty$, and, for $k \ge 5$,
 \[
-\frac{\varepsilon\,(1 + \E V)}{k-2} - \frac{\varepsilon^2 \E T^2}{2(k-2)(k-4)} \le \delta^{\mathrm{ex}} \le \frac{\varepsilon\,(1 + \E F)}{k-2},
-\qquad\text{so}\qquad
-\delta^{\mathrm{ex}} = \frac{\varepsilon (d-1)}{(k-1)(k-2)} + O\!\left(\frac{\varepsilon^2 d^2}{k^4}\right), \qquad k \ge 5 .
+\delta^{\mathrm{ex}} = \frac{\varepsilon (d-1)}{(k-1)(k-2)} + O\!\left(\frac{\varepsilon^2 d^2}{k^4}\right).
 \]
+\end{lemma}
 
-\emph{Step 3: solve (i).} Matching $R^{\mathrm{ex}}(n) = R^{\mathrm{desc}}$ cancels $\log a_0$:
+\begin{proof}
+Write $X_n^\top X_n = \sum_{i \le n} \lambda_i u_i u_i^\top$ with $\lambda_i > 0$ almost surely, and let $Q$ be the squared norm of the projection of $x$ onto the $k$ directions orthogonal to the $u_i$. Then $\Sigma$ has eigenvalue $a_0$ on those directions and $1/(\varepsilon + \lambda_i)$ on $u_i$, so
 \[
-\psi(k/2) - \psi(d/2) = \log r + \delta^{\mathrm{desc}} - \delta^{\mathrm{ex}} .
+1 + x^\top \Sigma x = a_0 Q + T, \qquad T = 1 + V, \quad V = \sum_{i \le n} \frac{z_i^2}{\varepsilon + \lambda_i}, \quad z_i = u_i^\top x,
 \]
-Read it as in the high-SNR case: the $k$ untouched directions must be as big, on a log scale, as $d$ directions each shrunk by $r$, with the finite-SNR leftovers $\delta^{\mathrm{desc}}$ and $\delta^{\mathrm{ex}}$ as corrections. Treat $k$ as real; the paper's ESS interpolates $R^{\mathrm{ex}}$ linearly between integers, and since the right side of the display is, as a function of $n$, smooth with second derivative $O(1/k^2)$ and slope of order $1/k$, that moves the root by $O(1/k)$, which the error term absorbs. With $\psi(z) = \log z - 1/(2z) + O(z^{-2})$,
+where, given $X_n$, the $z_i$ are i.i.d.\ standard normal and independent of $Q \sim \chi^2_k$. Taking logarithms and expectations, by (a),
 \[
-k = rd \, \exp\!\big(\eta\big), \qquad \eta = \frac1k - \frac1d + \delta^{\mathrm{desc}} - \delta^{\mathrm{ex}} + O(k^{-2}) .
+2R^{\mathrm{ex}}(n) = \log(2a_0) + \psi(k/2) + \delta^{\mathrm{ex}}, \qquad \delta^{\mathrm{ex}} = \E \log\!\left(1 + \frac{\varepsilon T}{Q}\right) \ge 0 .
 \]
-As $rd \to \infty$ every term of $\eta$ vanishes, so $k = rd(1 + o(1))$ as in the high-SNR proof, and then $1/k = O(1/(rd))$, $\delta^{\mathrm{desc}} = O(c/d)$, and $\delta^{\mathrm{ex}} = O(\varepsilon d / k^2) = O(c/(rd))$ because $\varepsilon = rc$. So $\eta = O((1+c)/(rd))$ and $k = rd + rd\,\eta + O((1+c)^2/(rd))$. In $rd\,\eta$: $rd/k = 1 + O((1+c)/(rd))$; $rd\,\delta^{\mathrm{desc}} = rc + O(rc(1+c)/d) = 1/a_0 + O((1+c)^2/(rd))$; and $rd\,\delta^{\mathrm{ex}} = (\varepsilon/r)(rd/k)^2(1 + O(1/k)) + O(\varepsilon^2 r d^3/k^4) = c + O(c(1+c)/(rd)) + O(c^2/(rd))$. Hence
-\[
-k = rd + 1 - r + \frac{1}{a_0} - c + O\!\left(\frac{(1+c)^2}{rd}\right),
-\qquad
-\ess = d - k = (d-1)(1-r) + c - \frac{1}{a_0} + O\!\left(\frac{(1+c)^2}{rd}\right),
-\]
-and $c - 1/a_0 = c - rc = (1-r)c$. For $c \le 1$ the error is $O(1/(rd))$, which is (i). As $a_0 \to \infty$ with $r$ fixed, $c \to 0$ and this is the high-SNR rule $(d-1)(1-r) + O(1/(rd))$.
+As $a_0 \to \infty$, $\varepsilon T$ decreases to $0$ pathwise, so $\delta^{\mathrm{ex}} \to 0$ by dominated convergence (the integrand at $a_0 = 1$ is integrable).
 
-\emph{Step 4: at least $d$ examples, an exact representation.} Rotate coordinates so that $x = \|x\| e_1$; the rows of the rotated $X_n$ are still i.i.d.\ $\mathcal{N}(0, I_d)$ and independent of $\|x\|$. Then $x^\top \Sigma x = A\,\Sigma_{11} = A/S$, where by the Schur complement and the Woodbury identity, with $X_1$ the first column of $X_n$ and $X_{-1}$ the other $d-1$ columns,
+For the expansion, let $F = \sum_i z_i^2 / \lambda_i$. In the eigenbasis of $W = X_n X_n^\top \sim W_n(d, I)$, which has the same eigenvalues, $F = z^\top W^{-1} z$ and $\sum_i z_i^2/\lambda_i^2 = z^\top W^{-2} z$ with $z \sim \mathcal{N}(0, I_n)$ independent of $W$. By (b), $F \sim \chi^2_n / \chi^2_{k+1}$, so $\E F = n/(k-1)$ and $\E (1+F)^2 = O(d^2/k^2)$, and $\E \sum_i z_i^2/\lambda_i^2 = n(d-1)/(k(k-1)(k-3))$. Since $1/\lambda - \varepsilon/\lambda^2 \le 1/(\varepsilon + \lambda) \le 1/\lambda$, we have $F - \varepsilon \sum_i z_i^2/\lambda_i^2 \le V \le F$. Now (c) with $y = \varepsilon T / Q$, the independence of $Q$ from $T$, and (a) give
+\[
+\frac{\varepsilon\,(1 + \E V)}{k-2} - \frac{\varepsilon^2\, \E T^2}{2(k-2)(k-4)} \le \delta^{\mathrm{ex}} \le \frac{\varepsilon\,(1 + \E F)}{k-2} = \frac{\varepsilon (d-1)}{(k-1)(k-2)} ,
+\]
+and the two sides differ by $\varepsilon^2 \E \sum_i z_i^2/\lambda_i^2 /(k-2) + \varepsilon^2 \E T^2 / (2(k-2)(k-4)) = O(\varepsilon^2 d^2 / k^4)$, as $\E T^2 \le \E (1 + F)^2$.
+\end{proof}
+
+\begin{lemma}[at least $d$ examples]\label{lem:many}
+Let $n \ge d$ and $m = n - d + 1$. Then $2\Phi(n) = \E \log(1 + A/Q)$ with $Q \sim \chi^2_m$ independent of $A$, and $R^{\mathrm{ex}}(n) \le \Phi(n)$, with equality as $a_0 \to \infty$. If moreover $a_0 \ge 1$ and $m \ge \max(d, 7)$, then
+\[
+2R^{\mathrm{ex}}(n) = 2\Phi(n) - \frac{\varepsilon d}{m^2} + O\!\left(\frac{\varepsilon d^2}{m^3}\right).
+\]
+\end{lemma}
+
+\begin{proof}
+Rotate coordinates so that $x = \|x\| e_1$; the rows of $X_n$ remain i.i.d.\ $\mathcal{N}(0, I_d)$, independent of $A$. Then $x^\top \Sigma x = A\,\Sigma_{11} = A/S$ with $S$ the Schur complement of the first coordinate in $\Sigma^{-1}$, which the Woodbury identity writes, with $X_1$ the first column of $X_n$ and $X_{-1}$ the other $d-1$ columns, as
 \[
 S = \varepsilon + X_1^\top \big(I_n + a_0 X_{-1} X_{-1}^\top\big)^{-1} X_1 .
 \]
-Given $X_{-1}$, the matrix in the middle has eigenvalue $1$ on the $m = n - d + 1$ directions orthogonal to the columns of $X_{-1}$ and $1/(1 + a_0 \mu_j)$ on the other $d - 1$, where $\mu_j$ are the eigenvalues of $M = X_{-1}^\top X_{-1} \sim W_{d-1}(n, I)$. Since $X_1 \sim \mathcal{N}(0, I_n)$ is independent of $X_{-1}$, its coordinates in that eigenbasis are i.i.d.\ standard normal, and
+Given $X_{-1}$, the middle matrix has eigenvalue $1$ on the $m$ directions orthogonal to the columns of $X_{-1}$ and $1/(1 + a_0 \mu_j)$ on the other $d - 1$, where $\mu_j$ are the eigenvalues of $M = X_{-1}^\top X_{-1} \sim W_{d-1}(n, I)$. Since $X_1 \sim \mathcal{N}(0, I_n)$ is independent of $X_{-1}$, its coordinates in that eigenbasis are i.i.d.\ standard normal, and
 \[
-S = \varepsilon + Q + \sum_{j < d} \frac{z_j^2}{1 + a_0 \mu_j}, \qquad Q \sim \chi^2_m,
-\quad\text{so}\quad
-Q \le S \le Q + \varepsilon (1 + F), \quad F = z^\top M^{-1} z \sim \frac{\chi^2_{d-1}}{\chi^2_{n-d+2}},
+S = Q + \Delta, \qquad Q \sim \chi^2_m, \qquad
+\Delta = \varepsilon + \sum_{j < d} \frac{z_j^2}{1 + a_0 \mu_j} \in \big[\varepsilon,\, \varepsilon(1 + F)\big], \qquad F = \sum_{j < d} \frac{z_j^2}{\mu_j},
 \]
-with $A$, $Q$, and $(z, M)$ independent, $\E F = (d-1)/(n-d)$ and $\E F^2 = (d-1)(d+1)/((n-d)(n-d-2))$.
+with $A$, $Q$, and $(z, M)$ independent; by (b), $F \sim \chi^2_{d-1} / \chi^2_{m+1}$, so $\E F = (d-1)/(m-1)$ and, when $m \ge \max(d, 7)$, $\E (1+F)^2 \le 5$.
 
-At $a_0 = \infty$, $S = Q$ and $1 + A/Q = (A + Q)/Q$ with $A + Q \sim \chi^2_{n+1}$, so $\E \log(1 + A/Q) = \psi\big(\tfrac{n+1}{2}\big) - \psi\big(\tfrac{m}{2}\big) = 2\Phi(n)$. Since $S \ge Q$ for every $a_0$, $R^{\mathrm{ex}}(n) \le \Phi(n)$, with equality as $a_0 \to \infty$ by monotone convergence: the first claim of (ii).
+Since $A + Q \sim \chi^2_{n+1}$, (a) gives $\E \log(1 + A/Q) = \psi\big(\tfrac{n+1}{2}\big) - \psi\big(\tfrac{m}{2}\big) = 2\Phi(n)$. As $S \ge Q$, $R^{\mathrm{ex}}(n) \le \Phi(n)$, with equality as $a_0 \to \infty$ by monotone convergence, since $\Delta$ decreases to $0$.
 
-\emph{Step 5: the universal bound.} Conditionally on $A$, $\log(1 + A/Q)$ is concave in $1/Q$, so Jensen gives $2\Phi(n) \le \E \log\big(1 + A/(m-2)\big) = g(1/(m-2))$ for $m > 2$. If $m - 2 \ge c$, that is $n \ge c + d + 1$, then $g(1/(m-2)) \le g(1/c) = 2R^{\mathrm{desc}}$, so $R^{\mathrm{ex}}(n) \le \Phi(n) \le R^{\mathrm{desc}}$. The smallest such integer is at most $c + d + 2$, and $R^{\mathrm{ex}}$ is nonincreasing, so $\ess \le c + d + 2$ in every setting.
+For the expansion, $2R^{\mathrm{ex}}(n) = 2\Phi(n) - \E D$ with
+\[
+D = \log\Big(1 + \frac{A}{Q}\Big) - \log\Big(1 + \frac{A}{S}\Big) = \log(1 + y_1) - \log(1 + y_2), \quad y_1 = \frac{\Delta}{Q} \ge y_2 = \frac{\Delta}{Q + A}, \quad y_1 - y_2 = \frac{\Delta A}{Q(Q+A)} .
+\]
+By concavity of $\log(1+y)$ and $1/(1+y_1) \ge 1 - y_1$, $(y_1 - y_2)(1 - \Delta/Q) \le D \le y_1 - y_2$. Here $\Delta$ is independent of $(A, Q)$; $\E \frac{A}{Q(Q+A)} = \E\frac1Q - \E\frac{1}{Q+A} = \frac{d}{(m-2)(m+d-2)}$ by (a), as $Q + A \sim \chi^2_{m+d}$; $\frac{A}{Q^2(Q+A)} \le \frac{A}{Q^3}$; and $\varepsilon \le \E\Delta \le \varepsilon(1 + \E F) = \varepsilon\frac{m+d-2}{m-1}$, $\E \Delta^2 \le 5\varepsilon^2$. Hence
+\[
+\frac{\varepsilon d}{(m-2)(m+d-2)} - \frac{5\,\varepsilon^2 d}{(m-2)(m-4)(m-6)} \le \E D \le \frac{\varepsilon d}{(m-1)(m-2)} ,
+\]
+and both sides are $\varepsilon d / m^2 + O(\varepsilon d^2 / m^3)$, using $\varepsilon \le 1$.
+\end{proof}
 
-\emph{Step 6: solve (ii).} Two sandwiches. First, finite $a_0$: with $D = \log(1 + A/Q) - \log(1 + A/S) = \log\big(1 + \tfrac{A(S-Q)}{Q(S+A)}\big) \ge 0$, the bounds $0 \le S - Q \le \varepsilon(1+F)$, $1/(S+A) \ge 1/Q - (S + A - Q)/Q^2$, and $y - y^2/2 \le \log(1+y) \le y$ give, for $a_0 \ge 1$ and $n \ge d + 6$,
+\begin{proof}[Proof of Proposition~\ref{prop:precision}]
+\emph{(iii).} Conditionally on $A$, $\log(1 + Av)$ is concave in $v$, so Jensen's inequality with $\E[1/Q] = 1/(m-2)$ gives $2\Phi(n) \le g(1/(m-2))$ for $m \ge 3$. If $m - 2 \ge c$, that is $n \ge c + d + 1$, then $g(1/(m-2)) \le g(1/c) = 2R^{\mathrm{desc}}$, so $R^{\mathrm{ex}}(n) \le \Phi(n) \le R^{\mathrm{desc}}$ by Lemma~\ref{lem:many}. The least such integer is $\lceil c + d + 1 \rceil < c + d + 2$, and $R^{\mathrm{ex}}$ is decreasing, so $\ess \le c + d + 2$.
+
+\emph{(i).} The lower bound and the limit are Lemma~\ref{lem:few}. For the expansion let $c \le 1$, $n_0 = (d-1)(1-r) + (1-r)c$, and $n \ge 0$ an integer with $|n - n_0| \le 3$; write $k = d - n = rd + u$. Since $n_0 = d - rd - u_0$ with $u_0 = 1 - r + \varepsilon - c \in [-c, 1]$, we have $|u| \le 4$, so $k \ge 5$ once $rd \ge 9$. By Lemma~\ref{lem:few}, \eqref{eq:rdesc}, $\psi(z) = \log z - 1/(2z) + O(z^{-2})$, and $\varepsilon = rc$, with every $O$ uniform in $c \le 1$ and $|u| \le 4$,
+\begin{align*}
+h(n) &= \psi(k/2) - \psi(d/2) - \log r + \delta^{\mathrm{ex}} - \delta^{\mathrm{desc}} \\
+&= \Big[\log\frac{k}{rd} - \frac1k + \frac1d\Big] + \frac{\varepsilon d}{r^2 d^2}\Big(1 + O\Big(\frac{1}{rd}\Big)\Big) - \frac{c}{d} + O\Big(\frac{1}{(rd)^2}\Big)
+ = \frac{u - 1 + r + c - \varepsilon}{rd} + O\Big(\frac{1}{(rd)^2}\Big),
+\end{align*}
+since $\log(k/(rd)) = u/(rd) + O((rd)^{-2})$, $1/k = 1/(rd) + O((rd)^{-2})$, $\varepsilon d / (r^2 d^2) = c/(rd)$, and $c/d = \varepsilon/(rd)$. So $h(n) = \frac{1}{rd}\big[(n_0 - n) + O(1/(rd))\big]$, which is~\eqref{eq:root} with $\alpha = \theta = 1/(rd)$, and $\ess = (d-1)(1-r) + (1-r)c + O(1/(rd))$.
+
+\emph{(ii).} The upper bound and the limit are Lemma~\ref{lem:many}. For the expansion let $n_0 = c + d + 1 - \varepsilon$ and $n$ an integer with $|n - n_0| \le 3$, so that $m - 2 = c + s$ with $s = n - n_0 - \varepsilon$, $|s| \le 4$; for $c \ge 9d$ every such $n$ has $m \ge \max(d, 7)$. By~\eqref{eq:rdesc} and Lemma~\ref{lem:many}, $2\Phi(n) - 2R^{\mathrm{desc}} = \E\big[g(1/Q) - g(1/c)\big]$, and a second-order Taylor expansion of $g$ about $1/c$ with~\eqref{eq:g-derivs}, $\E[1/Q] - 1/c = -s/(c(c+s))$, and $\E(1/Q - 1/c)^2 = \operatorname{Var}(1/Q) + s^2/(c(c+s))^2 = O(c^{-3})$ gives
 \[
-\E D = \frac{\varepsilon d}{m^2}\Big(1 + O\big(\tfrac{d+1}{m}\big)\Big),
-\qquad\text{so}\qquad
-2R^{\mathrm{ex}}(n) = 2\Phi(n) - \frac{\varepsilon d}{m^2} + O\!\left(\frac{\varepsilon d^2}{m^3}\right).
+2\Phi(n) - 2R^{\mathrm{desc}} = -\frac{s}{c(c+s)}\,d\,\Big(1 + O\Big(\frac dc\Big)\Big) + O\Big(\frac{d^2}{c^3}\Big) = -\frac{ds}{c^2} + O\Big(\frac{d^2}{c^3}\Big).
 \]
-(The upper bound is $\E[\varepsilon A (1+F)/Q^2] = \varepsilon d (n-1)/((n-d)(n-d-1)(n-d-3))$; the lower bound subtracts $\E[\varepsilon A (\varepsilon(1+F) + A)/Q^3]$ and $\tfrac12 \E[\varepsilon^2 A^2 (1+F)^2 / Q^4]$, both $O(\varepsilon d^2 / m^3)$.) Second, $\Phi$ against its mean: $g''(t) = -\E[A^2/(1+At)^2] \ge -(d^2 + 2d)$ and $\operatorname{Var}(1/Q) = 2/((m-2)^2(m-4))$, so a second-order Taylor bound around $\E[1/Q] = 1/(m-2)$ gives
+With Lemma~\ref{lem:many}, $\varepsilon \le 1$, and $\varepsilon d/m^2 = \varepsilon d/c^2 + O(d/c^3)$,
 \[
-2\Phi(n) = g\!\left(\tfrac{1}{m-2}\right) - \vartheta\,\frac{d^2 + 2d}{(m-2)^2 (m-4)}, \qquad \vartheta \in [0, 1] .
+h(n) = -\frac{d}{c^2}\Big[s + \varepsilon + O\Big(\frac{d}{c}\Big)\Big] = \frac{d}{c^2}\Big[(n_0 - n) + O\Big(\frac{d}{c}\Big)\Big],
 \]
-Together,
-\[
-2R^{\mathrm{ex}}(n) - 2R^{\mathrm{desc}} = g\!\left(\tfrac{1}{m-2}\right) - g\!\left(\tfrac1c\right) - \frac{\varepsilon d}{m^2} + O\!\left(\frac{d^2}{m^3}\right).
-\]
-Now $d(1 - (d+2)t) \le g'(t) \le d$ because $A - A^2 t \le A/(1+At) \le A$. Put $m - 2 = c + s$ with $|s| \le c/2$. Then $g(1/(m-2)) - g(1/c) = -\frac{ds}{c(c+s)}\big(1 + O(d/c)\big)$ and $\varepsilon d/m^2 = \frac{\varepsilon d}{c^2}\big(1 + O((|s|+1)/c)\big)$, so
-\[
-2R^{\mathrm{ex}}(n) - 2R^{\mathrm{desc}} = -\frac{d}{c^2}\Big[s + \varepsilon + O\!\Big(\frac{(1 + |s|)(d + |s|)}{c}\Big)\Big].
-\]
-At $s = -\varepsilon \pm K d/c$ the bracket has the sign $\pm$ once $K$ exceeds the constant in the $O$ (for $c/d$ large, $|s| = O(1)$). So $R^{\mathrm{ex}} - R^{\mathrm{desc}}$ changes sign between $n = c + d + 1 - \varepsilon - Kd/c$ and $n = c + d + 1 - \varepsilon + Kd/c$; linear interpolation between integers moves the crossing by $O(1/c)$, and the moment conditions $n \ge d + 6$ hold since $n \ge c$. Hence $\ess = c + d + 1 - 1/a_0 + O(d/c)$, which is (ii).
+which is~\eqref{eq:root} with $\alpha = d/c^2$ and $\theta = d/c$, uniformly in $a_0 \ge 1$, so $\ess = c + d + 1 - 1/a_0 + O(d/c)$.
 \end{proof}
 
 \section{Proof of Proposition~\ref{prop:floor}}\label{app:floor}
