@@ -1,7 +1,7 @@
 # RQ3: do meta-trained networks match the Bayes-optimal learner?
 
 **What it shows.** Networks trained on the matching distribution reproduce
-the exact learner's ESS for reliable descriptions (6.7 vs 6.7; 2.2 vs 2.3)
+the Bayes-optimal predictor's ESS for reliable descriptions (6.7 vs 6.7; 2.2 vs 2.3)
 and for the coarse unreliable one (1.8 vs 1.9). The precise unreliable
 model under-values its description (ESS 3.9 vs 5.0, implied trust 0.85);
 a continuation to 80k steps left it unchanged (3.9, trust 0.85), so it is not under-training.
