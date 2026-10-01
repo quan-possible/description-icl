@@ -36,8 +36,11 @@ what is needed to resume the task.
   inputs.
 - Analyses: `results/rq1-single-query-gap/`, `results/rq2-reliability/`;
   network pipeline in `results/rq3-meta-trained/`, untrained.
-- Paper: `docs/paper/paper.tex`, sections 3 to 5 done with proofs; section 6
-  pending the loss decision and training.
+- Paper: `docs/paper/paper.tex`, simplified on 2026-10-01: two propositions
+  (additive precision rule; reliability sandwich with $n$ in hand),
+  definitions in the sources' form, Figure 2 carrying $n$, $r$, $p$, tables
+  in Appendix A, a fully trusting learner in Section 5. Section 6 describes
+  the four existing models; retraining on the new grid waits for Bruce.
 - Next action: see "Next moves" in [RESEARCH.md](RESEARCH.md).
 
 ## History
@@ -46,3 +49,6 @@ what is needed to resume the task.
   search for the proposal's lost preliminary code.
 - 2026-09-30: The paper became the plan; Propositions 1 and 2 written out;
   the design record moved to `docs/wiki/experiments.md`.
+- 2026-10-01: Powers-of-ten grids; adversarial, number, and grounding
+  reviews; simplification pass (two propositions, sources' definitions,
+  prose cut). Network retraining relaunched and stopped on Bruce's call.
