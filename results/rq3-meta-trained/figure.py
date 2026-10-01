@@ -45,13 +45,13 @@ for ax, (model, label) in zip(axes.flat, MODELS):
     ax.grid(True, axis="y", color=fs.MUTED, lw=0.5)
 fs.panel_labels(axes.flat)
 for ax in axes[1]:
-    ax.set_xlabel("examples in the prompt, $n$")
+    ax.set_xlabel("demonstrations in the prompt, $n$")
     ax.set_xticks([0, 5, 10, 15, 20])
 for ax in axes[:, 0]:
     ax.set_ylabel("regret (nats)")
 from matplotlib.lines import Line2D
-handles = [Line2D([], [], color=COLOR["1"], lw=1.2, label="Bayes-optimal, with description"),
-           Line2D([], [], color=COLOR["1"], lw=1.2, ls="--", label="best single Gaussian, with description"),
+handles = [Line2D([], [], color=COLOR["1"], lw=1.2, label="Bayes-optimal, with descriptor"),
+           Line2D([], [], color=COLOR["1"], lw=1.2, ls="--", label="best single Gaussian, with descriptor"),
            Line2D([], [], color=COLOR["0"], lw=1.2, label="Bayes-optimal, without"),
            Line2D([], [], color=fs.BASELINE, marker="o", mfc="white", ms=3, lw=0, label="network")]
 fig.legend(handles=handles, loc="outside lower center", ncol=2, frameon=False)
