@@ -66,3 +66,28 @@ def test_reliability_sandwich():
         assert lo - tol <= x["regret"] <= hi + tol, (x, lo, hi)
         checked += 1
     assert checked >= 100
+
+
+def test_reliability_with_examples_sandwich():
+    """Proposition 3 on the computed worth table: with n examples in hand,
+    p R_1(n) + (1-p) R_ex(n) <= R_desc(n) <= that + E[-log pi_n(Z)], and the
+    identification term starts at H(p) and never rises."""
+    rows = list(csv.DictReader((ROOT / "results/rq2-reliability/worth.csv").open()))
+    rows = [{k: float(v) for k, v in x.items()} for x in rows]
+    p = 0.9
+    H = -p * math.log(p) - (1 - p) * math.log(1 - p)
+    checked = 0
+    for seed in (0.0, 1.0, 2.0):
+        for r in (0.05, 0.001):
+            one = {x["n"]: x for x in rows if x["seed"] == seed and x["r"] == r and x["p"] == 1.0}
+            mix = {x["n"]: x for x in rows if x["seed"] == seed and x["r"] == r and x["p"] == p}
+            assert abs(mix[0.0]["ident"] - H) < 0.03  # sample fraction of correct descriptions
+            for n in range(41):
+                lo = p * one[n]["R_desc"] + (1 - p) * mix[n]["R_ex"]
+                hi = lo + mix[n]["ident"]
+                tol = 0.03  # Monte Carlo, 2000 prompts, and R_1 from a separate draw
+                assert lo - tol <= mix[n]["R_desc"] <= hi + tol, (seed, r, n, lo, mix[n]["R_desc"], hi)
+                if n:
+                    assert mix[n]["ident"] <= mix[n - 1.0]["ident"] + 0.01
+                checked += 1
+    assert checked == 246

@@ -11,7 +11,7 @@ flowchart TD
     classDef edgeGreen stroke:#8a9f7a,color:#8a9f7a,stroke-width:2px
     classDef edgeBlue stroke:#7f9fc4,color:#7f9fc4,stroke-width:2px
 
-    done["Sections 3 to 6 drafted<br/>four networks trained"] e1@--> gap["Precise unreliable model<br/>off by 1.1 examples; continuation running"] e2@--> next["Finish section 6<br/>then full-draft review"]
+    done["Full draft: three propositions,<br/>four networks, two figures"] e1@--> gap["No referee pass on the<br/>whole draft yet"] e2@--> next["Full-draft review,<br/>then related-work check"]
 
     class done green
     class gap pink
@@ -42,11 +42,20 @@ learner and then for meta-trained networks.
   `results/rq2-reliability/ess_map.csv`; the RQ1 folder's horizon columns
   are unused by the paper. Figure 1 is a TikZ diagram,
   `docs/paper/figs/overview.tex`.
-- Section 6 (networks) is drafted from four trained models (one per
+- Section 6 (networks) is done from four trained models (one per
   setting, 40k steps, log loss, Colab L4, 2026-09-30). Three reproduce the
   exact learner's ESS within 0.1 examples; the precise unreliable model
-  gives 3.9 against 5.0 with implied trust 0.85. A 40k-step continuation
-  of that model is running to separate under-training from under-trust.
+  gives 3.9 against 5.0 with implied trust 0.85, unchanged after 80k steps,
+  so it is under-trust on one seed, reported as an observation.
+- Proposition 3 (2026-09-30, Bruce's point): the reliability floor with
+  $n$ examples in hand is $(1-p)R^{\mathrm{ex}}(n)$ plus an identification
+  term that starts at $H(p)$ and never rises, so a precise unreliable
+  description gains worth as examples verify it (23 alone, 57 after 24 at
+  $d = 16$, $r = 0.001$) while a reliable one does not. Figure in
+  `results/rq2-reliability/worth.pdf`; checked by `tests/test_propositions.py`.
+- The description is framed as data about $w$ under the pretraining prior,
+  not as the prior itself; $r$ is read as the fraction of a weight's typical
+  size the description pins it to.
   Models trained on reliable descriptions do not discount unreliable ones:
   ESS 0.7 against a calibrated 5.0 for the precise description. The table
   and figure regenerate from `results/rq3-meta-trained/summarize.py` and
@@ -108,19 +117,16 @@ learner and then for meta-trained networks.
 
 ## Next actions
 
-1. Fold the continuation result for the precise unreliable model into
-   section 6 (table row, results paragraph, figure caption) and remove the
-   last todo.
-2. Decide how the transfer finding enters the abstract and discussion; it is
-   the network result that speaks to the LLM observation.
-3. Full-draft adversarial review, then the affiliation and the related-work
-   check (Schmidli et al.'s robust-weight convention before citing it for
-   $p = 0.9$).
+1. Full-draft adversarial review (claims, numbers, related work against
+   Zhu, Oermann & Cho 2026 and Reznik 2026).
+2. Confirm Schmidli et al.'s robust-weight convention before citing it for
+   $p = 0.9$; affiliation.
+3. Optional: two more seeds of the $r = 0.05$, $p = 0.9$ network if the
+   under-trust observation is to become a finding.
 
 ## Risks and blockers
 
-- The precise unreliable model's gap may be under-training rather than
-  under-trust; the continuation decides. Either way it is one seed.
+- The under-trust of the precise unreliable network rests on one seed.
 - The novelty check rests on web searches and partly on paper summaries. The
   minimum-description-length literature was not searched in depth.
 - NeurIPS 2027 dates are not announced. ICML 2027 (late January 2027,

@@ -52,3 +52,34 @@ varies across seeds by at most 12%.
 
 **Under squared error** the saturation is stronger: at $d = 5$, $r = 0.05$,
 ESS is 7.4 at $p = 1$ and 4.4 at $p = 0.9$ (`results/rq3-meta-trained/targets.csv`).
+
+## With examples in hand (added 2026-09-30)
+
+Bruce's point: with no examples nothing can check the description, so
+hedging is forced and the floor is obvious. The floor generalises to $n$
+examples in hand (paper, Proposition 3): for every $n$,
+
+$$p\,R_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n) \le R^{\mathrm{desc}}(n) \le
+p\,R_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n) + H(Z \mid D_n),$$
+
+and the identification term $H(Z \mid D_n)$ starts at $H(p)$ and never
+rises. The floor $(1-p)R^{\mathrm{ex}}(n)$ falls with $n$, so the worth of
+a precise unreliable description, measured as further examples saved
+(Definition 2), rises as examples verify it, while a reliable description's
+worth stays near $1/(r a_0)$. Asymptotically $\mathrm{ESS}_n \approx
+n\,p/(1-p)$.
+
+**Numbers** ($d = 16$, $a_0 = 10$, `results/rq2-reliability/worth.csv`, mean
+of three seeds; `worth.py`, `worth_figure.py`):
+
+| $n$ in hand | 0 | 1 | 3 | 8 | 16 | 24 | 40 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| $r = 0.001$, $p = 0.9$ | 23 | 30 | 32 | 30 | 37 | 57 | 74 |
+| $r = 0.001$, $p = 1$ | 117 | 116 | 116 | 116 | 114 | 115 | |
+| $r = 0.05$, $p = 0.9$ | 15 | 15 | 13 | 10 | 6 | 4 | 3 |
+| $r = 0.05$, $p = 1$ | 17 | 16 | 15 | 11 | 7 | 4 | 3 |
+
+`tests/test_propositions.py` checks the sandwich on every row. The
+networks at $d = 5$, $r = 0.05$ show the same shape; the $p = 0.9$ network
+under-values its description alone and meets the exact learner by about
+five examples.
