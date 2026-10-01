@@ -66,8 +66,13 @@ and the identification term $H(Z \mid D_n)$ starts at $H(p)$ and never
 rises. The floor $(1-p)R^{\mathrm{ex}}(n)$ falls with $n$, so the worth of
 a precise unreliable description, measured as further examples saved
 (Definition 2), rises as examples verify it, while a reliable description's
-worth stays near $1/(r a_0)$. Asymptotically $\mathrm{ESS}_n \approx
-n\,p/(1-p)$.
+worth stays near $c = 1/(r a_0)$. Once examples have identified the
+description and $R^{\mathrm{ex}}(n) \approx d/(2n)$,
+$\mathrm{ESS}_n \approx n p c / (n + (1-p) c) \to p\,c$: worth $p$ times a
+reliable description (90 against 100 at $r = 0.001$, $a_0 = 10$,
+$p = 0.9$), and linear in $n$ while $n \ll (1-p)c$. The earlier statement
+$\mathrm{ESS}_n \approx n p/(1-p)$ took $r \to 0$ before $n \to \infty$ and
+was wrong as a limit.
 
 **Numbers** ($d = 16$, $a_0 = 10$, `results/rq2-reliability/worth.csv`, mean
 of three seeds; `worth.py`, `worth_figure.py`):

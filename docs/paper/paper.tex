@@ -82,7 +82,7 @@ Let $R^{\mathrm{desc}}$ be the regret of a Bayes-optimal predictor given only th
 The two sides of the definition are prompts of two kinds: a prompt holding the description and nothing else, and prompts holding $n$ examples and no description. The ESS asks what the description is worth on its own, in the currency of examples on their own. Prompts holding both are not part of the definition; they enter in \S\ref{sec:networks}, where we also report regret with a description and $n$ examples together. Since we compare Bayes-optimal predictors under different conditioning sets, the ESS measures information content rather than the specific architecture of a learner.
 
 \begin{definition}[Worth with examples in hand]
-Let $R^{\mathrm{desc}}(n)$ be the regret of the Bayes-optimal predictor given the description and $n$ examples. The worth of the description with $n$ examples in hand is $\ess_n = n^* - n$, where $n^*$ (interpolated continuously) solves $R^{\mathrm{ex}}(n^*) = R^{\mathrm{desc}}(n)$: the further examples an examples-only predictor needs to match it. $\ess_0 = \ess$.
+Fix $p$ and $r$ and let $R^{\mathrm{desc}}(n)$ be the regret of the Bayes-optimal predictor given the description and $n$ examples, so $R^{\mathrm{desc}}(0)$ is the $R^{\mathrm{desc}}(p, r)$ of Definition~1. The worth of the description with $n$ examples in hand is $\ess_n = n^* - n$, where $n^*$ (interpolated continuously) solves $R^{\mathrm{ex}}(n^*) = R^{\mathrm{desc}}(n)$: the further examples an examples-only predictor needs to match it. $\ess_0 = \ess$.
 \end{definition}
 
 \section{The Value of Precision}\label{sec:precision}
@@ -179,12 +179,16 @@ where $\pi_n(Z)$ is the posterior weight on the true component. The identificati
 \end{proposition}
 \emph{Idea.} The twin argument of Proposition~\ref{prop:floor} goes through with the examples included: the twin who is told whether the description is correct has regret $p\,R^{\mathrm{desc}}_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n)$, the learner cannot beat it, and the learner's predictive puts weight $\pi_n$ on the twin's answer, so it loses at most $-\log \pi_n(Z)$. More examples can only sharpen the posterior on $Z$ in expectation. The proof is in Appendix~\ref{app:examples}.
 
-Two consequences follow. As $r \to 0$ the floor is $(1-p)\,R^{\mathrm{ex}}(n)$, which decreases with $n$, so the cap on the description's worth rises as examples accumulate. And since $R^{\mathrm{ex}}(n) \approx d/(2n)$ for large $n$, matching $(1-p)\,d/(2n)$ needs $n^* \approx n/(1-p)$ examples, so the worth of a very precise unreliable description grows like $\ess_n \approx n\,p/(1-p)$: nine times the examples in hand at $p = 0.9$. A reliable description, by contrast, is worth about $1/(r a_0)$ examples at large $n$, a constant. Figure~\ref{fig:worth} shows both for the exact learner: with $r = 0.001$ and $p = 0.9$ at $d = 16$, the description is worth $23$ examples alone, $30$ after one example, $32$ after three, and $57$ after twenty-four, while the reliable description stays near $115$. The curves are far from their limits at these $n$, but the direction is fixed by the proposition: reliability caps precision until examples can check the description.
+The floor $(1-p)\,R^{\mathrm{ex}}(n)$ decreases with $n$, so the cap on the description's worth rises as examples accumulate. How far it rises has a simple form once $n$ is large enough that the examples have identified the description and $R^{\mathrm{ex}}(n) \approx d/(2n)$. Writing $c = 1/(r a_0)$, the reliable-description regret is then about $d/(2(n + c))$, so the floor is $\tfrac{d}{2}\big[\tfrac{p}{n+c} + \tfrac{1-p}{n}\big]$, and solving $d/(2n^*)$ equal to it gives
+\[
+\ess_n \;\approx\; \frac{n\,p\,c}{\,n + (1-p)\,c\,} \;\xrightarrow[n \to \infty]{}\; p\,c = \frac{p}{r a_0},
+\]
+against $\ess_n \to c = 1/(r a_0)$ for a reliable description. So a precise unreliable description, once examples have verified it, is worth $p$ times what a reliable one is worth; alone, Proposition~\ref{prop:floor} caps it far lower. For $n \ll (1-p)c$ the same formula grows linearly, $\ess_n \approx n\,p/(1-p)$. Figure~\ref{fig:worth} shows the exact learner: with $r = 0.001$ and $p = 0.9$ at $d = 16$, so $c = 100$, the description is worth $23$ examples alone, $30$ after one example, $32$ after three, $57$ after twenty-four, and $74$ after forty, against the formula's $63$ and $72$ at the last two, heading to $90$; the reliable description stays near $115$. Reliability caps precision until examples can check the description, and then costs a factor $p$.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{../../results/rq2-reliability/worth.pdf}
-\caption{\textbf{An unreliable description gains worth as examples verify it; a reliable one does not.} Worth of the description with $n$ examples in hand (Definition~2), as further examples saved. (a) Exact learner, $d=16$, $a_0=10$, mean of three seeds of 2{,}000 prompts; log scale. (b) Trained networks at $d=5$, $r=0.05$ (markers, one model per reliability) against the exact learner (lines). The network trained at $p=0.9$ under-values its description alone and converges to the exact learner as examples arrive.}
+\caption{\textbf{A precise unreliable description gains worth as examples verify it; a reliable or a coarse one does not.} Worth of the description with $n$ examples in hand (Definition~2), as further examples saved. (a) Exact learner, $d=16$, $a_0=10$, mean of three seeds of 2{,}000 prompts; log scale. At $r = 0.05$ both descriptions lose worth as examples accumulate, because $1/(r a_0) = 2$ is already below $n$. (b) Trained networks at $d=5$, $r=0.05$ (markers, one model per reliability) against the exact learner (lines). The network trained at $p=0.9$ under-values its description alone and converges to the exact learner as examples arrive.}
 \label{fig:worth}
 \end{figure}
 
@@ -292,7 +296,7 @@ Let $D_n = (x_{1:n}, y_{1:n}, m, x)$ be everything the predictor sees before pre
 
 \emph{Upper bound.} Pointwise $q \ge \pi_n f_1$ and $q \ge (1 - \pi_n) f_0$, so $-\log q \le -\log f_Z - \log \pi_n(Z)$ with $\pi_n(1) = \pi_n$ and $\pi_n(0) = 1 - \pi_n$. Taking expectations gives the upper bound with the identification term $\E[-\log \pi_n(Z)]$.
 
-\emph{The identification term.} At $n = 0$ nothing updates $Z$ (Appendix~\ref{app:floor}), so $\pi_0 = p$ and $\E[-\log \pi_0(Z)] = H(p)$. For $n \ge 1$, $\E[-\log \pi_n(Z)] = H(Z \mid D_n)$, the conditional entropy of $Z$ given the data, and conditioning on more data does not increase conditional entropy: $H(Z \mid D_{n+1}) \le H(Z \mid D_n)$.
+\emph{The identification term.} $\E[-\log \pi_n(Z)] = H(Z \mid D_n)$, the conditional entropy of $Z$ given the data. The query $x$ is independent of $Z$ and of everything else in $D_n$, so $H(Z \mid D_n) = H(Z \mid x_{1:n}, y_{1:n}, m)$, and these conditioning sets are nested in $n$. Conditioning on more does not increase conditional entropy, so the term is non-increasing. At $n = 0$ nothing updates $Z$ (Appendix~\ref{app:floor}), so $\pi_0 = p$ and the term is $H(p)$.
 \end{proof}
 
 \end{document}
