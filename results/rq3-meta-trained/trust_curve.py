@@ -9,7 +9,7 @@ trust: the curve is asymmetric around q = p, cheap below it and steep above.
 import csv
 import pathlib
 
-from descriptor_icl import mixture as mx
+from description_icl import mixture as mx
 
 here = pathlib.Path(__file__).parent
 D, A0, K, S = 5, 10.0, 24, 20_000

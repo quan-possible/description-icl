@@ -176,7 +176,7 @@ wheels = [
 ]
 
 [[package]]
-name = "descriptor-icl"
+name = "description-icl"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

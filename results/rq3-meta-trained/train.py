@@ -11,7 +11,7 @@ import time
 
 import torch
 
-from descriptor_icl import meta
+from description_icl import meta
 
 
 ap = argparse.ArgumentParser()

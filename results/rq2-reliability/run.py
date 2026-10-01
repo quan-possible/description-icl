@@ -15,8 +15,8 @@ import pathlib
 
 import numpy as np
 
-from descriptor_icl import gaussian as g
-from descriptor_icl import mixture as mx
+from description_icl import gaussian as g
+from description_icl import mixture as mx
 
 HERE = pathlib.Path(__file__).parent
 SETTINGS = ((4, 10.0), (16, 10.0), (16, 100.0), (64, 10.0))  # (d, a0)

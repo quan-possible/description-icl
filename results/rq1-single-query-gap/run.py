@@ -10,7 +10,7 @@ import pathlib
 
 import numpy as np
 
-from descriptor_icl import gaussian as g
+from description_icl import gaussian as g
 
 DIMS = (1, 2, 4, 8, 16, 32, 64)
 A0S = (1.0, 10.0, 100.0)

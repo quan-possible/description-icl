@@ -1,8 +1,8 @@
 import numpy as np
 from scipy import stats
 
-from descriptor_icl import gaussian as g
-from descriptor_icl import mixture as mx
+from description_icl import gaussian as g
+from description_icl import mixture as mx
 
 
 def test_log_ml_matches_joint_gaussian():

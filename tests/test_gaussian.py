@@ -1,6 +1,6 @@
 import numpy as np
 
-from descriptor_icl import gaussian as g
+from description_icl import gaussian as g
 
 
 def test_increments_match_direct_logdet():

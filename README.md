@@ -1,4 +1,4 @@
-# descriptor-icl
+# description-icl
 
 **Task descriptions as Bayesian priors: how many in-context examples is an
 instruction worth?**
@@ -57,7 +57,7 @@ The full plan is in the
 | `docs/wiki/` | One page per result or topic, kept current whether or not the paper uses it. |
 | `docs/paper/` | The paper draft (`paper.tex`, with a generated Markdown copy `paper.md`); earlier versions in `archive/`. |
 | `docs/wiki/experiments.md` | The experimental design and its decision table. |
-| `src/descriptor_icl/` | Shared code (created with the first implementation). |
+| `src/description_icl/` | Shared code (created with the first implementation). |
 | `results/<rq>-<slug>/` | One self-contained analysis each: code, config, figures, and a short README. |
 | `AGENTS.md` | Project contract for agents, including where each kind of work goes. |
 | `STATUS.md` | Current state and next actions. |
