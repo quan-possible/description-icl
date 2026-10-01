@@ -26,8 +26,8 @@ function Pandoc(doc)
       local ref = l.attributes["reference-type"]
       l.attributes = {}
       if ref and l.target:match("^#app:") then
-        local n = tonumber(pandoc.utils.stringify(l.content))
-        if n then l.content = { pandoc.Str(string.char(64 + n - nmain)) } end
+        local a, rest = pandoc.utils.stringify(l.content):match("^(%d+)(.*)$")
+        if a then l.content = { pandoc.Str(string.char(64 + tonumber(a) - nmain) .. rest) } end
       end
       return l
     end,
