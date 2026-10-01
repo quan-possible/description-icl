@@ -50,7 +50,7 @@ def test_precision_high_snr():
 
 def test_reliability_sandwich():
     """Every one-step cell of the RQ2 table with p < 1 sits between the two
-    bounds of Proposition 2, and R_ex(0) at d = 16, a0 = 10 is 2.51 nats."""
+    bounds of Proposition 2 at n = 0, and R_ex(0) at d = 16, a0 = 10 is 2.51 nats."""
     rows = list(csv.DictReader((ROOT / "results/rq2-reliability/ess_map.csv").open()))
     rows = [{k: float(v) for k, v in row.items()} for row in rows if row["N"] == "1"]
     r1 = {(x["d"], x["a0"], x["r"]): x["regret"] for x in rows if x["p"] == 1.0}
@@ -69,7 +69,7 @@ def test_reliability_sandwich():
 
 
 def test_reliability_with_examples_sandwich():
-    """Proposition 3 on the computed worth table: with n examples in hand,
+    """Proposition 2 with examples in hand on the computed worth table: with n examples in hand,
     p R_1(n) + (1-p) R_ex(n) <= R_desc(n) <= that + E[-log pi_n(Z)], and the
     identification term starts at H(p) and never rises."""
     rows = list(csv.DictReader((ROOT / "results/rq2-reliability/worth.csv").open()))
