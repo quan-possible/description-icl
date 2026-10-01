@@ -74,6 +74,15 @@ $q = 0.999999$, and 1 to 5 for `r` $= 0.1$; at $d = 4$, `r` $= 0.1$ the
 95th percentile is beyond 80 examples once $q \ge 0.9$, because a coarse
 wrong description is nearly compatible with the data.
 
+## ESS against precision
+
+`ess_figure.py` computes `ess_curve.csv`, the one-step ESS on a dense
+log-spaced grid of `r` (0.5 to 0.001, one seed, `a0` $= 10$) for $d \in
+\{4, 16, 64\}$ at $p = 1$ and $d = 16$ at $p \in \{1, 0.99, 0.9\}$, plus
+each reliability's cap (the $n$ at which $R^{\mathrm{ex}}(n) = (1-p)
+R^{\mathrm{ex}}(0)$: 40 at $p = 0.9$, 327 at $p = 0.99$), and draws
+`ess.pdf`, the paper's figure of the two relationships.
+
 ## Worth with examples in hand
 
 `worth.py` computes the description's worth as further examples saved when
