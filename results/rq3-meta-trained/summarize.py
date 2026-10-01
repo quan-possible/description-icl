@@ -38,7 +38,7 @@ with (here / "networks_table.tex").open("w") as f:
     f.write("\\begin{tabular}{rrrrrrrrr}\n\\toprule\n"
             "& & & \\multicolumn{4}{c}{ESS} & \\multicolumn{2}{c}{Regret gap (nats)} \\\\\n"
             "\\cmidrule(lr){4-7}\\cmidrule(lr){8-9}\n"
-            "$r$ & $p_{\\mathrm{train}}$ & $p_{\\mathrm{test}}$ & Network & Trained & Calibrated & Single Gaussian & Descriptor & None \\\\\n"
+            "$r$ & $p_{\\mathrm{train}}$ & $p_{\\mathrm{test}}$ & Network & Trained & Calibrated & Single Gaussian & Description & None \\\\\n"
             "\\midrule\n")
     for x in rows:
         cal = f"{x['calibrated_ess']:.2f}" if x["p_train"] != x["p_test"] else "---"

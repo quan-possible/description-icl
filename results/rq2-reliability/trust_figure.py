@@ -12,7 +12,7 @@ import pathlib
 import numpy as np
 import orx_figstyle as fs
 
-from descriptor_icl import mixture as mx
+from description_icl import mixture as mx
 
 here = pathlib.Path(__file__).parent
 D, A0, P, K, S = 16, 10.0, 0.9, 40, 8000
@@ -48,7 +48,7 @@ ax.axvline(1 - P, color=fs.MUTED, lw=0.8, zorder=0)
 ax.text(1 - P, 0.09, "$q = p$", color=fs.BASELINE, fontsize=6, ha="center", va="bottom")
 ax.set_xscale("log"); ax.invert_xaxis()
 ax.set_xticks([0.5, 0.1, 0.01, 0.001, 1e-4]); ax.set_xticklabels(["0.5", "0.9", "0.99", "0.999", "1"]); ax.minorticks_off()
-ax.set_xlabel("reliance $q$ on the descriptor")
+ax.set_xlabel("reliance $q$ on the description")
 ax.set_yscale("log"); ax.set_yticks([0.1, 0.3, 1, 3, 10]); ax.set_yticklabels(["0.1", "0.3", "1", "3", "10"]); ax.set_ylim(0.08, 30)
 ax.set_ylabel("regret (nats)")
 ax.grid(True, axis="y", color=fs.MUTED, lw=0.5)
