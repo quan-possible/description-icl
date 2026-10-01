@@ -71,6 +71,16 @@ $\mathrm{KL}(p\,\|\,q)$: 1.46 nats at $q = 0.999$.
 is abandoned is 1 to 3 for `r` $\le 0.05$ at every trust level tested, up to
 $q = 0.999999$. Coarse descriptions (`r` $= 0.5$) take up to 23 at $d = 64$.
 
+## Worth with examples in hand
+
+`worth.py` computes the description's worth as further examples saved when
+$n$ examples are already present (paper, Definition 2 and Proposition 3) at
+$d = 16$, `a0` $= 10$, three seeds, into `worth.csv`; `worth_figure.py`
+draws `worth.pdf` for the paper with the network panel from
+`results/rq3-meta-trained/`. A precise unreliable description gains worth
+as examples verify it (23 alone, 32 after three, 57 after 24 at
+`r` $= 0.001$, $p = 0.9$); a reliable one stays near 115.
+
 ## Validation
 
 `tests/test_mixture.py` checks the mixture learner. Two further checks agree
