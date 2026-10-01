@@ -14,7 +14,7 @@ from descriptor_icl import gaussian as g
 
 DIMS = (1, 2, 4, 8, 16, 32, 64)
 A0S = (1.0, 10.0, 100.0)
-RS = (0.9, 0.5, 0.2, 0.05, 0.01)
+RS = (0.1, 0.01, 0.001)
 HORIZONS = (1, 4, 16, 64, 256)
 SEEDS = (0, 1, 2)
 BUDGET = 4e9  # rough flop budget per design batch, sets the sample count

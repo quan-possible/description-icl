@@ -88,9 +88,9 @@ formula; the only randomness is the draw of inputs and tasks.
 | --- | --- | --- |
 | Code | `src/descriptor_icl/gaussian.py` | `src/descriptor_icl/mixture.py` |
 | Script | `results/rq1-single-query-gap/run.py` | `results/rq2-reliability/run.py` |
-| Reliability | $p = 1$ | $p \in \{1, 0.99, 0.9, 0.7, 0.5, 0.3\}$ |
+| Reliability | $p = 1$ | $p \in \{1, 0.99, 0.9\}$ |
 | Settings $(d, a_0)$ | $d \in \{1, \dots, 64\}$, $a_0 \in \{1, 10, 100\}$ | (4, 10), (16, 10), (16, 100), (64, 10) |
-| Precision $r$ | 0.9, 0.5, 0.2, 0.05, 0.01 | 0.5, 0.2, 0.05, 0.01, 0.001 |
+| Precision $r$ | 0.1, 0.01, 0.001 | 0.1, 0.01, 0.001 |
 | Seeds | 0, 1, 2 | 0, 1, 2 |
 
 ## 6. Trained networks (RQ3)
@@ -324,6 +324,9 @@ question. Elements that are neither are listed under Departures.
 | 18 | The model sees $w \sim \mathcal{N}(0, I)$. Supersedes weights of variance 10. | 2026-09-29 | Decision 14. The same task in the units of Garg et al. and Huang & Ge. |
 | 19 | The networks output a mean and a log variance and train on log loss. Supersedes decision 15. | 2026-09-30 | Bruce. One ESS definition through the paper; Genewein et al. is the evaluation the paper follows; the earlier log-loss pilot learned the task. |
 | 20 | One seed per configuration. Supersedes three seeds. | 2026-09-30 | Bruce. Compute; each model is compared with the exact learner on 20,000 prompts, so the comparison itself has small error. |
+| 21 | Grids are powers of ten: precision $r \in \{0.1, 0.01, 0.001\}$ (a description worth 1, 10, 100 examples in the long run at $a_0 = 10$), reliability $p \in \{1, 0.99, 0.9\}$ (wrong never, one time in 100, one time in 10). Supersedes the five-value grids of section 5. | 2026-09-30 | Bruce: pick the ends that matter, a factor of 10 apart, instead of many nearby values. |
+| 22 | Examples in hand are reported at $n \in \{0, 1, 10, 100\}$: alone, after identification, below the dimension, verified. | 2026-10-01 | Bruce. Each value is a different regime of Proposition 3. |
+| 23 | Networks: prompts hold up to $20 = 4d$ examples and the models cover $r \in \{0.1, 0.01\}$. Supersedes decision 10's 15 examples and the $r \in \{0.5, 0.05\}$ models. | 2026-09-30 | Decision 21. A description worth 100 examples has no crossing within a 20-example prompt at $d = 5$, so the networks take the two ends they can resolve; 20 examples cover the $r = 0.01$ reliable ESS of 15.6. |
 
 ## Open questions
 

@@ -71,20 +71,15 @@ We consider tasks defined by a weight vector $w \in \R^d$. An in-context example
 
 \paragraph{Task Description Model.} 
 We model a task description as a vector $m \in \R^d$ that provides information about $w$. The description's \emph{precision ratio} is $r \in (0, 1)$, meaning the variance around the description is $s_\ell^2 = r s_0^2$. The description is generated hierarchically via $m \sim \mathcal{N}(0, (1-r)s_0^2 I_d)$, ensuring the marginal distribution of $w$ matches the base prior.
-A description is not always correct. We define its \emph{reliability} $p$ as the probability that the description is accurate. If correct, $w \sim \mathcal{N}(m, s_\ell^2 I_d)$; if incorrect (with probability $1-p$), $w$ simply follows the base prior $\mathcal{N}(0, s_0^2 I_d)$ independently of $m$. Consequently, the Bayes-optimal prior conditioned on the description is a robust mixture \citep{schmidli2014}: $p\,\mathcal{N}(m, s_\ell^2 I_d) + (1-p)\,\mathcal{N}(0, s_0^2 I_d)$. Equivalently, $m$ is a noisy observation of the weights themselves, $m \mid w \sim \mathcal{N}((1-r)\,w,\; r(1-r)\,s_0^2 I_d)$ when correct, so the description is data about $w$ and the ESS is an exchange rate between direct observations of $w$ and indirect ones through $x$. A description with precision ratio $r$ locates each weight to within $\sqrt{r}$ of its typical size $s_0$: $71\%$ at $r = 0.5$, $22\%$ at $r = 0.05$, $3\%$ at $r = 0.001$. The formulation treats the description as a numerical observation rather than text to be parsed.
+A description is not always correct. We define its \emph{reliability} $p$ as the probability that the description is accurate. If correct, $w \sim \mathcal{N}(m, s_\ell^2 I_d)$; if incorrect (with probability $1-p$), $w$ simply follows the base prior $\mathcal{N}(0, s_0^2 I_d)$ independently of $m$. Consequently, the Bayes-optimal prior conditioned on the description is a robust mixture \citep{schmidli2014}: $p\,\mathcal{N}(m, s_\ell^2 I_d) + (1-p)\,\mathcal{N}(0, s_0^2 I_d)$. Equivalently, $m$ is a noisy observation of the weights themselves, $m \mid w \sim \mathcal{N}((1-r)\,w,\; r(1-r)\,s_0^2 I_d)$ when correct, so the description is data about $w$ and the ESS is an exchange rate between direct observations of $w$ and indirect ones through $x$. A description with precision ratio $r$ locates each weight to within $\sqrt{r}$ of its typical size $s_0$: $32\%$ at $r = 0.1$, $10\%$ at $r = 0.01$, $3\%$ at $r = 0.001$. The formulation treats the description as a numerical observation rather than text to be parsed.
 
 \paragraph{Regret and Effective Sample Size.}
 We evaluate predictors based on one-step predictive log-loss for a new query $x$. The regret is the expected difference in log-loss between the predictor and an oracle that knows $w$ exactly, the expectation taken over tasks, inputs, and labels \citep{genewein2025}. 
 
-\begin{definition}[Effective Sample Size]
-Let $R^{\mathrm{desc}}$ be the regret of a Bayes-optimal predictor given only the task description, and $R^{\mathrm{ex}}(n)$ be the regret of a Bayes-optimal predictor under the base prior given $n$ examples. The effective sample size (ESS) of the description is the value $n$ (interpolated continuously) where $R^{\mathrm{ex}}(n) = R^{\mathrm{desc}}$.
+\begin{definition}[Worth of a description]\label{def:ess}
+Fix $p$ and $r$. Let $R^{\mathrm{desc}}(n)$ be the regret of the Bayes-optimal predictor given the description and $n$ examples, and $R^{\mathrm{ex}}(n)$ its regret given $n$ examples and no description. The worth of the description with $n$ examples in hand is $\ess_n = n^* - n$, where $n^*$ (interpolated continuously) solves $R^{\mathrm{ex}}(n^*) = R^{\mathrm{desc}}(n)$: the further examples an examples-only predictor needs to match it. The \emph{effective sample size} of the description is its worth alone, $\ess = \ess_0$, the $n$ at which $R^{\mathrm{ex}}(n) = R^{\mathrm{desc}}(0)$.
 \end{definition}
-The two sides of the definition are prompts of two kinds: a prompt holding the description and nothing else, and prompts holding $n$ examples and no description. The ESS asks what the description is worth on its own, in the currency of examples on their own. Prompts holding both are not part of the definition; they enter in \S\ref{sec:networks}, where we also report regret with a description and $n$ examples together. Since we compare Bayes-optimal predictors under different conditioning sets, the ESS measures information content rather than the specific architecture of a learner.
-
-\begin{definition}[Worth with examples in hand]
-Fix $p$ and $r$ and let $R^{\mathrm{desc}}(n)$ be the regret of the Bayes-optimal predictor given the description and $n$ examples, so $R^{\mathrm{desc}}(0)$ is the $R^{\mathrm{desc}}(p, r)$ of Definition~1. The worth of the description with $n$ examples in hand is $\ess_n = n^* - n$, where $n^*$ (interpolated continuously) solves $R^{\mathrm{ex}}(n^*) = R^{\mathrm{desc}}(n)$: the further examples an examples-only predictor needs to match it. $\ess_0 = \ess$.
-\end{definition}
-
+The ESS compares prompts of two kinds, the description alone against examples alone, and asks what the description is worth on its own in the currency of examples on their own. $\ess_n$ asks the same with $n$ examples already present; \S\ref{sec:reliability} shows why that matters for unreliable descriptions. Since we compare Bayes-optimal predictors under different conditioning sets, the ESS measures information content rather than the specific architecture of a learner.
 \section{The Value of Precision}\label{sec:precision}
 
 We first analyze a perfectly reliable description ($p=1$). Given $n$ examples $X_n \in \R^{n \times d}$, the posterior covariance under a Gaussian prior with SNR $a$ is $\Sigma = \sigma_y^2(I/a + X_n^\top X_n)^{-1}$. This is independent of the examples' labels and the description $m$. The expected one-step regret simplifies to $\frac{1}{2}\E\log(1 + x^\top \Sigma x)$. A reliable description equates to $n=0$ and $a = r a_0$, whereas relying solely on examples uses $a = a_0$.
@@ -103,31 +98,16 @@ so the high-SNR ESS, with $R^{\mathrm{ex}}(n)$ extended to non-integer $n$ throu
 \end{proposition}
 \emph{Idea.} Regret is half the log of the leftover variance in the prediction. At high SNR each example removes all the variance along the one direction it looks at, so $n < d$ examples leave $d - n$ directions untouched; a description shrinks all $d$ directions by the factor $r$. Matching the two leftovers gives $d - n \approx rd$. The proof, with the error term, is in Appendix~\ref{app:precision}.
 
-The error term makes the range of validity precise: the approximation needs $rd \gg 1$, that is, the description must leave many more than one example's worth of variance unexplained, which is the condition $\ess < d$ in the first-order form $\ess \approx d(1-r)$. At $a_0 = 100$ the exact ESS is within $0.1$ of $(d-1)(1-r)$ for $d \in \{16, 64\}$ and $r \in \{0.5, 0.2\}$ (values $7.50$, $12.1$, $31.6$, $50.5$ against $7.5$, $12.0$, $31.5$, $50.4$).
+The error term makes the range of validity precise: the approximation needs $rd \gg 1$, that is, the description must leave many more than one example's worth of variance unexplained, which is the condition $\ess < d$ in the first-order form $\ess \approx d(1-r)$. At $a_0 = 100$ and $r = 0.1$ the exact ESS is within $0.3$ of $(d-1)(1-r)$ for $d \in \{16, 64\}$ ($13.7$ and $56.9$ against $13.5$ and $56.7$).
 
 \begin{table}[t]
 \centering\small
-\caption{Exact ESS of a reliable description ($p=1$) for $a_0=10$, averaged over three seeds (standard deviation across seeds below 2\% of each value). The approximation $d(1-r)$ holds well as long as the exact ESS does not exceed $d$.}
+\caption{Exact ESS of a reliable description ($p=1$) for $a_0=10$, three seeds (standard deviation across seeds below 2\% of each value), against $(d-1)(1-r)$ of Proposition~\ref{prop:precision}. The approximation holds while the description is worth fewer than $d$ examples, $r \gtrsim 1/(a_0 d)$; below that the exact ESS keeps growing because $d$ noisy examples cannot pin $w$ down.}
 \label{tab:precision}
-\begin{tabular}{rrrr}
-\toprule
-$d$ & $r$ & $\ess$ & $d(1-r)$ \\
-\midrule
-4 & 0.5 & 1.77 & 2.0 \\
-4 & 0.2 & 3.32 & 3.2 \\
-16 & 0.5 & 7.62 & 8.0 \\
-16 & 0.2 & 12.6 & 12.8 \\
-16 & 0.05 & 16.9 & 15.2 \\
-16 & 0.01 & 26.1 & 15.8 \\
-64 & 0.5 & 31.6 & 32.0 \\
-64 & 0.2 & 50.7 & 51.2 \\
-64 & 0.05 & 62.1 & 60.8 \\
-64 & 0.01 & 73.5 & 63.4 \\
-\bottomrule
-\end{tabular}
+\input{../../results/rq1-single-query-gap/precision_table.tex}
 \end{table}
 
-Table~\ref{tab:precision} illustrates this alignment. A description eliminating 50\% of the prior variance is worth roughly half the dimension in examples. However, once the description is precise enough that its ESS surpasses $d$, the approximation breaks down. The true ESS scales beyond $d$ because $d$ noisy examples cannot pinpoint $w$ perfectly.
+Table~\ref{tab:precision} illustrates this alignment. A description that removes nine tenths of the prior variance is worth about nine tenths of the dimension in examples at $d = 16$ and $64$. At $d = 4$ the error term $1/(rd)$ is already $2.5$ and the approximation is off by that much. Once the description is precise enough that its ESS surpasses $d$, the approximation breaks down for every $d$: the true ESS scales beyond $d$ because $d$ noisy examples cannot pinpoint $w$ perfectly.
 
 \section{The Bottleneck of Reliability}\label{sec:reliability}
 
@@ -150,20 +130,12 @@ Because $R^{\mathrm{ex}}(n)$ decreases with $n$, the lower bound caps the ESS at
 
 \begin{table}[t]
 \centering\small
-\caption{ESS of unreliable descriptions ($d=16$, $a_0=10$), three seeds; standard deviation across seeds at most 2\% of each value. As precision increases (smaller $r$), the ESS is capped by the reliability $p$.}
+\caption{ESS of unreliable descriptions ($d=16$, $a_0=10$), three seeds; standard deviation across seeds at most 2\% of each value. Down a column precision rises tenfold per row; across a row the description is wrong never, one time in a hundred, and one time in ten.}
 \label{tab:reliability}
-\begin{tabular}{rrrrr}
-\toprule
-$r$ & $p=1$ & $p=0.99$ & $p=0.9$ & $p=0.7$ \\
-\midrule
-0.5 & 7.6 & 7.5 & 6.3 & 4.1 \\
-0.05 & 16.9 & 16.6 & 14.8 & 11.7 \\
-0.001 & 116.5 & 64.2 & 23.1 & 15.6 \\
-\bottomrule
-\end{tabular}
+\input{../../results/rq2-reliability/reliability_table.tex}
 \end{table}
 
-Table~\ref{tab:reliability} demonstrates this saturation. For a perfectly reliable description, refining $r$ from $0.05$ to $0.001$ raises the ESS from $16.9$ to $116.5$. However, if $p=0.9$, the ESS only grows from $14.8$ to $23.1$. Even a 1\% unreliability ($p=0.99$) nearly halves the maximum potential ESS of the most precise description. The same saturation patterns manifest at $d \in \{4, 64\}$ and $a_0=100$.
+Table~\ref{tab:reliability} demonstrates this saturation. For a perfectly reliable description, refining $r$ from $0.1$ to $0.001$ raises the ESS from $14.9$ to $116$. However, if $p=0.9$, the ESS only grows from $13.1$ to $23.1$. Even a 1\% unreliability ($p=0.99$) nearly halves the ESS of the most precise description, $64$ against $116$, while leaving the coarse one almost untouched. The same saturation patterns manifest at $d \in \{4, 64\}$ and $a_0=100$.
 
 \paragraph{Examples lift the bottleneck.}
 With no examples there is nothing to check a description against, so hedging by $1-p$ is forced. Examples change this: they can reveal whether the description is correct, and once they have, the predictor can use its full precision. The floor of Proposition~\ref{prop:floor} generalises to $n$ examples in hand, and it falls with $n$.
@@ -183,26 +155,26 @@ The floor $(1-p)\,R^{\mathrm{ex}}(n)$ decreases with $n$, so the cap on the desc
 \[
 \ess_n \;\approx\; \frac{n\,p\,c}{\,n + (1-p)\,c\,} \;\xrightarrow[n \to \infty]{}\; p\,c = \frac{p}{r a_0},
 \]
-against $\ess_n \to c = 1/(r a_0)$ for a reliable description. So a precise unreliable description, once examples have verified it, is worth $p$ times what a reliable one is worth; alone, Proposition~\ref{prop:floor} caps it far lower. The formula applies only once $n$ exceeds $d$, and the exact learner shows two regimes before that limit (Figure~\ref{fig:worth}; $r = 0.001$, $p = 0.9$, $d = 16$, $c = 100$). The first one or two examples identify the description: the identification term falls from $H(p) = 0.33$ nats to $0.07$ after one example and $0.01$ after two, and the worth rises from $23$ examples alone to $30$ after one. It then stays near $30$ until the examples outnumber the dimension, because the wrong-description branch still carries the full examples-only regret, and rises once $n > d$ as that branch's regret shrinks: $37$ at $n = 16$, $57$ at $24$, $74$ at $40$, against the formula's $63$ and $72$ at the last two and a limit of $90$. The reliable description stays near $115$ through $n = 36$, beyond which the examples-only grid cannot resolve it. Reliability caps precision until examples can check the description, and then costs a factor $p$.
+against $\ess_n \to c = 1/(r a_0)$ for a reliable description. So a precise unreliable description, once examples have verified it, is worth $p$ times what a reliable one is worth; alone, Proposition~\ref{prop:floor} caps it far lower. The formula applies only once $n$ exceeds $d$, and the exact learner shows two regimes before that limit (Figure~\ref{fig:worth}; $r = 0.001$, $p = 0.9$, $d = 16$, $c = 100$). The first one or two examples identify the description: the identification term falls from $H(p) = 0.33$ nats to $0.07$ after one example and $0.02$ after two, and the worth rises from $23$ examples alone to $30$ after one. It then stays near $30$ until the examples outnumber the dimension, because the wrong-description branch still carries the full examples-only regret, and rises once $n > d$ as that branch's regret shrinks: $29$ at $n = 10$, $36$ at $16$, $88$ at $100$, against the formula's $82$ at $n = 100$ and a limit of $90$. The reliable description drifts from $117$ to $108$ over the same range, and at $r = 0.01$, where $c = 10$ is below $d$, the unreliable description gains one example after the first example and then loses worth like the reliable one. Reliability caps precision until examples can check the description, and then costs a factor $p$.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{../../results/rq2-reliability/worth.pdf}
-\caption{\textbf{A precise unreliable description gains worth as examples verify it; a reliable or a coarse one does not.} Worth of the description with $n$ examples in hand (Definition~2), as further examples saved. (a) Exact learner, $d=16$, $a_0=10$, mean of three seeds of 2{,}000 prompts; log scale. At $r = 0.05$ both descriptions lose worth as examples accumulate, because $1/(r a_0) = 2$ is already below $n$. (b) Trained networks at $d=5$, $r=0.05$ (markers, one model per reliability) against the exact learner (lines). The network trained at $p=0.9$ under-values its description alone and converges to the exact learner as examples arrive.}
+\caption{\textbf{A precise unreliable description gains worth as examples verify it; a reliable or a coarse one does not.} Worth of the description with $n$ examples in hand ($\ess_n$ of Definition~\ref{def:ess}), as further examples saved. (a) Exact learner, $d=16$, $a_0=10$, mean of three seeds of 8{,}000 prompts; log scales. At $r = 0.1$ and $0.01$ both descriptions lose worth as examples accumulate, because $1/(r a_0)$ is $1$ and $10$, below $d$. (b) Trained networks at $d=5$, $r=0.01$ (markers, one model per reliability) against the exact learner (lines). The network trained at $p=0.9$ under-values its description alone and converges to the exact learner as examples arrive.}
 \label{fig:worth}
 \end{figure}
 
 \section{Meta-Trained Transformers}\label{sec:networks}
 
 \paragraph{Design.}
-To test whether a learned predictor reproduces these values, we meta-train Transformers on prompts generated by the process of \S\ref{sec:setting} and compare them with the Bayes-optimal predictor on the same prompts, following \citet{genewein2025}. Prompts use the prefix embedding of \citet{huangge2025}: an optional descriptor token carrying $m$, up to 15 example tokens each holding an input beside its answer, and a final query token, with two indicator coordinates marking the token type. There is no positional encoding, so the examples are exchangeable. The architecture and optimisation follow \citet{garg2022}: 12 layers, 8 heads, width 256, Adam at $10^{-4}$, fresh prompts at every step. The network outputs a mean and a log variance for the answer to the query and is trained on the Gaussian log loss, so its regret is on the scale of \S\ref{sec:setting}. We set $d=5$ and $a_0=10$, draw the number of examples uniformly from $0$ to $15$, and omit the descriptor in half the prompts. The descriptor supplies only $m$: each network is trained at one precision $r$ and one reliability $p$, which it never sees and must learn from the training distribution. Every model trains for 40{,}000 steps at batch 1024, one model per setting. A pilot confirmed the budget: the mean gap between the network and the Bayes-optimal predictor falls from $0.07$ nats at 5{,}000 steps to $0.02$ at 20{,}000 and stays there to 40{,}000.
+To test whether a learned predictor reproduces these values, we meta-train Transformers on prompts generated by the process of \S\ref{sec:setting} and compare them with the Bayes-optimal predictor on the same prompts, following \citet{genewein2025}. Prompts use the prefix embedding of \citet{huangge2025}: an optional descriptor token carrying $m$, up to $20$ example tokens each holding an input beside its answer, and a final query token, with two indicator coordinates marking the token type. There is no positional encoding, so the examples are exchangeable. The architecture and optimisation follow \citet{garg2022}: 12 layers, 8 heads, width 256, Adam at $10^{-4}$, fresh prompts at every step. The network outputs a mean and a log variance for the answer to the query and is trained on the Gaussian log loss, so its regret is on the scale of \S\ref{sec:setting}. We set $d=5$ and $a_0=10$, draw the number of examples uniformly from $0$ to $20 = 4d$, and omit the descriptor in half the prompts. The descriptor supplies only $m$: each network is trained at one precision $r$ and one reliability $p$, which it never sees and must learn from the training distribution. Every model trains for 40{,}000 steps at batch 1024, one model per setting. A pilot confirmed the budget: the mean gap between the network and the Bayes-optimal predictor falls from $0.07$ nats at 5{,}000 steps to $0.02$ at 20{,}000 and stays there to 40{,}000.
 
 \paragraph{Readouts.}
-We evaluate each network on 20{,}000 fresh prompts for every $n$ from $0$ to $15$, with and without a descriptor. The ESS uses two of these conditions, exactly as in Definition~1: the network's regret on prompts holding the descriptor alone is placed on its own regret curve for prompts holding $n$ examples alone, and the crossing is the ESS. The remaining conditions, a descriptor followed by $n \ge 1$ examples, show how the network combines the two and are plotted alongside. We also evaluate the two models trained at $p=1$ on prompts whose descriptors are correct only with probability $0.9$, which asks how a learner that has never seen a wrong description treats one.
+We evaluate each network on 20{,}000 fresh prompts for every $n$ from $0$ to $20$, with and without a descriptor. The ESS uses two of these conditions, exactly as in Definition~\ref{def:ess}: the network's regret on prompts holding the descriptor alone is placed on its own regret curve for prompts holding $n$ examples alone, and the crossing is the ESS. The remaining conditions, a descriptor followed by $n \ge 1$ examples, show how the network combines the two and are plotted alongside. We also evaluate the two models trained at $p=1$ on prompts whose descriptors are correct only with probability $0.9$, which asks how a learner that has never seen a wrong description treats one.
 
 \begin{table}[t]
 \centering\small
-\caption{Networks against the Bayes-optimal predictor ($d=5$, $a_0=10$, one trained model per row, 20{,}000 evaluation prompts). ``Trained'' is the Bayes-optimal predictor with trust equal to the training reliability $p_{\mathrm{train}}$, the predictor each network is trained toward; ``calibrated'' is the predictor with trust equal to the test reliability, shown where the two differ. The last two columns are the mean regret gap, network minus Bayes-optimal, over $n = 0, \dots, 15$, with and without a descriptor.}
+\caption{Networks against the Bayes-optimal predictor ($d=5$, $a_0=10$, one trained model per row, 20{,}000 evaluation prompts). ``Exact'' is the Bayes-optimal predictor calibrated to the test reliability. The last two columns are the mean regret gap, network minus the Bayes-optimal predictor with the network's training reliability, over $n = 0, \dots, 20$, with and without a descriptor.}
 \label{tab:networks}
 \input{../../results/rq3-meta-trained/networks_table.tex}
 \end{table}
@@ -215,7 +187,7 @@ We evaluate each network on 20{,}000 fresh prompts for every $n$ from $0$ to $15
 \end{figure}
 
 \paragraph{Results.}
-Table~\ref{tab:networks} and Figure~\ref{fig:networks} give the readouts. For reliable descriptors the networks reproduce the Bayes-optimal values: ESS $6.7$ against $6.7$ for the precise descriptor and $2.25$ against $2.26$ for the coarse one, with regret about $0.02$ nats above the Bayes-optimal predictor's on average over $n$. The coarse unreliable descriptor is also reproduced, $1.83$ against $1.85$. The precise unreliable descriptor is not: the network's ESS is $3.9$ against $5.0$, its regret from the descriptor alone is $0.3$ nats above the Bayes-optimal predictor's, and its implied trust is $0.85$ rather than $0.9$. (The implied trust at $n$ examples is the $q$ for which the Bayes-optimal predictor with trust $q$ has the posterior-mean prediction closest, in mean squared difference over prompts, to the network's.) The gap closes as examples arrive (Figure~\ref{fig:networks}c). This is not under-training: continuing the same model to 80{,}000 steps on fresh prompts leaves its ESS at $3.9$ and its implied trust at $0.85$. With one trained model per setting we report it as an observation rather than a finding.
+Table~\ref{tab:networks} and Figure~\ref{fig:networks} give the readouts. For reliable descriptors the networks reproduce the Bayes-optimal values: ESS $6.7$ against $6.7$ for the precise descriptor and $2.25$ against $2.26$ for the coarse one, with regret about $0.02$ nats above the Bayes-optimal predictor's on average over $n$. The coarse unreliable descriptor is also reproduced, $1.83$ against $1.85$. The precise unreliable descriptor is not: the network's ESS is $3.9$ against $5.0$, its regret from the descriptor alone is $0.3$ nats above the Bayes-optimal predictor's, and its implied trust is $0.85$ rather than $0.9$. The gap closes as examples arrive (Figure~\ref{fig:networks}c). This is not under-training: continuing the same model to 80{,}000 steps on fresh prompts leaves its ESS unchanged. With one trained model per setting we report it as an observation rather than a finding.
 
 \paragraph{Transfer to unreliable descriptors.}
 The models trained at $p=1$ behave like a Bayes-optimal predictor that trusts the descriptor fully. On prompts where one descriptor in ten is wrong, the model trained on precise reliable descriptors gets almost nothing from a descriptor: ESS $0.7$, where a calibrated predictor would get $5.0$, and the fully trusting Bayes-optimal predictor's regret with the descriptor exceeds its regret without one, so its ESS is not positive (shown as $\le 0$ in Table~\ref{tab:networks}). Its implied trust is $0.99$. The coarse model is forgiven its trust, $1.6$ against the calibrated $1.9$, because a coarse descriptor that is wrong does little harm. This is the mechanism of \S\ref{sec:reliability} seen in a trained learner: the cost of unreliability falls on precise descriptors, and a learner that has never seen a wrong descriptor pays it in full.
@@ -225,7 +197,7 @@ The models trained at $p=1$ behave like a Bayes-optimal predictor that trusts th
 Our analysis offers a precise vocabulary for discussing the utility of task descriptions in prompts. For a Bayes-optimal predictor, a task description is worth a specific number of in-context examples. Assuming perfect reliability, this worth scales linearly with the proportion of prior variance the description eliminates. However, reliability acts as a strict bottleneck. Because a predictor must hedge against the possibility that the description is incorrect, the value of very precise descriptions saturates if they are not perfectly reliable. The hedge is only forced while nothing can check the description: examples lift it, and an unreliable precise description is worth more after a few examples than alone. Reliability, then, is not a fixed discount on a description but a cost that examples pay down.
 
 \paragraph{Limitations and Future Work.} 
-Our theoretical claims are restricted to Bayes-optimal predictors and small-scale meta-trained Transformers in a linear-Gaussian setting, chosen to permit exact calculation. Scaling these insights to large language models operating on complex text remains an open challenge. Additionally, our ESS scores one-step prediction; Definition~2 captures the examples already in the prompt, but not a sequential session in which the predictor's own feedback accumulates. Over such horizons the long-horizon ESS of a reliable description tends to the information-matching value $\tfrac{d}{2}\log(1/r)$, which is below the one-step value ($2.2$ against $7.6$ at $d = 16$, $a_0 = 10$, $r = 0.5$), and the horizon dependence for unreliable descriptions is left for future work.
+Our theoretical claims are restricted to Bayes-optimal predictors and small-scale meta-trained Transformers in a linear-Gaussian setting, chosen to permit exact calculation. Scaling these insights to large language models operating on complex text remains an open challenge. Additionally, our ESS scores one-step prediction; Definition~\ref{def:ess} captures the examples already in the prompt, but not a sequential session in which the predictor's own feedback accumulates. Over such horizons the long-horizon ESS of a reliable description tends to the information-matching value $\tfrac{d}{2}\log(1/r)$, which is below the one-step value ($7.8$ against $14.9$ at $d = 16$, $a_0 = 10$, $r = 0.1$), and the horizon dependence for unreliable descriptions is left for future work.
 
 \bibliographystyle{plainnat}
 \bibliography{refs}

@@ -111,5 +111,6 @@ limit and not used by the paper.
 
 ## Next moves
 
-1. Fold the continuation result into section 6.
+1. Retrain the four networks on the powers-of-ten grid ($r \in \{0.1, 0.01\}$,
+   prompts to 20 examples) once Bruce says go; rewrite section 6.
 2. Standing adversarial review of the full draft.

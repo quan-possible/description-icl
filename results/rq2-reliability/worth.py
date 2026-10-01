@@ -17,13 +17,13 @@ import numpy as np
 from descriptor_icl import gaussian as g
 from descriptor_icl import mixture as mx
 
-D, A0, K, S = 16, 10.0, 150, 2000
-NS = list(range(0, 41))
+D, A0, K, S = 16, 10.0, 260, 8000
+NS = list(range(0, 101))
 rows = []
 for seed in (0, 1, 2):
     plain = mx.simulate(D, A0, A0 * 0.999, 1.0, K, S, seed=100 + seed)
     R_ex = mx.regret(plain, 0.0, 1)
-    for r in (0.05, 0.001):
+    for r in (0.1, 0.01, 0.001):
         for p in (1.0, 0.9):
             paths = mx.simulate(D, A0, r * A0, p, K, S, seed=200 + seed)
             R_desc = mx.regret(paths, p, 1)
@@ -35,9 +35,9 @@ for seed in (0, 1, 2):
                                  worth=round(float(g.first_crossing(R_ex, R_desc[n])[1]) - n, 2)))
 with (pathlib.Path(__file__).parent / "worth.csv").open("w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
-for r in (0.05, 0.001):
+for r in (0.1, 0.01, 0.001):
     for p in (1.0, 0.9):
-        sel = [x for x in rows if x["r"] == r and x["p"] == p and x["n"] in (0, 1, 3, 8, 16, 24, 40)]
+        sel = [x for x in rows if x["r"] == r and x["p"] == p and x["n"] in (0, 1, 10, 100)]
         by_n = {}
         for x in sel:
             by_n.setdefault(x["n"], []).append(x["worth"])

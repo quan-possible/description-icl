@@ -50,6 +50,13 @@ flowchart TD
   proved; the design record moved to `docs/wiki/experiments.md`. The network
   loss is Bruce's open decision. See [2026-09-30](memory/2026-09-30.md).
 
+## 2026-10-01 | Grids in powers of ten
+
+- Bruce: exact results before training; ends a factor of 10 apart; $n \in
+  \{0, 1, 10, 100\}$. All exact tables and the worth figure regenerated;
+  Section 6 awaits retraining at $r \in \{0.1, 0.01\}$. Three Colab jobs
+  were lost to a conversation restart. See [2026-10-01](memory/2026-10-01.md).
+
 ## Rebuild rule
 
 - Rebuild from dated records and the files that own each claim. When over

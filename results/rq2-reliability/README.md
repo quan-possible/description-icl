@@ -10,19 +10,20 @@ unless it is extreme. A wrong description is abandoned after a few examples.
 | Symbol | Meaning | Values |
 | --- | --- | --- |
 | $(d,$ `a0`$)$ | dimension, base prior signal-to-noise ratio | (4, 10), (16, 10), (16, 100), (64, 10) |
-| `r` $= s_\ell^2/s_0^2$ | fraction of prior variance the description leaves | 0.5, 0.2, 0.05, 0.01, 0.001 |
-| $p$ | true reliability | 1, 0.99, 0.9, 0.7, 0.5, 0.3 |
+| `r` $= s_\ell^2/s_0^2$ | fraction of prior variance the description leaves | 0.1, 0.01, 0.001 |
+| $p$ | true reliability | 1, 0.99, 0.9 (`trust.csv` also 0.7, 0.5) |
 | $q$ | learner's assumed reliability | equal to $p$ in `ess_map.csv`; varied in `trust.csv` |
 | $N$ | horizon | 1, 16, 200 |
 
 $\sigma_y = 1$, inputs $x \sim \mathcal{N}(0, I_d)$, regret is log loss
-against the oracle that knows $w$, in nats. Three seeds (0, 1, 2); ESS varies
-across seeds by at most about 12%.
+against the oracle that knows $w$, in nats. Three seeds (0, 1, 2); the one-step ESS
+varies across seeds by at most 0.5%.
 
 ## Run
 
 ```bash
-uv run python results/rq2-reliability/run.py   # about 10 minutes
+uv run python results/rq2-reliability/run.py   # about 5 minutes
+uv run python results/rq2-reliability/table.py  # reliability_table.tex, the paper's Table 2
 ```
 
 ## Tables
@@ -36,14 +37,14 @@ uv run python results/rq2-reliability/run.py   # about 10 minutes
 ## Findings
 
 **Reliability caps the worth of precision.** Single-query ESS as `r` goes
-from 0.05 to 0.001:
+from 0.1 to 0.001:
 
 | $d$ | `a0` | $p = 1$ | $p = 0.99$ | $p = 0.9$ |
 | --- | --- | --- | --- | --- |
-| 4 | 10 | 5.9 → 105.1 | 5.6 → 29.9 | 4.2 → 7.0 |
-| 16 | 10 | 16.9 → 116.5 | 16.6 → 64.2 | 14.8 → 23.1 |
-| 16 | 100 | 14.8 → 26.4 | 14.7 → 24.0 | 13.8 → 17.9 |
-| 64 | 10 | 62.2 → 165.7 | 61.6 → 134.0 | 57.9 → 78.9 |
+| 4 | 10 | 4.4 → 105.1 | 4.3 → 29.9 | 3.5 → 7.0 |
+| 16 | 10 | 14.9 → 116.5 | 14.6 → 64.2 | 13.1 → 23.1 |
+| 16 | 100 | 13.8 → 26.3 | 13.6 → 24.0 | 12.6 → 17.9 |
+| 64 | 10 | 57.8 → 165.7 | 57.2 → 134.0 | 53.0 → 78.9 |
 
 **The horizon ordering reverses in three of four settings.** ESS at
 `r` $= 0.001$, $p = 0.9$:
@@ -68,8 +69,10 @@ At $N = 200$ the excess over calibrated trust matches
 $\mathrm{KL}(p\,\|\,q)$: 1.46 nats at $q = 0.999$.
 
 **Tipping is fast.** The median number of examples before a wrong description
-is abandoned is 1 to 3 for `r` $\le 0.05$ at every trust level tested, up to
-$q = 0.999999$. Coarse descriptions (`r` $= 0.5$) take up to 23 at $d = 64$.
+is abandoned is 1 or 2 for `r` $\le 0.01$ at every trust level tested, up to
+$q = 0.999999$, and 1 to 5 for `r` $= 0.1$; at $d = 4$, `r` $= 0.1$ the
+95th percentile is beyond 80 examples once $q \ge 0.9$, because a coarse
+wrong description is nearly compatible with the data.
 
 ## Worth with examples in hand
 
@@ -78,8 +81,10 @@ $n$ examples are already present (paper, Definition 2 and Proposition 3) at
 $d = 16$, `a0` $= 10$, three seeds, into `worth.csv`; `worth_figure.py`
 draws `worth.pdf` for the paper with the network panel from
 `results/rq3-meta-trained/`. A precise unreliable description gains worth
-as examples verify it (23 alone, 32 after three, 57 after 24 at
-`r` $= 0.001$, $p = 0.9$); a reliable one stays near 115.
+as examples verify it (23 alone, 30 after one, 29 after ten, 88 after a
+hundred at `r` $= 0.001$, $p = 0.9$); a reliable one drifts from 117 to
+108. The grid is $n = 0, \dots, 100$ with 8,000 prompts per seed; the table
+reports $n \in \{0, 1, 10, 100\}$.
 
 ## Validation
 

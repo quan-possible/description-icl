@@ -3,8 +3,10 @@
 **What it shows.** For a reliable description ($p = 1$), the single-query ESS
 always exceeds the long-horizon ESS. Their ratio grows with dimension and
 signal-to-noise ratio and shrinks as the description becomes more precise.
-It ranges from 1.01 to 8.5 over this grid, so the proposal's "up to three
-times" holds only for part of the range.
+It ranges from 0.99 to 3.3 over this grid (the earlier five-value grid
+reached 8.5 at $r = 0.9$, $a_0 = 100$, so "up to three times" holds for
+$r \le 0.1$ only). `table.py` writes `precision_table.tex`, the body of the
+paper's Table 1, from `ess.csv`.
 
 ## Setting
 
@@ -12,7 +14,7 @@ times" holds only for part of the range.
 | --- | --- | --- |
 | $d$ | dimension | 1, 2, 4, 8, 16, 32, 64 |
 | `a0` $= s_0^2/\sigma_y^2$ | base prior signal-to-noise ratio | 1, 10, 100 |
-| `r` $= s_\ell^2/s_0^2$ | fraction of prior variance the description leaves | 0.9, 0.5, 0.2, 0.05, 0.01 |
+| `r` $= s_\ell^2/s_0^2$ | fraction of prior variance the description leaves | 0.1, 0.01, 0.001 |
 | $N$ | horizon | 1, 4, 16, 64, 256, $\infty$ |
 
 Inputs are $x \sim \mathcal{N}(0, I_d)$. Regret is log loss against the oracle
@@ -22,7 +24,8 @@ standard deviation of the ESS across seeds.
 ## Run
 
 ```bash
-uv run python results/rq1-single-query-gap/run.py   # about 25 minutes
+uv run python results/rq1-single-query-gap/run.py   # about 15 minutes
+uv run python results/rq1-single-query-gap/table.py
 ```
 
 ## Columns of `ess.csv`
@@ -41,14 +44,15 @@ uv run python results/rq1-single-query-gap/run.py   # about 25 minutes
 
 | $d$ | `a0` | `r` | single-query ESS | long-horizon ESS | ratio |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 10 | 0.5 | 0.50 | 0.40 | 1.26 |
-| 16 | 10 | 0.5 | 7.62 | 2.23 | 3.42 |
-| 64 | 10 | 0.5 | 31.6 | 6.93 | 4.56 |
-| 64 | 100 | 0.9 | 6.52 | 0.77 | 8.46 |
-| 64 | 100 | 0.01 | 63.9 | 35.1 | 1.82 |
-| 64 | 1 | 0.01 | 162.5 | 132.8 | 1.22 |
+| 1 | 10 | 0.1 | 1.95 | 1.66 | 1.17 |
+| 16 | 10 | 0.1 | 14.9 | 7.76 | 1.92 |
+| 64 | 10 | 0.1 | 57.7 | 23.6 | 2.44 |
+| 64 | 100 | 0.1 | 56.9 | 17.1 | 3.32 |
+| 64 | 100 | 0.01 | 64.0 | 35.1 | 1.82 |
+| 64 | 1 | 0.01 | 163.0 | 132.8 | 1.23 |
+| 16 | 10 | 0.001 | 116.8 | 108.5 | 1.08 |
 
-- The gap is geometric. In $d = 1$ the ratio stays between 1.01 and 1.35;
+- The gap is geometric. In $d = 1$ the ratio stays between 0.99 and 1.22;
   under balanced designs it is exactly 1.
 - For coarse descriptions at high SNR the single-query ESS is close to
   $d(1 - r)$: a description that removes a fraction $1 - r$ of the prior

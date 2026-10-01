@@ -1,6 +1,6 @@
 # STATUS
 
-Last updated: 2026-09-30 (evening)
+Last updated: 2026-10-01 (early morning)
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Clear Sans, Noto Sans, Helvetica Neue, Arial, Noto Sans CJK JP, sans-serif","fontSize":"16px","primaryTextColor":"#171717","lineColor":"#a8a8a8","mainBkg":"#ffffff","clusterBkg":"#ffffff","clusterBorder":"#ffffff","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"curve":"linear"}}}%%
@@ -42,8 +42,22 @@ learner and then for meta-trained networks.
   `results/rq2-reliability/ess_map.csv`; the RQ1 folder's horizon columns
   are unused by the paper. Figure 1 is a TikZ diagram,
   `docs/paper/figs/overview.tex`.
-- Section 6 (networks) is done from four trained models (one per
-  setting, 40k steps, log loss, Colab L4, 2026-09-30). Three reproduce the
+- Grids are powers of ten (decisions 21 to 23, 2026-09-30/10-01): $r \in
+  \{0.1, 0.01, 0.001\}$ (a description worth 1, 10, 100 examples in the
+  long run at $a_0 = 10$), $p \in \{1, 0.99, 0.9\}$, examples in hand
+  $n \in \{0, 1, 10, 100\}$. Tables 1 and 2 are `\input` from
+  `precision_table.tex` and `reliability_table.tex`, written by each
+  folder's `table.py`; the worth figure runs to $n = 100$ on a log axis
+  with 8,000 prompts per seed. All exact numbers in the paper are updated.
+- Section 6 (networks) was done from four trained models (one per
+  setting, 40k steps, log loss, Colab L4, 2026-09-30) at the old grid
+  ($r \in \{0.5, 0.05\}$, prompts to 15 examples). It is stale: the models
+  must be retrained at $r \in \{0.1, 0.01\}$ with prompts to 20 examples
+  (`one_model.sh`), and its prose, Table 3, Figure 3, and panel (b) of the
+  worth figure follow. Exact $d = 5$ targets for the new grid are in
+  `results/rq3-meta-trained/targets.csv`: ESS 5.2/4.3 at $r = 0.1$ and
+  15.6/6.9 at $r = 0.01$ for $p = 1$/$0.9$; the unreliable $r = 0.01$
+  description rises from 6.7 to 10.6 over $n = 0$ to 20. Three reproduce the
   exact learner's ESS within 0.1 examples; the precise unreliable model
   gives 3.9 against 5.0 with implied trust 0.85, unchanged after 80k steps,
   so it is under-trust on one seed, reported as an observation.
@@ -76,7 +90,8 @@ learner and then for meta-trained networks.
 ## Findings that contradict the proposal (record; not in the paper)
 
 - **"Up to three times" is not a bound.** The single-query to long-horizon
-  ESS ratio runs from 1.01 to 8.5 on the RQ1 grid.
+  ESS ratio reached 8.5 at $r = 0.9$, $a_0 = 100$ on the five-value grid;
+  on the powers-of-ten grid ($r \le 0.1$) it tops out at 3.3.
 - **The trust-asymmetry explanation is weak.** For a Bayes-optimal learner,
   mis-set trust costs about $\mathrm{KL}(p\,\|\,q)$ nats over a long horizon
   (1.46 nats at $p = 0.7$, $q = 0.999$, against a total near 25). Large costs
@@ -117,7 +132,14 @@ learner and then for meta-trained networks.
 
 ## Next actions
 
-1. Affiliation; final read of the compiled PDF.
+1. On Bruce's go: train the four networks on Colab (three L4 VMs,
+   `one_model.sh` with `(1.0 0.1, 0.9 0.1)`, `(1.0 0.01)`, `(0.9 0.01)`,
+   about 80 minutes), with each `detached.py` heartbeat runner inside
+   `tmux`. Three such jobs were lost on 2026-09-30 when the conversation
+   restarted with the runners in its foreground shell.
+2. Rewrite Section 6 from the new models: `summarize.py`, `figure.py`,
+   `worth_figure.py`, then the Results and Transfer paragraphs.
+3. Affiliation; final read of the compiled PDF.
 
 Decided 2026-09-30 (Bruce: add only what is necessary): no three-regime
 ESS table, since the abstract, Proposition 3, and the limitations already

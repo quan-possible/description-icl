@@ -65,7 +65,7 @@ def test_reliability_sandwich():
         tol = 0.02  # Monte Carlo error of the table
         assert lo - tol <= x["regret"] <= hi + tol, (x, lo, hi)
         checked += 1
-    assert checked >= 100
+    assert checked == 4 * 2 * 3  # (d, a0) settings, p < 1, r
 
 
 def test_reliability_with_examples_sandwich():
@@ -78,11 +78,11 @@ def test_reliability_with_examples_sandwich():
     H = -p * math.log(p) - (1 - p) * math.log(1 - p)
     checked = 0
     for seed in (0.0, 1.0, 2.0):
-        for r in (0.05, 0.001):
+        for r in (0.1, 0.01, 0.001):
             one = {x["n"]: x for x in rows if x["seed"] == seed and x["r"] == r and x["p"] == 1.0}
             mix = {x["n"]: x for x in rows if x["seed"] == seed and x["r"] == r and x["p"] == p}
             assert abs(mix[0.0]["ident"] - H) < 0.03  # sample fraction of correct descriptions
-            for n in range(41):
+            for n in range(101):
                 lo = p * one[n]["R_desc"] + (1 - p) * mix[n]["R_ex"]
                 hi = lo + mix[n]["ident"]
                 tol = 0.03  # Monte Carlo, 2000 prompts, and R_1 from a separate draw
@@ -90,4 +90,4 @@ def test_reliability_with_examples_sandwich():
                 if n:
                     assert mix[n]["ident"] <= mix[n - 1.0]["ident"] + 0.01
                 checked += 1
-    assert checked == 246
+    assert checked == 3 * 3 * 101
