@@ -1,7 +1,7 @@
 % Figure 1: how the paper reads a prompt, and what sets a description's worth.
 % Compile: latexmk -cd -pdf -interaction=nonstopmode -halt-on-error docs/paper/figs/overview.tex
-% ESS values in (b) are copied from Table 2 (results/rq2-reliability/ess_map.csv,
-% d = 16, a0 = 10, N = 1): 7.6, 116.5, 23.1. Prior shapes are sketches.
+% ESS values in (b) are copied from the reliability table (results/rq2-reliability/ess_map.csv,
+% d = 16, a0 = 10, N = 1): 14.9, 116, 23.1. Prior shapes are sketches.
 %
 % Style: the Editorial Neutral system ($visualization-design DESIGN.md), its SVG
 % binding translated to TikZ at 0.5 pt per px (16 px node text = 8 pt).
@@ -113,25 +113,25 @@
   \coordinate (r2) at (0,-55mm);
   \coordinate (r3) at (0,-69mm);
 
-  \prior{r1}{6*exp(-(\x-1.2)*(\x-1.2)/(2*0.36))}{0}
+  \prior{r1}{7*exp(-(\x-1.2)*(\x-1.2)/(2*0.1))}{0}
   \prior{r2}{9*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144))}{0}
   \prior{r3}{8.1*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144))}{1.6*exp(-\x*\x/2)}
 
-  \node[note] at ($(r1)+(26mm,3mm)$) {coarse, reliable\\\textcolor{inkmuted}{$r = 0.5$, $p = 1$}};
+  \node[note] at ($(r1)+(26mm,3mm)$) {coarse, reliable\\\textcolor{inkmuted}{$r = 0.1$, $p = 1$}};
   \node[note] at ($(r2)+(26mm,3mm)$) {precise, reliable\\\textcolor{inkmuted}{$r = 0.001$, $p = 1$}};
   \node[note] at ($(r3)+(26mm,3mm)$) {precise, \textcolor{pinkstroke}{90\% reliable}\\\textcolor{inkmuted}{$r = 0.001$, $p = 0.9$}};
 
   \coordinate (b1) at ($(r1)+(56mm,3mm)$);
   \coordinate (b2) at ($(r2)+(56mm,3mm)$);
   \coordinate (b3) at ($(r3)+(56mm,3mm)$);
-  \exbar{b1}{7}{0.6}
+  \exbar{b1}{14}{0.9}
   \exbar{b2}{116}{0.5}
   \exbar{b3}{23}{0.1}
-  \node[note] at ($(b1)+(7.6*\pitch+1mm,0)$) {7.6};
-  \node[note] at ($(b2)+(116.5*\pitch+1mm,0)$) {117};
+  \node[note] at ($(b1)+(14.9*\pitch+1mm,0)$) {14.9};
+  \node[note] at ($(b2)+(116.5*\pitch+1mm,0)$) {116};
   \node[note] at ($(b3)+(23.1*\pitch+1mm,0)$) {23};
 
-  \node[note, text=inkmuted] at ($(b1)+(16mm,0)$) {500$\times$ more precise $\rightarrow$ 15$\times$ the worth};
+  \node[note, text=inkmuted] at ($(b1)+(20mm,0)$) {100$\times$ more precise $\rightarrow$ 8$\times$ the worth};
   \node[note, text=inkmuted] at ($(b3)+(23mm,0)$) {\textcolor{pinkstroke}{wrong 10\% of the time} $\rightarrow$ worth falls by 80\%};
   \node[lbl, text=inksubtle, anchor=north east] at ($(b3)+(84mm,-5mm)$) {$d = 16$, $a_0 = 10$, one query};
 
