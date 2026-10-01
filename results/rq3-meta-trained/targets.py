@@ -19,7 +19,7 @@ for r in (0.1, 0.01):
     plain = draw(S, K, D, A0, r, 1.0, 0.0, seed=1)
     plain["correct"] = torch.zeros_like(plain["correct"])  # w came from the base prior
     curve = bayes_regret(bayes_paths(plain, A0, r), 0.0, plain)[0]
-    for p in (1.0, 0.9):
+    for p in (1.0, 0.99, 0.9):
         batch = draw(S, K, D, A0, r, p, 1.0, seed=10)
         reg, se = bayes_regret(bayes_paths(batch, A0, r), p, batch)
         rows.append(dict(d=D, a0=A0, r=r, p=p, regret=round(reg[0], 3), regret_se=round(se[0], 3),

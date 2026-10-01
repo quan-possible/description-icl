@@ -15,7 +15,7 @@ here = pathlib.Path(__file__).parent
 D, A0, K, S = 5, 10.0, 24, 20_000
 QS = (0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 0.99, 0.999, 1.0)
 rows = []
-for p in (0.9, 1.0):
+for p in (0.9, 0.99, 1.0):
     for r in (0.1, 0.01):
         paths = mx.simulate(D, A0, r * A0, p, K, S, seed=300)
         for q in QS:
