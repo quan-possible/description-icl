@@ -88,9 +88,9 @@ paper's Figure 2: alone, $p = 0.9$ saturates at 23 while $p = 1$ reaches
 
 `worth.py` computes the description's worth as further examples saved when
 $n$ examples are already present (paper, Definition 2 and Proposition 3) at
-$d = 16$, `a0` $= 10$, three seeds, into `worth.csv`; `worth_figure.py`
-draws `worth.pdf` for the paper with the network panel from
-`results/rq3-meta-trained/`. A precise unreliable description gains worth
+$d = 16$, `a0` $= 10$, three seeds, into `worth.csv`, the source of the
+paper's $n$-in-hand numbers and of `tests/test_propositions.py`. A precise
+unreliable description gains worth
 as examples verify it (23 alone, 30 after one, 29 after ten, 88 after a
 hundred at `r` $= 0.001$, $p = 0.9$); a reliable one drifts from 117 to
 108. The grid is $n = 0, \dots, 100$ with 8,000 prompts per seed; the table

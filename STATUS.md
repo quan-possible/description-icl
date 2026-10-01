@@ -69,8 +69,9 @@ learner and then for meta-trained networks.
   $n$ examples in hand is $(1-p)R^{\mathrm{ex}}(n)$ plus an identification
   term that starts at $H(p)$ and never rises, so a precise unreliable
   description gains worth as examples verify it (23 alone, 57 after 24 at
-  $d = 16$, $r = 0.001$) while a reliable one does not. Figure in
-  `results/rq2-reliability/worth.pdf`; checked by `tests/test_propositions.py`.
+  $d = 16$, $r = 0.001$) while a reliable one does not. Figure 2
+  (`results/rq2-reliability/ess_figure.py`) shows it across precision;
+  checked by `tests/test_propositions.py`.
 - The description is framed as data about $w$ under the pretraining prior,
   not as the prior itself; $r$ is read as the fraction of a weight's typical
   size the description pins it to.
@@ -142,7 +143,9 @@ learner and then for meta-trained networks.
    `tmux`. Three such jobs were lost on 2026-09-30 when the conversation
    restarted with the runners in its foreground shell.
 2. Rewrite Section 6 from the new models: `summarize.py`, `figure.py`,
-   `worth_figure.py`, then the Results and Transfer paragraphs.
+   then the Results and Transfer paragraphs. The old worth-against-$n$
+   figure is gone (Figure 2 carries $n$); decide then whether a network
+   worth panel adds anything beyond Table 3 and the regret curves.
 3. Affiliation; final read of the compiled PDF.
 
 Decided 2026-09-30 (Bruce: add only what is necessary): no three-regime

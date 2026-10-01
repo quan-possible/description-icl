@@ -75,7 +75,7 @@ $\mathrm{ESS}_n \approx n p/(1-p)$ took $r \to 0$ before $n \to \infty$ and
 was wrong as a limit.
 
 **Numbers** ($d = 16$, $a_0 = 10$, `results/rq2-reliability/worth.csv`, mean
-of three seeds; `worth.py`, `worth_figure.py`):
+of three seeds; `worth.py`):
 
 | $n$ in hand | 0 | 1 | 3 | 8 | 16 | 24 | 40 |
 | --- | --- | --- | --- | --- | --- | --- | --- |

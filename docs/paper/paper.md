@@ -1,0 +1,426 @@
+# How Many In-Context Examples Is a Task Description Worth?
+
+Bruce Quan Nguyen  
+*\[Affiliation\]*
+
+*Draft of 30 September 2026*
+
+## Abstract
+
+While prompts in modern language models typically consist of both a task description and in-context examples, theoretical frameworks for in-context learning (ICL) predominantly focus on the latter. In this work, we adopt a Bayesian perspective on ICL to formally quantify the value of task descriptions. The pretraining distribution is the prior over tasks; a description and the examples are both data about the task, the description a direct but imperfect observation of it and the examples indirect observations through inputs. We measure the description’s value by its effective sample size (ESS): the number of examples that carry the same information. We analyze this in the setting of in-context linear regression, where Bayes-optimal predictions can be computed exactly. We define the ESS of a description by matching the one-step log-loss regret of a Bayes-optimal predictor using only the description to one using only examples. Our analysis reveals that a description’s worth is governed by two factors: its precision (how much it reduces prior variance) and its reliability (the probability it is correct). We show that a reliable description that removes a fraction $`1-r`$ of the prior variance in a $`d`$-dimensional task is worth approximately $`d(1-r)`$ examples when it stands alone; once examples are present its worth falls toward $`1/(r a_0)`$, the balanced-design value. For unreliable descriptions the ESS saturates: unreliability imposes a regret floor, so beyond a point more precision buys little: at $`p = 0.9`$, a fiftyfold increase in precision adds eight examples where a reliable description gains a hundred. The cap lifts once examples can check the description: with $`n`$ examples in hand the floor falls with $`n`$, and a precise unreliable description gains worth as examples verify it, from a small fraction of a reliable description’s worth alone to a fraction $`p`$ of it. Finally, small meta-trained Transformers (one per setting) reproduce these ESS values when trained on the matching distribution, except that the one trained on precise unreliable descriptions under-values them; and a Transformer trained only on reliable descriptions treats an unreliable one as a Bayes-optimal predictor with full trust would: a precise description becomes worth almost nothing. Our claims concern Bayes-optimal predictors and small meta-trained sequence models, not large language models.
+
+## 1 Introduction
+
+<img src="figs/overview.svg" />
+
+**Figure 1.** **A task description is worth a number of in-context examples, set by its precision and capped by its reliability.** (a) We read a prompt as Bayesian inference over a latent task $`w`$ under the pretraining prior: the description is a direct noisy observation of $`w`$ and the examples are indirect ones. The description’s effective sample size (ESS) is the number of examples $`k`$ that lowers a Bayes-optimal predictor’s one-step regret as much as the description does. (b) Three descriptions and their ESS. Precision $`1/r`$ sets how narrowly the prior concentrates around the stated $`m`$; reliability $`p`$ is the chance the description is correct, and otherwise $`w`$ follows the base prior (dashed; its share $`1-p`$ shaded pink). Prior shapes are sketches; ESS values are from Table [2](#tab:reliability) ($`d = 16`$, $`a_0 = 10`$).
+
+In-context learning (ICL) allows models to adapt to new tasks from a prompt (Brown et al. 2020). In practice, a prompt generally comprises a natural language task description paired with a few input-output demonstrations. However, formal theories of ICL largely abstract prompts as mere collections of demonstrations (Garg et al. 2022; Akyürek et al. 2023; Xie et al. 2022; Genewein et al. 2025). This leaves a significant gap in our understanding, as empirical evidence on the value of task descriptions remains mixed. Some studies show that a good description can be worth hundreds of data points (Le Scao and Rush 2021; Honda et al. 2025), whereas others find that misleading descriptions perform about as well as informative ones (Webson and Pavlick 2022) and that enough examples override an explicitly stated bias (Gupta et al. 2025). Even recent theoretical models that incorporate descriptors (Huang and Ge 2025; Lin et al. 2025; Tong et al. 2026) fail to express the utility of these descriptions on a commensurate scale with the examples themselves.
+
+We quantify the value of a task description as the number of in-context examples it can replace. Following the Bayesian interpretation of ICL (Xie et al. 2022), a sequence model can be seen as performing posterior predictive inference over a latent task. In this view the pretraining distribution is the prior over tasks, and everything in the prompt is data: the examples observe the task indirectly through inputs, and the description observes it directly, if imperfectly. Conditioning on the description first gives the prior under which the examples are processed, which is where the usual phrase “the description is the prior” comes from. Bayesian statistics measures the weight of such conditioning information by its *effective sample size* (ESS) (Morita et al. 2008), driven by two things: how concentrated the information is, and whether it agrees with the truth (Evans and Moshonov 2006). Translating this to task descriptions, we identify two key characteristics: **precision** (the extent to which the description reduces posterior uncertainty) and **reliability** (the probability that the description is actually correct).
+
+We compute the ESS as a function of precision and reliability within in-context linear regression (Garg et al. 2022), a setting where the Bayes-optimal predictor is exact. We focus on one-step prediction, mirroring standard prompt usage.
+
+#### Contributions.
+
+1.  We introduce a formal definition for the ESS of a task description by equating the one-step log-loss regret of a description to that of $`n`$ examples (§[3](#sec:setting)).
+
+2.  We establish that for a perfectly reliable description, the ESS scales linearly as $`\mathrm{ESS}\approx d(1-r)`$, where $`d`$ is the dimensionality and $`r`$ is the precision ratio (§[4](#sec:precision)).
+
+3.  We demonstrate that unreliable descriptions induce a hard floor on regret, governed by the description’s error probability $`1-p`$ and its entropy $`H(p)`$. Consequently, the ESS saturates; making an unreliable description infinitely precise yields diminishing returns. The cap lifts as examples verify the description: its worth with $`n`$ examples in hand rises with $`n`$, where a reliable description’s does not (§[5](#sec:reliability)).
+
+4.  We meta-train small Transformers on this process, one per setting, and show that they reproduce the Bayes-optimal ESS when trained on the matching distribution in three of four settings, under-valuing a precise unreliable description in the fourth, and that a model trained on reliable descriptions does not discount an unreliable one (§[6](#sec:networks)).
+
+## 2 Related Work
+
+#### Bayesian Perspectives on ICL.
+
+ICL can be framed as implicit Bayesian inference (Xie et al. 2022). In the context of linear regression, meta-trained Transformers effectively implement Bayes-optimal ridge regression (Akyürek et al. 2023; Raventós et al. 2023; Panwar et al. 2024). Genewein et al. (2025) evaluate such models using log-loss regret against the Bayes-optimal baseline, a metric we similarly adopt. Zhu et al. (2026) show that a Transformer given a prefix of related datasets performs amortised hierarchical Bayesian prediction, matching the oracle across prior families, which is the closest demonstration that a prior-carrying prefix is used Bayes-optimally; they do not price the prefix in examples or model an unreliable one. None of these works translate the influence of a description into an equivalent number of in-context examples.
+
+#### Task Descriptions in ICL Theory.
+
+Recent studies have begun exploring task descriptions theoretically. Huang and Ge (2025) include a descriptor token representing the input mean, but because it is independent of the regression weights, its ESS in our framework would be zero. Lin et al. (2025) guide models using hypothesis classes, and Tong et al. (2026) demonstrate how models can exponentially override incorrect instructions given enough examples. Lin and Lee (2024) analyze Gaussian-mixture priors similar to ours, but none of these works quantify the description’s value in terms of sample size.
+
+#### Effective Sample Size.
+
+In statistics, Morita et al. (2008) define ESS via curvature matching, while Reimherr et al. (2021) highlight the need for prediction-based ESS measures. Reznik (2026) define a borrowed ESS of historical data under predictive log-loss for a power prior; it has no mixture and does not depend on the current data. Our approach defines ESS through predictive regret and lets it depend on the examples in hand. Our model of reliability draws on robust mixture priors (Schmidli et al. 2014), used in clinical trials to incorporate potentially conflicting historical data; their worked example puts weight $`0.1`$ on the vague component, which is our $`p = 0.9`$.
+
+## 3 Problem Formulation
+
+#### Task Distribution.
+
+We consider tasks defined by a weight vector $`w \in \mathbb{R}^d`$. An in-context example consists of an input $`x \sim \mathcal{N}(0, I_d)`$ and a corresponding label $`y = w^\top x + \epsilon`$, where the noise is $`\epsilon \sim \mathcal{N}(0, \sigma_y^2)`$. The base prior over tasks is $`w \sim \mathcal{N}(0, s_0^2 I_d)`$. For simplicity, we set $`\sigma_y = 1`$ and define the prior signal-to-noise ratio (SNR) as $`a_0 = s_0^2 / \sigma_y^2`$.
+
+#### Task Description Model.
+
+We model a task description as a vector $`m \in \mathbb{R}^d`$ that provides information about $`w`$. The description’s *precision ratio* is $`r \in (0, 1)`$, meaning the variance around the description is $`s_\ell^2 = r s_0^2`$. The description is generated hierarchically via $`m \sim \mathcal{N}(0, (1-r)s_0^2 I_d)`$, ensuring the marginal distribution of $`w`$ matches the base prior. A description is not always correct. We define its *reliability* $`p`$ as the probability that the description is accurate. If correct, $`w \sim \mathcal{N}(m, s_\ell^2 I_d)`$; if incorrect (with probability $`1-p`$), $`w`$ simply follows the base prior $`\mathcal{N}(0, s_0^2 I_d)`$ independently of $`m`$. Consequently, the Bayes-optimal prior conditioned on the description is a robust mixture (Schmidli et al. 2014): $`p\,\mathcal{N}(m, s_\ell^2 I_d) + (1-p)\,\mathcal{N}(0, s_0^2 I_d)`$. Equivalently, $`m`$ is a noisy observation of the weights themselves, $`m \mid w \sim \mathcal{N}((1-r)\,w,\; r(1-r)\,s_0^2 I_d)`$ when correct, so the description is data about $`w`$ and the ESS is an exchange rate between direct observations of $`w`$ and indirect ones through $`x`$. A description with precision ratio $`r`$ locates each weight to within $`\sqrt{r}`$ of its typical size $`s_0`$: $`32\%`$ at $`r = 0.1`$, $`10\%`$ at $`r = 0.01`$, $`3\%`$ at $`r = 0.001`$. The formulation treats the description as a numerical observation rather than text to be parsed.
+
+#### Regret and Effective Sample Size.
+
+We evaluate predictors based on one-step predictive log-loss for a new query $`x`$. The regret is the expected difference in log-loss between the predictor and an oracle that knows $`w`$ exactly, the expectation taken over tasks, inputs, and labels (Genewein et al. 2025).
+
+<div id="def:ess" class="definition">
+
+**Definition 1** (Worth of a description). *Fix $`p`$ and $`r`$. Let $`R^{\mathrm{desc}}(n)`$ be the regret of the Bayes-optimal predictor given the description and $`n`$ examples, and $`R^{\mathrm{ex}}(n)`$ its regret given $`n`$ examples and no description. The worth of the description with $`n`$ examples in hand is $`\mathrm{ESS}_n = n^* - n`$, where $`n^*`$ (interpolated continuously) solves $`R^{\mathrm{ex}}(n^*) = R^{\mathrm{desc}}(n)`$: the further examples an examples-only predictor needs to match it. The *effective sample size* of the description is its worth alone, $`\mathrm{ESS}= \mathrm{ESS}_0`$, the $`n`$ at which $`R^{\mathrm{ex}}(n) = R^{\mathrm{desc}}(0)`$.*
+
+</div>
+
+The ESS compares prompts of two kinds, the description alone against examples alone, and asks what the description is worth on its own in the currency of examples on their own. $`\mathrm{ESS}_n`$ asks the same with $`n`$ examples already present; §[5](#sec:reliability) shows why that matters for unreliable descriptions. Since we compare Bayes-optimal predictors under different conditioning sets, the ESS measures information content rather than the specific architecture of a learner.
+
+## 4 The Value of Precision
+
+We first analyze a perfectly reliable description ($`p=1`$). Given $`n`$ examples $`X_n \in \mathbb{R}^{n \times d}`$, the posterior covariance under a Gaussian prior with SNR $`a`$ is $`\Sigma = \sigma_y^2(I/a + X_n^\top X_n)^{-1}`$. This is independent of the examples’ labels and the description $`m`$. The expected one-step regret simplifies to $`\frac{1}{2}\mathbb{E}\log(1 + x^\top \Sigma x)`$. A reliable description equates to $`n=0`$ and $`a = r a_0`$, whereas relying solely on examples uses $`a = a_0`$.
+
+<div id="prop:precision" class="proposition">
+
+**Proposition 1**. Let $`\psi`$ be the digamma function. As $`a_0 \to \infty`$, for $`n < d`$,
+``` math
+R^{\mathrm{ex}}(n) = \tfrac12\log a_0 + \tfrac12\log 2 + \tfrac12\psi\!\left(\tfrac{d-n}{2}\right) + o(1),
+\qquad
+R^{\mathrm{desc}} = \tfrac12\log (r a_0) + \tfrac12\log 2 + \tfrac12\psi\!\left(\tfrac{d}{2}\right) + o(1),
+```
+so the high-SNR ESS, with $`R^{\mathrm{ex}}(n)`$ extended to non-integer $`n`$ through the digamma function, solves $`\psi\big(\tfrac{d-n}{2}\big) - \psi\big(\tfrac d2\big) = \log r`$. As $`d \to \infty`$ with $`rd \to \infty`$, its solution is
+``` math
+\mathrm{ESS}= (d-1)(1-r) + O\!\left(\tfrac{1}{rd}\right).
+```
+
+</div>
+
+*Idea.* Regret is half the log of the leftover variance in the prediction. At high SNR each example removes all the variance along the one direction it looks at, so $`n < d`$ examples leave $`d - n`$ directions untouched; a description shrinks all $`d`$ directions by the factor $`r`$. Matching the two leftovers gives $`d - n \approx rd`$. The proof, with the error term, is in Appendix [A](#app:precision).
+
+The error term makes the range of validity precise: the approximation needs $`rd \gg 1`$, that is, the description must leave many more than one example’s worth of variance unexplained, which is the condition $`\mathrm{ESS}< d`$ in the first-order form $`\mathrm{ESS}\approx d(1-r)`$. At $`a_0 = 100`$ and $`r = 0.1`$ the exact ESS is within $`0.3`$ of $`(d-1)(1-r)`$ for $`d \in \{16, 64\}`$ ($`13.7`$ and $`56.9`$ against $`13.5`$ and $`56.7`$).
+
+<div id="tab:precision">
+
+| $`d`$ | $`r`$ | $`\mathrm{ESS}`$ | $`(d-1)(1-r)`$ |
+|------:|------:|-----------------:|---------------:|
+|     4 |   0.1 |             4.41 |            2.7 |
+|     4 |  0.01 |             14.5 |           2.97 |
+|     4 | 0.001 |              105 |              3 |
+|    16 |   0.1 |             14.9 |           13.5 |
+|    16 |  0.01 |             26.1 |           14.8 |
+|    16 | 0.001 |              117 |             15 |
+|    64 |   0.1 |             57.7 |           56.7 |
+|    64 |  0.01 |             73.3 |           62.4 |
+|    64 | 0.001 |              164 |           62.9 |
+
+**Table 1.** Exact ESS of a reliable description ($`p=1`$) for $`a_0=10`$, three seeds (standard deviation across seeds below 2% of each value), against $`(d-1)(1-r)`$ of Proposition [1](#prop:precision). The approximation holds while the description is worth fewer than $`d`$ examples, $`r \gtrsim 1/(a_0 d)`$; below that the exact ESS keeps growing because $`d`$ noisy examples cannot pin $`w`$ down.
+
+</div>
+
+Table [1](#tab:precision) illustrates this alignment. A description that removes nine tenths of the prior variance is worth about nine tenths of the dimension in examples at $`d = 16`$ and $`64`$. At $`d = 4`$ the error term $`1/(rd)`$ is already $`2.5`$ and the approximation is off by that much. Once the description is precise enough that its ESS surpasses $`d`$, the approximation breaks down for every $`d`$: the true ESS scales beyond $`d`$ because $`d`$ noisy examples cannot pinpoint $`w`$ perfectly. The $`n = 0`$ curve of Figure [2](#fig:ess)(a) traces the whole relationship at $`d = 16`$: the ESS follows $`(d-1)(1-r)`$ until it reaches about $`d`$ and then leaves it, growing without bound as $`r \to 0`$.
+
+## 5 The Bottleneck of Reliability
+
+In reality, descriptions can be flawed or ambiguous. When providing an unreliable description without examples, the Bayes-optimal predictive distribution becomes a mixture. Without observations that could identify the correct component, the predictor must average over both.
+
+<div id="prop:floor" class="proposition">
+
+**Proposition 2**. Let $`R^{\mathrm{desc}}(p, r)`$ be the regret of a description with reliability $`p`$ and precision ratio $`r`$, $`R^{\mathrm{desc}}_{p=1}(r)`$ the same for a reliable one, and $`R^{\mathrm{ex}}(0)`$ the regret with neither description nor examples. For every $`p \in (0,1)`$ and $`r \in (0, 1)`$,
+``` math
+p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0)
+\;\le\; R^{\mathrm{desc}}(p, r) \;\le\;
+p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0) + H(p),
+```
+where $`H(p)`$ is the binary entropy in nats. In particular $`R^{\mathrm{desc}}(p, r) \ge (1-p)\,R^{\mathrm{ex}}(0)`$ for every $`r`$, and as $`r \to 0`$ the regret lies between $`(1-p)\,R^{\mathrm{ex}}(0)`$ and $`(1-p)\,R^{\mathrm{ex}}(0) + H(p)`$.
+
+</div>
+
+*Idea.* Compare the learner with a twin who is also told whether the description is correct. The twin’s regret is $`p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0)`$. The learner cannot beat the twin, since extra information never hurts a Bayes-optimal predictor. And it loses at most $`\log(1/p)`$ nats when the description is correct and $`\log(1/(1-p))`$ when it is wrong, because its predictive puts those weights on the twin’s answer; the average is $`H(p)`$. The proof is in Appendix [B](#app:floor).
+
+The gap between the two bounds is the cost of not knowing whether the description is correct, and it is at most $`H(p)`$ however precise the description. For $`d=16`$ and $`a_0=10`$, $`R^{\mathrm{ex}}(0) = 2.51`$ nats and $`R^{\mathrm{desc}}_{p=1}(0.001) = 0.07`$; at $`p=0.9`$ the two bounds are $`0.32`$ and $`0.64`$, and the computed regret at $`r=0.001`$ is $`0.57`$.
+
+Because $`R^{\mathrm{ex}}(n)`$ decreases with $`n`$, the lower bound caps the ESS at the $`n`$ where $`R^{\mathrm{ex}}(n) = (1-p)\,R^{\mathrm{ex}}(0)`$, however precise the description. An unreliable description can replace only a bounded number of examples, and the identification cost, up to $`H(p)`$, lowers the cap further.
+
+<div id="tab:reliability">
+
+| $`r`$ | $`p = 1`$ | $`p = 0.99`$ | $`p = 0.9`$ |
+|------:|----------:|-------------:|------------:|
+|   0.1 |      14.9 |         14.6 |        13.1 |
+|  0.01 |      26.1 |         24.2 |        18.4 |
+| 0.001 |       116 |         64.2 |        23.1 |
+
+**Table 2.** ESS of unreliable descriptions ($`d=16`$, $`a_0=10`$), three seeds; standard deviation across seeds at most 2% of each value. Down a column precision rises tenfold per row; across a row the description is wrong never, one time in a hundred, and one time in ten.
+
+</div>
+
+Table [2](#tab:reliability) demonstrates this saturation. For a perfectly reliable description, refining $`r`$ from $`0.1`$ to $`0.001`$ raises the ESS from $`14.9`$ to $`116`$. However, if $`p=0.9`$, the ESS only grows from $`13.1`$ to $`23.1`$. Even a 1% unreliability ($`p=0.99`$) nearly halves the ESS of the most precise description, $`64`$ against $`116`$, while leaving the coarse one almost untouched. The same saturation patterns manifest at $`d \in \{4, 64\}`$ and $`a_0=100`$. The $`n = 0`$ curves of Figure [2](#fig:ess) show the saturation across precision: at $`p = 0.9`$ the ESS bends toward its cap of $`40`$ examples, the $`n`$ at which $`R^{\mathrm{ex}}(n) = (1-p)\,R^{\mathrm{ex}}(0)`$, while the reliable description’s keeps rising; at $`p = 0.99`$ the cap is $`327`$ and the bend begins only below $`r = 0.005`$.
+
+<img src="../../results/rq2-reliability/ess.svg" />
+
+**Figure 2.** **Reliability caps precision only while nothing can check the description.** Worth of a description against its precision with $`n`$ examples in hand ($`\mathrm{ESS}_n`$ of Definition [1](#def:ess)), one panel per reliability; $`d = 16`$, $`a_0 = 10`$, log scales, one seed of 8,000 prompts. Dotted: the cap of Proposition [2](#prop:floor) at $`p = 0.9`$ with no examples. Alone, the $`p = 0.9`$ description saturates at $`23`$ examples while the reliable one keeps rising; with $`100`$ examples in hand the three panels nearly coincide ($`109`$, $`107`$, $`88`$ at $`r = 0.001`$).
+
+#### Examples lift the bottleneck.
+
+With no examples there is nothing to check a description against, so hedging by $`1-p`$ is forced. Examples change this: they can reveal whether the description is correct, and once they have, the predictor can use its full precision. The floor of Proposition [2](#prop:floor) generalises to $`n`$ examples in hand, and it falls with $`n`$.
+
+<div id="prop:examples" class="proposition">
+
+**Proposition 3**. Let $`R^{\mathrm{desc}}_{p=1}(n)`$ be the regret with a reliable description and $`n`$ examples, and $`\pi_n`$ the Bayes-optimal predictor’s posterior probability that the description is correct after $`n`$ examples. For every $`n`$, $`p`$, and $`r`$,
+``` math
+p\,R^{\mathrm{desc}}_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n)
+\;\le\; R^{\mathrm{desc}}(n) \;\le\;
+p\,R^{\mathrm{desc}}_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n) + \mathbb{E}[-\log \pi_n(Z)],
+```
+where $`\pi_n(Z)`$ is the posterior weight on the true component. The identification term $`\mathbb{E}[-\log \pi_n(Z)]`$ equals $`H(p)`$ at $`n = 0`$ and is non-increasing in $`n`$.
+
+</div>
+
+*Idea.* The twin argument of Proposition [2](#prop:floor) goes through with the examples included: the twin who is told whether the description is correct has regret $`p\,R^{\mathrm{desc}}_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n)`$, the learner cannot beat it, and the learner’s predictive puts weight $`\pi_n`$ on the twin’s answer, so it loses at most $`-\log \pi_n(Z)`$. More examples can only sharpen the posterior on $`Z`$ in expectation. The proof is in Appendix [C](#app:examples).
+
+The floor $`(1-p)\,R^{\mathrm{ex}}(n)`$ decreases with $`n`$, so the cap on the description’s worth rises as examples accumulate. How far it rises has a simple form once $`n`$ is large enough that the examples have identified the description and $`R^{\mathrm{ex}}(n) \approx d/(2n)`$. Writing $`c = 1/(r a_0)`$, the reliable-description regret is then about $`d/(2(n + c))`$, so the floor is $`\tfrac{d}{2}\big[\tfrac{p}{n+c} + \tfrac{1-p}{n}\big]`$, and solving $`d/(2n^*)`$ equal to it gives
+``` math
+\mathrm{ESS}_n \;\approx\; \frac{n\,p\,c}{\,n + (1-p)\,c\,} \;\xrightarrow[n \to \infty]{}\; p\,c = \frac{p}{r a_0},
+```
+against $`\mathrm{ESS}_n \to c = 1/(r a_0)`$ for a reliable description. So a precise unreliable description, once examples have verified it, is worth $`p`$ times what a reliable one is worth; alone, Proposition [2](#prop:floor) caps it far lower. The formula applies only once $`n`$ exceeds $`d`$, and the exact learner shows two regimes before that limit (Figure [2](#fig:ess)(c); $`r = 0.001`$, $`p = 0.9`$, $`d = 16`$, $`c = 100`$). The first one or two examples identify the description: the identification term falls from $`H(p) = 0.33`$ nats to $`0.07`$ after one example and $`0.02`$ after two, and the worth rises from $`23`$ examples alone to $`30`$ after one. It then stays near $`30`$ until the examples outnumber the dimension, because the wrong-description branch still carries the full examples-only regret, and rises once $`n > d`$ as that branch’s regret shrinks: $`29`$ at $`n = 10`$, $`36`$ at $`16`$, $`88`$ at $`100`$, against the formula’s $`82`$ at $`n = 100`$ and a limit of $`90`$. The reliable description drifts from $`117`$ to $`108`$ over the same range, and at $`r = 0.01`$, where $`c = 10`$ is below $`d`$, the unreliable description gains one example after the first example and then loses worth like the reliable one. Figure [2](#fig:ess) shows this across precision: with $`100`$ examples in hand the most precise description is worth $`88`$ examples at $`p = 0.9`$ against $`109`$ when reliable, where alone it was worth $`23`$ against $`117`$. Reliability caps precision until examples can check the description, and then costs a factor $`p`$.
+
+## 6 Meta-Trained Transformers
+
+#### Design.
+
+To test whether a learned predictor reproduces these values, we meta-train Transformers on prompts generated by the process of §[3](#sec:setting) and compare them with the Bayes-optimal predictor on the same prompts, following Genewein et al. (2025). Prompts use the prefix embedding of Huang and Ge (2025): an optional descriptor token carrying $`m`$, up to $`20`$ example tokens each holding an input beside its answer, and a final query token, with two indicator coordinates marking the token type. There is no positional encoding, so the examples are exchangeable. The architecture and optimisation follow Garg et al. (2022): 12 layers, 8 heads, width 256, Adam at $`10^{-4}`$, fresh prompts at every step. The network outputs a mean and a log variance for the answer to the query and is trained on the Gaussian log loss, so its regret is on the scale of §[3](#sec:setting). We set $`d=5`$ and $`a_0=10`$, draw the number of examples uniformly from $`0`$ to $`20 = 4d`$, and omit the descriptor in half the prompts. The descriptor supplies only $`m`$: each network is trained at one precision $`r`$ and one reliability $`p`$, which it never sees and must learn from the training distribution. Every model trains for 40,000 steps at batch 1024, one model per setting. A pilot confirmed the budget: the mean gap between the network and the Bayes-optimal predictor falls from $`0.07`$ nats at 5,000 steps to $`0.02`$ at 20,000 and stays there to 40,000.
+
+#### Readouts.
+
+We evaluate each network on 20,000 fresh prompts for every $`n`$ from $`0`$ to $`20`$, with and without a descriptor. The ESS uses two of these conditions, exactly as in Definition [1](#def:ess): the network’s regret on prompts holding the descriptor alone is placed on its own regret curve for prompts holding $`n`$ examples alone, and the crossing is the ESS. The remaining conditions, a descriptor followed by $`n \ge 1`$ examples, show how the network combines the two and are plotted alongside. We also evaluate the two models trained at $`p=1`$ on prompts whose descriptors are correct only with probability $`0.9`$, which asks how a learner that has never seen a wrong description treats one.
+
+<div id="tab:networks">
+
+| $`r`$ | $`p_{\mathrm{train}}`$ | $`p_{\mathrm{test}}`$ | Network | Trained | Calibrated | Descriptor | None |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0.05 | 1 | 1 | 6.7 | 6.7 | — | 0.023 | 0.022 |
+| 0.5 | 1 | 1 | 2.2 | 2.3 | — | 0.019 | 0.019 |
+| 0.05 | 0.9 | 0.9 | 3.9 | 5.0 | — | 0.070 | 0.025 |
+| 0.5 | 0.9 | 0.9 | 1.8 | 1.9 | — | 0.019 | 0.016 |
+| 0.05 | 1 | 0.9 | 0.7 | $`\le 0`$ | 5.0 | 0.000 | 0.022 |
+| 0.5 | 1 | 0.9 | 1.6 | 1.7 | 1.9 | 0.024 | 0.019 |
+
+**Table 3.** Networks against the Bayes-optimal predictor ($`d=5`$, $`a_0=10`$, one trained model per row, 20,000 evaluation prompts). “Exact” is the Bayes-optimal predictor calibrated to the test reliability. The last two columns are the mean regret gap, network minus the Bayes-optimal predictor with the network’s training reliability, over $`n = 0, \dots, 20`$, with and without a descriptor.
+
+</div>
+
+<img src="../../results/rq3-meta-trained/regret.svg" />
+
+**Figure 3.** **Networks trained on the matching distribution track the Bayes-optimal predictor, except the precise unreliable descriptor.** Regret against the number of examples for the network (markers, standard errors over 20,000 prompts) and the Bayes-optimal predictor (lines); one trained model per panel. The lower curve in each panel is prompts with a descriptor followed by $`n`$ examples, the upper curve prompts with $`n`$ examples alone. The ESS is the $`n`$ at which the upper curve reaches the lower curve’s value at $`n = 0`$. (a) $`r=0.05`$, $`p=1`$; (b) $`r=0.5`$, $`p=1`$; (c) $`r=0.05`$, $`p=0.9`$; (d) $`r=0.5`$, $`p=0.9`$. In (c) the network’s regret with the descriptor alone exceeds the Bayes-optimal predictor’s by $`0.3`$ nats, and its ESS is $`3.9`$ against $`5.0`$.
+
+#### Results.
+
+Table [3](#tab:networks) and Figure [3](#fig:networks) give the readouts. For reliable descriptors the networks reproduce the Bayes-optimal values: ESS $`6.7`$ against $`6.7`$ for the precise descriptor and $`2.25`$ against $`2.26`$ for the coarse one, with regret about $`0.02`$ nats above the Bayes-optimal predictor’s on average over $`n`$. The coarse unreliable descriptor is also reproduced, $`1.83`$ against $`1.85`$. The precise unreliable descriptor is not: the network’s ESS is $`3.9`$ against $`5.0`$, its regret from the descriptor alone is $`0.3`$ nats above the Bayes-optimal predictor’s, and its implied trust is $`0.85`$ rather than $`0.9`$. The gap closes as examples arrive (Figure [3](#fig:networks)c). This is not under-training: continuing the same model to 80,000 steps on fresh prompts leaves its ESS unchanged. With one trained model per setting we report it as an observation rather than a finding.
+
+#### Transfer to unreliable descriptors.
+
+The models trained at $`p=1`$ behave like a Bayes-optimal predictor that trusts the descriptor fully. On prompts where one descriptor in ten is wrong, the model trained on precise reliable descriptors gets almost nothing from a descriptor: ESS $`0.7`$, where a calibrated predictor would get $`5.0`$, and the fully trusting Bayes-optimal predictor’s regret with the descriptor exceeds its regret without one, so its ESS is not positive (shown as $`\le 0`$ in Table [3](#tab:networks)). Its implied trust is $`0.99`$. The coarse model is forgiven its trust, $`1.6`$ against the calibrated $`1.9`$, because a coarse descriptor that is wrong does little harm. This is the mechanism of §[5](#sec:reliability) seen in a trained learner: the cost of unreliability falls on precise descriptors, and a learner that has never seen a wrong descriptor pays it in full.
+
+## 7 Discussion
+
+Our analysis offers a precise vocabulary for discussing the utility of task descriptions in prompts. For a Bayes-optimal predictor, a task description is worth a specific number of in-context examples. Assuming perfect reliability, this worth scales linearly with the proportion of prior variance the description eliminates. However, reliability acts as a strict bottleneck. Because a predictor must hedge against the possibility that the description is incorrect, the value of very precise descriptions saturates if they are not perfectly reliable. The hedge is only forced while nothing can check the description: examples lift it, and an unreliable precise description is worth more after a few examples than alone. Reliability, then, is not a fixed discount on a description but a cost that examples pay down.
+
+#### Limitations and Future Work.
+
+Our theoretical claims are restricted to Bayes-optimal predictors and small-scale meta-trained Transformers in a linear-Gaussian setting, chosen to permit exact calculation. Scaling these insights to large language models operating on complex text remains an open challenge. Additionally, our ESS scores one-step prediction; Definition [1](#def:ess) captures the examples already in the prompt, but not a sequential session in which the predictor’s own feedback accumulates. Over such horizons the long-horizon ESS of a reliable description tends to the information-matching value $`\tfrac{d}{2}\log(1/r)`$, which is below the one-step value ($`7.8`$ against $`14.9`$ at $`d = 16`$, $`a_0 = 10`$, $`r = 0.1`$), and the horizon dependence for unreliable descriptions is left for future work.
+
+## A Proof of Proposition [1](#prop:precision)
+
+*Idea.* Regret is half the log of the leftover variance in the prediction. At high SNR each example removes all the variance along the one direction it looks at and none elsewhere, so $`n < d`$ examples leave $`d - n`$ directions untouched. A description instead shrinks every one of the $`d`$ directions by the factor $`r`$. The ESS is the $`n`$ at which the two leftovers match.
+
+<div class="proof">
+
+*Proof.* *Step 1: regret is leftover variance.* The Bayes predictive for $`y`$ is the true conditional law of $`y`$ given the data, a Gaussian with variance $`1 + x^\top \Sigma x`$ where $`\Sigma`$ is the posterior covariance of $`w`$. The expected log loss of a true conditional law is its entropy, $`\tfrac12 \log(2\pi e (1 + x^\top \Sigma x))`$; the oracle’s predictive is $`\mathcal{N}(w^\top x, 1)`$ with entropy $`\tfrac12 \log(2\pi e)`$. So the regret is $`\tfrac12 \mathbb{E}\log(1 + x^\top \Sigma x)`$: half the log of the leftover variance.
+
+*Step 2: examples.* Write $`X_n^\top X_n = \sum_{i \le n} \lambda_i u_i u_i^\top`$ with $`\lambda_i > 0`$ almost surely, and let $`P_\perp`$ project onto the $`d - n`$ directions the examples did not look at. Then $`\Sigma = (I/a_0 + X_n^\top X_n)^{-1}`$ has eigenvalue $`a_0`$ on those directions and $`1/(1/a_0 + \lambda_i)`$ on the others, so
+``` math
+1 + x^\top \Sigma x = a_0\,\|P_\perp x\|^2 + T, \qquad T = 1 + \sum_{i \le n} \frac{(u_i^\top x)^2}{1/a_0 + \lambda_i}.
+```
+Because $`x`$ is a fresh isotropic Gaussian, $`\|P_\perp x\|^2 \sim \chi^2_{d-n}`$, independent of $`X_n`$. Hence
+``` math
+R^{\mathrm{ex}}(n) = \tfrac12 \log a_0 + \tfrac12 \mathbb{E}\log \chi^2_{d-n} + \tfrac12 \mathbb{E}\log\!\left(1 + \frac{T / a_0}{\|P_\perp x\|^2}\right).
+```
+The last term is nonnegative, and $`T / a_0 = 1/a_0 + \sum_{i \le n} (u_i^\top x)^2 / (1 + a_0 \lambda_i)`$ decreases to $`0`$ as $`a_0 \to \infty`$, so by monotone convergence the term is $`o(1)`$. (It is finite at any finite $`a_0`$ because $`R^{\mathrm{ex}}(n)`$ is.)
+
+*Step 3: description.* Here $`n = 0`$ and $`\Sigma = r a_0 I`$, so $`1 + x^\top \Sigma x = 1 + r a_0 \|x\|^2`$ with $`\|x\|^2 \sim \chi^2_d`$, and the same argument gives $`R^{\mathrm{desc}} = \tfrac12 \log(r a_0) + \tfrac12 \mathbb{E}\log \chi^2_d + o(1)`$.
+
+*Step 4: match them.* The $`\log a_0`$ terms cancel, and $`\mathbb{E}\log \chi^2_k = \psi(k/2) + \log 2`$. Taking $`\psi((d-n)/2)`$ as the extension of $`R^{\mathrm{ex}}(n)`$ to non-integer $`n`$, the high-SNR ESS solves
+``` math
+\psi\!\left(\tfrac{d-n}{2}\right) - \psi\!\left(\tfrac d2\right) = \log r,
+```
+which has one root in $`(0, d)`$ because $`\psi`$ is increasing and $`\log r < 0`$. Read it as: $`d - n`$ untouched directions must be as big, on a log scale, as $`d`$ directions each shrunk by $`r`$. Replacing $`\mathbb{E}\log \chi^2_k`$ by $`\log k`$ gives the first-order answer $`d - n = rd`$, that is $`\mathrm{ESS}\approx d(1-r)`$.
+
+*Step 5: the error term.* Let $`k = d - n`$. As $`rd \to \infty`$, $`\psi(k/2) = \psi(d/2) + \log r \to \infty`$ forces $`k \to \infty`$. The log of a $`\chi^2_k`$ variable averages a little below the log of its mean: $`\psi(z) = \log z - \tfrac{1}{2z} + O(z^{-2})`$ as $`z \to \infty`$. Hence
+``` math
+\log\frac{k}{d} - \frac1k + \frac1d + O(k^{-2}) = \log r
+\quad\Longrightarrow\quad
+k = rd\left(1 + \frac1k - \frac1d + O(k^{-2})\right).
+```
+So $`k = rd\,(1 + o(1))`$ and $`rd / k = 1 + O(1/k)`$. Multiplying out, $`k = rd + 1 - r + O(1/(rd))`$, and $`\mathrm{ESS}= d - k = (d-1)(1-r) + O(1/(rd))`$. The correction $`-(1-r)`$ comes from the $`-1/k + 1/d`$ term: the $`d - n`$ untouched directions are fewer, so their chi-square sits further below its mean on the log scale. ◻
+
+</div>
+
+## B Proof of Proposition [2](#prop:floor)
+
+*Idea.* Compare the learner with a twin who is also told whether the description is correct. The twin’s regret is easy to write down. The learner cannot beat the twin, because extra information never hurts a Bayes-optimal predictor. And the learner cannot be much worse: its predictive puts weight $`p`$ on the twin’s answer when the description is correct and $`1 - p`$ when it is wrong, so it loses at most $`\log(1/p)`$ or $`\log(1/(1-p))`$ nats against the twin, which averages to $`H(p)`$.
+
+<div class="proof">
+
+*Proof.* Let $`Z = 1`$ if the description is correct and $`Z = 0`$ otherwise.
+
+*Step 1: the predictive is a $`p`$-mixture.* Seeing $`m`$ says nothing about $`Z`$, because $`m`$ has the same law $`\mathcal{N}(0, (1-r) a_0 I)`$ either way, and $`x`$ is independent of $`Z`$. With no examples there is nothing else to update on, so the posterior weight on $`Z = 1`$ stays $`p`$ and the Bayes predictive is
+``` math
+q(y) = p\,f_1(y) + (1-p)\,f_0(y), \qquad f_1 = \mathcal{N}(m^\top x,\, 1 + r a_0\|x\|^2), \quad f_0 = \mathcal{N}(0,\, 1 + a_0\|x\|^2),
+```
+where $`f_1`$ is the predictive given a correct description and $`f_0`$ the predictive under the base prior.
+
+*Step 2: the twin.* Given $`Z`$, the true conditional density of $`y`$ is $`f_Z`$. So the twin predicts with $`f_1`$ when $`Z = 1`$, with regret $`R^{\mathrm{desc}}_{p=1}(r)`$, and with $`f_0`$ when $`Z = 0`$, with regret $`R^{\mathrm{ex}}(0)`$. Its regret is $`p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0)`$.
+
+*Step 3: the learner cannot beat the twin (lower bound).* Given $`(x, m, Z)`$, the expected log loss of any density $`q`$ exceeds that of the true density $`f_Z`$ by $`\mathrm{KL}(f_Z \,\|\, q) \ge 0`$. Averaging over $`Z`$ gives $`R^{\mathrm{desc}}(p, r) \ge p\,R^{\mathrm{desc}}_{p=1}(r) + (1-p)\,R^{\mathrm{ex}}(0)`$.
+
+*Step 4: the learner is at most $`H(p)`$ worse (upper bound).* Pointwise, $`q \ge p f_1`$ and $`q \ge (1-p) f_0`$. So when $`Z = 1`$, $`-\log q \le -\log f_1 + \log(1/p)`$, and when $`Z = 0`$, $`-\log q \le -\log f_0 + \log(1/(1-p))`$. Averaging, the learner’s regret exceeds the twin’s by at most $`p \log(1/p) + (1-p)\log(1/(1-p)) = H(p)`$.
+
+*Step 5: the limits.* $`R^{\mathrm{desc}}_{p=1}(r) = \tfrac12 \mathbb{E}\log(1 + r a_0 \|x\|^2)`$ is nonnegative, which gives the floor $`(1-p)\,R^{\mathrm{ex}}(0)`$ for every $`r`$, and it decreases to $`0`$ as $`r \to 0`$ by monotone convergence, which gives the two limits. ◻
+
+</div>
+
+## C Proof of Proposition [3](#prop:examples)
+
+<div class="proof">
+
+*Proof.* Let $`D_n = (x_{1:n}, y_{1:n}, m, x)`$ be everything the predictor sees before predicting $`y`$, and $`Z`$ the indicator that the description is correct. The Bayes-optimal predictive is $`q(y) = \pi_n f_1(y) + (1 - \pi_n) f_0(y)`$, where $`\pi_n = P(Z = 1 \mid D_n)`$ and $`f_1`$, $`f_0`$ are the predictives of the two components given $`D_n`$: $`f_1`$ is the reliable-description predictor’s, and $`f_0`$ is the examples-only predictor’s, because under $`Z = 0`$ the description is independent of $`w`$ and carries no information about $`y`$.
+
+*Lower bound.* Given $`(D_n, Z)`$ the true conditional density of $`y`$ is $`f_Z`$, and $`\mathbb{E}[-\log q \mid D_n, Z] - \mathbb{E}[-\log f_Z \mid D_n, Z] = \mathrm{KL}(f_Z \,\|\, q) \ge 0`$. Averaging over $`Z`$, and noting that the regret of $`f_1`$ on $`Z = 1`$ is $`R^{\mathrm{desc}}_{p=1}(n)`$ and the regret of $`f_0`$ on $`Z = 0`$ is $`R^{\mathrm{ex}}(n)`$, gives the lower bound.
+
+*Upper bound.* Pointwise $`q \ge \pi_n f_1`$ and $`q \ge (1 - \pi_n) f_0`$, so $`-\log q \le -\log f_Z - \log \pi_n(Z)`$ with $`\pi_n(1) = \pi_n`$ and $`\pi_n(0) = 1 - \pi_n`$. Taking expectations gives the upper bound with the identification term $`\mathbb{E}[-\log \pi_n(Z)]`$.
+
+*The identification term.* $`\mathbb{E}[-\log \pi_n(Z)] = H(Z \mid D_n)`$, the conditional entropy of $`Z`$ given the data. The query $`x`$ is independent of $`Z`$ and of everything else in $`D_n`$, so $`H(Z \mid D_n) = H(Z \mid x_{1:n}, y_{1:n}, m)`$, and these conditioning sets are nested in $`n`$. Conditioning on more does not increase conditional entropy, so the term is non-increasing. At $`n = 0`$ nothing updates $`Z`$ (Appendix [B](#app:floor)), so $`\pi_0 = p`$ and the term is $`H(p)`$. ◻
+
+</div>
+
+## References
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-akyurek2023" class="csl-entry">
+
+Akyürek, Ekin, Dale Schuurmans, Jacob Andreas, Tengyu Ma, and Denny Zhou. 2023. “What Learning Algorithm Is in-Context Learning? Investigations with Linear Models.” *ICLR*.
+
+</div>
+
+<div id="ref-brown2020" class="csl-entry">
+
+Brown, Tom B. et al. 2020. “Language Models Are Few-Shot Learners.” *NeurIPS*.
+
+</div>
+
+<div id="ref-evans2006" class="csl-entry">
+
+Evans, Michael, and Hadas Moshonov. 2006. “Checking for Prior-Data Conflict.” *Bayesian Analysis* 1 (4): 893–914.
+
+</div>
+
+<div id="ref-garg2022" class="csl-entry">
+
+Garg, Shivam, Dimitris Tsipras, Percy Liang, and Gregory Valiant. 2022. “What Can Transformers Learn in-Context? A Case Study of Simple Function Classes.” *NeurIPS*.
+
+</div>
+
+<div id="ref-genewein2025" class="csl-entry">
+
+Genewein, Tim, Li Kevin Wenliang, Jordi Grau-Moya, Anian Ruoss, Laurent Orseau, and Marcus Hutter. 2025. “Understanding Prompt Tuning and in-Context Learning via Meta-Learning.” *NeurIPS*.
+
+</div>
+
+<div id="ref-gupta2025" class="csl-entry">
+
+Gupta, Ritwik, Rodolfo Corona, Jiaxin Ge, et al. 2025. “Enough Coin Flips Can Make LLMs Act Bayesian.” *ACL*.
+
+</div>
+
+<div id="ref-honda2025" class="csl-entry">
+
+Honda, Ukyo, Soichiro Murakami, and Peinan Zhang. 2025. “Distilling Many-Shot in-Context Learning into a Cheat Sheet.” *Findings of EMNLP*.
+
+</div>
+
+<div id="ref-huangge2025" class="csl-entry">
+
+Huang, Ruomin, and Rong Ge. 2025. “Task Descriptors Help Transformers Learn Linear Models in-Context.” *ICLR*.
+
+</div>
+
+<div id="ref-lescao2021" class="csl-entry">
+
+Le Scao, Teven, and Alexander M. Rush. 2021. “How Many Data Points Is a Prompt Worth?” *NAACL*.
+
+</div>
+
+<div id="ref-lin2025" class="csl-entry">
+
+Lin, Ziqian, Shubham Kumar Bharti, and Kangwook Lee. 2025. “In-Context Learning with Hypothesis-Class Guidance.” *arXiv:2502.19787*.
+
+</div>
+
+<div id="ref-lin2024" class="csl-entry">
+
+Lin, Ziqian, and Kangwook Lee. 2024. “Dual Operating Modes of in-Context Learning.” *ICML*.
+
+</div>
+
+<div id="ref-morita2008" class="csl-entry">
+
+Morita, Satoshi, Peter F. Thall, and Peter Müller. 2008. “Determining the Effective Sample Size of a Parametric Prior.” *Biometrics* 64 (2): 595–602.
+
+</div>
+
+<div id="ref-panwar2024" class="csl-entry">
+
+Panwar, Madhur, Kabir Ahuja, and Navin Goyal. 2024. “In-Context Learning Through the Bayesian Prism.” *ICLR*.
+
+</div>
+
+<div id="ref-raventos2023" class="csl-entry">
+
+Raventós, Allan, Mansheej Paul, Feng Chen, and Surya Ganguli. 2023. “Pretraining Task Diversity and the Emergence of Non-Bayesian in-Context Learning for Regression.” *NeurIPS*.
+
+</div>
+
+<div id="ref-reimherr2021" class="csl-entry">
+
+Reimherr, Matthew, Xiao-Li Meng, and Dan L. Nicolae. 2021. “Prior Sample Size Extensions for Assessing Prior Impact and Prior-Likelihood Discordance.” *Journal of the Royal Statistical Society: Series B* 83 (3): 413–37.
+
+</div>
+
+<div id="ref-reznik2026" class="csl-entry">
+
+Reznik, Yuriy A. 2026. “The Optimal Discounting Parameter of the Power Prior Under Predictive Log-Loss.” *arXiv:2608.12159*.
+
+</div>
+
+<div id="ref-schmidli2014" class="csl-entry">
+
+Schmidli, Heinz, Sandro Gsteiger, Satrajit Roychoudhury, Anthony O’Hagan, David Spiegelhalter, and Beat Neuenschwander. 2014. “Robust Meta-Analytic-Predictive Priors in Clinical Trials with Historical Control Information.” *Biometrics* 70 (4): 1023–32.
+
+</div>
+
+<div id="ref-tong2026" class="csl-entry">
+
+Tong, X., Y. Zeng, and J. Zhang. 2026. “Demonstrations, CoT, and Prompting: A Theoretical Analysis of ICL.” *arXiv:2603.19611*.
+
+</div>
+
+<div id="ref-webson2022" class="csl-entry">
+
+Webson, Albert, and Ellie Pavlick. 2022. “Do Prompt-Based Models Really Understand the Meaning of Their Prompts?” *NAACL*.
+
+</div>
+
+<div id="ref-xie2022" class="csl-entry">
+
+Xie, Sang Michael, Aditi Raghunathan, Percy Liang, and Tengyu Ma. 2022. “An Explanation of in-Context Learning as Implicit Bayesian Inference.” *ICLR*.
+
+</div>
+
+<div id="ref-zhu2026" class="csl-entry">
+
+Zhu, Qingyang, Eric Karl Oermann, and Kyunghyun Cho. 2026. “Multi-Task Bayesian in-Context Learning.” *ICML*.
+
+</div>
+
+</div>
