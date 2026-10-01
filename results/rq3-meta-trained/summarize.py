@@ -15,7 +15,8 @@ targets = {(x["r"], x["p"]): x["ess"] for x in csv.DictReader((here / "targets.c
 def _key(f):  # training reliability descending, precision descending, seed, then test reliability descending
     stem = f.name[:-8]; head, _, ptest = stem.partition("_ptest")
     p, r, _, s = head.split("_"); return (-float(p[1:]), -float(r[1:]), int(s[1:]), -(float(ptest) if ptest else float(p[1:])))
-ORDER = [f.name[:-8] for f in sorted(here.glob("p*_d5_s*_ess.csv"), key=_key) if not f.name.startswith("p0.9_r0.05") and not f.name.startswith("p0.9_r0.5") and not f.name.startswith("p1.0_r0.05") and not f.name.startswith("p1.0_r0.5") and "_cont" not in f.name]
+FILES = [f for f in here.glob("p*_d5_s*_ess.csv") if f.name.split("_")[1] in ("r0.1", "r0.01") and "_cont" not in f.name]
+ORDER = [f.name[:-8] for f in sorted(FILES, key=_key)]
 single = {x["r"]: x["ess_n"] for x in csv.DictReader((here / "single_gaussian.csv").open()) if x["who"] == "single" and x["n"] == "0"}
 rows = []
 for stem in ORDER:
@@ -37,7 +38,7 @@ with (here / "networks_table.tex").open("w") as f:
     f.write("\\begin{tabular}{rrrrrrrrr}\n\\toprule\n"
             "& & & \\multicolumn{4}{c}{ESS} & \\multicolumn{2}{c}{Regret gap (nats)} \\\\\n"
             "\\cmidrule(lr){4-7}\\cmidrule(lr){8-9}\n"
-            "$r$ & $p_{\\mathrm{train}}$ & $p_{\\mathrm{test}}$ & Network & Trained & Calibrated & Single Gaussian & Description & None \\\\\n"
+            "$r$ & $p_{\\mathrm{train}}$ & $p_{\\mathrm{test}}$ & Network & Trained & Calibrated & Single Gaussian & Descriptor & None \\\\\n"
             "\\midrule\n")
     for x in rows:
         cal = f"{x['calibrated_ess']:.2f}" if x["p_train"] != x["p_test"] else "---"

@@ -48,12 +48,12 @@ ax.axvline(1 - P, color=fs.MUTED, lw=0.8, zorder=0)
 ax.text(1 - P, 0.09, "$q = p$", color=fs.BASELINE, fontsize=6, ha="center", va="bottom")
 ax.set_xscale("log"); ax.invert_xaxis()
 ax.set_xticks([0.5, 0.1, 0.01, 0.001, 1e-4]); ax.set_xticklabels(["0.5", "0.9", "0.99", "0.999", "1"]); ax.minorticks_off()
-ax.set_xlabel("trust $q$ in the description")
+ax.set_xlabel("reliance $q$ on the descriptor")
 ax.set_yscale("log"); ax.set_yticks([0.1, 0.3, 1, 3, 10]); ax.set_yticklabels(["0.1", "0.3", "1", "3", "10"]); ax.set_ylim(0.08, 30)
 ax.set_ylabel("regret (nats)")
 ax.grid(True, axis="y", color=fs.MUTED, lw=0.5)
 from matplotlib.lines import Line2D
 handles = [Line2D([], [], color=COLOR[r], lw=1.4, label=f"$r = {r:g}$") for r in RS]
-handles += [Line2D([], [], color=fs.BASELINE, lw=1.4, ls="-", label="alone"), Line2D([], [], color=fs.BASELINE, lw=1.4, ls="--", label="10 examples in hand")]
+handles += [Line2D([], [], color=fs.BASELINE, lw=1.4, ls="-", label="alone"), Line2D([], [], color=fs.BASELINE, lw=1.4, ls="--", label="10 demonstrations in hand")]
 ax.legend(handles=handles, loc="upper left", frameon=False, ncol=2, fontsize=6)
 fs.save(fig, str(here / "trust"))
