@@ -100,10 +100,16 @@ trust (B), and the LLM benchmark (E) are out of the paper and kept in
 `docs/wiki/`. The closed form (C) is done for $p = 1$ in the proportional
 limit and not used by the paper.
 
+9. **Networks reproduce the exact learner on the matching distribution,
+   except the precise unreliable description** (computed, one seed each,
+   `results/rq3-meta-trained/summary.csv`). ESS 6.7/6.7, 2.2/2.3, 1.8/1.9;
+   3.9/5.0 for $r = 0.05$, $p = 0.9$ (continuation pending).
+10. **A network trained on reliable descriptions does not discount an
+    unreliable one** (computed). On $p = 0.9$ prompts the precise model's
+    description is worth 0.7 examples against a calibrated 5.0; the coarse
+    one 1.6 against 1.9.
+
 ## Next moves
 
-1. Bruce decides the network output and loss (squared error as coded, or log
-   loss with a predicted spread, matching the paper's ESS definition).
-2. Train in the paper's readout order (see `STATUS.md`, next actions) and
-   fill section 6.
-3. Standing adversarial review of the draft once section 6 has numbers.
+1. Fold the continuation result into section 6.
+2. Standing adversarial review of the full draft.

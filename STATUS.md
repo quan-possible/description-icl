@@ -1,6 +1,6 @@
 # STATUS
 
-Last updated: 2026-09-30
+Last updated: 2026-09-30 (evening)
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Clear Sans, Noto Sans, Helvetica Neue, Arial, Noto Sans CJK JP, sans-serif","fontSize":"16px","primaryTextColor":"#171717","lineColor":"#a8a8a8","mainBkg":"#ffffff","clusterBkg":"#ffffff","clusterBorder":"#ffffff","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"curve":"linear"}}}%%
@@ -11,7 +11,7 @@ flowchart TD
     classDef edgeGreen stroke:#8a9f7a,color:#8a9f7a,stroke-width:2px
     classDef edgeBlue stroke:#7f9fc4,color:#7f9fc4,stroke-width:2px
 
-    done["Precision and reliability<br/>derived, computed, in the paper"] e1@--> gap["Network loss undecided<br/>no model trained"] e2@--> next["Decide the loss<br/>then train and fill section 6"]
+    done["Sections 3 to 6 drafted<br/>four networks trained"] e1@--> gap["Precise unreliable model<br/>off by 1.1 examples; continuation running"] e2@--> next["Finish section 6<br/>then full-draft review"]
 
     class done green
     class gap pink
@@ -42,14 +42,18 @@ learner and then for meta-trained networks.
   `results/rq2-reliability/ess_map.csv`; the RQ1 folder's horizon columns
   are unused by the paper. Figure 1 is a TikZ diagram,
   `docs/paper/figs/overview.tex`.
-- Section 6 (networks) is pending. The pipeline in
-  [results/rq3-meta-trained/](results/rq3-meta-trained/README.md) runs end
-  to end; no model is trained. The design is in
-  [docs/wiki/experiments.md](docs/wiki/experiments.md), section 6.
-- **Open decision (Bruce):** the network's output and loss. The code uses a
-  one-number output with squared error (Garg et al.); the paper's ESS is
-  defined under log loss, which would need a predicted spread (Genewein et
-  al.). The paper marks this as to be finalized.
+- Section 6 (networks) is drafted from four trained models (one per
+  setting, 40k steps, log loss, Colab L4, 2026-09-30). Three reproduce the
+  exact learner's ESS within 0.1 examples; the precise unreliable model
+  gives 3.9 against 5.0 with implied trust 0.85. A 40k-step continuation
+  of that model is running to separate under-training from under-trust.
+  Models trained on reliable descriptions do not discount unreliable ones:
+  ESS 0.7 against a calibrated 5.0 for the precise description. The table
+  and figure regenerate from `results/rq3-meta-trained/summarize.py` and
+  `figure.py`.
+- Decisions today: log loss with a Gaussian output (19), one seed per
+  setting (20), a fixed 40k-step budget confirmed by the pilot; see
+  [docs/wiki/experiments.md](docs/wiki/experiments.md).
 - Exact learners: `src/descriptor_icl/gaussian.py` (reliable) and
   `mixture.py` (unreliable). `uv run pytest` passes.
 - The venue evidence and design decisions are in
@@ -104,22 +108,19 @@ learner and then for meta-trained networks.
 
 ## Next actions
 
-1. Bruce decides the network output and loss; record it in
-   `docs/wiki/experiments.md` and remove the paper's todo in section 6.
-2. Train in the paper's readout order: the precise reliable model
-   ($r = 0.05$, $p = 1$, three seeds); evaluate it at test reliability
-   $p = 0.9$; the coarse reliable model ($r = 0.5$, $p = 1$); then separate
-   models at $p = 0.9$. Step count from the stage-1 pilot, which flattened
-   by about 15k steps.
-3. Fill section 6: the network-versus-Bayes ESS table and the regret figure,
-   regenerated from `results/rq3-meta-trained/`.
+1. Fold the continuation result for the precise unreliable model into
+   section 6 (table row, results paragraph, figure caption) and remove the
+   last todo.
+2. Decide how the transfer finding enters the abstract and discussion; it is
+   the network result that speaks to the LLM observation.
+3. Full-draft adversarial review, then the affiliation and the related-work
+   check (Schmidli et al.'s robust-weight convention before citing it for
+   $p = 0.9$).
 
 ## Risks and blockers
 
-- RQ3 may only confirm that networks match the Bayes-optimal learner, which
-  is already known for examples alone; the new content is the description.
-- If the networks train under squared error, the paper carries two ESS
-  scales (log loss for the theory, squared error for the networks).
+- The precise unreliable model's gap may be under-training rather than
+  under-trust; the continuation decides. Either way it is one seed.
 - The novelty check rests on web searches and partly on paper summaries. The
   minimum-description-length literature was not searched in depth.
 - NeurIPS 2027 dates are not announced. ICML 2027 (late January 2027,
