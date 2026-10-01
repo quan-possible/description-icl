@@ -11,7 +11,7 @@ flowchart TD
     classDef edgeGreen stroke:#8a9f7a,color:#8a9f7a,stroke-width:2px
     classDef edgeBlue stroke:#7f9fc4,color:#7f9fc4,stroke-width:2px
 
-    done["Full draft: three propositions,<br/>four networks, two figures"] e1@--> gap["No referee pass on the<br/>whole draft yet"] e2@--> next["Full-draft review,<br/>then related-work check"]
+    done["Full draft reviewed:<br/>three propositions, four networks"] e1@--> gap["Two scope calls open<br/>(worth table, seeds)"] e2@--> next["Bruce decides,<br/>then final pass"]
 
     class done green
     class gap pink
@@ -117,18 +117,22 @@ learner and then for meta-trained networks.
 
 ## Next actions
 
-1. Full-draft adversarial review (claims, numbers, related work against
-   Zhu, Oermann & Cho 2026 and Reznik 2026).
-2. Confirm Schmidli et al.'s robust-weight convention before citing it for
-   $p = 0.9$; affiliation.
-3. Optional: two more seeds of the $r = 0.05$, $p = 0.9$ network if the
-   under-trust observation is to become a finding.
+1. Bruce decides two scope items raised by the full-draft review
+   (2026-09-30): a table of ESS alone, with $d$ examples in hand, and in
+   the long-horizon limit, making "worth alone versus worth once examples
+   are in hand" the stated message; and two to four more seeds of the
+   $r = 0.05$, $p = 0.9$ network so the under-trust observation can become
+   a finding (or be dropped).
+2. Affiliation; final read of the compiled PDF.
 
 ## Risks and blockers
 
 - The under-trust of the precise unreliable network rests on one seed.
-- The novelty check rests on web searches and partly on paper summaries. The
-  minimum-description-length literature was not searched in depth.
+- The novelty check (2026-09-30, second pass): no 2025 to 2026 paper prices a
+  description in examples; Zhu, Oermann & Cho 2026 and Reznik 2026 are cited
+  with their scope. Schmidli et al. 2014 could not be read in full; the
+  $p = 0.9$ grounding rests on their example as shown in Schmidli's 2015
+  slides and on RBesT's default of 0.2.
 - NeurIPS 2027 dates are not announced. ICML 2027 (late January 2027,
   unconfirmed) is a possible earlier target.
 
