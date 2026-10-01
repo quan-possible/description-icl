@@ -25,6 +25,8 @@ ap.add_argument("--batch", type=int, default=1024)
 ap.add_argument("--lr", type=float, default=1e-4)
 ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--amp", action="store_true", help="bf16 autocast on CUDA")
+ap.add_argument("--init", help="continue from this checkpoint's weights (Adam restarts)")
+ap.add_argument("--name", help="checkpoint name; default p<p>_r<r>_d<d>_s<seed>")
 ap.add_argument("--snapshots", action="store_true", help="also keep a copy of every checkpoint, tagged by step")
 args = ap.parse_args()
 
@@ -32,11 +34,13 @@ torch.manual_seed(args.seed)
 torch.backends.cuda.matmul.allow_tf32 = True  # TF32 matmuls on Ampere and later
 dev = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 model = meta.Transformer(args.d).to(dev)
+if args.init:
+    model.load_state_dict(torch.load(args.init, map_location=dev)["model"])
 opt = torch.optim.Adam(model.parameters(), lr=args.lr)
 rs = torch.tensor([args.r], device=dev)
 out = pathlib.Path("tmp/rq3")
 out.mkdir(parents=True, exist_ok=True)
-name = f"p{args.p}_r{args.r}_d{args.d}_s{args.seed}"
+name = args.name or f"p{args.p}_r{args.r}_d{args.d}_s{args.seed}"
 
 t0, run = time.time(), 0.0
 for step in range(1, args.steps + 1):
