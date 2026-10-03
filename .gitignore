@@ -25,6 +25,10 @@ __pycache__/
 *.ckpt
 *.npz
 wandb/
+# ...except the language-model scores the paper's Section 7 is computed from (about 3 MB each)
+!results/llm-test/full_*.npz
+!results/llm-test/reason_*.npz
+*.pkl
 
 # LaTeX build files
 *.aux
@@ -36,3 +40,5 @@ wandb/
 *.fdb_latexmk
 *.fls
 *.synctex.gz
+# figure-script byproducts
+docs/paper/figs/*.svg

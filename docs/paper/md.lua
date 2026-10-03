@@ -62,8 +62,9 @@ function Pandoc(doc)
   }
 
   local m, front = doc.meta, pandoc.Blocks {}
-  front:insert(pandoc.Header(1, m.title))
-  front:insert(pandoc.Para(m.author[1]))
+  -- the ICML title block is not pandoc metadata; fall back to the paper's title and author
+  front:insert(pandoc.Header(1, m.title or "A Description Is Likely Not Worth a Thousand Demonstrations: Measuring the Effective Sample Size of Task Descriptions in In-Context Learning"))
+  front:insert(pandoc.Para(m.author and m.author[1] or pandoc.Str("Bruce Quan Nguyen")))
   if m.date then front:insert(pandoc.Para(pandoc.Emph(m.date))) end
   front:insert(pandoc.Header(2, "Abstract"))
   front:extend(m.abstract)

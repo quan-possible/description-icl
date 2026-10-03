@@ -1,0 +1,17 @@
+\begin{tabular}{lrrrrrrrrrrrrrr}
+\toprule
+& \multicolumn{3}{c}{Strength, valid} & \multicolumn{3}{c}{Strength, invalid} & \multicolumn{3}{c}{Content ESS} & \multicolumn{3}{c}{ESS vs.\ no line} & \multicolumn{2}{c}{Regret, no line} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}\cmidrule(lr){11-13}\cmidrule(lr){14-15}
+Model & $\pm$ & sent. & int. & $\pm$ & sent. & int. & $\pm$ & sent. & int. & $\pm$ & sent. & int. & $n = 5$ & $n = 50$ \\
+\midrule
+Bayes-optimal, line taken as valid & \multicolumn{3}{c}{9} & \multicolumn{3}{c}{---} & \multicolumn{3}{c}{---} & \multicolumn{3}{c}{8.9} & 0.086 & 0.010 \\
+Bayes-optimal, hedging & \multicolumn{3}{c}{4.4 to 7.5} & \multicolumn{3}{c}{0.02 to 0.03} & \multicolumn{3}{c}{7.2 to 11.0} & \multicolumn{3}{c}{6.2 to 8.2} & & \\
+\midrule
+7B & $1.4$ & $1.0$ & $1.0$ & $0.4$ & $0.2$ & $0.2$ & $1.3$ & $-0.1$ & $1.1$ & $1.1$ & $-1.0$ & $1.2$ & 0.587 & 0.092 \\
+7B instruct & $1.9$ & $4.7$ & $2.6$ & $1.1$ & $3.4$ & $1.4$ & $0.9$ & $2.4$ & $1.8$ & $-3.6$ & $-3.7$ & $-3.5$ & 1.303 & 0.470 \\
+13B & $1.0$ & $2.5$ & $0.6$ & $0.3$ & $0.4$ & $0.1$ & $2.7$ & $1.6$ & $0.5$ & $-0.3$ & $2.1$ & $-0.7$ & 0.475 & 0.096 \\
+13B instruct & $2.1$ & $5.2$ & $1.8$ & $0.8$ & $0.7$ & $0.5$ & $2.6$ & $0.8$ & $1.1$ & $-2.2$ & $-2.5$ & $-3.1$ & 0.599 & 0.230 \\
+32B & $2.0$ & $4.9$ & $1.7$ & $0.4$ & $2.3$ & $0.4$ & $3.2$ & $5.4$ & $0.6$ & $4.2$ & $1.9$ & $0.3$ & 0.889 & 0.073 \\
+32B instruct & $3.5$ & $18.3$ & $4.7$ & $0.5$ & $6.2$ & $0.6$ & $0.3$ & $4.0$ & $0.3$ & $0.1$ & $-2.0$ & $-2.6$ & 0.799 & 0.154 \\
+\bottomrule
+\end{tabular}

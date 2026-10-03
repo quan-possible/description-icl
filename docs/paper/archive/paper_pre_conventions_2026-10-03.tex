@@ -1,0 +1,419 @@
+% Compile with: latexmk -pdf paper.tex (from docs/paper, where refs.bib, figs/ and the ICML style files live).
+% ICML 2026 style (icml/icml2026.zip). Submission mode hides the authors; use \usepackage[accepted]{icml2026} for the camera-ready.
+\documentclass{article}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{icml2026}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{needspace}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}[section]
+\newcommand{\ess}{\mathrm{ESS}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+
+\icmltitlerunning{A Description Is Likely Not Worth a Thousand Demonstrations}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{A Description Is Likely Not Worth a Thousand Demonstrations: \\ Measuring the Effective Sample Size of Task Descriptions in In-Context Learning}
+\begin{icmlauthorlist}
+\icmlauthor{Bruce Quan Nguyen}{dec,ua}
+\end{icmlauthorlist}
+\icmlaffiliation{dec}{Decaude Labs}
+\icmlaffiliation{ua}{University of Alberta, Edmonton, Canada}
+\icmlcorrespondingauthor{Bruce Quan Nguyen}{bruce.nguyen@decaude.com, trungqua@ualberta.ca}
+\icmlkeywords{in-context learning, task description, effective sample size, Bayesian inference}
+\vskip 0.3in
+]
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+Prompts for in-context learning usually combine a task description with demonstrations, yet theories of in-context learning mostly model only the demonstrations. We ask how many demonstrations a description is worth. We define the \emph{effective sample size} (ESS) of a description as the number of demonstrations that lower a Bayes-optimal predictor's regret by the same amount, and study it in in-context linear regression. The ESS is set by the description's \emph{specificity}, how much uncertainty about the task it removes, and its \emph{reliability}, the probability that it is relevant. For a reliable description, we prove that the ESS grows linearly in the task dimension when the description is loose and in inverse proportion to the variance it leaves when it is specific. For a description that may be irrelevant, the ESS without demonstrations stays bounded however specific the description is, and a predictor that trusts it fully can do worse than one that ignores it. Meta-trained Transformers come close to the Bayes-optimal ESS for reliable descriptions and inherit their trust in a description from their training distribution. Pretrained language models told a description's precision and reliability in words use the description, and gain more from a more precise one, but a description with a Bayes-optimal ESS of thirty-six has an ESS of at most eight for them, because they rely on it by a fixed amount that neither its stated precision nor its stated reliability moves.
+\end{abstract}
+
+\section{Introduction}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=5.5in]{figs/overview.pdf}
+\caption{(a) A prompt read as Bayesian inference, and the ESS of its description. (b) The prior on the task given three descriptions (sketched, not to scale), and the ESS of each with no demonstrations in hand, at $d = 16$ and $a_0 = 10$. Specificity raises the ESS (\S\ref{sec:specificity}); a one-in-ten chance of being unrelated to the task removes most of that gain (\S\ref{sec:reliability}).}
+\label{fig:overview}
+\end{figure*}
+A prompt for in-context learning (ICL) usually carries two kinds of information about the task: a description in natural language and a few demonstrations \citep{brown2020}. In practice the description is an instruction; we read it as a statement about the task, since its value lies in what it says the task is, and set aside how a model is made to follow it. The evidence on what a description contributes is mixed. In prompt-based fine-tuning a well-crafted prompt can be worth hundreds of data points \citep{lescao2021}, and a written summary can stand in for many demonstrations \citep{honda2025}, yet models also perform adequately with misleading descriptions \citep{webson2022} and can prioritize demonstrations over explicit instructions \citep{gupta2025}. Theories of ICL mostly model the prompt as a sequence of demonstrations \citep{garg2022, akyurek2023, xie2022}. Those that add a description show that a learner can use it to predict better \citep{huangge2025}, but not how much it is worth in the unit a prompt writer trades it against: demonstrations. We ask the question directly: how many demonstrations is a task description worth, and what determines the number? Our title answers for descriptions as they come: a reliable and very specific description can be worth thousands (Theorem~\ref{prop:reliable}), but one that may be irrelevant is worth a bounded number however specific it is (Corollary~\ref{cor:ess}), and the pretrained models we test treat even a precise one as worth a few.
+
+We take the Bayesian view of ICL \citep{xie2022}. Pretraining gives the model a prior over a latent task, and the prompt is evidence about that task. A demonstration is one noisy observation of the task's input-output behaviour. A description is a statement about the task itself, and conditioning on it gives a sharper prior. Bayesian statistics measures the information in a prior by its effective sample size (ESS), the number of observations that would carry the same information \citep{morita2008}. We define the ESS of a description in the same way and compute it in noisy in-context linear regression with a Gaussian task prior \citep{garg2022, akyurek2023, raventos2023}, where Bayes-optimal prediction has a closed form.
+
+Two properties of a description determine its ESS. The first is its \emph{specificity}: a description may state exactly how to do the task or only loosely indicate it, and the more specific it is, the less uncertainty about the task it leaves. The second is its \emph{reliability}: the probability that it is relevant, since a description can conflict with the task the demonstrations come from \citep{evans2006}. Our contributions are:
+\begin{itemize}
+    \item \textbf{A common unit.} We define the ESS of a task description as the number of demonstrations that lower a Bayes-optimal predictor's regret by the same amount (Definition~\ref{def:ess}). It puts descriptions and demonstrations on one scale.
+    \item \textbf{What specificity is worth.} For a reliable description, we prove that the ESS grows linearly in the task dimension $d$ when the description is loose and linearly in $1/r$ when it is specific, where $r$ is the fraction of the prior variance the description leaves (Theorem~\ref{prop:reliable}). Roughly, it is $(d-1)(1-r) + 1/(r a_0)$.
+    \item \textbf{What unreliability costs.} For a description that is relevant with probability $p$, the regret is that of a predictor told whether the description is relevant, plus the information the next label carries about relevance, which totals at most the entropy $H(p)$ over the whole prompt (Proposition~\ref{prop:unreliable}). Consequently, the ESS without demonstrations is bounded however specific the description is, and with many demonstrations it is at most $p$ times that of a reliable description (Corollary~\ref{cor:ess}). A predictor that instead trusts the description fully pays a penalty that grows with specificity, and a specific description that is sometimes irrelevant can then be worse than none.
+\end{itemize}
+We then measure the ESS in two kinds of learner. Meta-trained Transformers come close to the Bayes-optimal ESS for reliable descriptions, and their trust in a description follows the reliability they were trained on (\S\ref{sec:networks}). Pretrained language models, told a description's precision and reliability in words, use the description but rely on it by a fixed amount, so a description with a Bayes-optimal ESS of thirty-six has an ESS of a few for them (\S\ref{sec:llm}).
+
+\section{Related Work}
+\paragraph{ICL as Bayesian inference.} Our approach builds on the understanding of ICL as implicit Bayesian inference \citep{xie2022}, in which meta-trained Transformers have been shown to implement optimal estimators such as Bayes-optimal ridge regression \citep{akyurek2023, raventos2023, panwar2024}.
+
+\paragraph{Task descriptions in theories of ICL.} Some of this literature includes task descriptions, modeling them as tokens that indicate hypothesis classes or carry input means \citep{huangge2025, lin2025, tong2026, lin2024}, but these works generally do not quantify the description's value in units of examples, nor do they formalize the probability that a description is irrelevant. Closest to our setting, \citet{zhu2026} show that a Transformer given a prefix of related datasets performs amortised hierarchical Bayesian prediction; we express the value of such conditioning information in demonstrations and allow it to be irrelevant.
+
+\paragraph{Effective sample size of a prior.} Our ESS follows the prior sample size methods of Bayesian statistics \citep{morita2008, reimherr2021, neuenschwander2020}, particularly those that use predictive regret \citep{reznik2026}. To model a description that may be irrelevant we use a robust mixture prior, a technique from clinical trials for historical data that may conflict with the trial \citep{schmidli2014}.
+
+\paragraph{Descriptions and priors in pretrained language models.} Empirical work has priced prompts in training examples: \citet{lescao2021} in prompt-based fine-tuning, and \citet{cook2026}, who find that one instruction in fine-tuning data can stand in for up to a hundred execution examples. \citet{wenliang2025} treat a prompt as conditioning for a Bayesian sequence predictor and find that an optimized prompt can be shorter than demonstrations of equal effect. Tests of pretrained models against a known optimum on synthetic tasks find that in-context evidence outweighs a stated prior \citep{gupta2025}, that learning curves approach a Bayesian reference \citep{akata2026}, and that models estimate a density from numbers in context like a kernel estimator of adaptive width \citep{liu2025}. We add to such a test a description of stated precision and stated reliability, and measure its ESS against the Bayes-optimal ESS.
+
+\section{Problem Setup}\label{sec:setting}
+
+\paragraph{Tasks and demonstrations.} A task is a weight vector $w \in \R^d$. A demonstration is an input $x \sim \mathcal{N}(0, I_d)$ with a label $y = w^\top x + \epsilon$, where $\epsilon \sim \mathcal{N}(0, \sigma_y^2)$. The base prior over tasks is $w \sim \mathcal{N}(0, s_0^2 I_d)$. The prior signal-to-noise ratio is $a_0 = s_0^2/\sigma_y^2$; we set $\sigma_y = 1$ throughout and $a_0 = 10$ in the numerical results.
+
+\paragraph{Descriptions.} A description is a vector $m \in \R^d$. A latent indicator $Z \sim \mathrm{Bernoulli}(p)$ says whether the description is \emph{relevant} ($Z = 1$) or \emph{irrelevant} ($Z = 0$):
+\begin{align}
+    m &\sim \mathcal{N}(0, (1-r)s_0^2 I_d) \\
+    w \mid m, Z=1 &\sim \mathcal{N}(m, r s_0^2 I_d) \\
+    w \mid m, Z=0 &\sim \mathcal{N}(0, s_0^2 I_d)
+\end{align}
+A relevant description locates the task up to a variance $r s_0^2$ in every direction; an irrelevant one is independent of the task. Marginalizing over $Z$, the prior for $w$ given $m$ is the robust mixture $p\,\mathcal{N}(m, rs_0^2 I_d) + (1-p)\,\mathcal{N}(0, s_0^2 I_d)$ \citep{schmidli2014}. The parameter $r \in (0, 1)$ is the fraction of the prior variance that a relevant description leaves, and it sets the description's \textbf{specificity}: the smaller $r$, the more specific the description, from one that only loosely indicates the task ($r$ near 1) to one that all but states it ($r$ near 0). The parameter $p$ is the description's \textbf{reliability}. We call a description with $p = 1$ \emph{reliable}.
+
+\paragraph{Regret and ESS.} A predictor sees a prompt $D$ (the description, $n$ demonstrations, and a query $x$) and gives a predictive density $f(y \mid D)$ for the query's label. We measure it by its expected one-step log-loss regret against an oracle that knows the task $w$, the per-step regret of \citet{genewein2025}:
+\begin{equation}\label{eq:regret}
+    R = \E \left[ -\log f(y \mid D) + \log \phi(y; w^\top x, \sigma_y^2) \right],
+\end{equation}
+where $\phi$ is the Gaussian density. Let $R^{\mathrm{desc}}(n)$ be the Bayes-optimal regret with the description and $n$ demonstrations, $R^{\mathrm{ex}}(n)$ the Bayes-optimal regret with $n$ demonstrations alone, and $R^{\mathrm{desc}}_{p=1}(n)$ the former for a reliable description.
+\begin{definition}\label{def:ess}
+The effective sample size (ESS) of a description, given $n$ demonstrations, is $\ess_n = n^* - n$, where $n^*$ is the root of $R^{\mathrm{ex}}(n^*) = R^{\mathrm{desc}}(n)$, with $R^{\mathrm{ex}}$ linearly interpolated between integers. The standalone ESS is $\ess_0$, which we also write $\ess$.
+\end{definition}
+The ESS is the number of further demonstrations a predictor without the description would need to match the predictor with it. It is the data-dependent prior sample size of \citet{reimherr2021} with predictive regret as the measure of uncertainty. For the Bayes-optimal predictor it is never negative. The same definition applies to any other learner through its own two regret curves; there it is negative when the description hurts, and when the regret with the description is at least the regret with nothing there is no root and we write $\ess_n \le -n$.
+
+\section{Specificity: Reliable Descriptions}\label{sec:specificity}
+With a reliable description ($p = 1$) the posterior over $w$ is Gaussian with some covariance $\Sigma$, and the regret is half the expected log of the predictive variance relative to the noise, $R = \tfrac12 \E \log(1 + x^\top \Sigma x)$.
+
+\begin{theorem}[ESS of a reliable description]\label{prop:reliable}
+Let $p = 1$ and let $c = 1/(r a_0) = \sigma_y^2/(r s_0^2)$ be the conjugate-prior ESS.
+\begin{enumerate}
+    \item[(i)] (Loose descriptions) If $c \le 1$, then as $rd \to \infty$, $\ess = (d-1)(1-r) + (1-r)c + O(1/(rd))$.
+    \item[(ii)] (Specific descriptions) If $c \ge d$, then as $c/d \to \infty$, $\ess = c + d + 1 - 1/a_0 + O(d/c)$.
+    \item[(iii)] For every $d$, $a_0$, and $r$, $\ess \le c + d + 2$.
+\end{enumerate}
+\end{theorem}
+Appendix~\ref{app:specificity} states the theorem in a fuller form and proves it. In both regimes the ESS is the sum of two terms. The first counts dimensions: a description that removes a fraction $1-r$ of the prior variance replaces about $(1-r)(d-1)$ demonstrations, because at high signal-to-noise ratio each of the first $d$ demonstrations removes the uncertainty in one direction. The second is the conjugate-prior ESS $c$, the number of observations with noise $\sigma_y^2$ that carry as much information as a prior of variance $r s_0^2$ \citep{neuenschwander2020}. A single formula summarizes both regimes: $\ess \approx (d-1)(1-r) + 1/(ra_0)$. It differs from the expansion in (i) by $1/a_0$ and from the one in (ii) by less than two demonstrations. It is not a theorem for $1 < c < d$, where only the bound (iii) applies, but at every $r$ in Figure~\ref{fig:ess}a it is within two demonstrations of the exact ESS. At $d = 16$ and $a_0 = 10$, a description that removes nine tenths of the prior variance ($r = 0.1$) is worth $14.9$ demonstrations, and one that leaves a thousandth ($r = 0.001$) is worth $117$ (Figure~\ref{fig:ess}a). With many demonstrations in hand the dimension term fades, since the demonstrations have already removed that uncertainty (Corollary~\ref{cor:ess}): at $r = 0.1$ the ESS falls from $14.9$ alone to $1.1$ with $100$ demonstrations in hand.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=5.5in]{figs/ess.pdf}
+\caption{ESS of a description against $r$, the fraction of the prior variance it leaves, with $n$ demonstrations in hand ($\ess_n$ of Definition~\ref{def:ess}); one panel per reliability $p$. The ESS of a reliable description grows without bound as it becomes more specific (a). When the description may be irrelevant, the ESS with no demonstrations is capped at the dotted limit, and many demonstrations in hand lift it (b, c). $d = 16$, $a_0 = 10$, eight batches of 8{,}000 prompts, with standard errors below $0.1$ demonstrations ($0.2$ for the dotted line at $p = 0.99$). Dotted: the limit of the standalone ESS as $r \to 0$.}
+\label{fig:ess}
+\end{figure*}
+
+\section{Reliability: Descriptions That May Be Irrelevant}\label{sec:reliability}
+When $p < 1$ the Bayes-optimal predictive is a mixture of two predictives, one that takes the description as relevant and one that ignores it, weighted by the posterior probability that the description is relevant.
+
+\begin{proposition}[Regret of a description that may be irrelevant]\label{prop:unreliable}
+For every $n \ge 0$, with $D_n$ the prompt with $n$ demonstrations and $y$ the label of its query,
+\begin{equation}\label{eq:decomp}
+    R^{\mathrm{desc}}(n) \;=\; p\, R^{\mathrm{desc}}_{p=1}(n) + (1-p)\, R^{\mathrm{ex}}(n) + I_n,
+\end{equation}
+where $I_n = I(Z;\, y \mid D_n)$ is the mutual information between the relevance $Z$ and the label given the prompt. Moreover $I_n = H(Z \mid D_n) - H(Z \mid D_{n+1})$, so $0 \le I_n \le H(Z \mid D_n) \le H(p)$ and $\sum_{n \ge 0} I_n \le H(p)$, with $H(p)$ the binary entropy.
+\end{proposition}
+Appendix~\ref{app:reliability} gives the proof. The first two terms are the regret of a predictor that is told whether the description is relevant: with probability $p$ it holds a reliable description, and with probability $1-p$ it holds only the demonstrations. So a description that may be irrelevant is worth what a reliable one is worth when it is relevant and nothing when it is not.
+
+The last term is the price of not being told, and under log loss it is exactly what the label reveals about relevance. It depends on the setting, through $d$, $a_0$, $r$, and $n$: it vanishes when the two predictives agree, so that the label says nothing about relevance, and it is largest when a specific description makes them differ sharply ($0.04$ nats at $r = 0.5$ and $0.26$ at $r = 0.001$, with no demonstrations at $d = 16$, $a_0 = 10$, $p = 0.9$). But there are only $H(p)$ nats to learn about $Z$, so the price summed over the whole prompt is at most $H(p)$, whatever $d$, $a_0$, and $r$: $0.33$ nats at $p = 0.9$. This is an average over relevant and irrelevant descriptions. Case by case, the price summed over the whole prompt is at most $\log(1/p)$ when the description is relevant and $\log(1/(1-p))$ when it is irrelevant, $0.11$ and $2.3$ nats at $p = 0.9$, because the mixture starts with weight $p$ or $1-p$ on the right predictive; the irrelevant case is costly but rare. The decomposition is the standard one for a mixture forecaster under log loss \citep{cesabianchi2006, merhav1998}; what is new is what it implies for the ESS.
+
+\needspace{7\baselineskip}
+\begin{corollary}[ESS of a description that may be irrelevant]\label{cor:ess}
+Fix $d$, $a_0$, and $r$.
+\begin{enumerate}
+    \item[(i)] (Without demonstrations) If $p < 1$, then $\ess_0 \le n^*_p$, where $n^*_p$ is the finite root of $R^{\mathrm{ex}}(n^*_p) = (1-p)\,R^{\mathrm{ex}}(0)$, which does not depend on $r$.
+    \item[(ii)] (With many demonstrations) If $p = 1$, then $\ess_n \to c - 1/a_0$ as $n \to \infty$. If $p < 1$, then $\limsup_{n \to \infty} \ess_n \le p\,(c - 1/a_0)$.
+\end{enumerate}
+\end{corollary}
+
+\paragraph{Without demonstrations the ESS is bounded.} The average regret cannot fall below the share contributed by irrelevant descriptions, $(1-p)R^{\mathrm{ex}}(0)$, however specific the description is, and (i) turns that floor into a bound on the ESS. At $d = 16$, $a_0 = 10$, and $p = 0.9$ the bound $n^*_p$ is $40$ demonstrations. It applies even to the predictor told whether the description is relevant, so it comes from irrelevant descriptions being worth nothing, not from doubt; not being told lowers the limit of the exact ESS as $r \to 0$ to $25$ (dotted in Figure~\ref{fig:ess}c). Refining $r$ from $0.1$ to $0.001$ raises the ESS of a reliable description from $14.9$ to $117$, but that of a $p = 0.9$ description only from $13.1$ to $23.0$.
+
+\paragraph{With many demonstrations the ESS is at most $p$ times the reliable one.} Demonstrations shrink the regret in the irrelevant case, $R^{\mathrm{ex}}(n)$, and so lift the bound. In the limit a reliable description is worth $c - 1/a_0$ demonstrations: the dimension term is gone and what remains is the precision the description adds to the prior. A description that may be irrelevant is then worth at most $p$ times as much. With $100$ demonstrations in hand, the $r = 0.001$ description is worth $109$ demonstrations if reliable and $87.4$ at $p = 0.9$ (Figure~\ref{fig:ess}), against limits of $99.9$ and at most $89.9$.
+
+\paragraph{Full trust.} The Bayes-optimal predictor hedges, and Proposition~\ref{prop:unreliable} prices the hedge at no more than $H(p)$ on average. A predictor that instead treats the description as certainly relevant predicts as if $p = 1$ whether or not the description is relevant. With no demonstrations its regret is
+\begin{equation}\label{eq:trust}
+    R^{\mathrm{trust}}(0) \;=\; R^{\mathrm{desc}}_{p=1}(0) \;+\; (1-p)(1-r)\,\E\!\left[\frac{a_0\|x\|^2}{1 + r a_0 \|x\|^2}\right]
+\end{equation}
+(Appendix~\ref{app:trust}): the regret of a reliable description plus a penalty for the irrelevant case. The penalty grows as the description becomes more specific, up to $(1-p)\,a_0 d$ as $r \to 0$, and $H(p)$ does not limit it. When the penalty exceeds what the description gains, full trust is worse than ignoring the description. At $d = 16$, $a_0 = 10$, and $p = 0.9$, the $r = 0.001$ description costs the fully trusting predictor $13.7$ nats, against $2.51$ with no description; at $p = 0.99$ the same description costs it $1.43$ nats and still helps.
+
+\section{Meta-Trained Transformers}\label{sec:networks}
+The Bayes-optimal predictor knows how specific and how reliable descriptions are. A network can learn both from the distribution it is trained on. We therefore meta-train Transformers on the setting of \S\ref{sec:setting} and ask how close they come to the Bayes-optimal ESS, and where their trust in a description comes from.
+
+\paragraph{Setup.} Prompts use the prefix embedding of \citet{huangge2025}: an optional description token (their descriptor token) carrying $m$, up to $20$ demonstration tokens each holding an input beside its label, and a query token, with two indicator coordinates marking the token type and no positional encoding. The architecture and optimiser follow \citet{garg2022}: $12$ layers, $8$ heads, width $256$, Adam at a learning rate of $10^{-4}$, fresh prompts at every step, $40{,}000$ steps at batch $1024$ without a curriculum, at $d = 5$ and $a_0 = 10$. The network outputs a mean and a log variance for the query's label and is trained with log loss, so its regret is on the scale of~\eqref{eq:regret}. The number of demonstrations is uniform on $0$ to $20$ and the description is omitted in half the prompts. We train one network for each combination of a specific ($r = 0.01$) or loose ($r = 0.1$) description with reliability $p \in \{1, 0.99, 0.9\}$, one training run per setting and a second seed at $p = 0.9$, $r = 0.01$. The description token supplies only $m$, so each network must learn $r$ and $p$ from its training distribution. We evaluate each network on $20{,}000$ fresh prompts for every $n$ from $0$ to $20$, with and without a description, on prompts of all three reliabilities. Its ESS follows Definition~\ref{def:ess} with its own regret curves. We compare it, on the same prompts, with the Bayes-optimal predictor that uses the reliability the network was trained on (\emph{trained}) and the one that uses the reliability of the test prompts (\emph{calibrated}) (Figure~\ref{fig:networks}; Table~\ref{tab:networks} in Appendix~\ref{app:networks}). A learner's \emph{implied trust} is the weight $q$ for which the predictor that uses the mixture prior of \S\ref{sec:setting} with $q$ in place of $p$ best matches the learner's mean predictions.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=5.5in]{figs/networks.pdf}
+\caption{\textbf{Networks reach the Bayes-optimal ESS within what their output can express, and take their trust from training.} ESS with no demonstrations, $d = 5$, $a_0 = 10$; error bars, standard errors over $20{,}000$ prompts. (a) Each network tested at the reliability it was trained on, beside the Bayes-optimal ESS and that of the best single Gaussian: at $p = 1$ the networks match the Bayes-optimal ESS, and below it they match the single-Gaussian limit of their output. (b) The networks trained on specific descriptions ($r = 0.01$) tested at every reliability (the $p = 0.9$ network is the second seed, tested at all three): a network's ESS follows the reliability it was trained on, so the one trained on reliable descriptions loses the description's whole value when one in ten is irrelevant, and the one trained at $p = 0.9$ keeps hedging when all are relevant. Table~\ref{tab:networks} (Appendix~\ref{app:networks}) has every value.}
+\label{fig:networks}
+\end{figure*}
+
+\paragraph{Networks approach the Bayes-optimal ESS within what their output can express.} Trained and tested on reliable descriptions, the networks come close to the Bayes-optimal ESS: $14.7 \pm 0.4$ against $15.6$ at $r = 0.01$ and $5.24 \pm 0.05$ against $5.25$ at $r = 0.1$. With descriptions that may be irrelevant and no demonstrations, they fall short of it: at $p = 0.9$, $4.30 \pm 0.07$ against $6.92$ and $3.57 \pm 0.06$ against $4.26$, and at $p = 0.99$, $8.9 \pm 0.2$ against $12.9$ and $5.01 \pm 0.05$ against $5.08$. The cause is the output. The Bayes-optimal predictive is then a mixture of two Gaussians, which a network that emits one mean and one variance cannot express. The networks match the best single Gaussian instead, whose ESS is $4.29$, $3.62$, $8.54$, and $4.93$ in the same four cases. As demonstrations settle whether the description is relevant, the mixture collapses to one component and the networks rejoin the Bayes-optimal predictor: at $r = 0.01$, $p = 0.9$ the network's regret is within $0.05$ nats of it from $n = 6$ on, and its ESS with ten demonstrations in hand is $8.1$ against $9.0$. A second seed reproduces the first ($4.26 \pm 0.08$ alone, $8.3$ with ten demonstrations). The shortfall is not under-training: a network trained at $r = 0.05$, $p = 0.9$ and continued to $80{,}000$ steps kept it ($3.9$ against $5.0$).
+
+\paragraph{Trust is inherited from training.} A network's implied trust follows the reliability it was trained on. Networks trained only on reliable descriptions ($p = 1$) have an implied trust near $1$ and behave as the fully trusting predictor of \S\ref{sec:reliability}. When one description in ten is irrelevant, the network trained on specific descriptions has a regret of $2.87$ nats with the description alone against $1.87$ without it ($3.32$ for the fully trusting predictor, which the network beats by hedging slightly, at an implied trust of $0.999$), so its ESS is at most zero where the calibrated predictor obtains $6.9$. Networks trained at $p = 0.99$ have an implied trust of $0.95$ and lose the specific description's entire value when one in ten is irrelevant ($0.1 \pm 0.4$ against $6.9$). Networks trained at $p = 0.9$ keep hedging, with an implied trust of $0.85$ to $0.9$ across the two seeds, even on prompts whose descriptions are all relevant, where their ESS is $6.4$ and $6.6$ against the calibrated $15.6$ at $r = 0.01$.
+
+\section{Pretrained Language Models}\label{sec:llm}
+The networks of \S\ref{sec:networks} know how specific and how reliable descriptions are because they were trained on the task distribution. A pretrained language model has had no such training, and the only way to give it what the Bayes-optimal predictor knows is to say it in the prompt. We say nearly all of it, state a description's precision and reliability in words, and measure the description's ESS for the model against its Bayes-optimal ESS. The design follows earlier tests of pretrained models against a known optimum on synthetic tasks \citep{gupta2025, akata2026}.
+
+\paragraph{Setting.} We use the simplest case of \S\ref{sec:setting}: one weight ($d = 1$) and the input fixed at $x = 1$, so that a task is a hidden mean $w \sim \mathcal{N}(500, 100^2)$ and a demonstration is a number $y = w + \epsilon$, rounded to an integer. With inputs the model would also have to do arithmetic; with a single mean, the test is about weighing alone (the theory's figures use $d = 16$ to show the dimension term, and the networks $d = 5$ to keep training short). A description states a value $m$ and a standard deviation $\tau$, and the tasks are drawn so that $w \mid m \sim \mathcal{N}(m, \tau^2)$, the description of \S\ref{sec:setting} with $r = \tau^2 / 100^2$. For noise $\sigma$, its Bayes-optimal ESS is the conjugate-prior ESS $c = \sigma^2 / \tau^2$ of \S\ref{sec:specificity} (Definition~\ref{def:ess} gives $c - 1/a_0$, and here $1/a_0 = (\sigma/100)^2 = 0.36$), and with $n$ demonstrations of mean $\bar y$ the Bayes-optimal predictor that takes the description as relevant predicts $(c\,m + n\,\bar y)/(c + n)$, a weight of $c/(c+n)$ on the stated value. We set $\sigma = 60$ and $\tau = 60$, $30$, and $10$, so that $c = 1$, $4$, and $36$, and show $n = 0$, $1$, $2$, $4$, $8$, $16$, $32$, or $64$ demonstrations. A second noise level, $\sigma = 30$ with $\tau = 30$, $15$, and $5$, gives the same three $c$. An \emph{irrelevant} description states the value of an independently drawn task, so it is unrelated to the task, not necessarily far from it. A \emph{stated reliability} adds one sentence giving the chance that the description is wrong, $10\%$ or $50\%$: the mixture prior of \S\ref{sec:reliability} with $p = 0.9$ or $0.5$, said in words.
+
+\paragraph{Prompt.} The prompt is the user turn of the model's chat template, and the first token of the reply is read as the prediction:
+
+\begin{quote}\small\ttfamily
+The numbers below are drawn from a normal distribution with standard deviation 60.\\
+Its mean was drawn from a normal distribution with mean 510 and standard deviation 30.\\[3pt]
+548\\
+431\\[3pt]
+Predict the next number. Reply with the number only.
+\end{quote}
+
+\noindent Without a description the second sentence is ``Its mean is unknown.''; with a stated reliability a third follows: ``There is a 10\% chance that this statement is wrong, in which case the mean is unknown.''; with no demonstrations the question is ``Predict the first number.'' One thing the Bayes-optimal predictor knows is not stated: its prior over the mean before any description, $\mathcal{N}(500, 100^2)$, which the prompt calls unknown. That prior enters the Bayes-optimal prediction without a description and its hedging when a description may be wrong, and gives it an edge in those columns.
+
+\paragraph{Models and measurement.} We use openly available chat models whose tokenizer encodes every three-digit integer as one token, so that the reply's first-token distribution, restricted to the $900$ number tokens and renormalized, is the model's distribution over the next number: gpt-oss-20b \citep{openai2025}, Phi-4 \citep{abdin2024}, and OLMo~2 32B Instruct \citep{walsh2025}. These begin their reply with a number in at least three quarters of replies, averaged over conditions; MiniCPM5~2B \citep{minicpm5} and OLMo~2 7B and 13B Instruct do not, mostly explaining instead, and are reported only for that (Appendix~\ref{app:llm}). Where a model answers with a number in fewer than three quarters of the replies of a condition, the tables set the cell in italics. Thinking is disabled. The model's prediction is the mean of its distribution, and its error is the root-mean-square distance from the hidden mean over the $2{,}000$ tasks. The model's ESS is Definition~\ref{def:ess} with squared error in place of log loss, since the models answer with one number rather than a distribution: with $n$ demonstrations shown, the further demonstrations the model needs without the description to reach the error it has with it, read off its own no-description error curve from $n = 1$ on (at $n = 0$ the models rarely answer with a number), made non-increasing and interpolated in $\log n$; when one demonstration alone beats the description we report the bound $\ess_n \le 1 - n$. We report the median over $n = 1$, $2$, and $4$, where a description matters most, with $95\%$ bootstrap intervals over tasks. For the Bayes-optimal predictor the exact value is $c - 1/a_0$, that is $0.64$, $3.64$, and $35.6$; computed the same way it reads $0.8$, $4.0$, and $36$, the interpolation biasing it upward by up to two demonstrations, and we report the computed value for it and the models alike. As a check on mechanism we also regress the prediction on the stated value $m$ and the mean $\bar y$ of the demonstrations, across tasks and with a constant; the coefficient on $m$ is the model's \emph{weight} on the stated value, which is $c/(c+n)$ for the Bayes-optimal predictor that takes the description as relevant.
+
+\begin{table*}[t]
+\centering\small
+\setlength{\tabcolsep}{2.4pt}
+\caption{\textbf{The models rely on the stated value by a fixed amount, so a loose description has about its Bayes-optimal ESS and a specific one a small fraction of it.} Left: ESS of a description for each model against its Bayes-optimal ESS, the median over $n = 1$, $2$, and $4$ demonstrations shown ($\sigma = 60$, $2{,}000$ tasks; brackets, $95\%$ bootstrap intervals; negative: the description costs that many demonstrations; $\le$: one demonstration alone beats the description, so the ESS is at most the value shown), for a relevant description with Bayes-optimal ESS $1$, $4$, or $36$, an irrelevant one that would have ESS $36$, and the description with ESS $36$ with a stated $10\%$ or $50\%$ chance of being wrong. Right: the weight on the stated value with one demonstration shown, for the three relevant descriptions; the Bayes-optimal weight is $c/(c+n)$. The Bayes-optimal row takes a description as relevant unless a reliability is stated, in which case it hedges with that $p$.}
+\label{tab:llm}
+\vspace{3pt}
+\input{../../results/llm-test/llm_table.tex}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{../../results/llm-test/llm_test.pdf}
+\caption{\textbf{The ESS rises with stated precision, but far less than the Bayes-optimal ESS; stated reliability does not move it; and it falls as demonstrations arrive.} ESS of a description for each model against the Bayes-optimal ESS (dotted), $2{,}000$ tasks, $\sigma = 60$. (a) A relevant description with Bayes-optimal ESS $1$, $4$, or $36$. (b) The description with Bayes-optimal ESS $36$ when it is relevant, when it comes with a stated $10\%$ or $50\%$ chance of being wrong, when it is irrelevant, and when it is irrelevant with a stated $50\%$ chance. In (a) and (b) the ESS is the median over $n = 1$, $2$, and $4$ demonstrations shown, with $95\%$ bootstrap intervals; an irrelevant description's value is an upper bound where Table~\ref{tab:llm} marks it so. (c) The ESS of the relevant description with Bayes-optimal ESS $36$ against the demonstrations shown. In (a) and (c) values at or below $0.3$ are drawn at $0.3$.}
+\label{fig:llm}
+\end{figure*}
+
+\paragraph{A loose description has about its Bayes-optimal ESS; a specific one has a small fraction of it.} A description with Bayes-optimal ESS $1$ has an ESS of $0.9$ for gpt-oss-20b and $0.7$ for Phi-4 (Table~\ref{tab:llm}). One with Bayes-optimal ESS $4$ has $2.0$ and $4.1$. One with Bayes-optimal ESS $36$ has $2.8$ and $7.6$ [OLMo~2 32B: pending]. The ESS rises with the stated precision, so the models do respond to precision, but a description that narrows the mean to within $10$ has an ESS of a few for them and thirty-six for the Bayes-optimal predictor (Figure~\ref{fig:llm}a). The noise-$30$ conditions give the same picture at the same $c$ (Appendix~\ref{app:llm}).
+
+\paragraph{An irrelevant description costs about a demonstration, and a stated chance of being wrong changes nothing.} An irrelevant description that would have ESS $36$ if relevant has an ESS of $-0.5$ for gpt-oss-20b and at most $-1$ for Phi-4, against at most $-1$ for the Bayes-optimal predictor that takes it as relevant. Stating that the description has a $10\%$ or a $50\%$ chance of being wrong leaves its ESS where it was: $2.4$ and $2.3$ for gpt-oss-20b, $8.7$ and $9.7$ for Phi-4, where the Bayes-optimal predictor's hedge gives $18$ and $4.4$ (Figure~\ref{fig:llm}b).
+
+\paragraph{The models rely on the stated value by a fixed amount, then stop.} With no demonstrations shown, the models answer the stated value (weight $0.93$ to $1.00$; Phi-4 then answers with a number in only a fifth of replies, and is read from those). With one shown, the weight on the stated value is the same whether the description's Bayes-optimal ESS is $1$, $4$, or $36$: $0.53$, $0.48$, and $0.49$ for gpt-oss-20b and $0.82$, $0.76$, and $0.74$ for Phi-4, where the Bayes-optimal weight is $0.50$, $0.80$, and $0.97$. Across every $c$, both noise levels, and $n = 1$ to $64$, the weights form a band that does not follow the Bayes-optimal weight (Table~\ref{tab:llm-full}). Individual replies show the mechanism: a model copies the stated value or copies the average of the demonstrations, and which it copies changes with the demonstrations shown, not with the description. So the ESS of a specific description falls as demonstrations arrive, from $15$ at one demonstration to $4.7$ at four for Phi-4, where the Bayes-optimal ESS stays at $36$ (Figure~\ref{fig:llm}c); the stated precision raises the ESS only because a more precise description states a value closer to the truth.
+
+\paragraph{The models learn slowly from demonstrations.} With no description, their error after $64$ demonstrations is $18$ to $20$, against $7$ for the Bayes-optimal predictor; this inflates a description's ESS for them, which is small even so.
+
+\paragraph{Summary.} Told the setting, the description's precision, and its reliability in words, these models use a description and gain more from a more precise one, but they rely on it by a fixed amount that neither its stated precision nor its stated reliability moves, so a description with a Bayes-optimal ESS of thirty-six has an ESS of a few for them. The networks of \S\ref{sec:networks} were never told a description's precision; they learned it from the task distribution and came close to the Bayes-optimal ESS. With the caveat that the two experiments differ in more than training, a description's ESS for a learner appears to be set by the learner's experience of descriptions, not by what the description says about itself.
+
+\section{Conclusion}
+We asked how many demonstrations a task description is worth, and answered for the Bayes-optimal predictor in in-context linear regression. A reliable description is worth a number of demonstrations that grows with the task dimension and with the description's specificity. A description that may be irrelevant is worth as much when it is relevant and nothing when it is not, and not knowing which costs at most the entropy of its reliability; a predictor that does not hedge can lose more than the description gives. Networks trained on the task distribution come close to these values for reliable descriptions and take their trust in a description from that distribution. Pretrained language models told a description's precision and reliability in words use the description, but rely on it by a fixed amount that neither moves, so a description with a Bayes-optimal ESS of thirty-six has an ESS of a few for them.
+
+\paragraph{Limitations.} The analysis assumes a linear-Gaussian task, a description that is equally specific in every direction, and a predictor that knows the description's specificity and reliability; a real description can be exact about some aspects of a task and silent about others. The Bayes-optimal numerical results are at one setting, $d = 16$ and $a_0 = 10$. The full-trust formula~\eqref{eq:trust} is for a prompt with no demonstrations, and Corollary~\ref{cor:ess}(ii) is a limit: with few demonstrations in hand, the ESS of a description that may be irrelevant need not be below $p$ times that of a reliable one. The network results rest on one training run per setting, two for one of them, and a network with a mixture output would not be bound by the single-Gaussian limit. The language-model test covers three small open models and the simplest case of the setting, with one prompt; in a pilot, other prompts and formats changed how much the models relied on a description, though not its insensitivity to stated precision. The test measures a model's ESS by squared error rather than the log loss of Definition~\ref{def:ess}: asked to predict, the models answer with one number rather than a distribution. The prediction is read from the replies that begin with a number, which in some conditions are fewer than three quarters (Table~\ref{tab:llm-full}), and the Bayes-optimal yardstick knows the prior over the mean that the prompt calls unknown, which favours it without a description and when it hedges. The ESS is defined by the log-loss regret of the next prediction; another criterion would give a different number, and the bound on the price of not knowing whether a description is relevant is specific to log loss.
+
+\section*{Impact Statement}
+This paper advances the understanding of in-context learning by giving task descriptions a value in demonstrations and testing whether learners honour it. The language-model result, that pretrained models do not scale their reliance on a description with its stated precision or reliability, bears on how instructions and examples should be combined in prompts. We see no societal consequences that need specific discussion here.
+
+\bibliographystyle{icml2026}
+\bibliography{refs}
+
+\clearpage
+\onecolumn
+\appendix
+\section{Proofs}
+
+\subsection{Proof of Theorem \ref{prop:reliable} (Reliable Descriptions)}\label{app:specificity}
+We state the theorem in full, with the regret bounds behind (i) and (ii), prove those bounds as two lemmas with their expansions, and locate the root that defines the ESS.
+
+\medskip\noindent\textbf{Theorem~\ref{prop:reliable} (full statement).} {\itshape Let $p = 1$, let $\psi$ be the digamma function, and let $c = 1/(r a_0) = \sigma_y^2 / s_1^2$ with $s_1^2 = r s_0^2$: the ESS of the description's prior $\mathcal{N}(m, s_1^2 I_d)$ in the conjugate sense, noise variance over prior variance \citep{neuenschwander2020}, the conjugate-prior ESS.
+\begin{enumerate}
+\item[(i)] \emph{Loose descriptions.} Suppose $c \le 1$. Then for every $n < d$,
+$R^{\mathrm{ex}}(n) \ge \tfrac12\big[\log(2a_0) + \psi\big(\tfrac{d-n}{2}\big)\big]$, with equality in the limit $a_0 \to \infty$, and as $rd \to \infty$, uniformly in $c \le 1$,
+\[
+\ess = (d-1)(1-r) + (1-r)\,c + O\!\left(\tfrac{1}{rd}\right).
+\]
+\item[(ii)] \emph{Specific descriptions.} Suppose $c \ge d$. Then for every $n \ge d$,
+$R^{\mathrm{ex}}(n) \le \Phi(n) := \tfrac12\big[\psi\big(\tfrac{n+1}{2}\big) - \psi\big(\tfrac{n-d+1}{2}\big)\big]$, with equality in the limit $a_0 \to \infty$, and as $c/d \to \infty$, uniformly in $a_0 \ge 1$,
+\[
+\ess = c + d + 1 - \tfrac{1}{a_0} + O\!\left(\tfrac{d}{c}\right).
+\]
+\item[(iii)] For every $d$, $a_0$, and $r$, $\ess \le c + d + 2$.
+\end{enumerate}}
+\medskip
+
+\paragraph{Standard facts.}
+Throughout, $\sigma_y = 1$, $\varepsilon = 1/a_0$, $A = \|x\|^2 \sim \chi^2_d$ for the query $x$, $X_n \in \R^{n \times d}$ holds the demonstration inputs as rows, $\Sigma = (\varepsilon I + X_n^\top X_n)^{-1}$ is the posterior covariance given $n$ demonstrations and no description, and $g(t) = \E \log(1 + At)$, which is increasing and concave with
+\begin{equation}\label{eq:g-derivs}
+d\,(1 - (d+2)t) \le g'(t) = \E \frac{A}{1 + At} \le d,
+\qquad
+-(d^2 + 2d) \le g''(t) \le 0 .
+\end{equation}
+We use (a) $\E \log \chi^2_k = \psi(k/2) + \log 2$, $\E[\chi_k^{-2j}] = \prod_{i=1}^{j} (k - 2i)^{-1}$ for $k > 2j$, and $\psi(z) = \log z - 1/(2z) + O(z^{-2})$; (b) for $W \sim W_j(\nu, I)$ with $\nu \ge j$ and $z \sim \mathcal{N}(0, I_j)$ independent of $W$, $z^\top W^{-1} z$ is distributed as $\chi^2_j / \chi^2_{\nu-j+1}$ with independent numerator and denominator \citep[Theorem~3.2.12]{muirhead1982}, and $\E \operatorname{tr} W^{-2} = j(\nu-1)/((\nu-j)(\nu-j-1)(\nu-j-3))$ for $\nu - j \ge 4$ \citep{vonrosen1988}; (c) $y - y^2/2 \le \log(1 + y) \le y$ for $y \ge 0$.
+
+\paragraph{Regret.}
+The posterior predictive is the true conditional law of $y$, a Gaussian with variance $1 + x^\top \Sigma x$, so its expected log loss is its entropy and $R^{\mathrm{ex}}(n) = \tfrac12 \E \log(1 + x^\top \Sigma x)$, as in \S\ref{sec:specificity}. It is strictly decreasing in $n$, since by the Sherman--Morrison formula each new demonstration lowers $x^\top \Sigma x$ almost surely. For the description, $n = 0$ and the posterior covariance is $r a_0 I = I/c$, so by (a) and (c) with $y = c/A$,
+\begin{equation}\label{eq:rdesc}
+2R^{\mathrm{desc}} = g(1/c) = \log(2 r a_0) + \psi(d/2) + \delta^{\mathrm{desc}},
+\qquad
+\delta^{\mathrm{desc}} = \E \log(1 + c/A) = \frac{c}{d-2} + O\!\left(\frac{c^2}{d^2}\right) \quad (d \ge 5).
+\end{equation}
+
+\paragraph{Locating the root.}
+Let $h(n) = 2R^{\mathrm{ex}}(n) - 2R^{\mathrm{desc}}$ on integers $n \ge 0$, with linear interpolant $\bar h$. Then $\ess$ is the unique root of $\bar h$, and $h(0) = g(a_0) - g(r a_0) > 0$. In (i) and (ii) we show, for some $n_0 \ge 0$, $\alpha > 0$, and $\theta \to 0$ along the stated limit,
+\begin{equation}\label{eq:root}
+h(n) = \alpha\,(n_0 - n) + O(\alpha\theta)
+\qquad \text{uniformly over integers $n \ge 0$ with $|n - n_0| \le 3$.}
+\end{equation}
+Being a convex combination of two such values, $\bar h(t)$ obeys the same expansion at real $t \ge 0$ with $|t - n_0| \le 2$; so for small $\theta$ the root lies within $2$ of $n_0$, and $0 = \bar h(\ess) = \alpha(n_0 - \ess) + O(\alpha\theta)$ gives $\ess = n_0 + O(\theta)$.
+
+\begin{lemma}[fewer than $d$ demonstrations]\label{lem:few}
+Let $n < d$ and $k = d - n$. Then $2R^{\mathrm{ex}}(n) = \log(2a_0) + \psi(k/2) + \delta^{\mathrm{ex}}$ with $\delta^{\mathrm{ex}} \ge 0$, $\delta^{\mathrm{ex}} \to 0$ as $a_0 \to \infty$, and, for $k \ge 5$,
+\[
+\delta^{\mathrm{ex}} = \frac{\varepsilon (d-1)}{(k-1)(k-2)} + O\!\left(\frac{\varepsilon^2 d^2}{k^4}\right).
+\]
+\end{lemma}
+
+\begin{proof}
+Write $X_n^\top X_n = \sum_{i \le n} \lambda_i u_i u_i^\top$ with $\lambda_i > 0$ almost surely, and let $Q$ be the squared norm of the projection of $x$ onto the $k$ directions orthogonal to the $u_i$. Then $\Sigma$ has eigenvalue $a_0$ on those directions and $1/(\varepsilon + \lambda_i)$ on $u_i$, so
+\[
+1 + x^\top \Sigma x = a_0 Q + T, \qquad T = 1 + V, \quad V = \sum_{i \le n} \frac{z_i^2}{\varepsilon + \lambda_i}, \quad z_i = u_i^\top x,
+\]
+where, given $X_n$, the $z_i$ are i.i.d.\ standard normal and independent of $Q \sim \chi^2_k$. Taking logarithms and expectations, by (a),
+\[
+2R^{\mathrm{ex}}(n) = \log(2a_0) + \psi(k/2) + \delta^{\mathrm{ex}}, \qquad \delta^{\mathrm{ex}} = \E \log\!\left(1 + \frac{\varepsilon T}{Q}\right) \ge 0 .
+\]
+As $a_0 \to \infty$, $\varepsilon T$ decreases to $0$ pathwise, so $\delta^{\mathrm{ex}} \to 0$ by dominated convergence (the integrand at $a_0 = 1$ is integrable).
+
+For the expansion, let $F = \sum_i z_i^2 / \lambda_i$. In the eigenbasis of $W = X_n X_n^\top \sim W_n(d, I)$, which has the same eigenvalues, $F = z^\top W^{-1} z$ and $\sum_i z_i^2/\lambda_i^2 = z^\top W^{-2} z$ with $z \sim \mathcal{N}(0, I_n)$ independent of $W$. By (b), $F \sim \chi^2_n / \chi^2_{k+1}$, so $\E F = n/(k-1)$ and $\E (1+F)^2 = O(d^2/k^2)$, and $\E \sum_i z_i^2/\lambda_i^2 = n(d-1)/(k(k-1)(k-3))$. Since $1/\lambda - \varepsilon/\lambda^2 \le 1/(\varepsilon + \lambda) \le 1/\lambda$, we have $F - \varepsilon \sum_i z_i^2/\lambda_i^2 \le V \le F$. Now (c) with $y = \varepsilon T / Q$, the independence of $Q$ from $T$, and (a) give
+\[
+\frac{\varepsilon\,(1 + \E V)}{k-2} - \frac{\varepsilon^2\, \E T^2}{2(k-2)(k-4)} \le \delta^{\mathrm{ex}} \le \frac{\varepsilon\,(1 + \E F)}{k-2} = \frac{\varepsilon (d-1)}{(k-1)(k-2)} ,
+\]
+and the two sides differ by $\varepsilon^2 \E \sum_i z_i^2/\lambda_i^2 /(k-2) + \varepsilon^2 \E T^2 / (2(k-2)(k-4)) = O(\varepsilon^2 d^2 / k^4)$, as $\E T^2 \le \E (1 + F)^2$.
+\end{proof}
+
+\begin{lemma}[at least $d$ demonstrations]\label{lem:many}
+Let $n \ge d$ and $\ell = n - d + 1$. Then $2\Phi(n) = \E \log(1 + A/Q)$ with $Q \sim \chi^2_\ell$ independent of $A$, and $R^{\mathrm{ex}}(n) \le \Phi(n)$, with equality as $a_0 \to \infty$. If moreover $a_0 \ge 1$ and $\ell \ge \max(d, 7)$, then
+\[
+2R^{\mathrm{ex}}(n) = 2\Phi(n) - \frac{\varepsilon d}{\ell^2} + O\!\left(\frac{\varepsilon d^2}{\ell^3}\right).
+\]
+\end{lemma}
+
+\begin{proof}
+Rotate coordinates so that $x = \|x\| e_1$; the rows of $X_n$ remain i.i.d.\ $\mathcal{N}(0, I_d)$, independent of $A$. Then $x^\top \Sigma x = A\,\Sigma_{11} = A/S$ with $S$ the Schur complement of the first coordinate in $\Sigma^{-1}$, which the Woodbury identity writes, with $X_1$ the first column of $X_n$ and $X_{-1}$ the other $d-1$ columns, as
+\[
+S = \varepsilon + X_1^\top \big(I_n + a_0 X_{-1} X_{-1}^\top\big)^{-1} X_1 .
+\]
+Given $X_{-1}$, the middle matrix has eigenvalue $1$ on the $\ell$ directions orthogonal to the columns of $X_{-1}$ and $1/(1 + a_0 \mu_j)$ on the other $d - 1$, where $\mu_j$ are the eigenvalues of $M = X_{-1}^\top X_{-1} \sim W_{d-1}(n, I)$. Since $X_1 \sim \mathcal{N}(0, I_n)$ is independent of $X_{-1}$, its coordinates in that eigenbasis are i.i.d.\ standard normal, and
+\[
+S = Q + \Delta, \qquad Q \sim \chi^2_\ell, \qquad
+\Delta = \varepsilon + \sum_{j < d} \frac{z_j^2}{1 + a_0 \mu_j} \in \big[\varepsilon,\, \varepsilon(1 + F)\big], \qquad F = \sum_{j < d} \frac{z_j^2}{\mu_j},
+\]
+with $A$, $Q$, and $(z, M)$ independent; by (b), $F \sim \chi^2_{d-1} / \chi^2_{\ell+1}$, so $\E F = (d-1)/(\ell-1)$ and, when $\ell \ge \max(d, 7)$, $\E (1+F)^2 \le 5$.
+
+Since $A + Q \sim \chi^2_{n+1}$, (a) gives $\E \log(1 + A/Q) = \psi\big(\tfrac{n+1}{2}\big) - \psi\big(\tfrac{\ell}{2}\big) = 2\Phi(n)$. As $S \ge Q$, $R^{\mathrm{ex}}(n) \le \Phi(n)$, with equality as $a_0 \to \infty$ by monotone convergence, since $\Delta$ decreases to $0$.
+
+For the expansion, $2R^{\mathrm{ex}}(n) = 2\Phi(n) - \E D$ with
+\[
+D = \log\Big(1 + \frac{A}{Q}\Big) - \log\Big(1 + \frac{A}{S}\Big) = \log(1 + y_1) - \log(1 + y_2), \quad y_1 = \frac{\Delta}{Q} \ge y_2 = \frac{\Delta}{Q + A}, \quad y_1 - y_2 = \frac{\Delta A}{Q(Q+A)} .
+\]
+By concavity of $\log(1+y)$ and $1/(1+y_1) \ge 1 - y_1$, $(y_1 - y_2)(1 - \Delta/Q) \le D \le y_1 - y_2$. Here $\Delta$ is independent of $(A, Q)$; $\E \frac{A}{Q(Q+A)} = \E\frac1Q - \E\frac{1}{Q+A} = \frac{d}{(\ell-2)(\ell+d-2)}$ by (a), as $Q + A \sim \chi^2_{\ell+d}$; $\frac{A}{Q^2(Q+A)} \le \frac{A}{Q^3}$; and $\varepsilon \le \E\Delta \le \varepsilon(1 + \E F) = \varepsilon\frac{\ell+d-2}{\ell-1}$, $\E \Delta^2 \le 5\varepsilon^2$. Hence
+\[
+\frac{\varepsilon d}{(\ell-2)(\ell+d-2)} - \frac{5\,\varepsilon^2 d}{(\ell-2)(\ell-4)(\ell-6)} \le \E D \le \frac{\varepsilon d}{(\ell-1)(\ell-2)} ,
+\]
+and both sides are $\varepsilon d / \ell^2 + O(\varepsilon d^2 / \ell^3)$, using $\varepsilon \le 1$.
+\end{proof}
+
+\paragraph{Any prior precision.}
+The proof of Lemma~\ref{lem:many} uses $\varepsilon$ only as the precision of the prior. For $\tau > 0$ let $R^{\tau}(n) = \tfrac12 \E \log\big(1 + x^\top (\tau I + X_n^\top X_n)^{-1} x\big)$, the regret with $n$ demonstrations under a Gaussian prior of precision $\tau$ in every direction, so that $R^{\mathrm{ex}} = R^{\varepsilon}$. With $\tau$ in place of $\varepsilon$ and $1/\tau$ in place of $a_0$, the same proof gives $\Delta \in [\tau, \tau(1+F)]$ and, for $\ell \ge \max(d, 7)$,
+\begin{equation}\label{eq:any-tau}
+2R^{\tau}(n) = 2\Phi(n) - \frac{\tau d}{\ell^2} + O\!\left(\frac{(\tau + \tau^2)\, d^2}{\ell^3}\right).
+\end{equation}
+
+\begin{proof}[Proof of Theorem~\ref{prop:reliable}]
+\emph{(iii).} Conditionally on $A$, $\log(1 + Av)$ is concave in $v$, so Jensen's inequality with $\E[1/Q] = 1/(\ell-2)$ gives $2\Phi(n) \le g(1/(\ell-2))$ for $\ell \ge 3$. If $\ell - 2 \ge c$, that is $n \ge c + d + 1$, then $g(1/(\ell-2)) \le g(1/c) = 2R^{\mathrm{desc}}$, so $R^{\mathrm{ex}}(n) \le \Phi(n) \le R^{\mathrm{desc}}$ by Lemma~\ref{lem:many}. The least such integer is $\lceil c + d + 1 \rceil < c + d + 2$, and $R^{\mathrm{ex}}$ is decreasing, so $\ess \le c + d + 2$.
+
+\emph{(i).} The lower bound and the limit are Lemma~\ref{lem:few}. For the expansion let $c \le 1$, $n_0 = (d-1)(1-r) + (1-r)c$, and $n \ge 0$ an integer with $|n - n_0| \le 3$; write $k = d - n = rd + u$. Since $n_0 = d - rd - u_0$ with $u_0 = 1 - r + \varepsilon - c \in [-c, 1]$, we have $|u| \le 4$, so $k \ge 5$ once $rd \ge 9$. By Lemma~\ref{lem:few}, \eqref{eq:rdesc}, $\psi(z) = \log z - 1/(2z) + O(z^{-2})$, and $\varepsilon = rc$, with every $O$ uniform in $c \le 1$ and $|u| \le 4$,
+\begin{align*}
+h(n) &= \psi(k/2) - \psi(d/2) - \log r + \delta^{\mathrm{ex}} - \delta^{\mathrm{desc}} \\
+&= \Big[\log\frac{k}{rd} - \frac1k + \frac1d\Big] + \frac{\varepsilon d}{r^2 d^2}\Big(1 + O\Big(\frac{1}{rd}\Big)\Big) - \frac{c}{d} + O\Big(\frac{1}{(rd)^2}\Big)
+ = \frac{u - 1 + r + c - \varepsilon}{rd} + O\Big(\frac{1}{(rd)^2}\Big),
+\end{align*}
+since $\log(k/(rd)) = u/(rd) + O((rd)^{-2})$, $1/k = 1/(rd) + O((rd)^{-2})$, $\varepsilon d / (r^2 d^2) = c/(rd)$, and $c/d = \varepsilon/(rd)$. So $h(n) = \frac{1}{rd}\big[(n_0 - n) + O(1/(rd))\big]$, which is~\eqref{eq:root} with $\alpha = \theta = 1/(rd)$, and $\ess = (d-1)(1-r) + (1-r)c + O(1/(rd))$.
+
+\emph{(ii).} The upper bound and the limit are Lemma~\ref{lem:many}. For the expansion let $n_0 = c + d + 1 - \varepsilon$ and $n$ an integer with $|n - n_0| \le 3$, so that $\ell - 2 = c + s$ with $s = n - n_0 - \varepsilon$, $|s| \le 4$; for $c \ge 9d$ every such $n$ has $\ell \ge \max(d, 7)$. By~\eqref{eq:rdesc} and Lemma~\ref{lem:many}, $2\Phi(n) - 2R^{\mathrm{desc}} = \E\big[g(1/Q) - g(1/c)\big]$, and a second-order Taylor expansion of $g$ about $1/c$ with~\eqref{eq:g-derivs}, $\E[1/Q] - 1/c = -s/(c(c+s))$, and $\E(1/Q - 1/c)^2 = \operatorname{Var}(1/Q) + s^2/(c(c+s))^2 = O(c^{-3})$ gives
+\[
+2\Phi(n) - 2R^{\mathrm{desc}} = -\frac{s}{c(c+s)}\,d\,\Big(1 + O\Big(\frac dc\Big)\Big) + O\Big(\frac{d^2}{c^3}\Big) = -\frac{ds}{c^2} + O\Big(\frac{d^2}{c^3}\Big).
+\]
+With Lemma~\ref{lem:many}, $\varepsilon \le 1$, and $\varepsilon d/\ell^2 = \varepsilon d/c^2 + O(d/c^3)$,
+\[
+h(n) = -\frac{d}{c^2}\Big[s + \varepsilon + O\Big(\frac{d}{c}\Big)\Big] = \frac{d}{c^2}\Big[(n_0 - n) + O\Big(\frac{d}{c}\Big)\Big],
+\]
+which is~\eqref{eq:root} with $\alpha = d/c^2$ and $\theta = d/c$, uniformly in $a_0 \ge 1$, so $\ess = c + d + 1 - 1/a_0 + O(d/c)$.
+\end{proof}
+
+\subsection{Proof of Proposition \ref{prop:unreliable} (Descriptions That May Be Irrelevant)}\label{app:reliability}
+Let $D_n = (x_{1:n}, y_{1:n}, m, x)$ be the prompt with the query input, and let $\pi_n = P(Z = 1 \mid D_n)$ be the posterior probability that the description is relevant. Write $\pi_n(Z)$ for the posterior weight on the true case: $\pi_n$ if $Z = 1$ and $1 - \pi_n$ otherwise.
+
+\paragraph{Step 1: the mixture predictive.}
+The Bayes-optimal predictive is $f(y) = \pi_n f_1(y) + (1 - \pi_n) f_0(y)$, where $f_1$ and $f_0$ are the predictives of the two cases given $D_n$: $f_1$ is the predictive of the Bayes-optimal predictor for a reliable description, and $f_0$ is that of the Bayes-optimal predictor with the demonstrations alone, because under $Z = 0$ the description is independent of $w$ and carries no information about $y$. At $n = 0$, $\pi_0 = p$: seeing $m$ says nothing about $Z$, because $m$ has the same law $\mathcal{N}(0, (1-r) a_0 I)$ in both cases, and $x$ is independent of $Z$. The two predictives are then $f_1 = \mathcal{N}(m^\top x,\, 1 + r a_0\|x\|^2)$ and $f_0 = \mathcal{N}(0,\, 1 + a_0\|x\|^2)$.
+
+\paragraph{Step 2: the decomposition.}
+Consider a predictor that is told $Z$. It predicts with $f_1$ when $Z=1$, incurring regret $R^{\mathrm{desc}}_{p=1}(n)$, and with $f_0$ when $Z=0$, incurring regret $R^{\mathrm{ex}}(n)$, so its expected regret is $p R^{\mathrm{desc}}_{p=1}(n) + (1-p) R^{\mathrm{ex}}(n)$. Given $(D_n, Z)$ the true conditional density of $y$ is $f_Z$, so the Bayes-optimal predictor's expected log loss exceeds the told predictor's by
+\[
+\E\big[\log f_Z(y) - \log f(y)\big] = \E\big[\mathrm{KL}(f_Z \,\|\, f)\big] = I(Z;\, y \mid D_n) = I_n \ge 0,
+\]
+the conditional mutual information, because $f$ is the law of $y$ given $D_n$ and $f_Z$ its law given $D_n$ and $Z$. This is~\eqref{eq:decomp}.
+
+\paragraph{Step 3: the bounds.}
+By definition $I_n = H(Z \mid D_n) - H(Z \mid D_n, y)$. A query input is independent of $Z$ and of everything else in the prompt, so $H(Z \mid D_n) = H(Z \mid x_{1:n}, y_{1:n}, m)$, and the query of $D_n$ with its label is a further demonstration, so $H(Z \mid D_n, y) = H(Z \mid D_{n+1})$. Hence $I_n = H(Z \mid D_n) - H(Z \mid D_{n+1}) \le H(Z \mid D_n)$, the entropies $H(Z \mid D_n)$ are non-increasing in $n$, and the sum telescopes: $\sum_{n < N} I_n = H(Z \mid D_0) - H(Z \mid D_N) \le H(Z \mid D_0) = H(p)$, as $\pi_0 = p$ by Step 1.
+
+\paragraph{Step 4: case by case.}
+Let the label of each query join the demonstrations, so that $D_{n+1}$ extends $D_n$. By Bayes' rule, $f_Z(y)/f(y) = \pi_{n+1}(Z)/\pi_n(Z)$: the excess log loss on a label is the log of the factor by which that label raises the posterior weight on the true case. Summed over the first $N$ labels the excess telescopes to $\log \pi_N(Z) - \log \pi_0(Z) \le -\log \pi_0(Z)$, and $\pi_0 = p$ by Step 1. So over the whole prompt the Bayes-optimal predictor's log loss exceeds the told predictor's by at most $\log(1/p)$ when the description is relevant and by at most $\log(1/(1-p))$ when it is irrelevant.
+
+This completes the proof of Proposition~\ref{prop:unreliable}.
+
+\begin{proof}[Proof of Corollary~\ref{cor:ess}]
+\emph{(i).} At $n = 0$, \eqref{eq:decomp} with $I_0 \ge 0$ gives $R^{\mathrm{desc}}(0) \ge (1-p)R^{\mathrm{ex}}(0)$ for every $r$, because $R^{\mathrm{desc}}_{p=1}(0) = \tfrac12 \E \log(1 + r a_0 \|x\|^2)$ is nonnegative. Since $R^{\mathrm{ex}}(n)$ is strictly decreasing in $n$ and tends to $0$ (Lemma~\ref{lem:many}, as $\Phi(n) \to 0$), there is a finite $n^*_p$ with $R^{\mathrm{ex}}(n^*_p) = (1-p)R^{\mathrm{ex}}(0)$, and the root that defines $\ess_0$ cannot exceed it. Moreover $R^{\mathrm{desc}}_{p=1}(0)$ decreases to $0$ as $r \to 0$ by monotone convergence, so in that limit the standalone regret lies between $(1-p)R^{\mathrm{ex}}(0)$ and $(1-p)R^{\mathrm{ex}}(0) + H(p)$.
+
+\emph{(ii).} Fix $d$, $a_0$, and $r$; every $O$ below is as $n \to \infty$ with these fixed. A reliable description leaves the prior $\mathcal{N}(m, r a_0 I)$, of precision $c$ in every direction, and the regret does not depend on $m$, so $R^{\mathrm{desc}}_{p=1} = R^{c}$ in the notation of~\eqref{eq:any-tau}, while $R^{\mathrm{ex}} = R^{\varepsilon}$. Since $1/\ell^2 = 1/n^2 + O(n^{-3})$, \eqref{eq:any-tau} gives
+\[
+R^{\mathrm{ex}}(n) - R^{\mathrm{desc}}_{p=1}(n) = \frac{(c - \varepsilon)\,d}{2n^2} + O(n^{-3}).
+\]
+By the standard expansion $\psi(z) = \log z - 1/(2z) - 1/(12z^2) + O(z^{-4})$, $\psi(z + \tfrac12) - \psi(z) = 1/(2z) + 1/(8z^2) + O(z^{-3})$, so $2\Phi(n) - 2\Phi(n+1) = d/(\ell(n+1)) + O(n^{-3})$, and with~\eqref{eq:any-tau} again,
+\[
+R^{\mathrm{ex}}(n) - R^{\mathrm{ex}}(n+1) = \frac{d}{2n^2} + O(n^{-3}).
+\]
+Let $L(n) = p\,R^{\mathrm{desc}}_{p=1}(n) + (1-p)\,R^{\mathrm{ex}}(n) = R^{\mathrm{ex}}(n) - p\,\big(R^{\mathrm{ex}}(n) - R^{\mathrm{desc}}_{p=1}(n)\big)$ be the first two terms of~\eqref{eq:decomp}, and let $n + k_n$ be the root at which the interpolated $R^{\mathrm{ex}}$ equals $L(n)$. On any bounded number of steps past $n$ the interpolated $R^{\mathrm{ex}}$ falls by $\tfrac{d}{2n^2}(1 + O(1/n))$ per step, and it must fall by $p\,(c - \varepsilon)\,\tfrac{d}{2n^2}(1 + O(1/n))$ in total, so $k_n = p\,(c - \varepsilon) + O(1/n)$. If $p = 1$, then $R^{\mathrm{desc}} = L$ and $\ess_n = k_n \to c - \varepsilon$. If $p < 1$, then $R^{\mathrm{desc}}(n) = L(n) + I_n \ge L(n)$ and $R^{\mathrm{ex}}$ is decreasing, so $\ess_n \le k_n$ and $\limsup_n \ess_n \le p\,(c - \varepsilon)$.
+\end{proof}
+
+\subsection{The Fully Trusting Predictor}\label{app:trust}
+We derive~\eqref{eq:trust}. With no demonstrations, the fully trusting predictor uses $f_1 = \mathcal{N}(m^\top x, v_1)$ with $v_1 = 1 + r a_0 \|x\|^2$. If the description is relevant, $f_1$ is the true conditional law of $y$ and the regret is $\tfrac12 \E \log v_1 = R^{\mathrm{desc}}_{p=1}(0)$. If it is irrelevant, $w$ is independent of $m$, so given $x$ the error $y - m^\top x$ has mean zero and variance $1 + a_0\|x\|^2 + (1-r)a_0\|x\|^2 = v_1 + 2(1-r)a_0\|x\|^2$. The expected log loss of $f_1$ is then $\tfrac12 \log(2\pi v_1) + \tfrac12 + (1-r)a_0\|x\|^2/v_1$, against $\tfrac12 \log(2\pi) + \tfrac12$ for the oracle, so the regret given $x$ is $\tfrac12 \log v_1 + (1-r)a_0\|x\|^2/v_1$. Averaging over the two cases gives~\eqref{eq:trust}. The integrand of the penalty increases to $a_0\|x\|^2$ as $r \to 0$, so the penalty increases to $(1-p)\,a_0 d$ by monotone convergence.
+
+\section{The Meta-Trained Networks in Full}\label{app:networks}
+\begin{table}[t]
+\centering\small
+\caption{Networks against the reference predictors ($d=5$, $a_0=10$; 20{,}000 evaluation prompts per network, with the standard error of its ESS; the last three rows are the second seed). ``Trained'' and ``calibrated'' are the Bayes-optimal predictors with the training and the test reliability, computed once on 200{,}000 prompts (standard errors below $0.12$) and shown once where they coincide; ``single Gaussian'' is the best predictive that a mean and a variance can express, where the Bayes-optimal predictive is a mixture. ``Trust'' is the network's implied trust with the description alone, on a grid of step $0.05$ plus $0.99$ and $0.999$. The last two columns are the mean regret gap, network minus the trained predictor, over $n = 0, \dots, 20$, with and without a description.}
+\label{tab:networks}
+\vspace{3pt}
+\input{../../results/rq3-meta-trained/networks_table.tex}
+\end{table}
+
+\section{The Language-Model Test in Full}\label{app:llm}
+Table~\ref{tab:llm-worth} gives the ESS of every description at every number of demonstrations shown, and Table~\ref{tab:llm-full} the weight on the stated value, each against the Bayes-optimal value, with how often each model's reply begins with a number. MiniCPM5~2B and OLMo~2 7B and 13B Instruct begin fewer than three quarters of their replies with a number, mostly explaining instead (``To predict\ldots'', ``Given\ldots'') despite the instruction to reply with the number only, and are not reported beyond that.
+
+\begin{table}[t]
+\centering\scriptsize
+\setlength{\tabcolsep}{1.2pt}
+\caption{ESS of a description, model/Bayes-optimal, for every condition and number of demonstrations shown ($2{,}000$ tasks). ``Number'' is the share of replies that begin with a three-digit number, averaged over $n$; a cell is in italics where that share is below three quarters at that $n$. Rel./irrel.: a relevant or irrelevant description; w.: a stated chance of being wrong. Rel.\ and irrel.: a relevant or an irrelevant description; w.: a stated chance of being wrong. $> 64$: the model's error with the description is below its error with $64$ demonstrations and no description.}
+\label{tab:llm-worth}
+\vspace{3pt}
+\input{../../results/llm-test/llm_table_worth.tex}
+\end{table}
+
+\begin{table}[t]
+\centering\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\caption{Weight on the stated value, model/Bayes-optimal, for every condition and number of demonstrations shown. Italics as in Table~\ref{tab:llm-worth}.}
+\label{tab:llm-full}
+\vspace{3pt}
+\input{../../results/llm-test/llm_table_full.tex}
+\end{table}
+
+\end{document}

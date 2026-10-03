@@ -1,0 +1,4681 @@
+model,condition,reading,n,ess_n
+7B,valid30,numbers,1,0.984
+7B,valid30,numbers,2,3.145
+7B,valid30,numbers,3,2.724
+7B,valid30,numbers,4,2.256
+7B,valid30,numbers,5,1.115
+7B,valid30,numbers,6,0.994
+7B,valid30,numbers,7,1.285
+7B,valid30,numbers,8,1.009
+7B,valid30,numbers,9,0.889
+7B,valid30,numbers,10,0.47
+7B,valid30,numbers,11,0.224
+7B,valid30,numbers,12,0.03
+7B,valid30,numbers,13,-0.345
+7B,valid30,numbers,14,-0.105
+7B,valid30,numbers,15,0.03
+7B,valid30,numbers,16,0.177
+7B,valid30,numbers,17,0.232
+7B,valid30,numbers,18,0.571
+7B,valid30,numbers,19,0.365
+7B,valid30,numbers,20,0.616
+7B,valid30,numbers,21,0.884
+7B,valid30,numbers,22,1.63
+7B,valid30,numbers,23,0.971
+7B,valid30,numbers,24,0.632
+7B,valid30,numbers,25,0.91
+7B,valid30,numbers,26,1.497
+7B,valid30,numbers,27,0.387
+7B,valid30,numbers,28,1.307
+7B,valid30,numbers,29,0.766
+7B,valid30,numbers,30,0.707
+7B,valid30,all,1,0.561
+7B,valid30,all,2,1.761
+7B,valid30,all,3,1.399
+7B,valid30,all,4,0.552
+7B,valid30,all,5,-1.302
+7B,valid30,all,6,-1.285
+7B,valid30,all,7,-0.909
+7B,valid30,all,8,-1.095
+7B,valid30,all,9,-1.478
+7B,valid30,all,10,-2.319
+7B,valid30,all,11,-2.59
+7B,valid30,all,12,-2.484
+7B,valid30,all,13,-2.537
+7B,valid30,all,14,-2.34
+7B,valid30,all,15,-1.897
+7B,valid30,all,16,-1.996
+7B,valid30,all,17,-2.18
+7B,valid30,all,18,-1.727
+7B,valid30,all,19,-1.833
+7B,valid30,all,20,-1.879
+7B,valid30,all,21,-1.563
+7B,valid30,all,22,-1.403
+7B,valid30,all,23,-1.811
+7B,valid30,all,24,-1.643
+7B,valid30,all,25,-1.289
+7B,valid30,all,26,-1.355
+7B,valid30,all,27,-2.294
+7B,valid30,all,28,-0.921
+7B,valid30,all,29,-1.535
+7B,valid30,all,30,-2.009
+7B,valid10,numbers,1,1.222
+7B,valid10,numbers,2,3.944
+7B,valid10,numbers,3,2.99
+7B,valid10,numbers,4,2.544
+7B,valid10,numbers,5,1.378
+7B,valid10,numbers,6,1.208
+7B,valid10,numbers,7,1.45
+7B,valid10,numbers,8,1.176
+7B,valid10,numbers,9,0.988
+7B,valid10,numbers,10,0.555
+7B,valid10,numbers,11,0.36
+7B,valid10,numbers,12,0.03
+7B,valid10,numbers,13,-0.321
+7B,valid10,numbers,14,-0.072
+7B,valid10,numbers,15,0.034
+7B,valid10,numbers,16,0.088
+7B,valid10,numbers,17,0.149
+7B,valid10,numbers,18,0.38
+7B,valid10,numbers,19,0.259
+7B,valid10,numbers,20,0.474
+7B,valid10,numbers,21,0.521
+7B,valid10,numbers,22,1.24
+7B,valid10,numbers,23,0.602
+7B,valid10,numbers,24,0.326
+7B,valid10,numbers,25,0.435
+7B,valid10,numbers,26,1.131
+7B,valid10,numbers,27,0.062
+7B,valid10,numbers,28,-0.141
+7B,valid10,numbers,29,0.089
+7B,valid10,numbers,30,0.028
+7B,valid10,all,1,0.626
+7B,valid10,all,2,1.978
+7B,valid10,all,3,1.472
+7B,valid10,all,4,0.681
+7B,valid10,all,5,-1.247
+7B,valid10,all,6,-1.253
+7B,valid10,all,7,-0.856
+7B,valid10,all,8,-1.043
+7B,valid10,all,9,-1.428
+7B,valid10,all,10,-2.257
+7B,valid10,all,11,-2.479
+7B,valid10,all,12,-2.403
+7B,valid10,all,13,-2.435
+7B,valid10,all,14,-2.239
+7B,valid10,all,15,-1.8
+7B,valid10,all,16,-1.942
+7B,valid10,all,17,-2.151
+7B,valid10,all,18,-1.678
+7B,valid10,all,19,-1.79
+7B,valid10,all,20,-1.789
+7B,valid10,all,21,-1.651
+7B,valid10,all,22,-1.605
+7B,valid10,all,23,-2.03
+7B,valid10,all,24,-1.871
+7B,valid10,all,25,-1.465
+7B,valid10,all,26,-1.69
+7B,valid10,all,27,-2.584
+7B,valid10,all,28,-2.168
+7B,valid10,all,29,-1.744
+7B,valid10,all,30,-2.262
+7B,valid3,numbers,1,1.301
+7B,valid3,numbers,2,3.925
+7B,valid3,numbers,3,2.972
+7B,valid3,numbers,4,2.553
+7B,valid3,numbers,5,1.331
+7B,valid3,numbers,6,1.166
+7B,valid3,numbers,7,1.411
+7B,valid3,numbers,8,1.108
+7B,valid3,numbers,9,0.924
+7B,valid3,numbers,10,0.468
+7B,valid3,numbers,11,0.234
+7B,valid3,numbers,12,-0.084
+7B,valid3,numbers,13,-0.438
+7B,valid3,numbers,14,-0.203
+7B,valid3,numbers,15,-0.17
+7B,valid3,numbers,16,-0.297
+7B,valid3,numbers,17,-0.098
+7B,valid3,numbers,18,-0.038
+7B,valid3,numbers,19,-0.04
+7B,valid3,numbers,20,0.033
+7B,valid3,numbers,21,0.128
+7B,valid3,numbers,22,0.887
+7B,valid3,numbers,23,0.218
+7B,valid3,numbers,24,-0.164
+7B,valid3,numbers,25,-0.258
+7B,valid3,numbers,26,-0.128
+7B,valid3,numbers,27,-1.361
+7B,valid3,numbers,28,-0.379
+7B,valid3,numbers,29,-1.037
+7B,valid3,numbers,30,-0.374
+7B,valid3,all,1,0.657
+7B,valid3,all,2,1.96
+7B,valid3,all,3,1.541
+7B,valid3,all,4,0.782
+7B,valid3,all,5,-1.284
+7B,valid3,all,6,-1.293
+7B,valid3,all,7,-0.855
+7B,valid3,all,8,-1.031
+7B,valid3,all,9,-1.421
+7B,valid3,all,10,-2.264
+7B,valid3,all,11,-2.486
+7B,valid3,all,12,-2.405
+7B,valid3,all,13,-2.424
+7B,valid3,all,14,-2.255
+7B,valid3,all,15,-1.878
+7B,valid3,all,16,-2.062
+7B,valid3,all,17,-2.221
+7B,valid3,all,18,-1.851
+7B,valid3,all,19,-1.882
+7B,valid3,all,20,-2.013
+7B,valid3,all,21,-1.79
+7B,valid3,all,22,-1.76
+7B,valid3,all,23,-2.266
+7B,valid3,all,24,-2.288
+7B,valid3,all,25,-1.879
+7B,valid3,all,26,-2.007
+7B,valid3,all,27,-2.986
+7B,valid3,all,28,-2.472
+7B,valid3,all,29,-1.909
+7B,valid3,all,30,-2.383
+7B,exact,numbers,1,0.833
+7B,exact,numbers,2,1.019
+7B,exact,numbers,3,1.971
+7B,exact,numbers,4,1.676
+7B,exact,numbers,5,0.527
+7B,exact,numbers,6,0.465
+7B,exact,numbers,7,0.917
+7B,exact,numbers,8,0.754
+7B,exact,numbers,9,0.613
+7B,exact,numbers,10,0.54
+7B,exact,numbers,11,0.673
+7B,exact,numbers,12,0.997
+7B,exact,numbers,13,1.061
+7B,exact,numbers,14,1.321
+7B,exact,numbers,15,2.279
+7B,exact,numbers,16,2.012
+7B,exact,numbers,17,2.363
+7B,exact,numbers,18,3.338
+7B,exact,numbers,19,4.119
+7B,exact,numbers,20,4.418
+7B,exact,numbers,21,4.921
+7B,exact,numbers,22,5.676
+7B,exact,numbers,23,4.904
+7B,exact,numbers,24,5.781
+7B,exact,numbers,25,6.833
+7B,exact,numbers,26,8.311
+7B,exact,numbers,27,7.878
+7B,exact,numbers,28,10.081
+7B,exact,numbers,29,10.395
+7B,exact,numbers,30,10.528
+7B,exact,all,1,0.604
+7B,exact,all,2,0.64
+7B,exact,all,3,1.308
+7B,exact,all,4,0.608
+7B,exact,all,5,-1.138
+7B,exact,all,6,-1.16
+7B,exact,all,7,-0.399
+7B,exact,all,8,-0.462
+7B,exact,all,9,-0.804
+7B,exact,all,10,-1.114
+7B,exact,all,11,-0.787
+7B,exact,all,12,-0.362
+7B,exact,all,13,0.275
+7B,exact,all,14,0.654
+7B,exact,all,15,1.674
+7B,exact,all,16,1.748
+7B,exact,all,17,2.113
+7B,exact,all,18,3.023
+7B,exact,all,19,3.912
+7B,exact,all,20,4.322
+7B,exact,all,21,4.815
+7B,exact,all,22,5.624
+7B,exact,all,23,4.904
+7B,exact,all,24,5.837
+7B,exact,all,25,6.901
+7B,exact,all,26,8.323
+7B,exact,all,27,7.929
+7B,exact,all,28,10.14
+7B,exact,all,29,10.431
+7B,exact,all,30,10.595
+7B,invalid30,numbers,1,0.297
+7B,invalid30,numbers,2,0.985
+7B,invalid30,numbers,3,1.309
+7B,invalid30,numbers,4,0.94
+7B,invalid30,numbers,5,0.269
+7B,invalid30,numbers,6,0.211
+7B,invalid30,numbers,7,0.236
+7B,invalid30,numbers,8,0.192
+7B,invalid30,numbers,9,-0.014
+7B,invalid30,numbers,10,-0.502
+7B,invalid30,numbers,11,-0.824
+7B,invalid30,numbers,12,-0.825
+7B,invalid30,numbers,13,-1.313
+7B,invalid30,numbers,14,-1.007
+7B,invalid30,numbers,15,-0.829
+7B,invalid30,numbers,16,-1.026
+7B,invalid30,numbers,17,-0.854
+7B,invalid30,numbers,18,-0.399
+7B,invalid30,numbers,19,-0.709
+7B,invalid30,numbers,20,-0.285
+7B,invalid30,numbers,21,-0.141
+7B,invalid30,numbers,22,0.495
+7B,invalid30,numbers,23,0.323
+7B,invalid30,numbers,24,0.034
+7B,invalid30,numbers,25,0.242
+7B,invalid30,numbers,26,1.105
+7B,invalid30,numbers,27,0.115
+7B,invalid30,numbers,28,-0.01
+7B,invalid30,numbers,29,0.077
+7B,invalid30,numbers,30,0.312
+7B,invalid30,all,1,0.277
+7B,invalid30,all,2,0.708
+7B,invalid30,all,3,0.668
+7B,invalid30,all,4,-0.164
+7B,invalid30,all,5,-1.485
+7B,invalid30,all,6,-1.653
+7B,invalid30,all,7,-1.335
+7B,invalid30,all,8,-1.452
+7B,invalid30,all,9,-1.897
+7B,invalid30,all,10,-2.715
+7B,invalid30,all,11,-3.048
+7B,invalid30,all,12,-3.043
+7B,invalid30,all,13,-3.136
+7B,invalid30,all,14,-2.952
+7B,invalid30,all,15,-2.779
+7B,invalid30,all,16,-2.641
+7B,invalid30,all,17,-2.739
+7B,invalid30,all,18,-2.588
+7B,invalid30,all,19,-2.603
+7B,invalid30,all,20,-2.39
+7B,invalid30,all,21,-2.314
+7B,invalid30,all,22,-2.207
+7B,invalid30,all,23,-2.476
+7B,invalid30,all,24,-2.393
+7B,invalid30,all,25,-1.745
+7B,invalid30,all,26,-1.882
+7B,invalid30,all,27,-2.662
+7B,invalid30,all,28,-2.098
+7B,invalid30,all,29,-1.833
+7B,invalid30,all,30,-2.203
+7B,invalid10,numbers,1,0.306
+7B,invalid10,numbers,2,0.99
+7B,invalid10,numbers,3,1.354
+7B,invalid10,numbers,4,1.008
+7B,invalid10,numbers,5,0.374
+7B,invalid10,numbers,6,0.276
+7B,invalid10,numbers,7,0.275
+7B,invalid10,numbers,8,0.264
+7B,invalid10,numbers,9,0.065
+7B,invalid10,numbers,10,-0.437
+7B,invalid10,numbers,11,-0.775
+7B,invalid10,numbers,12,-0.768
+7B,invalid10,numbers,13,-1.224
+7B,invalid10,numbers,14,-0.922
+7B,invalid10,numbers,15,-0.795
+7B,invalid10,numbers,16,-0.96
+7B,invalid10,numbers,17,-0.933
+7B,invalid10,numbers,18,-0.445
+7B,invalid10,numbers,19,-0.705
+7B,invalid10,numbers,20,-0.241
+7B,invalid10,numbers,21,-0.053
+7B,invalid10,numbers,22,0.721
+7B,invalid10,numbers,23,0.407
+7B,invalid10,numbers,24,0.13
+7B,invalid10,numbers,25,0.373
+7B,invalid10,numbers,26,1.181
+7B,invalid10,numbers,27,0.152
+7B,invalid10,numbers,28,0.895
+7B,invalid10,numbers,29,0.291
+7B,invalid10,numbers,30,0.471
+7B,invalid10,all,1,0.27
+7B,invalid10,all,2,0.69
+7B,invalid10,all,3,0.664
+7B,invalid10,all,4,-0.151
+7B,invalid10,all,5,-1.458
+7B,invalid10,all,6,-1.652
+7B,invalid10,all,7,-1.351
+7B,invalid10,all,8,-1.442
+7B,invalid10,all,9,-1.876
+7B,invalid10,all,10,-2.695
+7B,invalid10,all,11,-3.023
+7B,invalid10,all,12,-2.997
+7B,invalid10,all,13,-3.054
+7B,invalid10,all,14,-2.866
+7B,invalid10,all,15,-2.68
+7B,invalid10,all,16,-2.556
+7B,invalid10,all,17,-2.72
+7B,invalid10,all,18,-2.545
+7B,invalid10,all,19,-2.489
+7B,invalid10,all,20,-2.298
+7B,invalid10,all,21,-2.092
+7B,invalid10,all,22,-2.033
+7B,invalid10,all,23,-2.287
+7B,invalid10,all,24,-2.177
+7B,invalid10,all,25,-1.561
+7B,invalid10,all,26,-1.682
+7B,invalid10,all,27,-2.508
+7B,invalid10,all,28,-1.006
+7B,invalid10,all,29,-1.682
+7B,invalid10,all,30,-2.067
+7B,invalid3,numbers,1,0.338
+7B,invalid3,numbers,2,0.963
+7B,invalid3,numbers,3,1.298
+7B,invalid3,numbers,4,1.0
+7B,invalid3,numbers,5,0.314
+7B,invalid3,numbers,6,0.158
+7B,invalid3,numbers,7,0.126
+7B,invalid3,numbers,8,0.118
+7B,invalid3,numbers,9,-0.08
+7B,invalid3,numbers,10,-0.596
+7B,invalid3,numbers,11,-0.895
+7B,invalid3,numbers,12,-0.982
+7B,invalid3,numbers,13,-1.397
+7B,invalid3,numbers,14,-1.132
+7B,invalid3,numbers,15,-0.921
+7B,invalid3,numbers,16,-1.112
+7B,invalid3,numbers,17,-1.105
+7B,invalid3,numbers,18,-0.519
+7B,invalid3,numbers,19,-0.788
+7B,invalid3,numbers,20,-0.432
+7B,invalid3,numbers,21,-0.488
+7B,invalid3,numbers,22,0.342
+7B,invalid3,numbers,23,0.198
+7B,invalid3,numbers,24,-0.071
+7B,invalid3,numbers,25,0.057
+7B,invalid3,numbers,26,0.211
+7B,invalid3,numbers,27,-0.768
+7B,invalid3,numbers,28,-0.191
+7B,invalid3,numbers,29,-0.061
+7B,invalid3,numbers,30,-0.061
+7B,invalid3,all,1,0.285
+7B,invalid3,all,2,0.668
+7B,invalid3,all,3,0.664
+7B,invalid3,all,4,-0.114
+7B,invalid3,all,5,-1.49
+7B,invalid3,all,6,-1.735
+7B,invalid3,all,7,-1.389
+7B,invalid3,all,8,-1.472
+7B,invalid3,all,9,-1.927
+7B,invalid3,all,10,-2.749
+7B,invalid3,all,11,-3.04
+7B,invalid3,all,12,-3.054
+7B,invalid3,all,13,-3.116
+7B,invalid3,all,14,-2.933
+7B,invalid3,all,15,-2.748
+7B,invalid3,all,16,-2.618
+7B,invalid3,all,17,-2.752
+7B,invalid3,all,18,-2.552
+7B,invalid3,all,19,-2.452
+7B,invalid3,all,20,-2.35
+7B,invalid3,all,21,-2.369
+7B,invalid3,all,22,-2.101
+7B,invalid3,all,23,-2.381
+7B,invalid3,all,24,-2.278
+7B,invalid3,all,25,-1.686
+7B,invalid3,all,26,-1.952
+7B,invalid3,all,27,-2.75
+7B,invalid3,all,28,-2.206
+7B,invalid3,all,29,-1.763
+7B,invalid3,all,30,-2.275
+7B,valid30_sentence,numbers,1,1.251
+7B,valid30_sentence,numbers,2,1.699
+7B,valid30_sentence,numbers,3,2.158
+7B,valid30_sentence,numbers,4,1.277
+7B,valid30_sentence,numbers,5,-0.249
+7B,valid30_sentence,numbers,6,-0.636
+7B,valid30_sentence,numbers,7,-0.748
+7B,valid30_sentence,numbers,8,-1.123
+7B,valid30_sentence,numbers,9,-1.384
+7B,valid30_sentence,numbers,10,-1.612
+7B,valid30_sentence,numbers,11,-1.767
+7B,valid30_sentence,numbers,12,-1.505
+7B,valid30_sentence,numbers,13,-1.573
+7B,valid30_sentence,numbers,14,-1.215
+7B,valid30_sentence,numbers,15,-1.1
+7B,valid30_sentence,numbers,16,-1.293
+7B,valid30_sentence,numbers,17,-1.154
+7B,valid30_sentence,numbers,18,-0.687
+7B,valid30_sentence,numbers,19,-0.474
+7B,valid30_sentence,numbers,20,0.113
+7B,valid30_sentence,numbers,21,0.578
+7B,valid30_sentence,numbers,22,1.444
+7B,valid30_sentence,numbers,23,1.155
+7B,valid30_sentence,numbers,24,1.455
+7B,valid30_sentence,numbers,25,2.63
+7B,valid30_sentence,numbers,26,3.177
+7B,valid30_sentence,numbers,27,2.622
+7B,valid30_sentence,numbers,28,3.954
+7B,valid30_sentence,numbers,29,4.027
+7B,valid30_sentence,numbers,30,4.375
+7B,valid30_sentence,all,1,0.869
+7B,valid30_sentence,all,2,0.986
+7B,valid30_sentence,all,3,0.882
+7B,valid30_sentence,all,4,-0.137
+7B,valid30_sentence,all,5,-1.372
+7B,valid30_sentence,all,6,-1.899
+7B,valid30_sentence,all,7,-1.985
+7B,valid30_sentence,all,8,-2.332
+7B,valid30_sentence,all,9,-2.85
+7B,valid30_sentence,all,10,-3.327
+7B,valid30_sentence,all,11,-3.56
+7B,valid30_sentence,all,12,-3.515
+7B,valid30_sentence,all,13,-3.641
+7B,valid30_sentence,all,14,-3.556
+7B,valid30_sentence,all,15,-3.619
+7B,valid30_sentence,all,16,-3.535
+7B,valid30_sentence,all,17,-3.361
+7B,valid30_sentence,all,18,-3.386
+7B,valid30_sentence,all,19,-3.007
+7B,valid30_sentence,all,20,-2.241
+7B,valid30_sentence,all,21,-1.797
+7B,valid30_sentence,all,22,-1.591
+7B,valid30_sentence,all,23,-1.361
+7B,valid30_sentence,all,24,-0.334
+7B,valid30_sentence,all,25,0.259
+7B,valid30_sentence,all,26,1.167
+7B,valid30_sentence,all,27,0.566
+7B,valid30_sentence,all,28,1.763
+7B,valid30_sentence,all,29,1.652
+7B,valid30_sentence,all,30,1.838
+7B,valid10_sentence,numbers,1,1.451
+7B,valid10_sentence,numbers,2,1.911
+7B,valid10_sentence,numbers,3,2.219
+7B,valid10_sentence,numbers,4,1.293
+7B,valid10_sentence,numbers,5,-0.199
+7B,valid10_sentence,numbers,6,-0.624
+7B,valid10_sentence,numbers,7,-0.79
+7B,valid10_sentence,numbers,8,-1.193
+7B,valid10_sentence,numbers,9,-1.517
+7B,valid10_sentence,numbers,10,-1.744
+7B,valid10_sentence,numbers,11,-1.865
+7B,valid10_sentence,numbers,12,-1.706
+7B,valid10_sentence,numbers,13,-1.672
+7B,valid10_sentence,numbers,14,-1.371
+7B,valid10_sentence,numbers,15,-1.181
+7B,valid10_sentence,numbers,16,-1.364
+7B,valid10_sentence,numbers,17,-1.324
+7B,valid10_sentence,numbers,18,-0.763
+7B,valid10_sentence,numbers,19,-0.858
+7B,valid10_sentence,numbers,20,-0.049
+7B,valid10_sentence,numbers,21,0.257
+7B,valid10_sentence,numbers,22,1.135
+7B,valid10_sentence,numbers,23,0.771
+7B,valid10_sentence,numbers,24,1.075
+7B,valid10_sentence,numbers,25,2.37
+7B,valid10_sentence,numbers,26,1.983
+7B,valid10_sentence,numbers,27,1.648
+7B,valid10_sentence,numbers,28,2.604
+7B,valid10_sentence,numbers,29,2.426
+7B,valid10_sentence,numbers,30,2.608
+7B,valid10_sentence,all,1,0.935
+7B,valid10_sentence,all,2,1.046
+7B,valid10_sentence,all,3,0.873
+7B,valid10_sentence,all,4,-0.132
+7B,valid10_sentence,all,5,-1.332
+7B,valid10_sentence,all,6,-1.86
+7B,valid10_sentence,all,7,-1.978
+7B,valid10_sentence,all,8,-2.35
+7B,valid10_sentence,all,9,-2.89
+7B,valid10_sentence,all,10,-3.357
+7B,valid10_sentence,all,11,-3.57
+7B,valid10_sentence,all,12,-3.559
+7B,valid10_sentence,all,13,-3.639
+7B,valid10_sentence,all,14,-3.546
+7B,valid10_sentence,all,15,-3.592
+7B,valid10_sentence,all,16,-3.504
+7B,valid10_sentence,all,17,-3.358
+7B,valid10_sentence,all,18,-3.35
+7B,valid10_sentence,all,19,-3.065
+7B,valid10_sentence,all,20,-2.231
+7B,valid10_sentence,all,21,-1.879
+7B,valid10_sentence,all,22,-1.733
+7B,valid10_sentence,all,23,-1.585
+7B,valid10_sentence,all,24,-0.443
+7B,valid10_sentence,all,25,-0.027
+7B,valid10_sentence,all,26,1.012
+7B,valid10_sentence,all,27,0.321
+7B,valid10_sentence,all,28,1.031
+7B,valid10_sentence,all,29,0.83
+7B,valid10_sentence,all,30,0.72
+7B,valid3_sentence,numbers,1,1.495
+7B,valid3_sentence,numbers,2,1.896
+7B,valid3_sentence,numbers,3,2.152
+7B,valid3_sentence,numbers,4,1.357
+7B,valid3_sentence,numbers,5,-0.188
+7B,valid3_sentence,numbers,6,-0.646
+7B,valid3_sentence,numbers,7,-0.804
+7B,valid3_sentence,numbers,8,-1.195
+7B,valid3_sentence,numbers,9,-1.479
+7B,valid3_sentence,numbers,10,-1.705
+7B,valid3_sentence,numbers,11,-1.84
+7B,valid3_sentence,numbers,12,-1.636
+7B,valid3_sentence,numbers,13,-1.606
+7B,valid3_sentence,numbers,14,-1.369
+7B,valid3_sentence,numbers,15,-1.249
+7B,valid3_sentence,numbers,16,-1.482
+7B,valid3_sentence,numbers,17,-1.443
+7B,valid3_sentence,numbers,18,-0.832
+7B,valid3_sentence,numbers,19,-0.907
+7B,valid3_sentence,numbers,20,-0.248
+7B,valid3_sentence,numbers,21,-0.011
+7B,valid3_sentence,numbers,22,0.93
+7B,valid3_sentence,numbers,23,0.575
+7B,valid3_sentence,numbers,24,0.759
+7B,valid3_sentence,numbers,25,2.131
+7B,valid3_sentence,numbers,26,1.734
+7B,valid3_sentence,numbers,27,0.872
+7B,valid3_sentence,numbers,28,2.338
+7B,valid3_sentence,numbers,29,1.944
+7B,valid3_sentence,numbers,30,2.229
+7B,valid3_sentence,all,1,0.953
+7B,valid3_sentence,all,2,1.053
+7B,valid3_sentence,all,3,0.847
+7B,valid3_sentence,all,4,-0.096
+7B,valid3_sentence,all,5,-1.317
+7B,valid3_sentence,all,6,-1.846
+7B,valid3_sentence,all,7,-1.963
+7B,valid3_sentence,all,8,-2.326
+7B,valid3_sentence,all,9,-2.826
+7B,valid3_sentence,all,10,-3.287
+7B,valid3_sentence,all,11,-3.49
+7B,valid3_sentence,all,12,-3.464
+7B,valid3_sentence,all,13,-3.52
+7B,valid3_sentence,all,14,-3.456
+7B,valid3_sentence,all,15,-3.541
+7B,valid3_sentence,all,16,-3.475
+7B,valid3_sentence,all,17,-3.312
+7B,valid3_sentence,all,18,-3.295
+7B,valid3_sentence,all,19,-2.906
+7B,valid3_sentence,all,20,-2.236
+7B,valid3_sentence,all,21,-1.888
+7B,valid3_sentence,all,22,-1.689
+7B,valid3_sentence,all,23,-1.597
+7B,valid3_sentence,all,24,-0.58
+7B,valid3_sentence,all,25,-0.214
+7B,valid3_sentence,all,26,0.032
+7B,valid3_sentence,all,27,0.171
+7B,valid3_sentence,all,28,0.66
+7B,valid3_sentence,all,29,0.706
+7B,valid3_sentence,all,30,0.574
+7B,valid30_interval,numbers,1,0.99
+7B,valid30_interval,numbers,2,0.97
+7B,valid30_interval,numbers,3,1.125
+7B,valid30_interval,numbers,4,0.976
+7B,valid30_interval,numbers,5,0.617
+7B,valid30_interval,numbers,6,0.548
+7B,valid30_interval,numbers,7,0.755
+7B,valid30_interval,numbers,8,0.641
+7B,valid30_interval,numbers,9,0.698
+7B,valid30_interval,numbers,10,0.66
+7B,valid30_interval,numbers,11,0.662
+7B,valid30_interval,numbers,12,0.856
+7B,valid30_interval,numbers,13,0.461
+7B,valid30_interval,numbers,14,0.687
+7B,valid30_interval,numbers,15,1.503
+7B,valid30_interval,numbers,16,1.365
+7B,valid30_interval,numbers,17,0.699
+7B,valid30_interval,numbers,18,1.492
+7B,valid30_interval,numbers,19,1.463
+7B,valid30_interval,numbers,20,2.272
+7B,valid30_interval,numbers,21,2.609
+7B,valid30_interval,numbers,22,2.84
+7B,valid30_interval,numbers,23,1.968
+7B,valid30_interval,numbers,24,2.74
+7B,valid30_interval,numbers,25,2.566
+7B,valid30_interval,numbers,26,3.033
+7B,valid30_interval,numbers,27,2.045
+7B,valid30_interval,numbers,28,2.808
+7B,valid30_interval,numbers,29,2.425
+7B,valid30_interval,numbers,30,2.549
+7B,valid30_interval,all,1,0.601
+7B,valid30_interval,all,2,0.429
+7B,valid30_interval,all,3,0.778
+7B,valid30_interval,all,4,0.221
+7B,valid30_interval,all,5,-0.854
+7B,valid30_interval,all,6,-0.578
+7B,valid30_interval,all,7,-0.155
+7B,valid30_interval,all,8,-0.135
+7B,valid30_interval,all,9,-0.353
+7B,valid30_interval,all,10,-0.698
+7B,valid30_interval,all,11,-0.481
+7B,valid30_interval,all,12,-0.307
+7B,valid30_interval,all,13,-0.167
+7B,valid30_interval,all,14,0.299
+7B,valid30_interval,all,15,0.878
+7B,valid30_interval,all,16,1.044
+7B,valid30_interval,all,17,0.506
+7B,valid30_interval,all,18,1.193
+7B,valid30_interval,all,19,1.137
+7B,valid30_interval,all,20,1.9
+7B,valid30_interval,all,21,2.364
+7B,valid30_interval,all,22,2.583
+7B,valid30_interval,all,23,1.808
+7B,valid30_interval,all,24,1.97
+7B,valid30_interval,all,25,2.453
+7B,valid30_interval,all,26,2.617
+7B,valid30_interval,all,27,1.811
+7B,valid30_interval,all,28,2.644
+7B,valid30_interval,all,29,2.16
+7B,valid30_interval,all,30,2.413
+7B,valid10_interval,numbers,1,1.756
+7B,valid10_interval,numbers,2,1.81
+7B,valid10_interval,numbers,3,1.575
+7B,valid10_interval,numbers,4,1.574
+7B,valid10_interval,numbers,5,1.31
+7B,valid10_interval,numbers,6,1.227
+7B,valid10_interval,numbers,7,1.395
+7B,valid10_interval,numbers,8,1.127
+7B,valid10_interval,numbers,9,1.156
+7B,valid10_interval,numbers,10,1.144
+7B,valid10_interval,numbers,11,1.011
+7B,valid10_interval,numbers,12,1.289
+7B,valid10_interval,numbers,13,0.659
+7B,valid10_interval,numbers,14,0.761
+7B,valid10_interval,numbers,15,1.018
+7B,valid10_interval,numbers,16,0.901
+7B,valid10_interval,numbers,17,0.261
+7B,valid10_interval,numbers,18,0.311
+7B,valid10_interval,numbers,19,0.345
+7B,valid10_interval,numbers,20,0.501
+7B,valid10_interval,numbers,21,0.561
+7B,valid10_interval,numbers,22,1.295
+7B,valid10_interval,numbers,23,0.495
+7B,valid10_interval,numbers,24,0.342
+7B,valid10_interval,numbers,25,0.004
+7B,valid10_interval,numbers,26,-0.129
+7B,valid10_interval,numbers,27,-0.208
+7B,valid10_interval,numbers,28,-0.313
+7B,valid10_interval,numbers,29,-1.092
+7B,valid10_interval,numbers,30,-0.495
+7B,valid10_interval,all,1,0.84
+7B,valid10_interval,all,2,0.786
+7B,valid10_interval,all,3,1.008
+7B,valid10_interval,all,4,0.692
+7B,valid10_interval,all,5,-0.319
+7B,valid10_interval,all,6,-0.115
+7B,valid10_interval,all,7,0.319
+7B,valid10_interval,all,8,0.309
+7B,valid10_interval,all,9,0.014
+7B,valid10_interval,all,10,-0.208
+7B,valid10_interval,all,11,-0.032
+7B,valid10_interval,all,12,0.132
+7B,valid10_interval,all,13,0.174
+7B,valid10_interval,all,14,0.462
+7B,valid10_interval,all,15,0.662
+7B,valid10_interval,all,16,0.566
+7B,valid10_interval,all,17,0.155
+7B,valid10_interval,all,18,0.087
+7B,valid10_interval,all,19,0.232
+7B,valid10_interval,all,20,0.439
+7B,valid10_interval,all,21,0.453
+7B,valid10_interval,all,22,1.157
+7B,valid10_interval,all,23,0.43
+7B,valid10_interval,all,24,0.277
+7B,valid10_interval,all,25,-0.044
+7B,valid10_interval,all,26,-0.153
+7B,valid10_interval,all,27,-0.349
+7B,valid10_interval,all,28,-0.347
+7B,valid10_interval,all,29,-1.1
+7B,valid10_interval,all,30,-0.487
+7B,valid3_interval,numbers,1,1.781
+7B,valid3_interval,numbers,2,1.577
+7B,valid3_interval,numbers,3,0.969
+7B,valid3_interval,numbers,4,1.068
+7B,valid3_interval,numbers,5,0.913
+7B,valid3_interval,numbers,6,0.822
+7B,valid3_interval,numbers,7,0.975
+7B,valid3_interval,numbers,8,0.662
+7B,valid3_interval,numbers,9,0.6
+7B,valid3_interval,numbers,10,0.396
+7B,valid3_interval,numbers,11,0.243
+7B,valid3_interval,numbers,12,0.179
+7B,valid3_interval,numbers,13,-0.187
+7B,valid3_interval,numbers,14,-0.187
+7B,valid3_interval,numbers,15,-0.136
+7B,valid3_interval,numbers,16,-0.403
+7B,valid3_interval,numbers,17,-0.99
+7B,valid3_interval,numbers,18,-0.716
+7B,valid3_interval,numbers,19,-1.071
+7B,valid3_interval,numbers,20,-0.781
+7B,valid3_interval,numbers,21,-1.078
+7B,valid3_interval,numbers,22,-0.916
+7B,valid3_interval,numbers,23,-1.585
+7B,valid3_interval,numbers,24,-1.221
+7B,valid3_interval,numbers,25,-1.598
+7B,valid3_interval,numbers,26,-1.975
+7B,valid3_interval,numbers,27,-2.504
+7B,valid3_interval,numbers,28,-2.21
+7B,valid3_interval,numbers,29,-1.991
+7B,valid3_interval,numbers,30,-2.519
+7B,valid3_interval,all,1,0.85
+7B,valid3_interval,all,2,0.747
+7B,valid3_interval,all,3,0.736
+7B,valid3_interval,all,4,0.388
+7B,valid3_interval,all,5,-0.369
+7B,valid3_interval,all,6,-0.212
+7B,valid3_interval,all,7,0.085
+7B,valid3_interval,all,8,0.021
+7B,valid3_interval,all,9,-0.212
+7B,valid3_interval,all,10,-0.526
+7B,valid3_interval,all,11,-0.471
+7B,valid3_interval,all,12,-0.402
+7B,valid3_interval,all,13,-0.532
+7B,valid3_interval,all,14,-0.294
+7B,valid3_interval,all,15,-0.228
+7B,valid3_interval,all,16,-0.466
+7B,valid3_interval,all,17,-0.942
+7B,valid3_interval,all,18,-0.738
+7B,valid3_interval,all,19,-1.084
+7B,valid3_interval,all,20,-0.743
+7B,valid3_interval,all,21,-1.042
+7B,valid3_interval,all,22,-0.936
+7B,valid3_interval,all,23,-1.541
+7B,valid3_interval,all,24,-1.208
+7B,valid3_interval,all,25,-1.586
+7B,valid3_interval,all,26,-1.939
+7B,valid3_interval,all,27,-2.457
+7B,valid3_interval,all,28,-2.212
+7B,valid3_interval,all,29,-2.003
+7B,valid3_interval,all,30,-2.508
+7B instruct,valid30,numbers,1,-1.0
+7B instruct,valid30,numbers,2,0.611
+7B instruct,valid30,numbers,3,0.122
+7B instruct,valid30,numbers,4,-1.048
+7B instruct,valid30,numbers,5,-2.043
+7B instruct,valid30,numbers,6,-2.569
+7B instruct,valid30,numbers,7,-3.041
+7B instruct,valid30,numbers,8,-3.91
+7B instruct,valid30,numbers,9,-4.774
+7B instruct,valid30,numbers,10,-5.594
+7B instruct,valid30,numbers,11,-6.261
+7B instruct,valid30,numbers,12,-7.141
+7B instruct,valid30,numbers,13,-8.082
+7B instruct,valid30,numbers,14,-8.805
+7B instruct,valid30,numbers,15,-9.349
+7B instruct,valid30,numbers,16,-9.923
+7B instruct,valid30,numbers,17,-10.797
+7B instruct,valid30,numbers,18,-11.373
+7B instruct,valid30,numbers,19,-11.972
+7B instruct,valid30,numbers,20,-12.277
+7B instruct,valid30,numbers,21,-12.817
+7B instruct,valid30,numbers,22,-13.745
+7B instruct,valid30,numbers,23,-15.156
+7B instruct,valid30,numbers,24,-15.957
+7B instruct,valid30,numbers,25,-16.891
+7B instruct,valid30,numbers,26,-17.55
+7B instruct,valid30,numbers,27,-18.312
+7B instruct,valid30,numbers,28,-19.004
+7B instruct,valid30,numbers,29,-20.382
+7B instruct,valid30,numbers,30,-21.142
+7B instruct,valid30,all,1,-0.396
+7B instruct,valid30,all,2,-0.055
+7B instruct,valid30,all,3,-0.252
+7B instruct,valid30,all,4,-1.472
+7B instruct,valid30,all,5,-2.711
+7B instruct,valid30,all,6,-3.158
+7B instruct,valid30,all,7,-3.272
+7B instruct,valid30,all,8,-4.035
+7B instruct,valid30,all,9,-4.963
+7B instruct,valid30,all,10,-5.786
+7B instruct,valid30,all,11,-6.307
+7B instruct,valid30,all,12,-7.109
+7B instruct,valid30,all,13,-7.974
+7B instruct,valid30,all,14,-8.632
+7B instruct,valid30,all,15,-9.183
+7B instruct,valid30,all,16,-9.637
+7B instruct,valid30,all,17,-10.409
+7B instruct,valid30,all,18,-10.99
+7B instruct,valid30,all,19,-11.509
+7B instruct,valid30,all,20,-11.919
+7B instruct,valid30,all,21,-12.527
+7B instruct,valid30,all,22,-13.49
+7B instruct,valid30,all,23,-14.775
+7B instruct,valid30,all,24,-15.554
+7B instruct,valid30,all,25,-16.502
+7B instruct,valid30,all,26,-17.181
+7B instruct,valid30,all,27,-17.859
+7B instruct,valid30,all,28,-18.057
+7B instruct,valid30,all,29,-19.854
+7B instruct,valid30,all,30,-20.162
+7B instruct,valid10,numbers,1,-1.0
+7B instruct,valid10,numbers,2,0.931
+7B instruct,valid10,numbers,3,0.174
+7B instruct,valid10,numbers,4,-0.884
+7B instruct,valid10,numbers,5,-1.846
+7B instruct,valid10,numbers,6,-2.435
+7B instruct,valid10,numbers,7,-3.011
+7B instruct,valid10,numbers,8,-3.849
+7B instruct,valid10,numbers,9,-4.766
+7B instruct,valid10,numbers,10,-5.55
+7B instruct,valid10,numbers,11,-6.324
+7B instruct,valid10,numbers,12,-7.27
+7B instruct,valid10,numbers,13,-8.194
+7B instruct,valid10,numbers,14,-8.919
+7B instruct,valid10,numbers,15,-9.493
+7B instruct,valid10,numbers,16,-10.153
+7B instruct,valid10,numbers,17,-11.041
+7B instruct,valid10,numbers,18,-11.553
+7B instruct,valid10,numbers,19,-12.18
+7B instruct,valid10,numbers,20,-12.413
+7B instruct,valid10,numbers,21,-13.139
+7B instruct,valid10,numbers,22,-14.137
+7B instruct,valid10,numbers,23,-15.538
+7B instruct,valid10,numbers,24,-16.284
+7B instruct,valid10,numbers,25,-17.229
+7B instruct,valid10,numbers,26,-17.698
+7B instruct,valid10,numbers,27,-18.571
+7B instruct,valid10,numbers,28,-19.22
+7B instruct,valid10,numbers,29,-20.585
+7B instruct,valid10,numbers,30,-21.248
+7B instruct,valid10,all,1,-0.224
+7B instruct,valid10,all,2,-0.028
+7B instruct,valid10,all,3,-0.304
+7B instruct,valid10,all,4,-1.439
+7B instruct,valid10,all,5,-2.615
+7B instruct,valid10,all,6,-3.123
+7B instruct,valid10,all,7,-3.276
+7B instruct,valid10,all,8,-4.025
+7B instruct,valid10,all,9,-5.009
+7B instruct,valid10,all,10,-5.79
+7B instruct,valid10,all,11,-6.384
+7B instruct,valid10,all,12,-7.24
+7B instruct,valid10,all,13,-8.103
+7B instruct,valid10,all,14,-8.768
+7B instruct,valid10,all,15,-9.334
+7B instruct,valid10,all,16,-9.962
+7B instruct,valid10,all,17,-10.67
+7B instruct,valid10,all,18,-11.171
+7B instruct,valid10,all,19,-11.751
+7B instruct,valid10,all,20,-12.038
+7B instruct,valid10,all,21,-12.821
+7B instruct,valid10,all,22,-13.854
+7B instruct,valid10,all,23,-15.078
+7B instruct,valid10,all,24,-15.815
+7B instruct,valid10,all,25,-16.785
+7B instruct,valid10,all,26,-17.331
+7B instruct,valid10,all,27,-18.202
+7B instruct,valid10,all,28,-18.637
+7B instruct,valid10,all,29,-20.146
+7B instruct,valid10,all,30,-20.448
+7B instruct,valid3,numbers,1,-1.0
+7B instruct,valid3,numbers,2,1.043
+7B instruct,valid3,numbers,3,0.31
+7B instruct,valid3,numbers,4,-0.709
+7B instruct,valid3,numbers,5,-1.706
+7B instruct,valid3,numbers,6,-2.321
+7B instruct,valid3,numbers,7,-2.844
+7B instruct,valid3,numbers,8,-3.748
+7B instruct,valid3,numbers,9,-4.609
+7B instruct,valid3,numbers,10,-5.493
+7B instruct,valid3,numbers,11,-6.27
+7B instruct,valid3,numbers,12,-7.183
+7B instruct,valid3,numbers,13,-8.12
+7B instruct,valid3,numbers,14,-8.92
+7B instruct,valid3,numbers,15,-9.44
+7B instruct,valid3,numbers,16,-10.129
+7B instruct,valid3,numbers,17,-11.014
+7B instruct,valid3,numbers,18,-11.528
+7B instruct,valid3,numbers,19,-12.134
+7B instruct,valid3,numbers,20,-12.38
+7B instruct,valid3,numbers,21,-13.108
+7B instruct,valid3,numbers,22,-14.039
+7B instruct,valid3,numbers,23,-15.491
+7B instruct,valid3,numbers,24,-16.21
+7B instruct,valid3,numbers,25,-17.11
+7B instruct,valid3,numbers,26,-17.686
+7B instruct,valid3,numbers,27,-18.529
+7B instruct,valid3,numbers,28,-19.196
+7B instruct,valid3,numbers,29,-20.594
+7B instruct,valid3,numbers,30,-21.298
+7B instruct,valid3,all,1,-0.224
+7B instruct,valid3,all,2,0.065
+7B instruct,valid3,all,3,-0.258
+7B instruct,valid3,all,4,-1.418
+7B instruct,valid3,all,5,-2.663
+7B instruct,valid3,all,6,-3.141
+7B instruct,valid3,all,7,-3.24
+7B instruct,valid3,all,8,-4.002
+7B instruct,valid3,all,9,-4.95
+7B instruct,valid3,all,10,-5.806
+7B instruct,valid3,all,11,-6.365
+7B instruct,valid3,all,12,-7.178
+7B instruct,valid3,all,13,-8.047
+7B instruct,valid3,all,14,-8.773
+7B instruct,valid3,all,15,-9.298
+7B instruct,valid3,all,16,-9.938
+7B instruct,valid3,all,17,-10.631
+7B instruct,valid3,all,18,-11.148
+7B instruct,valid3,all,19,-11.701
+7B instruct,valid3,all,20,-12.012
+7B instruct,valid3,all,21,-12.801
+7B instruct,valid3,all,22,-13.784
+7B instruct,valid3,all,23,-15.039
+7B instruct,valid3,all,24,-15.761
+7B instruct,valid3,all,25,-16.704
+7B instruct,valid3,all,26,-17.321
+7B instruct,valid3,all,27,-18.162
+7B instruct,valid3,all,28,-18.567
+7B instruct,valid3,all,29,-20.153
+7B instruct,valid3,all,30,-20.575
+7B instruct,exact,numbers,1,1.328
+7B instruct,exact,numbers,2,2.084
+7B instruct,exact,numbers,3,1.262
+7B instruct,exact,numbers,4,-0.468
+7B instruct,exact,numbers,5,-1.257
+7B instruct,exact,numbers,6,-1.682
+7B instruct,exact,numbers,7,-2.163
+7B instruct,exact,numbers,8,-2.625
+7B instruct,exact,numbers,9,-3.319
+7B instruct,exact,numbers,10,-4.215
+7B instruct,exact,numbers,11,-4.684
+7B instruct,exact,numbers,12,-5.463
+7B instruct,exact,numbers,13,-6.456
+7B instruct,exact,numbers,14,-6.58
+7B instruct,exact,numbers,15,-6.563
+7B instruct,exact,numbers,16,-7.328
+7B instruct,exact,numbers,17,-7.67
+7B instruct,exact,numbers,18,-4.795
+7B instruct,exact,numbers,19,-4.498
+7B instruct,exact,numbers,20,-2.9
+7B instruct,exact,numbers,21,-2.985
+7B instruct,exact,numbers,22,-4.065
+7B instruct,exact,numbers,23,-5.99
+7B instruct,exact,numbers,24,-6.748
+7B instruct,exact,numbers,25,-7.199
+7B instruct,exact,numbers,26,-7.485
+7B instruct,exact,numbers,27,-7.882
+7B instruct,exact,numbers,28,-7.822
+7B instruct,exact,numbers,29,-10.488
+7B instruct,exact,numbers,30,-10.731
+7B instruct,exact,all,1,0.69
+7B instruct,exact,all,2,1.35
+7B instruct,exact,all,3,1.091
+7B instruct,exact,all,4,-0.854
+7B instruct,exact,all,5,-1.524
+7B instruct,exact,all,6,-1.854
+7B instruct,exact,all,7,-2.152
+7B instruct,exact,all,8,-2.529
+7B instruct,exact,all,9,-3.335
+7B instruct,exact,all,10,-4.182
+7B instruct,exact,all,11,-4.463
+7B instruct,exact,all,12,-5.146
+7B instruct,exact,all,13,-6.004
+7B instruct,exact,all,14,-6.081
+7B instruct,exact,all,15,-6.204
+7B instruct,exact,all,16,-6.774
+7B instruct,exact,all,17,-6.423
+7B instruct,exact,all,18,-4.465
+7B instruct,exact,all,19,-4.329
+7B instruct,exact,all,20,-2.868
+7B instruct,exact,all,21,-3.02
+7B instruct,exact,all,22,-4.113
+7B instruct,exact,all,23,-5.941
+7B instruct,exact,all,24,-6.675
+7B instruct,exact,all,25,-7.167
+7B instruct,exact,all,26,-7.462
+7B instruct,exact,all,27,-7.863
+7B instruct,exact,all,28,-7.812
+7B instruct,exact,all,29,-10.422
+7B instruct,exact,all,30,-10.614
+7B instruct,invalid30,numbers,1,-1.0
+7B instruct,invalid30,numbers,2,-0.069
+7B instruct,invalid30,numbers,3,-0.27
+7B instruct,invalid30,numbers,4,-1.405
+7B instruct,invalid30,numbers,5,-2.377
+7B instruct,invalid30,numbers,6,-2.846
+7B instruct,invalid30,numbers,7,-3.154
+7B instruct,invalid30,numbers,8,-4.032
+7B instruct,invalid30,numbers,9,-4.815
+7B instruct,invalid30,numbers,10,-5.642
+7B instruct,invalid30,numbers,11,-6.189
+7B instruct,invalid30,numbers,12,-6.978
+7B instruct,invalid30,numbers,13,-7.884
+7B instruct,invalid30,numbers,14,-8.56
+7B instruct,invalid30,numbers,15,-9.105
+7B instruct,invalid30,numbers,16,-9.579
+7B instruct,invalid30,numbers,17,-10.379
+7B instruct,invalid30,numbers,18,-10.842
+7B instruct,invalid30,numbers,19,-11.31
+7B instruct,invalid30,numbers,20,-11.696
+7B instruct,invalid30,numbers,21,-12.375
+7B instruct,invalid30,numbers,22,-13.323
+7B instruct,invalid30,numbers,23,-14.716
+7B instruct,invalid30,numbers,24,-15.588
+7B instruct,invalid30,numbers,25,-16.5
+7B instruct,invalid30,numbers,26,-17.154
+7B instruct,invalid30,numbers,27,-17.798
+7B instruct,invalid30,numbers,28,-18.217
+7B instruct,invalid30,numbers,29,-20.123
+7B instruct,invalid30,numbers,30,-20.635
+7B instruct,invalid30,all,1,-0.684
+7B instruct,invalid30,all,2,-0.223
+7B instruct,invalid30,all,3,-0.407
+7B instruct,invalid30,all,4,-1.658
+7B instruct,invalid30,all,5,-2.93
+7B instruct,invalid30,all,6,-3.301
+7B instruct,invalid30,all,7,-3.407
+7B instruct,invalid30,all,8,-4.123
+7B instruct,invalid30,all,9,-4.994
+7B instruct,invalid30,all,10,-5.841
+7B instruct,invalid30,all,11,-6.254
+7B instruct,invalid30,all,12,-6.962
+7B instruct,invalid30,all,13,-7.749
+7B instruct,invalid30,all,14,-8.397
+7B instruct,invalid30,all,15,-8.91
+7B instruct,invalid30,all,16,-9.307
+7B instruct,invalid30,all,17,-10.021
+7B instruct,invalid30,all,18,-10.418
+7B instruct,invalid30,all,19,-10.953
+7B instruct,invalid30,all,20,-11.406
+7B instruct,invalid30,all,21,-12.086
+7B instruct,invalid30,all,22,-13.061
+7B instruct,invalid30,all,23,-14.365
+7B instruct,invalid30,all,24,-15.188
+7B instruct,invalid30,all,25,-16.116
+7B instruct,invalid30,all,26,-16.427
+7B instruct,invalid30,all,27,-16.791
+7B instruct,invalid30,all,28,-17.136
+7B instruct,invalid30,all,29,-19.155
+7B instruct,invalid30,all,30,-19.336
+7B instruct,invalid10,numbers,1,-1.0
+7B instruct,invalid10,numbers,2,0.136
+7B instruct,invalid10,numbers,3,-0.229
+7B instruct,invalid10,numbers,4,-1.292
+7B instruct,invalid10,numbers,5,-2.259
+7B instruct,invalid10,numbers,6,-2.783
+7B instruct,invalid10,numbers,7,-3.199
+7B instruct,invalid10,numbers,8,-4.057
+7B instruct,invalid10,numbers,9,-4.908
+7B instruct,invalid10,numbers,10,-5.727
+7B instruct,invalid10,numbers,11,-6.301
+7B instruct,invalid10,numbers,12,-7.09
+7B instruct,invalid10,numbers,13,-8.032
+7B instruct,invalid10,numbers,14,-8.715
+7B instruct,invalid10,numbers,15,-9.209
+7B instruct,invalid10,numbers,16,-9.826
+7B instruct,invalid10,numbers,17,-10.622
+7B instruct,invalid10,numbers,18,-11.006
+7B instruct,invalid10,numbers,19,-11.438
+7B instruct,invalid10,numbers,20,-11.851
+7B instruct,invalid10,numbers,21,-12.517
+7B instruct,invalid10,numbers,22,-13.49
+7B instruct,invalid10,numbers,23,-14.863
+7B instruct,invalid10,numbers,24,-15.674
+7B instruct,invalid10,numbers,25,-16.551
+7B instruct,invalid10,numbers,26,-17.298
+7B instruct,invalid10,numbers,27,-18.022
+7B instruct,invalid10,numbers,28,-18.344
+7B instruct,invalid10,numbers,29,-20.231
+7B instruct,invalid10,numbers,30,-20.863
+7B instruct,invalid10,all,1,-0.668
+7B instruct,invalid10,all,2,-0.18
+7B instruct,invalid10,all,3,-0.437
+7B instruct,invalid10,all,4,-1.633
+7B instruct,invalid10,all,5,-2.886
+7B instruct,invalid10,all,6,-3.309
+7B instruct,invalid10,all,7,-3.491
+7B instruct,invalid10,all,8,-4.173
+7B instruct,invalid10,all,9,-5.083
+7B instruct,invalid10,all,10,-5.954
+7B instruct,invalid10,all,11,-6.376
+7B instruct,invalid10,all,12,-7.088
+7B instruct,invalid10,all,13,-7.926
+7B instruct,invalid10,all,14,-8.568
+7B instruct,invalid10,all,15,-9.062
+7B instruct,invalid10,all,16,-9.549
+7B instruct,invalid10,all,17,-10.253
+7B instruct,invalid10,all,18,-10.577
+7B instruct,invalid10,all,19,-11.07
+7B instruct,invalid10,all,20,-11.559
+7B instruct,invalid10,all,21,-12.231
+7B instruct,invalid10,all,22,-13.23
+7B instruct,invalid10,all,23,-14.514
+7B instruct,invalid10,all,24,-15.275
+7B instruct,invalid10,all,25,-16.175
+7B instruct,invalid10,all,26,-16.817
+7B instruct,invalid10,all,27,-17.084
+7B instruct,invalid10,all,28,-17.301
+7B instruct,invalid10,all,29,-19.441
+7B instruct,invalid10,all,30,-19.593
+7B instruct,invalid3,numbers,1,-1.0
+7B instruct,invalid3,numbers,2,0.107
+7B instruct,invalid3,numbers,3,-0.222
+7B instruct,invalid3,numbers,4,-1.189
+7B instruct,invalid3,numbers,5,-2.197
+7B instruct,invalid3,numbers,6,-2.716
+7B instruct,invalid3,numbers,7,-3.127
+7B instruct,invalid3,numbers,8,-4.019
+7B instruct,invalid3,numbers,9,-4.858
+7B instruct,invalid3,numbers,10,-5.718
+7B instruct,invalid3,numbers,11,-6.272
+7B instruct,invalid3,numbers,12,-7.084
+7B instruct,invalid3,numbers,13,-8.049
+7B instruct,invalid3,numbers,14,-8.696
+7B instruct,invalid3,numbers,15,-9.222
+7B instruct,invalid3,numbers,16,-9.796
+7B instruct,invalid3,numbers,17,-10.536
+7B instruct,invalid3,numbers,18,-11.014
+7B instruct,invalid3,numbers,19,-11.476
+7B instruct,invalid3,numbers,20,-11.829
+7B instruct,invalid3,numbers,21,-12.507
+7B instruct,invalid3,numbers,22,-13.492
+7B instruct,invalid3,numbers,23,-14.888
+7B instruct,invalid3,numbers,24,-15.69
+7B instruct,invalid3,numbers,25,-16.646
+7B instruct,invalid3,numbers,26,-17.354
+7B instruct,invalid3,numbers,27,-18.068
+7B instruct,invalid3,numbers,28,-18.39
+7B instruct,invalid3,numbers,29,-20.281
+7B instruct,invalid3,numbers,30,-20.903
+7B instruct,invalid3,all,1,-0.69
+7B instruct,invalid3,all,2,-0.165
+7B instruct,invalid3,all,3,-0.444
+7B instruct,invalid3,all,4,-1.621
+7B instruct,invalid3,all,5,-2.961
+7B instruct,invalid3,all,6,-3.352
+7B instruct,invalid3,all,7,-3.471
+7B instruct,invalid3,all,8,-4.166
+7B instruct,invalid3,all,9,-5.094
+7B instruct,invalid3,all,10,-6.004
+7B instruct,invalid3,all,11,-6.376
+7B instruct,invalid3,all,12,-7.097
+7B instruct,invalid3,all,13,-7.953
+7B instruct,invalid3,all,14,-8.552
+7B instruct,invalid3,all,15,-9.08
+7B instruct,invalid3,all,16,-9.525
+7B instruct,invalid3,all,17,-10.175
+7B instruct,invalid3,all,18,-10.579
+7B instruct,invalid3,all,19,-11.089
+7B instruct,invalid3,all,20,-11.532
+7B instruct,invalid3,all,21,-12.212
+7B instruct,invalid3,all,22,-13.229
+7B instruct,invalid3,all,23,-14.529
+7B instruct,invalid3,all,24,-15.287
+7B instruct,invalid3,all,25,-16.26
+7B instruct,invalid3,all,26,-16.951
+7B instruct,invalid3,all,27,-17.205
+7B instruct,invalid3,all,28,-17.344
+7B instruct,invalid3,all,29,-19.56
+7B instruct,invalid3,all,30,-19.634
+7B instruct,valid30_sentence,numbers,1,-1.0
+7B instruct,valid30_sentence,numbers,2,-2.0
+7B instruct,valid30_sentence,numbers,3,-0.864
+7B instruct,valid30_sentence,numbers,4,-2.164
+7B instruct,valid30_sentence,numbers,5,-2.396
+7B instruct,valid30_sentence,numbers,6,-3.004
+7B instruct,valid30_sentence,numbers,7,-3.506
+7B instruct,valid30_sentence,numbers,8,-4.255
+7B instruct,valid30_sentence,numbers,9,-5.207
+7B instruct,valid30_sentence,numbers,10,-6.107
+7B instruct,valid30_sentence,numbers,11,-6.815
+7B instruct,valid30_sentence,numbers,12,-7.604
+7B instruct,valid30_sentence,numbers,13,-8.495
+7B instruct,valid30_sentence,numbers,14,-9.261
+7B instruct,valid30_sentence,numbers,15,-9.989
+7B instruct,valid30_sentence,numbers,16,-10.664
+7B instruct,valid30_sentence,numbers,17,-11.489
+7B instruct,valid30_sentence,numbers,18,-12.054
+7B instruct,valid30_sentence,numbers,19,-12.652
+7B instruct,valid30_sentence,numbers,20,-13.242
+7B instruct,valid30_sentence,numbers,21,-13.932
+7B instruct,valid30_sentence,numbers,22,-14.934
+7B instruct,valid30_sentence,numbers,23,-15.842
+7B instruct,valid30_sentence,numbers,24,-16.345
+7B instruct,valid30_sentence,numbers,25,-17.163
+7B instruct,valid30_sentence,numbers,26,-17.757
+7B instruct,valid30_sentence,numbers,27,-18.665
+7B instruct,valid30_sentence,numbers,28,-19.317
+7B instruct,valid30_sentence,numbers,29,-20.127
+7B instruct,valid30_sentence,numbers,30,-20.672
+7B instruct,valid30_sentence,all,1,0.893
+7B instruct,valid30_sentence,all,2,-0.415
+7B instruct,valid30_sentence,all,3,-0.959
+7B instruct,valid30_sentence,all,4,-2.072
+7B instruct,valid30_sentence,all,5,-3.014
+7B instruct,valid30_sentence,all,6,-3.51
+7B instruct,valid30_sentence,all,7,-4.036
+7B instruct,valid30_sentence,all,8,-4.651
+7B instruct,valid30_sentence,all,9,-5.61
+7B instruct,valid30_sentence,all,10,-6.657
+7B instruct,valid30_sentence,all,11,-7.226
+7B instruct,valid30_sentence,all,12,-7.945
+7B instruct,valid30_sentence,all,13,-8.652
+7B instruct,valid30_sentence,all,14,-9.355
+7B instruct,valid30_sentence,all,15,-10.098
+7B instruct,valid30_sentence,all,16,-10.765
+7B instruct,valid30_sentence,all,17,-11.447
+7B instruct,valid30_sentence,all,18,-11.92
+7B instruct,valid30_sentence,all,19,-12.437
+7B instruct,valid30_sentence,all,20,-13.019
+7B instruct,valid30_sentence,all,21,-13.692
+7B instruct,valid30_sentence,all,22,-14.852
+7B instruct,valid30_sentence,all,23,-15.692
+7B instruct,valid30_sentence,all,24,-16.036
+7B instruct,valid30_sentence,all,25,-16.911
+7B instruct,valid30_sentence,all,26,-17.519
+7B instruct,valid30_sentence,all,27,-18.392
+7B instruct,valid30_sentence,all,28,-19.093
+7B instruct,valid30_sentence,all,29,-19.609
+7B instruct,valid30_sentence,all,30,-19.612
+7B instruct,valid10_sentence,numbers,1,-1.0
+7B instruct,valid10_sentence,numbers,2,-2.0
+7B instruct,valid10_sentence,numbers,3,-0.502
+7B instruct,valid10_sentence,numbers,4,-1.493
+7B instruct,valid10_sentence,numbers,5,-2.009
+7B instruct,valid10_sentence,numbers,6,-2.566
+7B instruct,valid10_sentence,numbers,7,-3.196
+7B instruct,valid10_sentence,numbers,8,-4.004
+7B instruct,valid10_sentence,numbers,9,-4.892
+7B instruct,valid10_sentence,numbers,10,-5.715
+7B instruct,valid10_sentence,numbers,11,-6.636
+7B instruct,valid10_sentence,numbers,12,-7.527
+7B instruct,valid10_sentence,numbers,13,-8.565
+7B instruct,valid10_sentence,numbers,14,-9.3
+7B instruct,valid10_sentence,numbers,15,-10.063
+7B instruct,valid10_sentence,numbers,16,-10.777
+7B instruct,valid10_sentence,numbers,17,-11.65
+7B instruct,valid10_sentence,numbers,18,-12.17
+7B instruct,valid10_sentence,numbers,19,-12.834
+7B instruct,valid10_sentence,numbers,20,-13.339
+7B instruct,valid10_sentence,numbers,21,-14.161
+7B instruct,valid10_sentence,numbers,22,-15.272
+7B instruct,valid10_sentence,numbers,23,-16.217
+7B instruct,valid10_sentence,numbers,24,-16.75
+7B instruct,valid10_sentence,numbers,25,-17.529
+7B instruct,valid10_sentence,numbers,26,-17.935
+7B instruct,valid10_sentence,numbers,27,-18.958
+7B instruct,valid10_sentence,numbers,28,-19.61
+7B instruct,valid10_sentence,numbers,29,-20.38
+7B instruct,valid10_sentence,numbers,30,-21.101
+7B instruct,valid10_sentence,all,1,0.941
+7B instruct,valid10_sentence,all,2,-0.361
+7B instruct,valid10_sentence,all,3,-0.771
+7B instruct,valid10_sentence,all,4,-1.828
+7B instruct,valid10_sentence,all,5,-2.72
+7B instruct,valid10_sentence,all,6,-3.256
+7B instruct,valid10_sentence,all,7,-3.692
+7B instruct,valid10_sentence,all,8,-4.344
+7B instruct,valid10_sentence,all,9,-5.281
+7B instruct,valid10_sentence,all,10,-6.313
+7B instruct,valid10_sentence,all,11,-7.088
+7B instruct,valid10_sentence,all,12,-7.848
+7B instruct,valid10_sentence,all,13,-8.691
+7B instruct,valid10_sentence,all,14,-9.368
+7B instruct,valid10_sentence,all,15,-10.13
+7B instruct,valid10_sentence,all,16,-10.835
+7B instruct,valid10_sentence,all,17,-11.572
+7B instruct,valid10_sentence,all,18,-12.046
+7B instruct,valid10_sentence,all,19,-12.564
+7B instruct,valid10_sentence,all,20,-13.06
+7B instruct,valid10_sentence,all,21,-13.874
+7B instruct,valid10_sentence,all,22,-15.114
+7B instruct,valid10_sentence,all,23,-15.997
+7B instruct,valid10_sentence,all,24,-16.327
+7B instruct,valid10_sentence,all,25,-17.168
+7B instruct,valid10_sentence,all,26,-17.662
+7B instruct,valid10_sentence,all,27,-18.641
+7B instruct,valid10_sentence,all,28,-19.338
+7B instruct,valid10_sentence,all,29,-20.071
+7B instruct,valid10_sentence,all,30,-20.196
+7B instruct,valid3_sentence,numbers,1,-1.0
+7B instruct,valid3_sentence,numbers,2,-2.0
+7B instruct,valid3_sentence,numbers,3,-0.6
+7B instruct,valid3_sentence,numbers,4,-1.503
+7B instruct,valid3_sentence,numbers,5,-1.914
+7B instruct,valid3_sentence,numbers,6,-2.529
+7B instruct,valid3_sentence,numbers,7,-3.167
+7B instruct,valid3_sentence,numbers,8,-4.001
+7B instruct,valid3_sentence,numbers,9,-4.893
+7B instruct,valid3_sentence,numbers,10,-5.756
+7B instruct,valid3_sentence,numbers,11,-6.64
+7B instruct,valid3_sentence,numbers,12,-7.507
+7B instruct,valid3_sentence,numbers,13,-8.506
+7B instruct,valid3_sentence,numbers,14,-9.275
+7B instruct,valid3_sentence,numbers,15,-10.015
+7B instruct,valid3_sentence,numbers,16,-10.746
+7B instruct,valid3_sentence,numbers,17,-11.62
+7B instruct,valid3_sentence,numbers,18,-12.082
+7B instruct,valid3_sentence,numbers,19,-12.797
+7B instruct,valid3_sentence,numbers,20,-13.346
+7B instruct,valid3_sentence,numbers,21,-14.199
+7B instruct,valid3_sentence,numbers,22,-15.211
+7B instruct,valid3_sentence,numbers,23,-16.124
+7B instruct,valid3_sentence,numbers,24,-16.69
+7B instruct,valid3_sentence,numbers,25,-17.42
+7B instruct,valid3_sentence,numbers,26,-17.943
+7B instruct,valid3_sentence,numbers,27,-18.913
+7B instruct,valid3_sentence,numbers,28,-19.586
+7B instruct,valid3_sentence,numbers,29,-20.379
+7B instruct,valid3_sentence,numbers,30,-21.108
+7B instruct,valid3_sentence,all,1,0.946
+7B instruct,valid3_sentence,all,2,-0.373
+7B instruct,valid3_sentence,all,3,-0.971
+7B instruct,valid3_sentence,all,4,-1.949
+7B instruct,valid3_sentence,all,5,-2.863
+7B instruct,valid3_sentence,all,6,-3.372
+7B instruct,valid3_sentence,all,7,-3.865
+7B instruct,valid3_sentence,all,8,-4.475
+7B instruct,valid3_sentence,all,9,-5.417
+7B instruct,valid3_sentence,all,10,-6.458
+7B instruct,valid3_sentence,all,11,-7.163
+7B instruct,valid3_sentence,all,12,-7.903
+7B instruct,valid3_sentence,all,13,-8.693
+7B instruct,valid3_sentence,all,14,-9.396
+7B instruct,valid3_sentence,all,15,-10.145
+7B instruct,valid3_sentence,all,16,-10.877
+7B instruct,valid3_sentence,all,17,-11.596
+7B instruct,valid3_sentence,all,18,-12.006
+7B instruct,valid3_sentence,all,19,-12.582
+7B instruct,valid3_sentence,all,20,-13.128
+7B instruct,valid3_sentence,all,21,-14.007
+7B instruct,valid3_sentence,all,22,-15.143
+7B instruct,valid3_sentence,all,23,-15.979
+7B instruct,valid3_sentence,all,24,-16.341
+7B instruct,valid3_sentence,all,25,-17.142
+7B instruct,valid3_sentence,all,26,-17.71
+7B instruct,valid3_sentence,all,27,-18.635
+7B instruct,valid3_sentence,all,28,-19.35
+7B instruct,valid3_sentence,all,29,-20.1
+7B instruct,valid3_sentence,all,30,-20.269
+7B instruct,valid30_interval,numbers,1,-1.0
+7B instruct,valid30_interval,numbers,2,0.644
+7B instruct,valid30_interval,numbers,3,0.139
+7B instruct,valid30_interval,numbers,4,-1.054
+7B instruct,valid30_interval,numbers,5,-1.835
+7B instruct,valid30_interval,numbers,6,-2.394
+7B instruct,valid30_interval,numbers,7,-3.08
+7B instruct,valid30_interval,numbers,8,-4.019
+7B instruct,valid30_interval,numbers,9,-5.033
+7B instruct,valid30_interval,numbers,10,-5.437
+7B instruct,valid30_interval,numbers,11,-6.006
+7B instruct,valid30_interval,numbers,12,-6.526
+7B instruct,valid30_interval,numbers,13,-7.213
+7B instruct,valid30_interval,numbers,14,-7.481
+7B instruct,valid30_interval,numbers,15,-7.602
+7B instruct,valid30_interval,numbers,16,-8.297
+7B instruct,valid30_interval,numbers,17,-8.966
+7B instruct,valid30_interval,numbers,18,-9.057
+7B instruct,valid30_interval,numbers,19,-9.083
+7B instruct,valid30_interval,numbers,20,-6.711
+7B instruct,valid30_interval,numbers,21,-6.506
+7B instruct,valid30_interval,numbers,22,-7.493
+7B instruct,valid30_interval,numbers,23,-9.868
+7B instruct,valid30_interval,numbers,24,-10.743
+7B instruct,valid30_interval,numbers,25,-10.804
+7B instruct,valid30_interval,numbers,26,-11.034
+7B instruct,valid30_interval,numbers,27,-10.588
+7B instruct,valid30_interval,numbers,28,-10.815
+7B instruct,valid30_interval,numbers,29,-14.695
+7B instruct,valid30_interval,numbers,30,-15.146
+7B instruct,valid30_interval,all,1,-1.0
+7B instruct,valid30_interval,all,2,-0.501
+7B instruct,valid30_interval,all,3,-0.449
+7B instruct,valid30_interval,all,4,-1.68
+7B instruct,valid30_interval,all,5,-2.332
+7B instruct,valid30_interval,all,6,-2.993
+7B instruct,valid30_interval,all,7,-3.378
+7B instruct,valid30_interval,all,8,-4.175
+7B instruct,valid30_interval,all,9,-5.174
+7B instruct,valid30_interval,all,10,-5.643
+7B instruct,valid30_interval,all,11,-6.18
+7B instruct,valid30_interval,all,12,-6.631
+7B instruct,valid30_interval,all,13,-7.19
+7B instruct,valid30_interval,all,14,-7.427
+7B instruct,valid30_interval,all,15,-7.643
+7B instruct,valid30_interval,all,16,-8.236
+7B instruct,valid30_interval,all,17,-8.812
+7B instruct,valid30_interval,all,18,-8.735
+7B instruct,valid30_interval,all,19,-8.537
+7B instruct,valid30_interval,all,20,-6.886
+7B instruct,valid30_interval,all,21,-7.066
+7B instruct,valid30_interval,all,22,-7.959
+7B instruct,valid30_interval,all,23,-9.763
+7B instruct,valid30_interval,all,24,-10.638
+7B instruct,valid30_interval,all,25,-10.932
+7B instruct,valid30_interval,all,26,-11.178
+7B instruct,valid30_interval,all,27,-11.587
+7B instruct,valid30_interval,all,28,-11.233
+7B instruct,valid30_interval,all,29,-14.605
+7B instruct,valid30_interval,all,30,-15.06
+7B instruct,valid10_interval,numbers,1,-1.0
+7B instruct,valid10_interval,numbers,2,0.929
+7B instruct,valid10_interval,numbers,3,0.229
+7B instruct,valid10_interval,numbers,4,-0.803
+7B instruct,valid10_interval,numbers,5,-1.649
+7B instruct,valid10_interval,numbers,6,-2.226
+7B instruct,valid10_interval,numbers,7,-2.954
+7B instruct,valid10_interval,numbers,8,-3.906
+7B instruct,valid10_interval,numbers,9,-4.872
+7B instruct,valid10_interval,numbers,10,-5.385
+7B instruct,valid10_interval,numbers,11,-6.012
+7B instruct,valid10_interval,numbers,12,-6.66
+7B instruct,valid10_interval,numbers,13,-7.336
+7B instruct,valid10_interval,numbers,14,-7.772
+7B instruct,valid10_interval,numbers,15,-8.095
+7B instruct,valid10_interval,numbers,16,-8.774
+7B instruct,valid10_interval,numbers,17,-9.368
+7B instruct,valid10_interval,numbers,18,-9.416
+7B instruct,valid10_interval,numbers,19,-10.064
+7B instruct,valid10_interval,numbers,20,-9.528
+7B instruct,valid10_interval,numbers,21,-7.514
+7B instruct,valid10_interval,numbers,22,-8.709
+7B instruct,valid10_interval,numbers,23,-12.596
+7B instruct,valid10_interval,numbers,24,-12.971
+7B instruct,valid10_interval,numbers,25,-11.802
+7B instruct,valid10_interval,numbers,26,-11.94
+7B instruct,valid10_interval,numbers,27,-12.414
+7B instruct,valid10_interval,numbers,28,-12.299
+7B instruct,valid10_interval,numbers,29,-15.355
+7B instruct,valid10_interval,numbers,30,-15.602
+7B instruct,valid10_interval,all,1,-1.0
+7B instruct,valid10_interval,all,2,-0.406
+7B instruct,valid10_interval,all,3,-0.44
+7B instruct,valid10_interval,all,4,-1.481
+7B instruct,valid10_interval,all,5,-2.198
+7B instruct,valid10_interval,all,6,-2.79
+7B instruct,valid10_interval,all,7,-3.285
+7B instruct,valid10_interval,all,8,-4.137
+7B instruct,valid10_interval,all,9,-5.117
+7B instruct,valid10_interval,all,10,-5.669
+7B instruct,valid10_interval,all,11,-6.254
+7B instruct,valid10_interval,all,12,-6.875
+7B instruct,valid10_interval,all,13,-7.409
+7B instruct,valid10_interval,all,14,-7.837
+7B instruct,valid10_interval,all,15,-8.211
+7B instruct,valid10_interval,all,16,-8.802
+7B instruct,valid10_interval,all,17,-9.274
+7B instruct,valid10_interval,all,18,-9.373
+7B instruct,valid10_interval,all,19,-9.995
+7B instruct,valid10_interval,all,20,-9.392
+7B instruct,valid10_interval,all,21,-9.27
+7B instruct,valid10_interval,all,22,-10.279
+7B instruct,valid10_interval,all,23,-11.975
+7B instruct,valid10_interval,all,24,-12.582
+7B instruct,valid10_interval,all,25,-11.91
+7B instruct,valid10_interval,all,26,-12.193
+7B instruct,valid10_interval,all,27,-12.762
+7B instruct,valid10_interval,all,28,-13.224
+7B instruct,valid10_interval,all,29,-15.266
+7B instruct,valid10_interval,all,30,-15.607
+7B instruct,valid3_interval,numbers,1,-1.0
+7B instruct,valid3_interval,numbers,2,0.913
+7B instruct,valid3_interval,numbers,3,0.157
+7B instruct,valid3_interval,numbers,4,-0.843
+7B instruct,valid3_interval,numbers,5,-1.681
+7B instruct,valid3_interval,numbers,6,-2.268
+7B instruct,valid3_interval,numbers,7,-2.949
+7B instruct,valid3_interval,numbers,8,-3.874
+7B instruct,valid3_interval,numbers,9,-4.796
+7B instruct,valid3_interval,numbers,10,-5.349
+7B instruct,valid3_interval,numbers,11,-6.03
+7B instruct,valid3_interval,numbers,12,-6.634
+7B instruct,valid3_interval,numbers,13,-7.275
+7B instruct,valid3_interval,numbers,14,-7.811
+7B instruct,valid3_interval,numbers,15,-8.133
+7B instruct,valid3_interval,numbers,16,-8.775
+7B instruct,valid3_interval,numbers,17,-9.365
+7B instruct,valid3_interval,numbers,18,-9.442
+7B instruct,valid3_interval,numbers,19,-10.077
+7B instruct,valid3_interval,numbers,20,-9.631
+7B instruct,valid3_interval,numbers,21,-7.809
+7B instruct,valid3_interval,numbers,22,-8.904
+7B instruct,valid3_interval,numbers,23,-12.503
+7B instruct,valid3_interval,numbers,24,-12.531
+7B instruct,valid3_interval,numbers,25,-11.953
+7B instruct,valid3_interval,numbers,26,-12.138
+7B instruct,valid3_interval,numbers,27,-12.69
+7B instruct,valid3_interval,numbers,28,-13.106
+7B instruct,valid3_interval,numbers,29,-15.261
+7B instruct,valid3_interval,numbers,30,-15.34
+7B instruct,valid3_interval,all,1,-0.798
+7B instruct,valid3_interval,all,2,-0.305
+7B instruct,valid3_interval,all,3,-0.387
+7B instruct,valid3_interval,all,4,-1.404
+7B instruct,valid3_interval,all,5,-2.162
+7B instruct,valid3_interval,all,6,-2.784
+7B instruct,valid3_interval,all,7,-3.26
+7B instruct,valid3_interval,all,8,-4.093
+7B instruct,valid3_interval,all,9,-5.05
+7B instruct,valid3_interval,all,10,-5.627
+7B instruct,valid3_interval,all,11,-6.264
+7B instruct,valid3_interval,all,12,-6.868
+7B instruct,valid3_interval,all,13,-7.381
+7B instruct,valid3_interval,all,14,-7.912
+7B instruct,valid3_interval,all,15,-8.288
+7B instruct,valid3_interval,all,16,-8.864
+7B instruct,valid3_interval,all,17,-9.337
+7B instruct,valid3_interval,all,18,-9.444
+7B instruct,valid3_interval,all,19,-10.059
+7B instruct,valid3_interval,all,20,-9.591
+7B instruct,valid3_interval,all,21,-9.681
+7B instruct,valid3_interval,all,22,-10.63
+7B instruct,valid3_interval,all,23,-12.022
+7B instruct,valid3_interval,all,24,-12.442
+7B instruct,valid3_interval,all,25,-13.154
+7B instruct,valid3_interval,all,26,-12.42
+7B instruct,valid3_interval,all,27,-13.082
+7B instruct,valid3_interval,all,28,-13.474
+7B instruct,valid3_interval,all,29,-15.243
+7B instruct,valid3_interval,all,30,-15.413
+13B,valid30,numbers,1,1.991
+13B,valid30,numbers,2,1.463
+13B,valid30,numbers,3,0.817
+13B,valid30,numbers,4,0.15
+13B,valid30,numbers,5,-0.161
+13B,valid30,numbers,6,-0.469
+13B,valid30,numbers,7,-0.706
+13B,valid30,numbers,8,-1.228
+13B,valid30,numbers,9,-1.908
+13B,valid30,numbers,10,-2.383
+13B,valid30,numbers,11,0.302
+13B,valid30,numbers,12,-0.018
+13B,valid30,numbers,13,-0.229
+13B,valid30,numbers,14,-0.444
+13B,valid30,numbers,15,-0.903
+13B,valid30,numbers,16,-1.094
+13B,valid30,numbers,17,-1.26
+13B,valid30,numbers,18,-0.969
+13B,valid30,numbers,19,-1.518
+13B,valid30,numbers,20,-1.251
+13B,valid30,numbers,21,-0.576
+13B,valid30,numbers,22,-0.553
+13B,valid30,numbers,23,-0.961
+13B,valid30,numbers,24,-1.297
+13B,valid30,numbers,25,-1.81
+13B,valid30,numbers,26,-2.484
+13B,valid30,numbers,27,-2.795
+13B,valid30,numbers,28,-1.828
+13B,valid30,numbers,29,-1.918
+13B,valid30,numbers,30,-2.209
+13B,valid30,all,1,1.847
+13B,valid30,all,2,1.102
+13B,valid30,all,3,0.354
+13B,valid30,all,4,-0.493
+13B,valid30,all,5,-1.101
+13B,valid30,all,6,-1.533
+13B,valid30,all,7,-2.081
+13B,valid30,all,8,-2.856
+13B,valid30,all,9,-3.875
+13B,valid30,all,10,-4.71
+13B,valid30,all,11,-4.978
+13B,valid30,all,12,-5.205
+13B,valid30,all,13,-2.987
+13B,valid30,all,14,-2.941
+13B,valid30,all,15,-3.536
+13B,valid30,all,16,-4.152
+13B,valid30,all,17,-4.64
+13B,valid30,all,18,-5.015
+13B,valid30,all,19,-5.701
+13B,valid30,all,20,-6.284
+13B,valid30,all,21,-6.925
+13B,valid30,all,22,-7.235
+13B,valid30,all,23,-7.486
+13B,valid30,all,24,-7.715
+13B,valid30,all,25,-8.063
+13B,valid30,all,26,-8.73
+13B,valid30,all,27,-9.208
+13B,valid30,all,28,-7.846
+13B,valid30,all,29,-8.127
+13B,valid30,all,30,-8.318
+13B,valid10,numbers,1,2.102
+13B,valid10,numbers,2,1.591
+13B,valid10,numbers,3,0.912
+13B,valid10,numbers,4,0.346
+13B,valid10,numbers,5,0.085
+13B,valid10,numbers,6,-0.107
+13B,valid10,numbers,7,-0.311
+13B,valid10,numbers,8,-0.769
+13B,valid10,numbers,9,-1.328
+13B,valid10,numbers,10,0.398
+13B,valid10,numbers,11,0.735
+13B,valid10,numbers,12,0.701
+13B,valid10,numbers,13,0.246
+13B,valid10,numbers,14,-0.02
+13B,valid10,numbers,15,-0.326
+13B,valid10,numbers,16,-0.377
+13B,valid10,numbers,17,-0.269
+13B,valid10,numbers,18,-0.257
+13B,valid10,numbers,19,-0.448
+13B,valid10,numbers,20,0.416
+13B,valid10,numbers,21,0.237
+13B,valid10,numbers,22,0.054
+13B,valid10,numbers,23,0.056
+13B,valid10,numbers,24,-0.532
+13B,valid10,numbers,25,-1.095
+13B,valid10,numbers,26,-1.403
+13B,valid10,numbers,27,-1.533
+13B,valid10,numbers,28,-0.708
+13B,valid10,numbers,29,-1.445
+13B,valid10,numbers,30,-0.721
+13B,valid10,all,1,1.884
+13B,valid10,all,2,1.161
+13B,valid10,all,3,0.403
+13B,valid10,all,4,-0.438
+13B,valid10,all,5,-1.029
+13B,valid10,all,6,-1.392
+13B,valid10,all,7,-1.905
+13B,valid10,all,8,-2.614
+13B,valid10,all,9,-3.682
+13B,valid10,all,10,-4.492
+13B,valid10,all,11,-4.656
+13B,valid10,all,12,-4.695
+13B,valid10,all,13,-2.354
+13B,valid10,all,14,-2.586
+13B,valid10,all,15,-3.252
+13B,valid10,all,16,-3.817
+13B,valid10,all,17,-4.09
+13B,valid10,all,18,-4.595
+13B,valid10,all,19,-5.302
+13B,valid10,all,20,-5.845
+13B,valid10,all,21,-6.309
+13B,valid10,all,22,-6.392
+13B,valid10,all,23,-6.397
+13B,valid10,all,24,-6.75
+13B,valid10,all,25,-7.274
+13B,valid10,all,26,-7.778
+13B,valid10,all,27,-7.48
+13B,valid10,all,28,-6.952
+13B,valid10,all,29,-7.434
+13B,valid10,all,30,-7.392
+13B,valid3,numbers,1,2.149
+13B,valid3,numbers,2,1.654
+13B,valid3,numbers,3,0.958
+13B,valid3,numbers,4,0.391
+13B,valid3,numbers,5,0.187
+13B,valid3,numbers,6,-0.04
+13B,valid3,numbers,7,-0.248
+13B,valid3,numbers,8,-0.677
+13B,valid3,numbers,9,-1.19
+13B,valid3,numbers,10,0.923
+13B,valid3,numbers,11,0.874
+13B,valid3,numbers,12,0.879
+13B,valid3,numbers,13,0.378
+13B,valid3,numbers,14,0.121
+13B,valid3,numbers,15,-0.22
+13B,valid3,numbers,16,-0.217
+13B,valid3,numbers,17,-0.199
+13B,valid3,numbers,18,-0.179
+13B,valid3,numbers,19,0.219
+13B,valid3,numbers,20,0.512
+13B,valid3,numbers,21,0.35
+13B,valid3,numbers,22,0.136
+13B,valid3,numbers,23,0.005
+13B,valid3,numbers,24,-0.345
+13B,valid3,numbers,25,-1.073
+13B,valid3,numbers,26,-1.146
+13B,valid3,numbers,27,-1.507
+13B,valid3,numbers,28,-0.642
+13B,valid3,numbers,29,-1.397
+13B,valid3,numbers,30,-0.631
+13B,valid3,all,1,1.895
+13B,valid3,all,2,1.199
+13B,valid3,all,3,0.428
+13B,valid3,all,4,-0.425
+13B,valid3,all,5,-1.01
+13B,valid3,all,6,-1.353
+13B,valid3,all,7,-1.846
+13B,valid3,all,8,-2.565
+13B,valid3,all,9,-3.603
+13B,valid3,all,10,-4.409
+13B,valid3,all,11,-4.557
+13B,valid3,all,12,-4.417
+13B,valid3,all,13,-2.173
+13B,valid3,all,14,-2.503
+13B,valid3,all,15,-3.182
+13B,valid3,all,16,-3.676
+13B,valid3,all,17,-3.999
+13B,valid3,all,18,-4.515
+13B,valid3,all,19,-5.192
+13B,valid3,all,20,-5.724
+13B,valid3,all,21,-6.173
+13B,valid3,all,22,-6.212
+13B,valid3,all,23,-6.286
+13B,valid3,all,24,-6.53
+13B,valid3,all,25,-7.145
+13B,valid3,all,26,-7.234
+13B,valid3,all,27,-7.203
+13B,valid3,all,28,-6.79
+13B,valid3,all,29,-7.304
+13B,valid3,all,30,-7.144
+13B,exact,numbers,1,1.943
+13B,exact,numbers,2,1.913
+13B,exact,numbers,3,1.517
+13B,exact,numbers,4,0.122
+13B,exact,numbers,5,0.203
+13B,exact,numbers,6,0.647
+13B,exact,numbers,7,0.592
+13B,exact,numbers,8,2.971
+13B,exact,numbers,9,-2.108
+13B,exact,numbers,10,1.391
+13B,exact,numbers,11,2.191
+13B,exact,numbers,12,1.99
+13B,exact,numbers,13,2.035
+13B,exact,numbers,14,3.138
+13B,exact,numbers,15,3.753
+13B,exact,numbers,16,4.887
+13B,exact,numbers,17,4.968
+13B,exact,numbers,18,5.364
+13B,exact,numbers,19,5.199
+13B,exact,numbers,20,5.829
+13B,exact,numbers,21,6.451
+13B,exact,numbers,22,6.752
+13B,exact,numbers,23,6.604
+13B,exact,numbers,24,6.708
+13B,exact,numbers,25,6.521
+13B,exact,numbers,26,6.689
+13B,exact,numbers,27,6.07
+13B,exact,numbers,28,6.959
+13B,exact,numbers,29,8.474
+13B,exact,numbers,30,9.674
+13B,exact,all,1,1.964
+13B,exact,all,2,1.73
+13B,exact,all,3,0.959
+13B,exact,all,4,-0.877
+13B,exact,all,5,-1.1
+13B,exact,all,6,-0.704
+13B,exact,all,7,-0.999
+13B,exact,all,8,-2.064
+13B,exact,all,9,-4.144
+13B,exact,all,10,-3.738
+13B,exact,all,11,0.161
+13B,exact,all,12,-0.022
+13B,exact,all,13,0.096
+13B,exact,all,14,-0.026
+13B,exact,all,15,-0.26
+13B,exact,all,16,-0.301
+13B,exact,all,17,0.157
+13B,exact,all,18,0.746
+13B,exact,all,19,1.161
+13B,exact,all,20,1.232
+13B,exact,all,21,1.327
+13B,exact,all,22,1.445
+13B,exact,all,23,1.533
+13B,exact,all,24,2.028
+13B,exact,all,25,2.196
+13B,exact,all,26,1.775
+13B,exact,all,27,0.944
+13B,exact,all,28,1.765
+13B,exact,all,29,2.206
+13B,exact,all,30,3.779
+13B,invalid30,numbers,1,1.632
+13B,invalid30,numbers,2,0.939
+13B,invalid30,numbers,3,0.406
+13B,invalid30,numbers,4,-0.269
+13B,invalid30,numbers,5,-0.743
+13B,invalid30,numbers,6,-1.254
+13B,invalid30,numbers,7,-1.829
+13B,invalid30,numbers,8,-2.366
+13B,invalid30,numbers,9,-3.008
+13B,invalid30,numbers,10,-3.656
+13B,invalid30,numbers,11,-4.086
+13B,invalid30,numbers,12,-4.129
+13B,invalid30,numbers,13,-1.859
+13B,invalid30,numbers,14,-2.178
+13B,invalid30,numbers,15,-2.525
+13B,invalid30,numbers,16,-2.812
+13B,invalid30,numbers,17,-3.311
+13B,invalid30,numbers,18,-3.681
+13B,invalid30,numbers,19,-4.189
+13B,invalid30,numbers,20,-4.467
+13B,invalid30,numbers,21,-4.545
+13B,invalid30,numbers,22,-4.491
+13B,invalid30,numbers,23,-3.987
+13B,invalid30,numbers,24,-3.774
+13B,invalid30,numbers,25,-4.325
+13B,invalid30,numbers,26,-5.015
+13B,invalid30,numbers,27,-5.493
+13B,invalid30,numbers,28,-5.112
+13B,invalid30,numbers,29,-5.571
+13B,invalid30,numbers,30,-4.931
+13B,invalid30,all,1,1.602
+13B,invalid30,all,2,0.935
+13B,invalid30,all,3,0.173
+13B,invalid30,all,4,-0.653
+13B,invalid30,all,5,-1.23
+13B,invalid30,all,6,-1.838
+13B,invalid30,all,7,-2.393
+13B,invalid30,all,8,-3.221
+13B,invalid30,all,9,-4.195
+13B,invalid30,all,10,-5.131
+13B,invalid30,all,11,-5.506
+13B,invalid30,all,12,-5.862
+13B,invalid30,all,13,-6.324
+13B,invalid30,all,14,-6.478
+13B,invalid30,all,15,-4.557
+13B,invalid30,all,16,-4.896
+13B,invalid30,all,17,-5.481
+13B,invalid30,all,18,-6.142
+13B,invalid30,all,19,-6.782
+13B,invalid30,all,20,-7.254
+13B,invalid30,all,21,-7.828
+13B,invalid30,all,22,-8.364
+13B,invalid30,all,23,-9.01
+13B,invalid30,all,24,-9.562
+13B,invalid30,all,25,-10.246
+13B,invalid30,all,26,-11.06
+13B,invalid30,all,27,-11.413
+13B,invalid30,all,28,-10.865
+13B,invalid30,all,29,-11.236
+13B,invalid30,all,30,-10.309
+13B,invalid10,numbers,1,1.604
+13B,invalid10,numbers,2,0.951
+13B,invalid10,numbers,3,0.435
+13B,invalid10,numbers,4,-0.24
+13B,invalid10,numbers,5,-0.698
+13B,invalid10,numbers,6,-1.214
+13B,invalid10,numbers,7,-1.77
+13B,invalid10,numbers,8,-2.277
+13B,invalid10,numbers,9,-2.927
+13B,invalid10,numbers,10,-3.623
+13B,invalid10,numbers,11,-4.023
+13B,invalid10,numbers,12,-1.918
+13B,invalid10,numbers,13,-1.72
+13B,invalid10,numbers,14,-2.089
+13B,invalid10,numbers,15,-2.376
+13B,invalid10,numbers,16,-2.668
+13B,invalid10,numbers,17,-3.232
+13B,invalid10,numbers,18,-3.475
+13B,invalid10,numbers,19,-4.051
+13B,invalid10,numbers,20,-4.138
+13B,invalid10,numbers,21,-4.055
+13B,invalid10,numbers,22,-4.137
+13B,invalid10,numbers,23,-3.019
+13B,invalid10,numbers,24,-3.323
+13B,invalid10,numbers,25,-3.987
+13B,invalid10,numbers,26,-4.77
+13B,invalid10,numbers,27,-5.276
+13B,invalid10,numbers,28,-4.739
+13B,invalid10,numbers,29,-5.241
+13B,invalid10,numbers,30,-4.453
+13B,invalid10,all,1,1.582
+13B,invalid10,all,2,0.95
+13B,invalid10,all,3,0.217
+13B,invalid10,all,4,-0.61
+13B,invalid10,all,5,-1.194
+13B,invalid10,all,6,-1.767
+13B,invalid10,all,7,-2.339
+13B,invalid10,all,8,-3.163
+13B,invalid10,all,9,-4.148
+13B,invalid10,all,10,-5.098
+13B,invalid10,all,11,-5.399
+13B,invalid10,all,12,-5.703
+13B,invalid10,all,13,-6.18
+13B,invalid10,all,14,-6.025
+13B,invalid10,all,15,-4.268
+13B,invalid10,all,16,-4.731
+13B,invalid10,all,17,-5.364
+13B,invalid10,all,18,-5.997
+13B,invalid10,all,19,-6.513
+13B,invalid10,all,20,-6.974
+13B,invalid10,all,21,-7.556
+13B,invalid10,all,22,-8.131
+13B,invalid10,all,23,-8.65
+13B,invalid10,all,24,-9.213
+13B,invalid10,all,25,-9.909
+13B,invalid10,all,26,-10.571
+13B,invalid10,all,27,-10.879
+13B,invalid10,all,28,-10.399
+13B,invalid10,all,29,-10.392
+13B,invalid10,all,30,-9.616
+13B,invalid3,numbers,1,1.633
+13B,invalid3,numbers,2,0.939
+13B,invalid3,numbers,3,0.422
+13B,invalid3,numbers,4,-0.239
+13B,invalid3,numbers,5,-0.657
+13B,invalid3,numbers,6,-1.184
+13B,invalid3,numbers,7,-1.741
+13B,invalid3,numbers,8,-2.29
+13B,invalid3,numbers,9,-2.925
+13B,invalid3,numbers,10,-3.57
+13B,invalid3,numbers,11,-3.996
+13B,invalid3,numbers,12,-1.937
+13B,invalid3,numbers,13,-1.713
+13B,invalid3,numbers,14,-2.094
+13B,invalid3,numbers,15,-2.343
+13B,invalid3,numbers,16,-2.648
+13B,invalid3,numbers,17,-3.217
+13B,invalid3,numbers,18,-3.519
+13B,invalid3,numbers,19,-4.034
+13B,invalid3,numbers,20,-4.101
+13B,invalid3,numbers,21,-4.141
+13B,invalid3,numbers,22,-4.146
+13B,invalid3,numbers,23,-3.335
+13B,invalid3,numbers,24,-3.384
+13B,invalid3,numbers,25,-4.055
+13B,invalid3,numbers,26,-4.841
+13B,invalid3,numbers,27,-5.291
+13B,invalid3,numbers,28,-4.767
+13B,invalid3,numbers,29,-5.133
+13B,invalid3,numbers,30,-4.321
+13B,invalid3,all,1,1.611
+13B,invalid3,all,2,0.944
+13B,invalid3,all,3,0.204
+13B,invalid3,all,4,-0.606
+13B,invalid3,all,5,-1.176
+13B,invalid3,all,6,-1.729
+13B,invalid3,all,7,-2.314
+13B,invalid3,all,8,-3.153
+13B,invalid3,all,9,-4.131
+13B,invalid3,all,10,-5.065
+13B,invalid3,all,11,-5.353
+13B,invalid3,all,12,-5.668
+13B,invalid3,all,13,-6.146
+13B,invalid3,all,14,-3.944
+13B,invalid3,all,15,-4.169
+13B,invalid3,all,16,-4.681
+13B,invalid3,all,17,-5.319
+13B,invalid3,all,18,-5.943
+13B,invalid3,all,19,-6.436
+13B,invalid3,all,20,-6.91
+13B,invalid3,all,21,-7.54
+13B,invalid3,all,22,-8.093
+13B,invalid3,all,23,-8.632
+13B,invalid3,all,24,-9.164
+13B,invalid3,all,25,-9.834
+13B,invalid3,all,26,-10.521
+13B,invalid3,all,27,-10.79
+13B,invalid3,all,28,-10.317
+13B,invalid3,all,29,-9.892
+13B,invalid3,all,30,-9.424
+13B,valid30_sentence,numbers,1,1.205
+13B,valid30_sentence,numbers,2,1.485
+13B,valid30_sentence,numbers,3,0.779
+13B,valid30_sentence,numbers,4,0.37
+13B,valid30_sentence,numbers,5,-0.02
+13B,valid30_sentence,numbers,6,0.129
+13B,valid30_sentence,numbers,7,0.505
+13B,valid30_sentence,numbers,8,3.165
+13B,valid30_sentence,numbers,9,2.828
+13B,valid30_sentence,numbers,10,2.001
+13B,valid30_sentence,numbers,11,2.507
+13B,valid30_sentence,numbers,12,2.677
+13B,valid30_sentence,numbers,13,3.142
+13B,valid30_sentence,numbers,14,4.55
+13B,valid30_sentence,numbers,15,6.266
+13B,valid30_sentence,numbers,16,6.473
+13B,valid30_sentence,numbers,17,6.976
+13B,valid30_sentence,numbers,18,7.701
+13B,valid30_sentence,numbers,19,8.096
+13B,valid30_sentence,numbers,20,7.77
+13B,valid30_sentence,numbers,21,8.537
+13B,valid30_sentence,numbers,22,8.437
+13B,valid30_sentence,numbers,23,8.71
+13B,valid30_sentence,numbers,24,8.732
+13B,valid30_sentence,numbers,25,9.088
+13B,valid30_sentence,numbers,26,8.635
+13B,valid30_sentence,numbers,27,10.06
+13B,valid30_sentence,numbers,28,9.972
+13B,valid30_sentence,numbers,29,10.421
+13B,valid30_sentence,numbers,30,9.89
+13B,valid30_sentence,all,1,0.094
+13B,valid30_sentence,all,2,1.136
+13B,valid30_sentence,all,3,0.521
+13B,valid30_sentence,all,4,-0.275
+13B,valid30_sentence,all,5,-1.067
+13B,valid30_sentence,all,6,-1.161
+13B,valid30_sentence,all,7,-0.965
+13B,valid30_sentence,all,8,-1.436
+13B,valid30_sentence,all,9,-2.309
+13B,valid30_sentence,all,10,-3.148
+13B,valid30_sentence,all,11,0.515
+13B,valid30_sentence,all,12,0.639
+13B,valid30_sentence,all,13,0.456
+13B,valid30_sentence,all,14,0.557
+13B,valid30_sentence,all,15,1.215
+13B,valid30_sentence,all,16,1.52
+13B,valid30_sentence,all,17,2.775
+13B,valid30_sentence,all,18,2.971
+13B,valid30_sentence,all,19,2.627
+13B,valid30_sentence,all,20,2.719
+13B,valid30_sentence,all,21,2.841
+13B,valid30_sentence,all,22,3.381
+13B,valid30_sentence,all,23,4.019
+13B,valid30_sentence,all,24,3.599
+13B,valid30_sentence,all,25,2.99
+13B,valid30_sentence,all,26,3.404
+13B,valid30_sentence,all,27,2.753
+13B,valid30_sentence,all,28,3.206
+13B,valid30_sentence,all,29,3.232
+13B,valid30_sentence,all,30,3.863
+13B,valid10_sentence,numbers,1,1.226
+13B,valid10_sentence,numbers,2,1.682
+13B,valid10_sentence,numbers,3,0.881
+13B,valid10_sentence,numbers,4,0.572
+13B,valid10_sentence,numbers,5,0.349
+13B,valid10_sentence,numbers,6,0.491
+13B,valid10_sentence,numbers,7,3.063
+13B,valid10_sentence,numbers,8,3.565
+13B,valid10_sentence,numbers,9,3.197
+13B,valid10_sentence,numbers,10,2.177
+13B,valid10_sentence,numbers,11,2.644
+13B,valid10_sentence,numbers,12,2.735
+13B,valid10_sentence,numbers,13,3.018
+13B,valid10_sentence,numbers,14,4.873
+13B,valid10_sentence,numbers,15,6.124
+13B,valid10_sentence,numbers,16,5.976
+13B,valid10_sentence,numbers,17,6.685
+13B,valid10_sentence,numbers,18,7.192
+13B,valid10_sentence,numbers,19,7.572
+13B,valid10_sentence,numbers,20,7.567
+13B,valid10_sentence,numbers,21,8.367
+13B,valid10_sentence,numbers,22,7.966
+13B,valid10_sentence,numbers,23,8.457
+13B,valid10_sentence,numbers,24,8.51
+13B,valid10_sentence,numbers,25,8.625
+13B,valid10_sentence,numbers,26,8.503
+13B,valid10_sentence,numbers,27,7.821
+13B,valid10_sentence,numbers,28,9.888
+13B,valid10_sentence,numbers,29,10.361
+13B,valid10_sentence,numbers,30,9.855
+13B,valid10_sentence,all,1,0.122
+13B,valid10_sentence,all,2,1.274
+13B,valid10_sentence,all,3,0.593
+13B,valid10_sentence,all,4,-0.207
+13B,valid10_sentence,all,5,-1.033
+13B,valid10_sentence,all,6,-1.09
+13B,valid10_sentence,all,7,-0.748
+13B,valid10_sentence,all,8,-1.22
+13B,valid10_sentence,all,9,-2.142
+13B,valid10_sentence,all,10,-3.094
+13B,valid10_sentence,all,11,0.624
+13B,valid10_sentence,all,12,0.758
+13B,valid10_sentence,all,13,0.477
+13B,valid10_sentence,all,14,0.701
+13B,valid10_sentence,all,15,1.195
+13B,valid10_sentence,all,16,1.358
+13B,valid10_sentence,all,17,2.607
+13B,valid10_sentence,all,18,2.779
+13B,valid10_sentence,all,19,2.516
+13B,valid10_sentence,all,20,2.523
+13B,valid10_sentence,all,21,2.764
+13B,valid10_sentence,all,22,3.243
+13B,valid10_sentence,all,23,3.908
+13B,valid10_sentence,all,24,3.566
+13B,valid10_sentence,all,25,2.936
+13B,valid10_sentence,all,26,3.376
+13B,valid10_sentence,all,27,2.642
+13B,valid10_sentence,all,28,3.188
+13B,valid10_sentence,all,29,3.218
+13B,valid10_sentence,all,30,3.936
+13B,valid3_sentence,numbers,1,1.242
+13B,valid3_sentence,numbers,2,1.75
+13B,valid3_sentence,numbers,3,0.912
+13B,valid3_sentence,numbers,4,0.557
+13B,valid3_sentence,numbers,5,0.332
+13B,valid3_sentence,numbers,6,0.511
+13B,valid3_sentence,numbers,7,0.971
+13B,valid3_sentence,numbers,8,3.511
+13B,valid3_sentence,numbers,9,3.135
+13B,valid3_sentence,numbers,10,2.11
+13B,valid3_sentence,numbers,11,2.589
+13B,valid3_sentence,numbers,12,2.625
+13B,valid3_sentence,numbers,13,2.842
+13B,valid3_sentence,numbers,14,4.054
+13B,valid3_sentence,numbers,15,5.66
+13B,valid3_sentence,numbers,16,5.652
+13B,valid3_sentence,numbers,17,6.088
+13B,valid3_sentence,numbers,18,6.172
+13B,valid3_sentence,numbers,19,6.747
+13B,valid3_sentence,numbers,20,7.31
+13B,valid3_sentence,numbers,21,8.087
+13B,valid3_sentence,numbers,22,7.673
+13B,valid3_sentence,numbers,23,7.996
+13B,valid3_sentence,numbers,24,8.192
+13B,valid3_sentence,numbers,25,7.846
+13B,valid3_sentence,numbers,26,8.315
+13B,valid3_sentence,numbers,27,7.636
+13B,valid3_sentence,numbers,28,9.706
+13B,valid3_sentence,numbers,29,10.153
+13B,valid3_sentence,numbers,30,9.646
+13B,valid3_sentence,all,1,0.091
+13B,valid3_sentence,all,2,1.367
+13B,valid3_sentence,all,3,0.589
+13B,valid3_sentence,all,4,-0.252
+13B,valid3_sentence,all,5,-0.937
+13B,valid3_sentence,all,6,-0.969
+13B,valid3_sentence,all,7,-0.618
+13B,valid3_sentence,all,8,-1.105
+13B,valid3_sentence,all,9,-2.012
+13B,valid3_sentence,all,10,-2.892
+13B,valid3_sentence,all,11,0.697
+13B,valid3_sentence,all,12,0.85
+13B,valid3_sentence,all,13,0.555
+13B,valid3_sentence,all,14,0.737
+13B,valid3_sentence,all,15,1.047
+13B,valid3_sentence,all,16,1.259
+13B,valid3_sentence,all,17,2.18
+13B,valid3_sentence,all,18,2.56
+13B,valid3_sentence,all,19,2.397
+13B,valid3_sentence,all,20,2.33
+13B,valid3_sentence,all,21,2.591
+13B,valid3_sentence,all,22,2.93
+13B,valid3_sentence,all,23,3.529
+13B,valid3_sentence,all,24,3.493
+13B,valid3_sentence,all,25,2.831
+13B,valid3_sentence,all,26,3.291
+13B,valid3_sentence,all,27,2.558
+13B,valid3_sentence,all,28,3.013
+13B,valid3_sentence,all,29,3.0
+13B,valid3_sentence,all,30,3.237
+13B,valid30_interval,numbers,1,-0.283
+13B,valid30_interval,numbers,2,1.301
+13B,valid30_interval,numbers,3,0.601
+13B,valid30_interval,numbers,4,-0.107
+13B,valid30_interval,numbers,5,-0.418
+13B,valid30_interval,numbers,6,-0.681
+13B,valid30_interval,numbers,7,-0.765
+13B,valid30_interval,numbers,8,-1.109
+13B,valid30_interval,numbers,9,-1.775
+13B,valid30_interval,numbers,10,0.908
+13B,valid30_interval,numbers,11,1.072
+13B,valid30_interval,numbers,12,1.3
+13B,valid30_interval,numbers,13,0.91
+13B,valid30_interval,numbers,14,1.547
+13B,valid30_interval,numbers,15,2.434
+13B,valid30_interval,numbers,16,3.755
+13B,valid30_interval,numbers,17,4.25
+13B,valid30_interval,numbers,18,4.361
+13B,valid30_interval,numbers,19,4.165
+13B,valid30_interval,numbers,20,4.334
+13B,valid30_interval,numbers,21,6.065
+13B,valid30_interval,numbers,22,5.658
+13B,valid30_interval,numbers,23,6.166
+13B,valid30_interval,numbers,24,6.316
+13B,valid30_interval,numbers,25,6.444
+13B,valid30_interval,numbers,26,6.172
+13B,valid30_interval,numbers,27,5.767
+13B,valid30_interval,numbers,28,6.951
+13B,valid30_interval,numbers,29,8.29
+13B,valid30_interval,numbers,30,9.4
+13B,valid30_interval,all,1,-0.575
+13B,valid30_interval,all,2,0.903
+13B,valid30_interval,all,3,0.068
+13B,valid30_interval,all,4,-0.888
+13B,valid30_interval,all,5,-1.289
+13B,valid30_interval,all,6,-1.454
+13B,valid30_interval,all,7,-1.694
+13B,valid30_interval,all,8,-2.286
+13B,valid30_interval,all,9,-3.448
+13B,valid30_interval,all,10,-3.422
+13B,valid30_interval,all,11,0.031
+13B,valid30_interval,all,12,-0.149
+13B,valid30_interval,all,13,-0.294
+13B,valid30_interval,all,14,-0.267
+13B,valid30_interval,all,15,-0.262
+13B,valid30_interval,all,16,-0.164
+13B,valid30_interval,all,17,0.247
+13B,valid30_interval,all,18,0.938
+13B,valid30_interval,all,19,1.049
+13B,valid30_interval,all,20,0.946
+13B,valid30_interval,all,21,1.316
+13B,valid30_interval,all,22,1.511
+13B,valid30_interval,all,23,1.578
+13B,valid30_interval,all,24,2.66
+13B,valid30_interval,all,25,2.427
+13B,valid30_interval,all,26,1.773
+13B,valid30_interval,all,27,2.012
+13B,valid30_interval,all,28,2.334
+13B,valid30_interval,all,29,2.383
+13B,valid30_interval,all,30,3.713
+13B,valid10_interval,numbers,1,-0.22
+13B,valid10_interval,numbers,2,1.495
+13B,valid10_interval,numbers,3,0.706
+13B,valid10_interval,numbers,4,-0.007
+13B,valid10_interval,numbers,5,-0.308
+13B,valid10_interval,numbers,6,-0.619
+13B,valid10_interval,numbers,7,-0.872
+13B,valid10_interval,numbers,8,-1.229
+13B,valid10_interval,numbers,9,-1.876
+13B,valid10_interval,numbers,10,0.954
+13B,valid10_interval,numbers,11,1.023
+13B,valid10_interval,numbers,12,1.297
+13B,valid10_interval,numbers,13,0.859
+13B,valid10_interval,numbers,14,1.405
+13B,valid10_interval,numbers,15,2.033
+13B,valid10_interval,numbers,16,2.123
+13B,valid10_interval,numbers,17,3.628
+13B,valid10_interval,numbers,18,3.788
+13B,valid10_interval,numbers,19,3.505
+13B,valid10_interval,numbers,20,3.421
+13B,valid10_interval,numbers,21,4.747
+13B,valid10_interval,numbers,22,5.267
+13B,valid10_interval,numbers,23,4.833
+13B,valid10_interval,numbers,24,5.825
+13B,valid10_interval,numbers,25,5.039
+13B,valid10_interval,numbers,26,5.459
+13B,valid10_interval,numbers,27,5.268
+13B,valid10_interval,numbers,28,6.443
+13B,valid10_interval,numbers,29,5.884
+13B,valid10_interval,numbers,30,7.827
+13B,valid10_interval,all,1,-0.545
+13B,valid10_interval,all,2,0.901
+13B,valid10_interval,all,3,0.066
+13B,valid10_interval,all,4,-0.845
+13B,valid10_interval,all,5,-1.295
+13B,valid10_interval,all,6,-1.517
+13B,valid10_interval,all,7,-1.883
+13B,valid10_interval,all,8,-2.471
+13B,valid10_interval,all,9,-3.507
+13B,valid10_interval,all,10,-3.462
+13B,valid10_interval,all,11,-0.081
+13B,valid10_interval,all,12,-0.196
+13B,valid10_interval,all,13,-0.433
+13B,valid10_interval,all,14,-0.372
+13B,valid10_interval,all,15,-0.562
+13B,valid10_interval,all,16,-0.807
+13B,valid10_interval,all,17,-0.406
+13B,valid10_interval,all,18,-0.112
+13B,valid10_interval,all,19,0.236
+13B,valid10_interval,all,20,0.362
+13B,valid10_interval,all,21,0.745
+13B,valid10_interval,all,22,1.004
+13B,valid10_interval,all,23,0.835
+13B,valid10_interval,all,24,1.967
+13B,valid10_interval,all,25,1.977
+13B,valid10_interval,all,26,1.526
+13B,valid10_interval,all,27,0.956
+13B,valid10_interval,all,28,1.873
+13B,valid10_interval,all,29,1.928
+13B,valid10_interval,all,30,2.579
+13B,valid3_interval,numbers,1,-0.161
+13B,valid3_interval,numbers,2,1.252
+13B,valid3_interval,numbers,3,0.495
+13B,valid3_interval,numbers,4,-0.134
+13B,valid3_interval,numbers,5,-0.558
+13B,valid3_interval,numbers,6,-1.014
+13B,valid3_interval,numbers,7,-1.178
+13B,valid3_interval,numbers,8,-1.556
+13B,valid3_interval,numbers,9,-2.185
+13B,valid3_interval,numbers,10,-2.354
+13B,valid3_interval,numbers,11,0.448
+13B,valid3_interval,numbers,12,0.465
+13B,valid3_interval,numbers,13,0.298
+13B,valid3_interval,numbers,14,0.12
+13B,valid3_interval,numbers,15,0.184
+13B,valid3_interval,numbers,16,0.518
+13B,valid3_interval,numbers,17,0.637
+13B,valid3_interval,numbers,18,2.316
+13B,valid3_interval,numbers,19,2.033
+13B,valid3_interval,numbers,20,1.772
+13B,valid3_interval,numbers,21,2.022
+13B,valid3_interval,numbers,22,2.447
+13B,valid3_interval,numbers,23,2.983
+13B,valid3_interval,numbers,24,3.502
+13B,valid3_interval,numbers,25,2.697
+13B,valid3_interval,numbers,26,3.219
+13B,valid3_interval,numbers,27,2.58
+13B,valid3_interval,numbers,28,3.466
+13B,valid3_interval,numbers,29,3.226
+13B,valid3_interval,numbers,30,4.148
+13B,valid3_interval,all,1,-0.499
+13B,valid3_interval,all,2,0.814
+13B,valid3_interval,all,3,-0.035
+13B,valid3_interval,all,4,-0.899
+13B,valid3_interval,all,5,-1.342
+13B,valid3_interval,all,6,-1.663
+13B,valid3_interval,all,7,-2.046
+13B,valid3_interval,all,8,-2.626
+13B,valid3_interval,all,9,-3.531
+13B,valid3_interval,all,10,-3.649
+13B,valid3_interval,all,11,-0.716
+13B,valid3_interval,all,12,-0.535
+13B,valid3_interval,all,13,-1.021
+13B,valid3_interval,all,14,-0.935
+13B,valid3_interval,all,15,-1.266
+13B,valid3_interval,all,16,-1.659
+13B,valid3_interval,all,17,-1.922
+13B,valid3_interval,all,18,-1.296
+13B,valid3_interval,all,19,-1.643
+13B,valid3_interval,all,20,-1.625
+13B,valid3_interval,all,21,-0.532
+13B,valid3_interval,all,22,-0.438
+13B,valid3_interval,all,23,-0.553
+13B,valid3_interval,all,24,-0.339
+13B,valid3_interval,all,25,-0.832
+13B,valid3_interval,all,26,-0.397
+13B,valid3_interval,all,27,-0.412
+13B,valid3_interval,all,28,-0.143
+13B,valid3_interval,all,29,0.277
+13B,valid3_interval,all,30,0.031
+13B instruct,valid30,numbers,1,1.831
+13B instruct,valid30,numbers,2,1.113
+13B instruct,valid30,numbers,3,0.43
+13B instruct,valid30,numbers,4,-0.392
+13B instruct,valid30,numbers,5,-1.069
+13B instruct,valid30,numbers,6,-1.527
+13B instruct,valid30,numbers,7,-1.929
+13B instruct,valid30,numbers,8,-2.469
+13B instruct,valid30,numbers,9,-3.349
+13B instruct,valid30,numbers,10,-4.25
+13B instruct,valid30,numbers,11,-4.617
+13B instruct,valid30,numbers,12,-0.69
+13B instruct,valid30,numbers,13,-0.136
+13B instruct,valid30,numbers,14,-0.302
+13B instruct,valid30,numbers,15,-0.908
+13B instruct,valid30,numbers,16,-1.271
+13B instruct,valid30,numbers,17,-2.056
+13B instruct,valid30,numbers,18,-2.625
+13B instruct,valid30,numbers,19,-4.002
+13B instruct,valid30,numbers,20,-3.993
+13B instruct,valid30,numbers,21,-4.669
+13B instruct,valid30,numbers,22,-5.419
+13B instruct,valid30,numbers,23,-6.084
+13B instruct,valid30,numbers,24,-6.58
+13B instruct,valid30,numbers,25,-5.671
+13B instruct,valid30,numbers,26,-8.167
+13B instruct,valid30,numbers,27,-7.698
+13B instruct,valid30,numbers,28,-8.751
+13B instruct,valid30,numbers,29,-9.326
+13B instruct,valid30,numbers,30,-8.748
+13B instruct,valid30,all,1,1.715
+13B instruct,valid30,all,2,0.737
+13B instruct,valid30,all,3,-0.249
+13B instruct,valid30,all,4,-1.328
+13B instruct,valid30,all,5,-2.189
+13B instruct,valid30,all,6,-2.997
+13B instruct,valid30,all,7,-3.461
+13B instruct,valid30,all,8,-4.287
+13B instruct,valid30,all,9,-5.469
+13B instruct,valid30,all,10,-6.612
+13B instruct,valid30,all,11,-7.247
+13B instruct,valid30,all,12,-7.81
+13B instruct,valid30,all,13,-8.463
+13B instruct,valid30,all,14,-9.161
+13B instruct,valid30,all,15,-10.023
+13B instruct,valid30,all,16,-10.901
+13B instruct,valid30,all,17,-11.789
+13B instruct,valid30,all,18,-12.75
+13B instruct,valid30,all,19,-13.763
+13B instruct,valid30,all,20,-14.558
+13B instruct,valid30,all,21,-15.44
+13B instruct,valid30,all,22,-16.355
+13B instruct,valid30,all,23,-17.237
+13B instruct,valid30,all,24,-18.115
+13B instruct,valid30,all,25,-18.981
+13B instruct,valid30,all,26,-19.905
+13B instruct,valid30,all,27,-20.813
+13B instruct,valid30,all,28,-21.868
+13B instruct,valid30,all,29,-22.737
+13B instruct,valid30,all,30,-23.501
+13B instruct,valid10,numbers,1,1.823
+13B instruct,valid10,numbers,2,1.169
+13B instruct,valid10,numbers,3,0.463
+13B instruct,valid10,numbers,4,-0.334
+13B instruct,valid10,numbers,5,-0.961
+13B instruct,valid10,numbers,6,-1.317
+13B instruct,valid10,numbers,7,-1.655
+13B instruct,valid10,numbers,8,-2.225
+13B instruct,valid10,numbers,9,-3.14
+13B instruct,valid10,numbers,10,-4.094
+13B instruct,valid10,numbers,11,-4.328
+13B instruct,valid10,numbers,12,0.532
+13B instruct,valid10,numbers,13,0.166
+13B instruct,valid10,numbers,14,-0.069
+13B instruct,valid10,numbers,15,-0.499
+13B instruct,valid10,numbers,16,-1.011
+13B instruct,valid10,numbers,17,-1.049
+13B instruct,valid10,numbers,18,-1.985
+13B instruct,valid10,numbers,19,-3.124
+13B instruct,valid10,numbers,20,-3.585
+13B instruct,valid10,numbers,21,-4.344
+13B instruct,valid10,numbers,22,-5.073
+13B instruct,valid10,numbers,23,-5.315
+13B instruct,valid10,numbers,24,-4.903
+13B instruct,valid10,numbers,25,-5.621
+13B instruct,valid10,numbers,26,-6.587
+13B instruct,valid10,numbers,27,-7.42
+13B instruct,valid10,numbers,28,-8.38
+13B instruct,valid10,numbers,29,-9.121
+13B instruct,valid10,numbers,30,-8.423
+13B instruct,valid10,all,1,1.738
+13B instruct,valid10,all,2,0.742
+13B instruct,valid10,all,3,-0.254
+13B instruct,valid10,all,4,-1.339
+13B instruct,valid10,all,5,-2.178
+13B instruct,valid10,all,6,-2.938
+13B instruct,valid10,all,7,-3.387
+13B instruct,valid10,all,8,-4.224
+13B instruct,valid10,all,9,-5.442
+13B instruct,valid10,all,10,-6.578
+13B instruct,valid10,all,11,-7.178
+13B instruct,valid10,all,12,-7.64
+13B instruct,valid10,all,13,-8.335
+13B instruct,valid10,all,14,-9.037
+13B instruct,valid10,all,15,-9.868
+13B instruct,valid10,all,16,-10.778
+13B instruct,valid10,all,17,-11.616
+13B instruct,valid10,all,18,-12.583
+13B instruct,valid10,all,19,-13.57
+13B instruct,valid10,all,20,-14.383
+13B instruct,valid10,all,21,-15.27
+13B instruct,valid10,all,22,-16.204
+13B instruct,valid10,all,23,-17.107
+13B instruct,valid10,all,24,-18.0
+13B instruct,valid10,all,25,-18.872
+13B instruct,valid10,all,26,-19.701
+13B instruct,valid10,all,27,-20.659
+13B instruct,valid10,all,28,-21.7
+13B instruct,valid10,all,29,-22.597
+13B instruct,valid10,all,30,-23.353
+13B instruct,valid3,numbers,1,1.825
+13B instruct,valid3,numbers,2,1.252
+13B instruct,valid3,numbers,3,0.532
+13B instruct,valid3,numbers,4,-0.309
+13B instruct,valid3,numbers,5,-0.894
+13B instruct,valid3,numbers,6,-1.256
+13B instruct,valid3,numbers,7,-1.557
+13B instruct,valid3,numbers,8,-2.158
+13B instruct,valid3,numbers,9,-3.026
+13B instruct,valid3,numbers,10,-3.927
+13B instruct,valid3,numbers,11,-4.165
+13B instruct,valid3,numbers,12,0.837
+13B instruct,valid3,numbers,13,0.323
+13B instruct,valid3,numbers,14,0.054
+13B instruct,valid3,numbers,15,-0.431
+13B instruct,valid3,numbers,16,-0.839
+13B instruct,valid3,numbers,17,-0.965
+13B instruct,valid3,numbers,18,-1.921
+13B instruct,valid3,numbers,19,-2.879
+13B instruct,valid3,numbers,20,-3.578
+13B instruct,valid3,numbers,21,-4.319
+13B instruct,valid3,numbers,22,-5.082
+13B instruct,valid3,numbers,23,-5.289
+13B instruct,valid3,numbers,24,-4.787
+13B instruct,valid3,numbers,25,-5.623
+13B instruct,valid3,numbers,26,-6.471
+13B instruct,valid3,numbers,27,-7.526
+13B instruct,valid3,numbers,28,-8.431
+13B instruct,valid3,numbers,29,-9.115
+13B instruct,valid3,numbers,30,-8.434
+13B instruct,valid3,all,1,1.755
+13B instruct,valid3,all,2,0.775
+13B instruct,valid3,all,3,-0.23
+13B instruct,valid3,all,4,-1.329
+13B instruct,valid3,all,5,-2.168
+13B instruct,valid3,all,6,-2.88
+13B instruct,valid3,all,7,-3.334
+13B instruct,valid3,all,8,-4.177
+13B instruct,valid3,all,9,-5.371
+13B instruct,valid3,all,10,-6.507
+13B instruct,valid3,all,11,-7.131
+13B instruct,valid3,all,12,-7.559
+13B instruct,valid3,all,13,-8.274
+13B instruct,valid3,all,14,-8.98
+13B instruct,valid3,all,15,-9.788
+13B instruct,valid3,all,16,-10.693
+13B instruct,valid3,all,17,-11.53
+13B instruct,valid3,all,18,-12.491
+13B instruct,valid3,all,19,-13.472
+13B instruct,valid3,all,20,-14.325
+13B instruct,valid3,all,21,-15.224
+13B instruct,valid3,all,22,-16.156
+13B instruct,valid3,all,23,-17.052
+13B instruct,valid3,all,24,-17.893
+13B instruct,valid3,all,25,-18.782
+13B instruct,valid3,all,26,-19.642
+13B instruct,valid3,all,27,-20.594
+13B instruct,valid3,all,28,-21.639
+13B instruct,valid3,all,29,-22.552
+13B instruct,valid3,all,30,-23.286
+13B instruct,exact,numbers,1,-0.292
+13B instruct,exact,numbers,2,0.86
+13B instruct,exact,numbers,3,0.33
+13B instruct,exact,numbers,4,-0.896
+13B instruct,exact,numbers,5,-1.299
+13B instruct,exact,numbers,6,-1.456
+13B instruct,exact,numbers,7,-1.667
+13B instruct,exact,numbers,8,-2.371
+13B instruct,exact,numbers,9,-4.458
+13B instruct,exact,numbers,10,-4.613
+13B instruct,exact,numbers,11,-4.289
+13B instruct,exact,numbers,12,1.093
+13B instruct,exact,numbers,13,0.847
+13B instruct,exact,numbers,14,1.332
+13B instruct,exact,numbers,15,1.251
+13B instruct,exact,numbers,16,0.544
+13B instruct,exact,numbers,17,-0.166
+13B instruct,exact,numbers,18,-1.153
+13B instruct,exact,numbers,19,-1.908
+13B instruct,exact,numbers,20,-0.62
+13B instruct,exact,numbers,21,0.06
+13B instruct,exact,numbers,22,-0.188
+13B instruct,exact,numbers,23,-0.791
+13B instruct,exact,numbers,24,-1.076
+13B instruct,exact,numbers,25,170.291
+13B instruct,exact,numbers,26,nan
+13B instruct,exact,numbers,27,nan
+13B instruct,exact,numbers,28,nan
+13B instruct,exact,numbers,29,nan
+13B instruct,exact,numbers,30,nan
+13B instruct,exact,all,1,1.183
+13B instruct,exact,all,2,0.655
+13B instruct,exact,all,3,-0.224
+13B instruct,exact,all,4,-1.716
+13B instruct,exact,all,5,-2.484
+13B instruct,exact,all,6,-3.05
+13B instruct,exact,all,7,-3.291
+13B instruct,exact,all,8,-4.302
+13B instruct,exact,all,9,-6.146
+13B instruct,exact,all,10,-6.909
+13B instruct,exact,all,11,-6.984
+13B instruct,exact,all,12,-6.957
+13B instruct,exact,all,13,-7.214
+13B instruct,exact,all,14,-7.611
+13B instruct,exact,all,15,-8.411
+13B instruct,exact,all,16,-9.455
+13B instruct,exact,all,17,-10.568
+13B instruct,exact,all,18,-11.563
+13B instruct,exact,all,19,-12.433
+13B instruct,exact,all,20,-13.136
+13B instruct,exact,all,21,-9.804
+13B instruct,exact,all,22,-10.301
+13B instruct,exact,all,23,-11.073
+13B instruct,exact,all,24,-11.965
+13B instruct,exact,all,25,-12.662
+13B instruct,exact,all,26,-13.053
+13B instruct,exact,all,27,-13.972
+13B instruct,exact,all,28,-14.622
+13B instruct,exact,all,29,-15.195
+13B instruct,exact,all,30,-15.538
+13B instruct,invalid30,numbers,1,1.467
+13B instruct,invalid30,numbers,2,0.746
+13B instruct,invalid30,numbers,3,-0.016
+13B instruct,invalid30,numbers,4,-0.84
+13B instruct,invalid30,numbers,5,-1.428
+13B instruct,invalid30,numbers,6,-2.106
+13B instruct,invalid30,numbers,7,-2.646
+13B instruct,invalid30,numbers,8,-3.333
+13B instruct,invalid30,numbers,9,-4.228
+13B instruct,invalid30,numbers,10,-5.113
+13B instruct,invalid30,numbers,11,-5.557
+13B instruct,invalid30,numbers,12,-6.003
+13B instruct,invalid30,numbers,13,-6.453
+13B instruct,invalid30,numbers,14,-1.998
+13B instruct,invalid30,numbers,15,-2.369
+13B instruct,invalid30,numbers,16,-2.828
+13B instruct,invalid30,numbers,17,-3.44
+13B instruct,invalid30,numbers,18,-4.216
+13B instruct,invalid30,numbers,19,-5.224
+13B instruct,invalid30,numbers,20,-5.841
+13B instruct,invalid30,numbers,21,-6.564
+13B instruct,invalid30,numbers,22,-7.165
+13B instruct,invalid30,numbers,23,-7.538
+13B instruct,invalid30,numbers,24,-7.83
+13B instruct,invalid30,numbers,25,-8.709
+13B instruct,invalid30,numbers,26,-9.828
+13B instruct,invalid30,numbers,27,-10.576
+13B instruct,invalid30,numbers,28,-11.465
+13B instruct,invalid30,numbers,29,-12.012
+13B instruct,invalid30,numbers,30,-10.725
+13B instruct,invalid30,all,1,1.448
+13B instruct,invalid30,all,2,0.653
+13B instruct,invalid30,all,3,-0.282
+13B instruct,invalid30,all,4,-1.355
+13B instruct,invalid30,all,5,-2.205
+13B instruct,invalid30,all,6,-3.018
+13B instruct,invalid30,all,7,-3.561
+13B instruct,invalid30,all,8,-4.411
+13B instruct,invalid30,all,9,-5.6
+13B instruct,invalid30,all,10,-6.78
+13B instruct,invalid30,all,11,-7.409
+13B instruct,invalid30,all,12,-8.05
+13B instruct,invalid30,all,13,-8.715
+13B instruct,invalid30,all,14,-9.371
+13B instruct,invalid30,all,15,-10.236
+13B instruct,invalid30,all,16,-11.163
+13B instruct,invalid30,all,17,-12.057
+13B instruct,invalid30,all,18,-13.038
+13B instruct,invalid30,all,19,-14.021
+13B instruct,invalid30,all,20,-14.818
+13B instruct,invalid30,all,21,-15.695
+13B instruct,invalid30,all,22,-16.558
+13B instruct,invalid30,all,23,-17.442
+13B instruct,invalid30,all,24,-18.29
+13B instruct,invalid30,all,25,-19.193
+13B instruct,invalid30,all,26,-20.118
+13B instruct,invalid30,all,27,-21.077
+13B instruct,invalid30,all,28,-22.097
+13B instruct,invalid30,all,29,-23.016
+13B instruct,invalid30,all,30,-23.737
+13B instruct,invalid10,numbers,1,1.397
+13B instruct,invalid10,numbers,2,0.758
+13B instruct,invalid10,numbers,3,-0.023
+13B instruct,invalid10,numbers,4,-0.866
+13B instruct,invalid10,numbers,5,-1.452
+13B instruct,invalid10,numbers,6,-2.117
+13B instruct,invalid10,numbers,7,-2.647
+13B instruct,invalid10,numbers,8,-3.307
+13B instruct,invalid10,numbers,9,-4.227
+13B instruct,invalid10,numbers,10,-5.195
+13B instruct,invalid10,numbers,11,-5.593
+13B instruct,invalid10,numbers,12,-5.958
+13B instruct,invalid10,numbers,13,-6.402
+13B instruct,invalid10,numbers,14,-1.915
+13B instruct,invalid10,numbers,15,-2.236
+13B instruct,invalid10,numbers,16,-2.781
+13B instruct,invalid10,numbers,17,-3.424
+13B instruct,invalid10,numbers,18,-4.189
+13B instruct,invalid10,numbers,19,-5.143
+13B instruct,invalid10,numbers,20,-5.599
+13B instruct,invalid10,numbers,21,-6.228
+13B instruct,invalid10,numbers,22,-6.791
+13B instruct,invalid10,numbers,23,-7.032
+13B instruct,invalid10,numbers,24,-7.602
+13B instruct,invalid10,numbers,25,-8.605
+13B instruct,invalid10,numbers,26,-9.71
+13B instruct,invalid10,numbers,27,-10.496
+13B instruct,invalid10,numbers,28,-11.374
+13B instruct,invalid10,numbers,29,-11.86
+13B instruct,invalid10,numbers,30,-10.462
+13B instruct,invalid10,all,1,1.407
+13B instruct,invalid10,all,2,0.677
+13B instruct,invalid10,all,3,-0.274
+13B instruct,invalid10,all,4,-1.361
+13B instruct,invalid10,all,5,-2.206
+13B instruct,invalid10,all,6,-3.009
+13B instruct,invalid10,all,7,-3.523
+13B instruct,invalid10,all,8,-4.368
+13B instruct,invalid10,all,9,-5.584
+13B instruct,invalid10,all,10,-6.803
+13B instruct,invalid10,all,11,-7.384
+13B instruct,invalid10,all,12,-8.003
+13B instruct,invalid10,all,13,-8.607
+13B instruct,invalid10,all,14,-9.265
+13B instruct,invalid10,all,15,-10.142
+13B instruct,invalid10,all,16,-11.093
+13B instruct,invalid10,all,17,-11.986
+13B instruct,invalid10,all,18,-12.933
+13B instruct,invalid10,all,19,-13.886
+13B instruct,invalid10,all,20,-14.652
+13B instruct,invalid10,all,21,-15.513
+13B instruct,invalid10,all,22,-16.409
+13B instruct,invalid10,all,23,-17.305
+13B instruct,invalid10,all,24,-18.173
+13B instruct,invalid10,all,25,-19.111
+13B instruct,invalid10,all,26,-20.037
+13B instruct,invalid10,all,27,-20.974
+13B instruct,invalid10,all,28,-22.022
+13B instruct,invalid10,all,29,-22.901
+13B instruct,invalid10,all,30,-23.585
+13B instruct,invalid3,numbers,1,1.428
+13B instruct,invalid3,numbers,2,0.729
+13B instruct,invalid3,numbers,3,-0.037
+13B instruct,invalid3,numbers,4,-0.882
+13B instruct,invalid3,numbers,5,-1.42
+13B instruct,invalid3,numbers,6,-2.087
+13B instruct,invalid3,numbers,7,-2.575
+13B instruct,invalid3,numbers,8,-3.289
+13B instruct,invalid3,numbers,9,-4.181
+13B instruct,invalid3,numbers,10,-5.075
+13B instruct,invalid3,numbers,11,-5.491
+13B instruct,invalid3,numbers,12,-5.898
+13B instruct,invalid3,numbers,13,-6.343
+13B instruct,invalid3,numbers,14,-1.739
+13B instruct,invalid3,numbers,15,-2.036
+13B instruct,invalid3,numbers,16,-2.57
+13B instruct,invalid3,numbers,17,-3.258
+13B instruct,invalid3,numbers,18,-4.114
+13B instruct,invalid3,numbers,19,-5.063
+13B instruct,invalid3,numbers,20,-5.396
+13B instruct,invalid3,numbers,21,-6.177
+13B instruct,invalid3,numbers,22,-6.334
+13B instruct,invalid3,numbers,23,-6.984
+13B instruct,invalid3,numbers,24,-7.527
+13B instruct,invalid3,numbers,25,-8.542
+13B instruct,invalid3,numbers,26,-9.723
+13B instruct,invalid3,numbers,27,-10.441
+13B instruct,invalid3,numbers,28,-11.247
+13B instruct,invalid3,numbers,29,-11.033
+13B instruct,invalid3,numbers,30,-10.085
+13B instruct,invalid3,all,1,1.457
+13B instruct,invalid3,all,2,0.671
+13B instruct,invalid3,all,3,-0.278
+13B instruct,invalid3,all,4,-1.358
+13B instruct,invalid3,all,5,-2.191
+13B instruct,invalid3,all,6,-2.986
+13B instruct,invalid3,all,7,-3.467
+13B instruct,invalid3,all,8,-4.335
+13B instruct,invalid3,all,9,-5.543
+13B instruct,invalid3,all,10,-6.723
+13B instruct,invalid3,all,11,-7.334
+13B instruct,invalid3,all,12,-7.926
+13B instruct,invalid3,all,13,-8.536
+13B instruct,invalid3,all,14,-9.192
+13B instruct,invalid3,all,15,-10.067
+13B instruct,invalid3,all,16,-10.995
+13B instruct,invalid3,all,17,-11.857
+13B instruct,invalid3,all,18,-12.804
+13B instruct,invalid3,all,19,-13.764
+13B instruct,invalid3,all,20,-14.546
+13B instruct,invalid3,all,21,-15.431
+13B instruct,invalid3,all,22,-16.313
+13B instruct,invalid3,all,23,-17.229
+13B instruct,invalid3,all,24,-18.096
+13B instruct,invalid3,all,25,-19.033
+13B instruct,invalid3,all,26,-19.952
+13B instruct,invalid3,all,27,-20.879
+13B instruct,invalid3,all,28,-21.921
+13B instruct,invalid3,all,29,-22.763
+13B instruct,invalid3,all,30,-23.455
+13B instruct,valid30_sentence,numbers,1,1.19
+13B instruct,valid30_sentence,numbers,2,0.437
+13B instruct,valid30_sentence,numbers,3,-0.482
+13B instruct,valid30_sentence,numbers,4,-1.042
+13B instruct,valid30_sentence,numbers,5,-1.626
+13B instruct,valid30_sentence,numbers,6,-2.094
+13B instruct,valid30_sentence,numbers,7,-2.28
+13B instruct,valid30_sentence,numbers,8,-2.755
+13B instruct,valid30_sentence,numbers,9,-3.542
+13B instruct,valid30_sentence,numbers,10,-4.418
+13B instruct,valid30_sentence,numbers,11,-5.028
+13B instruct,valid30_sentence,numbers,12,-5.42
+13B instruct,valid30_sentence,numbers,13,-6.14
+13B instruct,valid30_sentence,numbers,14,-1.603
+13B instruct,valid30_sentence,numbers,15,-1.607
+13B instruct,valid30_sentence,numbers,16,-2.082
+13B instruct,valid30_sentence,numbers,17,-2.471
+13B instruct,valid30_sentence,numbers,18,-3.266
+13B instruct,valid30_sentence,numbers,19,-3.96
+13B instruct,valid30_sentence,numbers,20,-3.872
+13B instruct,valid30_sentence,numbers,21,-4.332
+13B instruct,valid30_sentence,numbers,22,-4.725
+13B instruct,valid30_sentence,numbers,23,-3.664
+13B instruct,valid30_sentence,numbers,24,-3.467
+13B instruct,valid30_sentence,numbers,25,-2.986
+13B instruct,valid30_sentence,numbers,26,-3.962
+13B instruct,valid30_sentence,numbers,27,-3.73
+13B instruct,valid30_sentence,numbers,28,nan
+13B instruct,valid30_sentence,numbers,29,nan
+13B instruct,valid30_sentence,numbers,30,nan
+13B instruct,valid30_sentence,all,1,0.239
+13B instruct,valid30_sentence,all,2,0.556
+13B instruct,valid30_sentence,all,3,-0.388
+13B instruct,valid30_sentence,all,4,-1.567
+13B instruct,valid30_sentence,all,5,-2.568
+13B instruct,valid30_sentence,all,6,-3.14
+13B instruct,valid30_sentence,all,7,-3.186
+13B instruct,valid30_sentence,all,8,-3.543
+13B instruct,valid30_sentence,all,9,-4.677
+13B instruct,valid30_sentence,all,10,-6.166
+13B instruct,valid30_sentence,all,11,-6.19
+13B instruct,valid30_sentence,all,12,-6.26
+13B instruct,valid30_sentence,all,13,-6.903
+13B instruct,valid30_sentence,all,14,-7.303
+13B instruct,valid30_sentence,all,15,-3.309
+13B instruct,valid30_sentence,all,16,-3.545
+13B instruct,valid30_sentence,all,17,-4.005
+13B instruct,valid30_sentence,all,18,-4.831
+13B instruct,valid30_sentence,all,19,-5.773
+13B instruct,valid30_sentence,all,20,-6.542
+13B instruct,valid30_sentence,all,21,-7.22
+13B instruct,valid30_sentence,all,22,-7.938
+13B instruct,valid30_sentence,all,23,-8.427
+13B instruct,valid30_sentence,all,24,-8.799
+13B instruct,valid30_sentence,all,25,-8.902
+13B instruct,valid30_sentence,all,26,-9.726
+13B instruct,valid30_sentence,all,27,-10.474
+13B instruct,valid30_sentence,all,28,-11.184
+13B instruct,valid30_sentence,all,29,-9.689
+13B instruct,valid30_sentence,all,30,-8.183
+13B instruct,valid10_sentence,numbers,1,1.321
+13B instruct,valid10_sentence,numbers,2,0.607
+13B instruct,valid10_sentence,numbers,3,-0.298
+13B instruct,valid10_sentence,numbers,4,-0.787
+13B instruct,valid10_sentence,numbers,5,-1.369
+13B instruct,valid10_sentence,numbers,6,-1.848
+13B instruct,valid10_sentence,numbers,7,-2.02
+13B instruct,valid10_sentence,numbers,8,-2.382
+13B instruct,valid10_sentence,numbers,9,-3.188
+13B instruct,valid10_sentence,numbers,10,-4.195
+13B instruct,valid10_sentence,numbers,11,-4.828
+13B instruct,valid10_sentence,numbers,12,-5.386
+13B instruct,valid10_sentence,numbers,13,-6.187
+13B instruct,valid10_sentence,numbers,14,-1.579
+13B instruct,valid10_sentence,numbers,15,-1.75
+13B instruct,valid10_sentence,numbers,16,-2.352
+13B instruct,valid10_sentence,numbers,17,-2.883
+13B instruct,valid10_sentence,numbers,18,-3.686
+13B instruct,valid10_sentence,numbers,19,-4.25
+13B instruct,valid10_sentence,numbers,20,-4.186
+13B instruct,valid10_sentence,numbers,21,-4.572
+13B instruct,valid10_sentence,numbers,22,-5.117
+13B instruct,valid10_sentence,numbers,23,-5.04
+13B instruct,valid10_sentence,numbers,24,-3.897
+13B instruct,valid10_sentence,numbers,25,-3.522
+13B instruct,valid10_sentence,numbers,26,-4.231
+13B instruct,valid10_sentence,numbers,27,-5.232
+13B instruct,valid10_sentence,numbers,28,nan
+13B instruct,valid10_sentence,numbers,29,nan
+13B instruct,valid10_sentence,numbers,30,nan
+13B instruct,valid10_sentence,all,1,0.334
+13B instruct,valid10_sentence,all,2,0.65
+13B instruct,valid10_sentence,all,3,-0.258
+13B instruct,valid10_sentence,all,4,-1.423
+13B instruct,valid10_sentence,all,5,-2.517
+13B instruct,valid10_sentence,all,6,-3.111
+13B instruct,valid10_sentence,all,7,-3.087
+13B instruct,valid10_sentence,all,8,-3.299
+13B instruct,valid10_sentence,all,9,-4.414
+13B instruct,valid10_sentence,all,10,-6.071
+13B instruct,valid10_sentence,all,11,-6.052
+13B instruct,valid10_sentence,all,12,-6.169
+13B instruct,valid10_sentence,all,13,-6.837
+13B instruct,valid10_sentence,all,14,-7.229
+13B instruct,valid10_sentence,all,15,-3.39
+13B instruct,valid10_sentence,all,16,-3.764
+13B instruct,valid10_sentence,all,17,-4.181
+13B instruct,valid10_sentence,all,18,-5.001
+13B instruct,valid10_sentence,all,19,-5.873
+13B instruct,valid10_sentence,all,20,-6.585
+13B instruct,valid10_sentence,all,21,-7.259
+13B instruct,valid10_sentence,all,22,-7.963
+13B instruct,valid10_sentence,all,23,-8.469
+13B instruct,valid10_sentence,all,24,-8.595
+13B instruct,valid10_sentence,all,25,-8.99
+13B instruct,valid10_sentence,all,26,-9.658
+13B instruct,valid10_sentence,all,27,-10.535
+13B instruct,valid10_sentence,all,28,-11.103
+13B instruct,valid10_sentence,all,29,-9.662
+13B instruct,valid10_sentence,all,30,-8.344
+13B instruct,valid3_sentence,numbers,1,1.37
+13B instruct,valid3_sentence,numbers,2,0.683
+13B instruct,valid3_sentence,numbers,3,-0.296
+13B instruct,valid3_sentence,numbers,4,-0.838
+13B instruct,valid3_sentence,numbers,5,-1.401
+13B instruct,valid3_sentence,numbers,6,-1.854
+13B instruct,valid3_sentence,numbers,7,-2.032
+13B instruct,valid3_sentence,numbers,8,-2.376
+13B instruct,valid3_sentence,numbers,9,-3.204
+13B instruct,valid3_sentence,numbers,10,-4.128
+13B instruct,valid3_sentence,numbers,11,-4.726
+13B instruct,valid3_sentence,numbers,12,-5.311
+13B instruct,valid3_sentence,numbers,13,-6.124
+13B instruct,valid3_sentence,numbers,14,-1.489
+13B instruct,valid3_sentence,numbers,15,-1.788
+13B instruct,valid3_sentence,numbers,16,-2.353
+13B instruct,valid3_sentence,numbers,17,-2.963
+13B instruct,valid3_sentence,numbers,18,-3.739
+13B instruct,valid3_sentence,numbers,19,-4.196
+13B instruct,valid3_sentence,numbers,20,-4.171
+13B instruct,valid3_sentence,numbers,21,-4.525
+13B instruct,valid3_sentence,numbers,22,-5.18
+13B instruct,valid3_sentence,numbers,23,-5.047
+13B instruct,valid3_sentence,numbers,24,-3.501
+13B instruct,valid3_sentence,numbers,25,-3.508
+13B instruct,valid3_sentence,numbers,26,-4.191
+13B instruct,valid3_sentence,numbers,27,-5.215
+13B instruct,valid3_sentence,numbers,28,nan
+13B instruct,valid3_sentence,numbers,29,nan
+13B instruct,valid3_sentence,numbers,30,nan
+13B instruct,valid3_sentence,all,1,0.694
+13B instruct,valid3_sentence,all,2,0.776
+13B instruct,valid3_sentence,all,3,-0.257
+13B instruct,valid3_sentence,all,4,-1.522
+13B instruct,valid3_sentence,all,5,-2.435
+13B instruct,valid3_sentence,all,6,-2.97
+13B instruct,valid3_sentence,all,7,-2.827
+13B instruct,valid3_sentence,all,8,-3.08
+13B instruct,valid3_sentence,all,9,-4.197
+13B instruct,valid3_sentence,all,10,-5.732
+13B instruct,valid3_sentence,all,11,-5.696
+13B instruct,valid3_sentence,all,12,-5.957
+13B instruct,valid3_sentence,all,13,-6.569
+13B instruct,valid3_sentence,all,14,-7.041
+13B instruct,valid3_sentence,all,15,-3.028
+13B instruct,valid3_sentence,all,16,-3.462
+13B instruct,valid3_sentence,all,17,-3.964
+13B instruct,valid3_sentence,all,18,-4.811
+13B instruct,valid3_sentence,all,19,-5.63
+13B instruct,valid3_sentence,all,20,-6.374
+13B instruct,valid3_sentence,all,21,-7.091
+13B instruct,valid3_sentence,all,22,-7.756
+13B instruct,valid3_sentence,all,23,-8.252
+13B instruct,valid3_sentence,all,24,-8.057
+13B instruct,valid3_sentence,all,25,-8.782
+13B instruct,valid3_sentence,all,26,-9.507
+13B instruct,valid3_sentence,all,27,-10.388
+13B instruct,valid3_sentence,all,28,-10.791
+13B instruct,valid3_sentence,all,29,-9.422
+13B instruct,valid3_sentence,all,30,-8.156
+13B instruct,valid30_interval,numbers,1,-0.635
+13B instruct,valid30_interval,numbers,2,1.287
+13B instruct,valid30_interval,numbers,3,0.077
+13B instruct,valid30_interval,numbers,4,-1.143
+13B instruct,valid30_interval,numbers,5,-1.736
+13B instruct,valid30_interval,numbers,6,-2.194
+13B instruct,valid30_interval,numbers,7,-2.53
+13B instruct,valid30_interval,numbers,8,-3.01
+13B instruct,valid30_interval,numbers,9,-3.872
+13B instruct,valid30_interval,numbers,10,-4.839
+13B instruct,valid30_interval,numbers,11,-5.243
+13B instruct,valid30_interval,numbers,12,-5.62
+13B instruct,valid30_interval,numbers,13,-6.369
+13B instruct,valid30_interval,numbers,14,-1.805
+13B instruct,valid30_interval,numbers,15,-1.904
+13B instruct,valid30_interval,numbers,16,-2.531
+13B instruct,valid30_interval,numbers,17,-3.144
+13B instruct,valid30_interval,numbers,18,-3.876
+13B instruct,valid30_interval,numbers,19,-5.046
+13B instruct,valid30_interval,numbers,20,-5.889
+13B instruct,valid30_interval,numbers,21,-6.163
+13B instruct,valid30_interval,numbers,22,-6.146
+13B instruct,valid30_interval,numbers,23,-6.899
+13B instruct,valid30_interval,numbers,24,-7.349
+13B instruct,valid30_interval,numbers,25,-8.042
+13B instruct,valid30_interval,numbers,26,-9.026
+13B instruct,valid30_interval,numbers,27,-7.852
+13B instruct,valid30_interval,numbers,28,-8.449
+13B instruct,valid30_interval,numbers,29,-9.201
+13B instruct,valid30_interval,numbers,30,-8.152
+13B instruct,valid30_interval,all,1,-0.582
+13B instruct,valid30_interval,all,2,0.694
+13B instruct,valid30_interval,all,3,-0.448
+13B instruct,valid30_interval,all,4,-2.603
+13B instruct,valid30_interval,all,5,-3.12
+13B instruct,valid30_interval,all,6,-3.492
+13B instruct,valid30_interval,all,7,-4.019
+13B instruct,valid30_interval,all,8,-4.42
+13B instruct,valid30_interval,all,9,-5.655
+13B instruct,valid30_interval,all,10,-6.926
+13B instruct,valid30_interval,all,11,-7.189
+13B instruct,valid30_interval,all,12,-7.162
+13B instruct,valid30_interval,all,13,-7.627
+13B instruct,valid30_interval,all,14,-8.061
+13B instruct,valid30_interval,all,15,-8.547
+13B instruct,valid30_interval,all,16,-9.338
+13B instruct,valid30_interval,all,17,-10.149
+13B instruct,valid30_interval,all,18,-11.077
+13B instruct,valid30_interval,all,19,-12.3
+13B instruct,valid30_interval,all,20,-13.281
+13B instruct,valid30_interval,all,21,-9.706
+13B instruct,valid30_interval,all,22,-9.816
+13B instruct,valid30_interval,all,23,-10.528
+13B instruct,valid30_interval,all,24,-11.086
+13B instruct,valid30_interval,all,25,-11.829
+13B instruct,valid30_interval,all,26,-12.612
+13B instruct,valid30_interval,all,27,-13.206
+13B instruct,valid30_interval,all,28,-14.034
+13B instruct,valid30_interval,all,29,-14.979
+13B instruct,valid30_interval,all,30,-15.086
+13B instruct,valid10_interval,numbers,1,-0.454
+13B instruct,valid10_interval,numbers,2,1.21
+13B instruct,valid10_interval,numbers,3,0.182
+13B instruct,valid10_interval,numbers,4,-0.875
+13B instruct,valid10_interval,numbers,5,-1.566
+13B instruct,valid10_interval,numbers,6,-2.112
+13B instruct,valid10_interval,numbers,7,-2.633
+13B instruct,valid10_interval,numbers,8,-3.165
+13B instruct,valid10_interval,numbers,9,-4.034
+13B instruct,valid10_interval,numbers,10,-4.921
+13B instruct,valid10_interval,numbers,11,-5.471
+13B instruct,valid10_interval,numbers,12,-6.006
+13B instruct,valid10_interval,numbers,13,-6.796
+13B instruct,valid10_interval,numbers,14,-7.33
+13B instruct,valid10_interval,numbers,15,-8.006
+13B instruct,valid10_interval,numbers,16,-3.809
+13B instruct,valid10_interval,numbers,17,-4.291
+13B instruct,valid10_interval,numbers,18,-4.881
+13B instruct,valid10_interval,numbers,19,-5.854
+13B instruct,valid10_interval,numbers,20,-6.655
+13B instruct,valid10_interval,numbers,21,-7.322
+13B instruct,valid10_interval,numbers,22,-8.09
+13B instruct,valid10_interval,numbers,23,-9.027
+13B instruct,valid10_interval,numbers,24,-9.206
+13B instruct,valid10_interval,numbers,25,-10.425
+13B instruct,valid10_interval,numbers,26,-11.279
+13B instruct,valid10_interval,numbers,27,-11.626
+13B instruct,valid10_interval,numbers,28,-12.278
+13B instruct,valid10_interval,numbers,29,-12.661
+13B instruct,valid10_interval,numbers,30,-13.543
+13B instruct,valid10_interval,all,1,-0.54
+13B instruct,valid10_interval,all,2,0.641
+13B instruct,valid10_interval,all,3,-0.424
+13B instruct,valid10_interval,all,4,-2.285
+13B instruct,valid10_interval,all,5,-3.109
+13B instruct,valid10_interval,all,6,-3.547
+13B instruct,valid10_interval,all,7,-4.099
+13B instruct,valid10_interval,all,8,-4.694
+13B instruct,valid10_interval,all,9,-5.915
+13B instruct,valid10_interval,all,10,-7.047
+13B instruct,valid10_interval,all,11,-7.37
+13B instruct,valid10_interval,all,12,-7.488
+13B instruct,valid10_interval,all,13,-8.056
+13B instruct,valid10_interval,all,14,-8.509
+13B instruct,valid10_interval,all,15,-9.146
+13B instruct,valid10_interval,all,16,-10.022
+13B instruct,valid10_interval,all,17,-10.831
+13B instruct,valid10_interval,all,18,-11.681
+13B instruct,valid10_interval,all,19,-12.834
+13B instruct,valid10_interval,all,20,-13.81
+13B instruct,valid10_interval,all,21,-14.473
+13B instruct,valid10_interval,all,22,-15.188
+13B instruct,valid10_interval,all,23,-16.069
+13B instruct,valid10_interval,all,24,-12.375
+13B instruct,valid10_interval,all,25,-13.424
+13B instruct,valid10_interval,all,26,-13.892
+13B instruct,valid10_interval,all,27,-14.27
+13B instruct,valid10_interval,all,28,-14.976
+13B instruct,valid10_interval,all,29,-15.781
+13B instruct,valid10_interval,all,30,-16.427
+13B instruct,valid3_interval,numbers,1,-0.416
+13B instruct,valid3_interval,numbers,2,0.952
+13B instruct,valid3_interval,numbers,3,-0.011
+13B instruct,valid3_interval,numbers,4,-0.909
+13B instruct,valid3_interval,numbers,5,-1.663
+13B instruct,valid3_interval,numbers,6,-2.238
+13B instruct,valid3_interval,numbers,7,-2.802
+13B instruct,valid3_interval,numbers,8,-3.303
+13B instruct,valid3_interval,numbers,9,-4.102
+13B instruct,valid3_interval,numbers,10,-5.103
+13B instruct,valid3_interval,numbers,11,-5.656
+13B instruct,valid3_interval,numbers,12,-6.173
+13B instruct,valid3_interval,numbers,13,-6.88
+13B instruct,valid3_interval,numbers,14,-7.467
+13B instruct,valid3_interval,numbers,15,-8.079
+13B instruct,valid3_interval,numbers,16,-3.957
+13B instruct,valid3_interval,numbers,17,-4.267
+13B instruct,valid3_interval,numbers,18,-4.884
+13B instruct,valid3_interval,numbers,19,-5.943
+13B instruct,valid3_interval,numbers,20,-6.713
+13B instruct,valid3_interval,numbers,21,-7.394
+13B instruct,valid3_interval,numbers,22,-8.178
+13B instruct,valid3_interval,numbers,23,-9.078
+13B instruct,valid3_interval,numbers,24,-9.352
+13B instruct,valid3_interval,numbers,25,-10.486
+13B instruct,valid3_interval,numbers,26,-11.35
+13B instruct,valid3_interval,numbers,27,-12.11
+13B instruct,valid3_interval,numbers,28,-12.181
+13B instruct,valid3_interval,numbers,29,-12.796
+13B instruct,valid3_interval,numbers,30,-13.605
+13B instruct,valid3_interval,all,1,-0.53
+13B instruct,valid3_interval,all,2,0.471
+13B instruct,valid3_interval,all,3,-0.52
+13B instruct,valid3_interval,all,4,-2.29
+13B instruct,valid3_interval,all,5,-3.185
+13B instruct,valid3_interval,all,6,-3.63
+13B instruct,valid3_interval,all,7,-4.159
+13B instruct,valid3_interval,all,8,-4.815
+13B instruct,valid3_interval,all,9,-5.98
+13B instruct,valid3_interval,all,10,-7.075
+13B instruct,valid3_interval,all,11,-7.472
+13B instruct,valid3_interval,all,12,-7.657
+13B instruct,valid3_interval,all,13,-8.12
+13B instruct,valid3_interval,all,14,-8.595
+13B instruct,valid3_interval,all,15,-9.145
+13B instruct,valid3_interval,all,16,-9.962
+13B instruct,valid3_interval,all,17,-10.73
+13B instruct,valid3_interval,all,18,-11.59
+13B instruct,valid3_interval,all,19,-12.715
+13B instruct,valid3_interval,all,20,-13.698
+13B instruct,valid3_interval,all,21,-14.422
+13B instruct,valid3_interval,all,22,-15.139
+13B instruct,valid3_interval,all,23,-11.99
+13B instruct,valid3_interval,all,24,-12.326
+13B instruct,valid3_interval,all,25,-13.13
+13B instruct,valid3_interval,all,26,-13.706
+13B instruct,valid3_interval,all,27,-14.257
+13B instruct,valid3_interval,all,28,-14.829
+13B instruct,valid3_interval,all,29,-15.652
+13B instruct,valid3_interval,all,30,-16.401
+32B,valid30,numbers,1,3.716
+32B,valid30,numbers,2,3.598
+32B,valid30,numbers,3,3.26
+32B,valid30,numbers,4,2.762
+32B,valid30,numbers,5,2.64
+32B,valid30,numbers,6,4.381
+32B,valid30,numbers,7,4.418
+32B,valid30,numbers,8,4.73
+32B,valid30,numbers,9,5.073
+32B,valid30,numbers,10,0.892
+32B,valid30,numbers,11,4.275
+32B,valid30,numbers,12,3.131
+32B,valid30,numbers,13,4.283
+32B,valid30,numbers,14,4.458
+32B,valid30,numbers,15,5.168
+32B,valid30,numbers,16,4.824
+32B,valid30,numbers,17,4.32
+32B,valid30,numbers,18,2.885
+32B,valid30,numbers,19,3.192
+32B,valid30,numbers,20,-0.102
+32B,valid30,numbers,21,3.864
+32B,valid30,numbers,22,4.784
+32B,valid30,numbers,23,6.369
+32B,valid30,numbers,24,3.937
+32B,valid30,numbers,25,6.085
+32B,valid30,numbers,26,3.361
+32B,valid30,numbers,27,4.297
+32B,valid30,numbers,28,3.351
+32B,valid30,numbers,29,2.973
+32B,valid30,numbers,30,1.931
+32B,valid30,all,1,2.804
+32B,valid30,all,2,3.271
+32B,valid30,all,3,2.871
+32B,valid30,all,4,1.977
+32B,valid30,all,5,1.609
+32B,valid30,all,6,3.051
+32B,valid30,all,7,3.508
+32B,valid30,all,8,3.314
+32B,valid30,all,9,2.492
+32B,valid30,all,10,-2.233
+32B,valid30,all,11,1.94
+32B,valid30,all,12,-0.117
+32B,valid30,all,13,2.134
+32B,valid30,all,14,1.684
+32B,valid30,all,15,2.909
+32B,valid30,all,16,1.993
+32B,valid30,all,17,1.558
+32B,valid30,all,18,-1.03
+32B,valid30,all,19,-0.535
+32B,valid30,all,20,-4.678
+32B,valid30,all,21,0.751
+32B,valid30,all,22,0.426
+32B,valid30,all,23,1.429
+32B,valid30,all,24,-0.339
+32B,valid30,all,25,1.232
+32B,valid30,all,26,-2.031
+32B,valid30,all,27,-0.138
+32B,valid30,all,28,-1.547
+32B,valid30,all,29,-1.303
+32B,valid30,all,30,-2.531
+32B,valid10,numbers,1,4.386
+32B,valid10,numbers,2,3.607
+32B,valid10,numbers,3,3.356
+32B,valid10,numbers,4,2.874
+32B,valid10,numbers,5,3.001
+32B,valid10,numbers,6,4.876
+32B,valid10,numbers,7,4.791
+32B,valid10,numbers,8,5.473
+32B,valid10,numbers,9,5.706
+32B,valid10,numbers,10,1.099
+32B,valid10,numbers,11,4.788
+32B,valid10,numbers,12,3.13
+32B,valid10,numbers,13,4.459
+32B,valid10,numbers,14,5.182
+32B,valid10,numbers,15,6.088
+32B,valid10,numbers,16,5.92
+32B,valid10,numbers,17,4.953
+32B,valid10,numbers,18,3.226
+32B,valid10,numbers,19,3.607
+32B,valid10,numbers,20,0.155
+32B,valid10,numbers,21,5.119
+32B,valid10,numbers,22,5.251
+32B,valid10,numbers,23,6.942
+32B,valid10,numbers,24,5.183
+32B,valid10,numbers,25,6.414
+32B,valid10,numbers,26,4.163
+32B,valid10,numbers,27,4.505
+32B,valid10,numbers,28,3.595
+32B,valid10,numbers,29,4.771
+32B,valid10,numbers,30,3.086
+32B,valid10,all,1,2.937
+32B,valid10,all,2,3.108
+32B,valid10,all,3,2.838
+32B,valid10,all,4,1.965
+32B,valid10,all,5,1.647
+32B,valid10,all,6,3.331
+32B,valid10,all,7,3.657
+32B,valid10,all,8,3.732
+32B,valid10,all,9,2.806
+32B,valid10,all,10,-2.153
+32B,valid10,all,11,2.224
+32B,valid10,all,12,-0.179
+32B,valid10,all,13,2.224
+32B,valid10,all,14,2.21
+32B,valid10,all,15,3.442
+32B,valid10,all,16,2.537
+32B,valid10,all,17,1.873
+32B,valid10,all,18,-0.884
+32B,valid10,all,19,-0.362
+32B,valid10,all,20,-4.493
+32B,valid10,all,21,1.016
+32B,valid10,all,22,0.83
+32B,valid10,all,23,1.816
+32B,valid10,all,24,-0.102
+32B,valid10,all,25,1.579
+32B,valid10,all,26,-1.491
+32B,valid10,all,27,0.086
+32B,valid10,all,28,-1.243
+32B,valid10,all,29,-0.245
+32B,valid10,all,30,-2.263
+32B,valid3,numbers,1,4.504
+32B,valid3,numbers,2,3.665
+32B,valid3,numbers,3,3.391
+32B,valid3,numbers,4,2.899
+32B,valid3,numbers,5,2.925
+32B,valid3,numbers,6,4.64
+32B,valid3,numbers,7,4.514
+32B,valid3,numbers,8,5.028
+32B,valid3,numbers,9,5.217
+32B,valid3,numbers,10,1.171
+32B,valid3,numbers,11,4.411
+32B,valid3,numbers,12,2.759
+32B,valid3,numbers,13,3.958
+32B,valid3,numbers,14,4.803
+32B,valid3,numbers,15,5.691
+32B,valid3,numbers,16,5.469
+32B,valid3,numbers,17,4.511
+32B,valid3,numbers,18,3.089
+32B,valid3,numbers,19,3.781
+32B,valid3,numbers,20,0.297
+32B,valid3,numbers,21,3.846
+32B,valid3,numbers,22,5.08
+32B,valid3,numbers,23,6.681
+32B,valid3,numbers,24,4.934
+32B,valid3,numbers,25,6.224
+32B,valid3,numbers,26,3.763
+32B,valid3,numbers,27,4.467
+32B,valid3,numbers,28,3.621
+32B,valid3,numbers,29,4.555
+32B,valid3,numbers,30,3.358
+32B,valid3,all,1,2.96
+32B,valid3,all,2,3.195
+32B,valid3,all,3,2.839
+32B,valid3,all,4,1.983
+32B,valid3,all,5,1.646
+32B,valid3,all,6,3.088
+32B,valid3,all,7,3.506
+32B,valid3,all,8,3.388
+32B,valid3,all,9,2.562
+32B,valid3,all,10,-2.007
+32B,valid3,all,11,2.043
+32B,valid3,all,12,-0.275
+32B,valid3,all,13,1.956
+32B,valid3,all,14,1.971
+32B,valid3,all,15,3.285
+32B,valid3,all,16,2.382
+32B,valid3,all,17,1.733
+32B,valid3,all,18,-0.795
+32B,valid3,all,19,-0.083
+32B,valid3,all,20,-4.242
+32B,valid3,all,21,0.897
+32B,valid3,all,22,0.805
+32B,valid3,all,23,1.809
+32B,valid3,all,24,-0.087
+32B,valid3,all,25,1.565
+32B,valid3,all,26,-1.561
+32B,valid3,all,27,0.217
+32B,valid3,all,28,-1.055
+32B,valid3,all,29,0.088
+32B,valid3,all,30,-2.007
+32B,exact,numbers,1,4.254
+32B,exact,numbers,2,4.027
+32B,exact,numbers,3,3.737
+32B,exact,numbers,4,3.457
+32B,exact,numbers,5,5.041
+32B,exact,numbers,6,5.001
+32B,exact,numbers,7,5.954
+32B,exact,numbers,8,6.154
+32B,exact,numbers,9,2.196
+32B,exact,numbers,10,4.981
+32B,exact,numbers,11,4.709
+32B,exact,numbers,12,5.343
+32B,exact,numbers,13,4.838
+32B,exact,numbers,14,6.278
+32B,exact,numbers,15,5.42
+32B,exact,numbers,16,5.988
+32B,exact,numbers,17,3.07
+32B,exact,numbers,18,4.682
+32B,exact,numbers,19,-0.096
+32B,exact,numbers,20,4.436
+32B,exact,numbers,21,5.401
+32B,exact,numbers,22,6.219
+32B,exact,numbers,23,5.61
+32B,exact,numbers,24,6.231
+32B,exact,numbers,25,4.602
+32B,exact,numbers,26,5.288
+32B,exact,numbers,27,2.756
+32B,exact,numbers,28,3.963
+32B,exact,numbers,29,2.288
+32B,exact,numbers,30,4.418
+32B,exact,all,1,3.149
+32B,exact,all,2,3.858
+32B,exact,all,3,3.202
+32B,exact,all,4,2.474
+32B,exact,all,5,3.907
+32B,exact,all,6,4.414
+32B,exact,all,7,4.648
+32B,exact,all,8,4.309
+32B,exact,all,9,-0.535
+32B,exact,all,10,3.359
+32B,exact,all,11,2.743
+32B,exact,all,12,4.27
+32B,exact,all,13,2.946
+32B,exact,all,14,4.588
+32B,exact,all,15,3.955
+32B,exact,all,16,4.447
+32B,exact,all,17,0.75
+32B,exact,all,18,1.868
+32B,exact,all,19,-3.669
+32B,exact,all,20,2.747
+32B,exact,all,21,2.698
+32B,exact,all,22,4.724
+32B,exact,all,23,3.06
+32B,exact,all,24,3.453
+32B,exact,all,25,1.416
+32B,exact,all,26,2.842
+32B,exact,all,27,-0.265
+32B,exact,all,28,2.178
+32B,exact,all,29,-1.057
+32B,exact,all,30,1.587
+32B,invalid30,numbers,1,2.448
+32B,invalid30,numbers,2,2.905
+32B,invalid30,numbers,3,2.598
+32B,invalid30,numbers,4,1.884
+32B,invalid30,numbers,5,1.476
+32B,invalid30,numbers,6,1.848
+32B,invalid30,numbers,7,1.824
+32B,invalid30,numbers,8,1.676
+32B,invalid30,numbers,9,2.036
+32B,invalid30,numbers,10,-0.322
+32B,invalid30,numbers,11,0.887
+32B,invalid30,numbers,12,0.372
+32B,invalid30,numbers,13,0.833
+32B,invalid30,numbers,14,0.675
+32B,invalid30,numbers,15,1.079
+32B,invalid30,numbers,16,0.922
+32B,invalid30,numbers,17,0.759
+32B,invalid30,numbers,18,-0.336
+32B,invalid30,numbers,19,-0.403
+32B,invalid30,numbers,20,-2.616
+32B,invalid30,numbers,21,0.023
+32B,invalid30,numbers,22,-0.004
+32B,invalid30,numbers,23,0.763
+32B,invalid30,numbers,24,-0.577
+32B,invalid30,numbers,25,1.038
+32B,invalid30,numbers,26,-1.822
+32B,invalid30,numbers,27,-0.426
+32B,invalid30,numbers,28,-1.335
+32B,invalid30,numbers,29,-1.18
+32B,invalid30,numbers,30,-2.288
+32B,invalid30,all,1,2.342
+32B,invalid30,all,2,2.4
+32B,invalid30,all,3,2.409
+32B,invalid30,all,4,1.612
+32B,invalid30,all,5,0.971
+32B,invalid30,all,6,1.262
+32B,invalid30,all,7,1.422
+32B,invalid30,all,8,1.12
+32B,invalid30,all,9,0.924
+32B,invalid30,all,10,-2.764
+32B,invalid30,all,11,-0.32
+32B,invalid30,all,12,-1.588
+32B,invalid30,all,13,-0.214
+32B,invalid30,all,14,-0.83
+32B,invalid30,all,15,-0.397
+32B,invalid30,all,16,-1.192
+32B,invalid30,all,17,-1.206
+32B,invalid30,all,18,-3.358
+32B,invalid30,all,19,-2.991
+32B,invalid30,all,20,-6.343
+32B,invalid30,all,21,-2.076
+32B,invalid30,all,22,-2.646
+32B,invalid30,all,23,-1.572
+32B,invalid30,all,24,-3.363
+32B,invalid30,all,25,-2.426
+32B,invalid30,all,26,-4.746
+32B,invalid30,all,27,-3.73
+32B,invalid30,all,28,-5.159
+32B,invalid30,all,29,-4.842
+32B,invalid30,all,30,-6.161
+32B,invalid10,numbers,1,2.468
+32B,invalid10,numbers,2,2.788
+32B,invalid10,numbers,3,2.619
+32B,invalid10,numbers,4,1.899
+32B,invalid10,numbers,5,1.5
+32B,invalid10,numbers,6,2.084
+32B,invalid10,numbers,7,1.942
+32B,invalid10,numbers,8,1.945
+32B,invalid10,numbers,9,2.286
+32B,invalid10,numbers,10,-0.25
+32B,invalid10,numbers,11,1.079
+32B,invalid10,numbers,12,0.721
+32B,invalid10,numbers,13,0.992
+32B,invalid10,numbers,14,0.879
+32B,invalid10,numbers,15,1.36
+32B,invalid10,numbers,16,1.167
+32B,invalid10,numbers,17,1.036
+32B,invalid10,numbers,18,-0.238
+32B,invalid10,numbers,19,-0.119
+32B,invalid10,numbers,20,-2.497
+32B,invalid10,numbers,21,0.489
+32B,invalid10,numbers,22,0.314
+32B,invalid10,numbers,23,1.041
+32B,invalid10,numbers,24,-0.245
+32B,invalid10,numbers,25,1.441
+32B,invalid10,numbers,26,-1.688
+32B,invalid10,numbers,27,-0.21
+32B,invalid10,numbers,28,-1.005
+32B,invalid10,numbers,29,-0.644
+32B,invalid10,numbers,30,-2.118
+32B,invalid10,all,1,2.356
+32B,invalid10,all,2,2.237
+32B,invalid10,all,3,2.407
+32B,invalid10,all,4,1.616
+32B,invalid10,all,5,0.974
+32B,invalid10,all,6,1.422
+32B,invalid10,all,7,1.513
+32B,invalid10,all,8,1.357
+32B,invalid10,all,9,1.119
+32B,invalid10,all,10,-2.704
+32B,invalid10,all,11,-0.212
+32B,invalid10,all,12,-1.548
+32B,invalid10,all,13,0.012
+32B,invalid10,all,14,-0.731
+32B,invalid10,all,15,-0.252
+32B,invalid10,all,16,-1.087
+32B,invalid10,all,17,-1.03
+32B,invalid10,all,18,-3.354
+32B,invalid10,all,19,-2.726
+32B,invalid10,all,20,-6.342
+32B,invalid10,all,21,-1.767
+32B,invalid10,all,22,-2.494
+32B,invalid10,all,23,-1.277
+32B,invalid10,all,24,-3.099
+32B,invalid10,all,25,-2.103
+32B,invalid10,all,26,-4.647
+32B,invalid10,all,27,-3.586
+32B,invalid10,all,28,-4.936
+32B,invalid10,all,29,-4.635
+32B,invalid10,all,30,-6.075
+32B,invalid3,numbers,1,2.526
+32B,invalid3,numbers,2,2.96
+32B,invalid3,numbers,3,2.614
+32B,invalid3,numbers,4,1.928
+32B,invalid3,numbers,5,1.514
+32B,invalid3,numbers,6,1.982
+32B,invalid3,numbers,7,1.799
+32B,invalid3,numbers,8,1.773
+32B,invalid3,numbers,9,2.165
+32B,invalid3,numbers,10,-0.032
+32B,invalid3,numbers,11,0.924
+32B,invalid3,numbers,12,0.051
+32B,invalid3,numbers,13,0.797
+32B,invalid3,numbers,14,0.812
+32B,invalid3,numbers,15,1.342
+32B,invalid3,numbers,16,1.209
+32B,invalid3,numbers,17,1.124
+32B,invalid3,numbers,18,-0.242
+32B,invalid3,numbers,19,0.018
+32B,invalid3,numbers,20,-2.444
+32B,invalid3,numbers,21,0.213
+32B,invalid3,numbers,22,0.246
+32B,invalid3,numbers,23,0.957
+32B,invalid3,numbers,24,-0.373
+32B,invalid3,numbers,25,1.252
+32B,invalid3,numbers,26,-1.858
+32B,invalid3,numbers,27,-0.236
+32B,invalid3,numbers,28,-1.133
+32B,invalid3,numbers,29,-0.537
+32B,invalid3,numbers,30,-1.721
+32B,invalid3,all,1,2.37
+32B,invalid3,all,2,2.309
+32B,invalid3,all,3,2.386
+32B,invalid3,all,4,1.648
+32B,invalid3,all,5,0.987
+32B,invalid3,all,6,1.341
+32B,invalid3,all,7,1.403
+32B,invalid3,all,8,1.211
+32B,invalid3,all,9,1.045
+32B,invalid3,all,10,-2.469
+32B,invalid3,all,11,-0.263
+32B,invalid3,all,12,-1.633
+32B,invalid3,all,13,-0.184
+32B,invalid3,all,14,-0.724
+32B,invalid3,all,15,-0.172
+32B,invalid3,all,16,-0.974
+32B,invalid3,all,17,-0.824
+32B,invalid3,all,18,-3.243
+32B,invalid3,all,19,-2.415
+32B,invalid3,all,20,-6.172
+32B,invalid3,all,21,-1.822
+32B,invalid3,all,22,-2.419
+32B,invalid3,all,23,-1.197
+32B,invalid3,all,24,-3.088
+32B,invalid3,all,25,-2.063
+32B,invalid3,all,26,-4.641
+32B,invalid3,all,27,-3.479
+32B,invalid3,all,28,-4.884
+32B,invalid3,all,29,-4.417
+32B,invalid3,all,30,-5.766
+32B,valid30_sentence,numbers,1,2.39
+32B,valid30_sentence,numbers,2,1.759
+32B,valid30_sentence,numbers,3,2.429
+32B,valid30_sentence,numbers,4,1.734
+32B,valid30_sentence,numbers,5,0.942
+32B,valid30_sentence,numbers,6,1.704
+32B,valid30_sentence,numbers,7,1.51
+32B,valid30_sentence,numbers,8,1.515
+32B,valid30_sentence,numbers,9,1.538
+32B,valid30_sentence,numbers,10,-0.393
+32B,valid30_sentence,numbers,11,2.248
+32B,valid30_sentence,numbers,12,1.741
+32B,valid30_sentence,numbers,13,2.483
+32B,valid30_sentence,numbers,14,2.835
+32B,valid30_sentence,numbers,15,3.262
+32B,valid30_sentence,numbers,16,3.112
+32B,valid30_sentence,numbers,17,3.349
+32B,valid30_sentence,numbers,18,2.022
+32B,valid30_sentence,numbers,19,2.057
+32B,valid30_sentence,numbers,20,-1.187
+32B,valid30_sentence,numbers,21,2.643
+32B,valid30_sentence,numbers,22,4.583
+32B,valid30_sentence,numbers,23,4.924
+32B,valid30_sentence,numbers,24,3.795
+32B,valid30_sentence,numbers,25,5.742
+32B,valid30_sentence,numbers,26,3.418
+32B,valid30_sentence,numbers,27,4.517
+32B,valid30_sentence,numbers,28,3.335
+32B,valid30_sentence,numbers,29,5.027
+32B,valid30_sentence,numbers,30,3.094
+32B,valid30_sentence,all,1,1.679
+32B,valid30_sentence,all,2,1.759
+32B,valid30_sentence,all,3,2.29
+32B,valid30_sentence,all,4,1.457
+32B,valid30_sentence,all,5,0.514
+32B,valid30_sentence,all,6,0.835
+32B,valid30_sentence,all,7,0.824
+32B,valid30_sentence,all,8,0.629
+32B,valid30_sentence,all,9,0.017
+32B,valid30_sentence,all,10,-3.023
+32B,valid30_sentence,all,11,-0.304
+32B,valid30_sentence,all,12,-1.032
+32B,valid30_sentence,all,13,1.157
+32B,valid30_sentence,all,14,0.549
+32B,valid30_sentence,all,15,1.606
+32B,valid30_sentence,all,16,0.875
+32B,valid30_sentence,all,17,1.619
+32B,valid30_sentence,all,18,-1.902
+32B,valid30_sentence,all,19,-0.606
+32B,valid30_sentence,all,20,-6.502
+32B,valid30_sentence,all,21,0.416
+32B,valid30_sentence,all,22,1.05
+32B,valid30_sentence,all,23,3.029
+32B,valid30_sentence,all,24,-0.105
+32B,valid30_sentence,all,25,1.989
+32B,valid30_sentence,all,26,-1.924
+32B,valid30_sentence,all,27,1.029
+32B,valid30_sentence,all,28,-1.297
+32B,valid30_sentence,all,29,1.605
+32B,valid30_sentence,all,30,-1.012
+32B,valid10_sentence,numbers,1,2.57
+32B,valid10_sentence,numbers,2,1.973
+32B,valid10_sentence,numbers,3,2.758
+32B,valid10_sentence,numbers,4,1.995
+32B,valid10_sentence,numbers,5,1.296
+32B,valid10_sentence,numbers,6,2.713
+32B,valid10_sentence,numbers,7,2.245
+32B,valid10_sentence,numbers,8,2.588
+32B,valid10_sentence,numbers,9,2.418
+32B,valid10_sentence,numbers,10,0.05
+32B,valid10_sentence,numbers,11,3.158
+32B,valid10_sentence,numbers,12,3.015
+32B,valid10_sentence,numbers,13,3.914
+32B,valid10_sentence,numbers,14,4.921
+32B,valid10_sentence,numbers,15,5.237
+32B,valid10_sentence,numbers,16,4.905
+32B,valid10_sentence,numbers,17,5.387
+32B,valid10_sentence,numbers,18,3.188
+32B,valid10_sentence,numbers,19,3.691
+32B,valid10_sentence,numbers,20,-0.789
+32B,valid10_sentence,numbers,21,3.885
+32B,valid10_sentence,numbers,22,6.233
+32B,valid10_sentence,numbers,23,8.04
+32B,valid10_sentence,numbers,24,5.6
+32B,valid10_sentence,numbers,25,6.856
+32B,valid10_sentence,numbers,26,5.16
+32B,valid10_sentence,numbers,27,6.526
+32B,valid10_sentence,numbers,28,5.08
+32B,valid10_sentence,numbers,29,7.462
+32B,valid10_sentence,numbers,30,5.142
+32B,valid10_sentence,all,1,1.737
+32B,valid10_sentence,all,2,1.843
+32B,valid10_sentence,all,3,2.527
+32B,valid10_sentence,all,4,1.636
+32B,valid10_sentence,all,5,0.589
+32B,valid10_sentence,all,6,1.194
+32B,valid10_sentence,all,7,1.249
+32B,valid10_sentence,all,8,1.327
+32B,valid10_sentence,all,9,0.762
+32B,valid10_sentence,all,10,-2.933
+32B,valid10_sentence,all,11,0.083
+32B,valid10_sentence,all,12,-0.378
+32B,valid10_sentence,all,13,2.092
+32B,valid10_sentence,all,14,1.93
+32B,valid10_sentence,all,15,3.211
+32B,valid10_sentence,all,16,2.206
+32B,valid10_sentence,all,17,2.866
+32B,valid10_sentence,all,18,-1.151
+32B,valid10_sentence,all,19,0.125
+32B,valid10_sentence,all,20,-6.393
+32B,valid10_sentence,all,21,1.596
+32B,valid10_sentence,all,22,2.033
+32B,valid10_sentence,all,23,4.359
+32B,valid10_sentence,all,24,0.682
+32B,valid10_sentence,all,25,3.4
+32B,valid10_sentence,all,26,0.177
+32B,valid10_sentence,all,27,2.978
+32B,valid10_sentence,all,28,-0.142
+32B,valid10_sentence,all,29,2.84
+32B,valid10_sentence,all,30,0.69
+32B,valid3_sentence,numbers,1,2.657
+32B,valid3_sentence,numbers,2,1.975
+32B,valid3_sentence,numbers,3,2.679
+32B,valid3_sentence,numbers,4,1.941
+32B,valid3_sentence,numbers,5,1.117
+32B,valid3_sentence,numbers,6,2.313
+32B,valid3_sentence,numbers,7,1.896
+32B,valid3_sentence,numbers,8,2.219
+32B,valid3_sentence,numbers,9,1.996
+32B,valid3_sentence,numbers,10,-0.27
+32B,valid3_sentence,numbers,11,2.844
+32B,valid3_sentence,numbers,12,2.621
+32B,valid3_sentence,numbers,13,3.371
+32B,valid3_sentence,numbers,14,4.48
+32B,valid3_sentence,numbers,15,4.826
+32B,valid3_sentence,numbers,16,4.616
+32B,valid3_sentence,numbers,17,4.687
+32B,valid3_sentence,numbers,18,2.789
+32B,valid3_sentence,numbers,19,3.412
+32B,valid3_sentence,numbers,20,-1.189
+32B,valid3_sentence,numbers,21,3.458
+32B,valid3_sentence,numbers,22,5.617
+32B,valid3_sentence,numbers,23,6.996
+32B,valid3_sentence,numbers,24,5.113
+32B,valid3_sentence,numbers,25,6.604
+32B,valid3_sentence,numbers,26,4.427
+32B,valid3_sentence,numbers,27,4.905
+32B,valid3_sentence,numbers,28,3.799
+32B,valid3_sentence,numbers,29,6.17
+32B,valid3_sentence,numbers,30,4.516
+32B,valid3_sentence,all,1,1.822
+32B,valid3_sentence,all,2,1.806
+32B,valid3_sentence,all,3,2.39
+32B,valid3_sentence,all,4,1.549
+32B,valid3_sentence,all,5,0.48
+32B,valid3_sentence,all,6,0.861
+32B,valid3_sentence,all,7,0.879
+32B,valid3_sentence,all,8,0.857
+32B,valid3_sentence,all,9,0.135
+32B,valid3_sentence,all,10,-3.096
+32B,valid3_sentence,all,11,-0.235
+32B,valid3_sentence,all,12,-0.765
+32B,valid3_sentence,all,13,1.579
+32B,valid3_sentence,all,14,1.404
+32B,valid3_sentence,all,15,2.57
+32B,valid3_sentence,all,16,1.742
+32B,valid3_sentence,all,17,2.222
+32B,valid3_sentence,all,18,-1.697
+32B,valid3_sentence,all,19,-0.218
+32B,valid3_sentence,all,20,-6.636
+32B,valid3_sentence,all,21,0.907
+32B,valid3_sentence,all,22,1.576
+32B,valid3_sentence,all,23,3.799
+32B,valid3_sentence,all,24,0.141
+32B,valid3_sentence,all,25,2.616
+32B,valid3_sentence,all,26,-1.371
+32B,valid3_sentence,all,27,2.216
+32B,valid3_sentence,all,28,-0.716
+32B,valid3_sentence,all,29,2.317
+32B,valid3_sentence,all,30,-0.184
+32B,valid30_interval,numbers,1,1.635
+32B,valid30_interval,numbers,2,2.491
+32B,valid30_interval,numbers,3,2.291
+32B,valid30_interval,numbers,4,1.669
+32B,valid30_interval,numbers,5,0.958
+32B,valid30_interval,numbers,6,0.811
+32B,valid30_interval,numbers,7,0.73
+32B,valid30_interval,numbers,8,0.665
+32B,valid30_interval,numbers,9,1.064
+32B,valid30_interval,numbers,10,-0.036
+32B,valid30_interval,numbers,11,0.805
+32B,valid30_interval,numbers,12,0.94
+32B,valid30_interval,numbers,13,0.907
+32B,valid30_interval,numbers,14,1.712
+32B,valid30_interval,numbers,15,1.849
+32B,valid30_interval,numbers,16,1.418
+32B,valid30_interval,numbers,17,0.563
+32B,valid30_interval,numbers,18,-0.854
+32B,valid30_interval,numbers,19,-0.508
+32B,valid30_interval,numbers,20,-2.12
+32B,valid30_interval,numbers,21,0.399
+32B,valid30_interval,numbers,22,0.287
+32B,valid30_interval,numbers,23,0.601
+32B,valid30_interval,numbers,24,-0.748
+32B,valid30_interval,numbers,25,-0.089
+32B,valid30_interval,numbers,26,-2.122
+32B,valid30_interval,numbers,27,-0.722
+32B,valid30_interval,numbers,28,-1.559
+32B,valid30_interval,numbers,29,-0.282
+32B,valid30_interval,numbers,30,-2.27
+32B,valid30_interval,all,1,0.441
+32B,valid30_interval,all,2,1.787
+32B,valid30_interval,all,3,1.864
+32B,valid30_interval,all,4,0.869
+32B,valid30_interval,all,5,0.404
+32B,valid30_interval,all,6,0.442
+32B,valid30_interval,all,7,0.442
+32B,valid30_interval,all,8,0.351
+32B,valid30_interval,all,9,0.146
+32B,valid30_interval,all,10,-1.469
+32B,valid30_interval,all,11,0.064
+32B,valid30_interval,all,12,-0.245
+32B,valid30_interval,all,13,0.863
+32B,valid30_interval,all,14,1.072
+32B,valid30_interval,all,15,1.594
+32B,valid30_interval,all,16,0.395
+32B,valid30_interval,all,17,-0.039
+32B,valid30_interval,all,18,-2.596
+32B,valid30_interval,all,19,-1.271
+32B,valid30_interval,all,20,-3.848
+32B,valid30_interval,all,21,0.111
+32B,valid30_interval,all,22,-0.482
+32B,valid30_interval,all,23,0.198
+32B,valid30_interval,all,24,-1.503
+32B,valid30_interval,all,25,-0.724
+32B,valid30_interval,all,26,-3.004
+32B,valid30_interval,all,27,-2.341
+32B,valid30_interval,all,28,-3.54
+32B,valid30_interval,all,29,-1.516
+32B,valid30_interval,all,30,-3.038
+32B,valid10_interval,numbers,1,1.846
+32B,valid10_interval,numbers,2,2.738
+32B,valid10_interval,numbers,3,2.142
+32B,valid10_interval,numbers,4,1.644
+32B,valid10_interval,numbers,5,0.921
+32B,valid10_interval,numbers,6,0.675
+32B,valid10_interval,numbers,7,0.242
+32B,valid10_interval,numbers,8,0.297
+32B,valid10_interval,numbers,9,0.231
+32B,valid10_interval,numbers,10,-0.7
+32B,valid10_interval,numbers,11,-0.055
+32B,valid10_interval,numbers,12,-0.155
+32B,valid10_interval,numbers,13,0.502
+32B,valid10_interval,numbers,14,1.058
+32B,valid10_interval,numbers,15,1.127
+32B,valid10_interval,numbers,16,0.967
+32B,valid10_interval,numbers,17,-0.103
+32B,valid10_interval,numbers,18,-1.335
+32B,valid10_interval,numbers,19,-1.214
+32B,valid10_interval,numbers,20,-1.958
+32B,valid10_interval,numbers,21,0.361
+32B,valid10_interval,numbers,22,0.534
+32B,valid10_interval,numbers,23,0.655
+32B,valid10_interval,numbers,24,-0.667
+32B,valid10_interval,numbers,25,-0.618
+32B,valid10_interval,numbers,26,-1.879
+32B,valid10_interval,numbers,27,-0.556
+32B,valid10_interval,numbers,28,-1.077
+32B,valid10_interval,numbers,29,0.038
+32B,valid10_interval,numbers,30,-1.277
+32B,valid10_interval,all,1,0.543
+32B,valid10_interval,all,2,1.785
+32B,valid10_interval,all,3,1.351
+32B,valid10_interval,all,4,0.404
+32B,valid10_interval,all,5,0.069
+32B,valid10_interval,all,6,0.087
+32B,valid10_interval,all,7,-0.105
+32B,valid10_interval,all,8,-0.207
+32B,valid10_interval,all,9,-0.569
+32B,valid10_interval,all,10,-2.003
+32B,valid10_interval,all,11,-0.616
+32B,valid10_interval,all,12,-0.889
+32B,valid10_interval,all,13,0.264
+32B,valid10_interval,all,14,0.268
+32B,valid10_interval,all,15,0.62
+32B,valid10_interval,all,16,-0.36
+32B,valid10_interval,all,17,-1.119
+32B,valid10_interval,all,18,-3.119
+32B,valid10_interval,all,19,-2.236
+32B,valid10_interval,all,20,-3.701
+32B,valid10_interval,all,21,-0.252
+32B,valid10_interval,all,22,-0.616
+32B,valid10_interval,all,23,-0.07
+32B,valid10_interval,all,24,-1.736
+32B,valid10_interval,all,25,-1.506
+32B,valid10_interval,all,26,-3.013
+32B,valid10_interval,all,27,-2.547
+32B,valid10_interval,all,28,-3.364
+32B,valid10_interval,all,29,-1.783
+32B,valid10_interval,all,30,-2.937
+32B,valid3_interval,numbers,1,1.791
+32B,valid3_interval,numbers,2,1.9
+32B,valid3_interval,numbers,3,1.17
+32B,valid3_interval,numbers,4,1.477
+32B,valid3_interval,numbers,5,0.827
+32B,valid3_interval,numbers,6,0.366
+32B,valid3_interval,numbers,7,-0.221
+32B,valid3_interval,numbers,8,-0.412
+32B,valid3_interval,numbers,9,-0.591
+32B,valid3_interval,numbers,10,-1.431
+32B,valid3_interval,numbers,11,-0.814
+32B,valid3_interval,numbers,12,-1.157
+32B,valid3_interval,numbers,13,-1.063
+32B,valid3_interval,numbers,14,-0.137
+32B,valid3_interval,numbers,15,-0.202
+32B,valid3_interval,numbers,16,-0.547
+32B,valid3_interval,numbers,17,-1.501
+32B,valid3_interval,numbers,18,-2.475
+32B,valid3_interval,numbers,19,-2.441
+32B,valid3_interval,numbers,20,-3.278
+32B,valid3_interval,numbers,21,-1.399
+32B,valid3_interval,numbers,22,-1.31
+32B,valid3_interval,numbers,23,-1.09
+32B,valid3_interval,numbers,24,-2.295
+32B,valid3_interval,numbers,25,-1.934
+32B,valid3_interval,numbers,26,-3.004
+32B,valid3_interval,numbers,27,-3.054
+32B,valid3_interval,numbers,28,-3.412
+32B,valid3_interval,numbers,29,-2.468
+32B,valid3_interval,numbers,30,-3.169
+32B,valid3_interval,all,1,0.426
+32B,valid3_interval,all,2,1.665
+32B,valid3_interval,all,3,0.937
+32B,valid3_interval,all,4,0.161
+32B,valid3_interval,all,5,0.063
+32B,valid3_interval,all,6,-0.071
+32B,valid3_interval,all,7,-0.392
+32B,valid3_interval,all,8,-0.825
+32B,valid3_interval,all,9,-1.199
+32B,valid3_interval,all,10,-2.491
+32B,valid3_interval,all,11,-1.3
+32B,valid3_interval,all,12,-1.582
+32B,valid3_interval,all,13,-1.131
+32B,valid3_interval,all,14,-0.588
+32B,valid3_interval,all,15,-0.595
+32B,valid3_interval,all,16,-1.532
+32B,valid3_interval,all,17,-2.225
+32B,valid3_interval,all,18,-3.902
+32B,valid3_interval,all,19,-3.331
+32B,valid3_interval,all,20,-4.772
+32B,valid3_interval,all,21,-1.699
+32B,valid3_interval,all,22,-2.007
+32B,valid3_interval,all,23,-1.708
+32B,valid3_interval,all,24,-3.13
+32B,valid3_interval,all,25,-2.803
+32B,valid3_interval,all,26,-4.252
+32B,valid3_interval,all,27,-3.719
+32B,valid3_interval,all,28,-4.416
+32B,valid3_interval,all,29,-4.253
+32B,valid3_interval,all,30,-5.079
+32B instruct,valid30,numbers,1,2.859
+32B instruct,valid30,numbers,2,3.013
+32B instruct,valid30,numbers,3,2.701
+32B instruct,valid30,numbers,4,1.722
+32B instruct,valid30,numbers,5,1.061
+32B instruct,valid30,numbers,6,2.645
+32B instruct,valid30,numbers,7,1.58
+32B instruct,valid30,numbers,8,0.972
+32B instruct,valid30,numbers,9,0.547
+32B instruct,valid30,numbers,10,-1.413
+32B instruct,valid30,numbers,11,0.151
+32B instruct,valid30,numbers,12,-0.569
+32B instruct,valid30,numbers,13,-0.057
+32B instruct,valid30,numbers,14,-0.215
+32B instruct,valid30,numbers,15,-1.044
+32B instruct,valid30,numbers,16,-0.822
+32B instruct,valid30,numbers,17,-1.417
+32B instruct,valid30,numbers,18,-2.204
+32B instruct,valid30,numbers,19,-3.727
+32B instruct,valid30,numbers,20,-6.579
+32B instruct,valid30,numbers,21,-5.547
+32B instruct,valid30,numbers,22,-2.812
+32B instruct,valid30,numbers,23,-3.008
+32B instruct,valid30,numbers,24,-4.709
+32B instruct,valid30,numbers,25,-5.689
+32B instruct,valid30,numbers,26,-9.017
+32B instruct,valid30,numbers,27,-8.046
+32B instruct,valid30,numbers,28,-8.624
+32B instruct,valid30,numbers,29,-9.193
+32B instruct,valid30,numbers,30,-10.26
+32B instruct,valid30,all,1,1.99
+32B instruct,valid30,all,2,2.771
+32B instruct,valid30,all,3,2.342
+32B instruct,valid30,all,4,0.982
+32B instruct,valid30,all,5,-0.067
+32B instruct,valid30,all,6,0.625
+32B instruct,valid30,all,7,0.07
+32B instruct,valid30,all,8,-0.532
+32B instruct,valid30,all,9,-2.601
+32B instruct,valid30,all,10,-5.386
+32B instruct,valid30,all,11,-4.446
+32B instruct,valid30,all,12,-4.4
+32B instruct,valid30,all,13,-2.578
+32B instruct,valid30,all,14,-3.585
+32B instruct,valid30,all,15,-4.095
+32B instruct,valid30,all,16,-4.014
+32B instruct,valid30,all,17,-3.453
+32B instruct,valid30,all,18,-5.51
+32B instruct,valid30,all,19,-7.685
+32B instruct,valid30,all,20,-13.528
+32B instruct,valid30,all,21,-9.229
+32B instruct,valid30,all,22,-8.008
+32B instruct,valid30,all,23,-7.228
+32B instruct,valid30,all,24,-9.918
+32B instruct,valid30,all,25,-10.554
+32B instruct,valid30,all,26,-12.544
+32B instruct,valid30,all,27,-11.65
+32B instruct,valid30,all,28,-12.843
+32B instruct,valid30,all,29,-12.479
+32B instruct,valid30,all,30,-14.712
+32B instruct,valid10,numbers,1,3.222
+32B instruct,valid10,numbers,2,3.144
+32B instruct,valid10,numbers,3,2.72
+32B instruct,valid10,numbers,4,1.764
+32B instruct,valid10,numbers,5,0.96
+32B instruct,valid10,numbers,6,1.785
+32B instruct,valid10,numbers,7,0.465
+32B instruct,valid10,numbers,8,0.064
+32B instruct,valid10,numbers,9,-0.702
+32B instruct,valid10,numbers,10,-1.826
+32B instruct,valid10,numbers,11,-0.939
+32B instruct,valid10,numbers,12,-1.974
+32B instruct,valid10,numbers,13,-2.369
+32B instruct,valid10,numbers,14,-2.025
+32B instruct,valid10,numbers,15,-2.849
+32B instruct,valid10,numbers,16,-2.558
+32B instruct,valid10,numbers,17,-3.541
+32B instruct,valid10,numbers,18,-4.365
+32B instruct,valid10,numbers,19,-5.604
+32B instruct,valid10,numbers,20,-8.17
+32B instruct,valid10,numbers,21,-7.482
+32B instruct,valid10,numbers,22,-6.693
+32B instruct,valid10,numbers,23,-6.7
+32B instruct,valid10,numbers,24,-8.454
+32B instruct,valid10,numbers,25,-9.439
+32B instruct,valid10,numbers,26,-11.301
+32B instruct,valid10,numbers,27,-11.883
+32B instruct,valid10,numbers,28,-12.12
+32B instruct,valid10,numbers,29,-12.294
+32B instruct,valid10,numbers,30,-13.535
+32B instruct,valid10,all,1,2.34
+32B instruct,valid10,all,2,2.724
+32B instruct,valid10,all,3,2.24
+32B instruct,valid10,all,4,0.929
+32B instruct,valid10,all,5,-0.172
+32B instruct,valid10,all,6,0.129
+32B instruct,valid10,all,7,-0.485
+32B instruct,valid10,all,8,-1.106
+32B instruct,valid10,all,9,-2.876
+32B instruct,valid10,all,10,-5.422
+32B instruct,valid10,all,11,-4.758
+32B instruct,valid10,all,12,-5.081
+32B instruct,valid10,all,13,-4.367
+32B instruct,valid10,all,14,-5.034
+32B instruct,valid10,all,15,-4.717
+32B instruct,valid10,all,16,-5.01
+32B instruct,valid10,all,17,-4.681
+32B instruct,valid10,all,18,-6.608
+32B instruct,valid10,all,19,-8.323
+32B instruct,valid10,all,20,-13.663
+32B instruct,valid10,all,21,-10.093
+32B instruct,valid10,all,22,-8.922
+32B instruct,valid10,all,23,-9.034
+32B instruct,valid10,all,24,-10.804
+32B instruct,valid10,all,25,-11.574
+32B instruct,valid10,all,26,-13.281
+32B instruct,valid10,all,27,-13.129
+32B instruct,valid10,all,28,-14.023
+32B instruct,valid10,all,29,-14.216
+32B instruct,valid10,all,30,-15.845
+32B instruct,valid3,numbers,1,3.496
+32B instruct,valid3,numbers,2,3.24
+32B instruct,valid3,numbers,3,2.79
+32B instruct,valid3,numbers,4,1.792
+32B instruct,valid3,numbers,5,0.88
+32B instruct,valid3,numbers,6,1.39
+32B instruct,valid3,numbers,7,0.046
+32B instruct,valid3,numbers,8,-0.23
+32B instruct,valid3,numbers,9,-1.198
+32B instruct,valid3,numbers,10,-2.142
+32B instruct,valid3,numbers,11,-1.668
+32B instruct,valid3,numbers,12,-2.621
+32B instruct,valid3,numbers,13,-2.989
+32B instruct,valid3,numbers,14,-2.692
+32B instruct,valid3,numbers,15,-3.541
+32B instruct,valid3,numbers,16,-2.942
+32B instruct,valid3,numbers,17,-3.958
+32B instruct,valid3,numbers,18,-4.568
+32B instruct,valid3,numbers,19,-5.885
+32B instruct,valid3,numbers,20,-8.453
+32B instruct,valid3,numbers,21,-7.712
+32B instruct,valid3,numbers,22,-7.244
+32B instruct,valid3,numbers,23,-7.417
+32B instruct,valid3,numbers,24,-9.029
+32B instruct,valid3,numbers,25,-10.016
+32B instruct,valid3,numbers,26,-11.771
+32B instruct,valid3,numbers,27,-12.223
+32B instruct,valid3,numbers,28,-12.374
+32B instruct,valid3,numbers,29,-12.86
+32B instruct,valid3,numbers,30,-13.832
+32B instruct,valid3,all,1,2.573
+32B instruct,valid3,all,2,2.693
+32B instruct,valid3,all,3,2.196
+32B instruct,valid3,all,4,0.893
+32B instruct,valid3,all,5,-0.26
+32B instruct,valid3,all,6,-0.109
+32B instruct,valid3,all,7,-0.826
+32B instruct,valid3,all,8,-1.398
+32B instruct,valid3,all,9,-3.115
+32B instruct,valid3,all,10,-5.642
+32B instruct,valid3,all,11,-5.08
+32B instruct,valid3,all,12,-5.398
+32B instruct,valid3,all,13,-5.119
+32B instruct,valid3,all,14,-5.707
+32B instruct,valid3,all,15,-6.047
+32B instruct,valid3,all,16,-5.386
+32B instruct,valid3,all,17,-5.434
+32B instruct,valid3,all,18,-7.057
+32B instruct,valid3,all,19,-8.552
+32B instruct,valid3,all,20,-13.889
+32B instruct,valid3,all,21,-10.366
+32B instruct,valid3,all,22,-9.45
+32B instruct,valid3,all,23,-9.449
+32B instruct,valid3,all,24,-11.235
+32B instruct,valid3,all,25,-11.912
+32B instruct,valid3,all,26,-13.734
+32B instruct,valid3,all,27,-13.353
+32B instruct,valid3,all,28,-14.24
+32B instruct,valid3,all,29,-14.691
+32B instruct,valid3,all,30,-16.109
+32B instruct,exact,numbers,1,3.45
+32B instruct,exact,numbers,2,3.353
+32B instruct,exact,numbers,3,2.903
+32B instruct,exact,numbers,4,1.947
+32B instruct,exact,numbers,5,1.861
+32B instruct,exact,numbers,6,0.95
+32B instruct,exact,numbers,7,0.667
+32B instruct,exact,numbers,8,0.157
+32B instruct,exact,numbers,9,-2.343
+32B instruct,exact,numbers,10,-1.974
+32B instruct,exact,numbers,11,-2.543
+32B instruct,exact,numbers,12,-2.13
+32B instruct,exact,numbers,13,-3.061
+32B instruct,exact,numbers,14,-3.921
+32B instruct,exact,numbers,15,-4.333
+32B instruct,exact,numbers,16,-4.139
+32B instruct,exact,numbers,17,-6.144
+32B instruct,exact,numbers,18,-7.504
+32B instruct,exact,numbers,19,-10.534
+32B instruct,exact,numbers,20,-9.674
+32B instruct,exact,numbers,21,-8.804
+32B instruct,exact,numbers,22,-8.681
+32B instruct,exact,numbers,23,-11.13
+32B instruct,exact,numbers,24,-12.136
+32B instruct,exact,numbers,25,-14.013
+32B instruct,exact,numbers,26,-14.398
+32B instruct,exact,numbers,27,-15.832
+32B instruct,exact,numbers,28,-16.327
+32B instruct,exact,numbers,29,-17.352
+32B instruct,exact,numbers,30,-18.139
+32B instruct,exact,all,1,3.23
+32B instruct,exact,all,2,2.995
+32B instruct,exact,all,3,2.322
+32B instruct,exact,all,4,0.776
+32B instruct,exact,all,5,0.518
+32B instruct,exact,all,6,-0.13
+32B instruct,exact,all,7,-1.0
+32B instruct,exact,all,8,-2.147
+32B instruct,exact,all,9,-5.057
+32B instruct,exact,all,10,-4.885
+32B instruct,exact,all,11,-5.129
+32B instruct,exact,all,12,-4.894
+32B instruct,exact,all,13,-6.211
+32B instruct,exact,all,14,-7.228
+32B instruct,exact,all,15,-7.199
+32B instruct,exact,all,16,-5.744
+32B instruct,exact,all,17,-8.967
+32B instruct,exact,all,18,-11.064
+32B instruct,exact,all,19,-14.02
+32B instruct,exact,all,20,-13.028
+32B instruct,exact,all,21,-10.861
+32B instruct,exact,all,22,-11.198
+32B instruct,exact,all,23,-14.233
+32B instruct,exact,all,24,-15.103
+32B instruct,exact,all,25,-17.28
+32B instruct,exact,all,26,-16.915
+32B instruct,exact,all,27,-18.644
+32B instruct,exact,all,28,-18.575
+32B instruct,exact,all,29,-20.13
+32B instruct,exact,all,30,-19.921
+32B instruct,invalid30,numbers,1,2.137
+32B instruct,invalid30,numbers,2,2.25
+32B instruct,invalid30,numbers,3,1.833
+32B instruct,invalid30,numbers,4,0.945
+32B instruct,invalid30,numbers,5,0.677
+32B instruct,invalid30,numbers,6,0.903
+32B instruct,invalid30,numbers,7,0.439
+32B instruct,invalid30,numbers,8,-0.049
+32B instruct,invalid30,numbers,9,0.813
+32B instruct,invalid30,numbers,10,-1.995
+32B instruct,invalid30,numbers,11,-0.228
+32B instruct,invalid30,numbers,12,-0.934
+32B instruct,invalid30,numbers,13,-0.977
+32B instruct,invalid30,numbers,14,-0.364
+32B instruct,invalid30,numbers,15,-1.091
+32B instruct,invalid30,numbers,16,-1.314
+32B instruct,invalid30,numbers,17,-1.332
+32B instruct,invalid30,numbers,18,-2.024
+32B instruct,invalid30,numbers,19,-3.21
+32B instruct,invalid30,numbers,20,-6.583
+32B instruct,invalid30,numbers,21,-5.29
+32B instruct,invalid30,numbers,22,-2.243
+32B instruct,invalid30,numbers,23,-1.734
+32B instruct,invalid30,numbers,24,-4.182
+32B instruct,invalid30,numbers,25,-4.727
+32B instruct,invalid30,numbers,26,-6.907
+32B instruct,invalid30,numbers,27,-7.33
+32B instruct,invalid30,numbers,28,-8.018
+32B instruct,invalid30,numbers,29,-8.038
+32B instruct,invalid30,numbers,30,-9.369
+32B instruct,invalid30,all,1,1.875
+32B instruct,invalid30,all,2,2.297
+32B instruct,invalid30,all,3,1.789
+32B instruct,invalid30,all,4,0.696
+32B instruct,invalid30,all,5,-0.195
+32B instruct,invalid30,all,6,-0.067
+32B instruct,invalid30,all,7,-0.494
+32B instruct,invalid30,all,8,-1.21
+32B instruct,invalid30,all,9,-2.662
+32B instruct,invalid30,all,10,-5.453
+32B instruct,invalid30,all,11,-4.636
+32B instruct,invalid30,all,12,-4.794
+32B instruct,invalid30,all,13,-2.863
+32B instruct,invalid30,all,14,-3.88
+32B instruct,invalid30,all,15,-4.323
+32B instruct,invalid30,all,16,-4.702
+32B instruct,invalid30,all,17,-3.624
+32B instruct,invalid30,all,18,-5.696
+32B instruct,invalid30,all,19,-7.677
+32B instruct,invalid30,all,20,-13.769
+32B instruct,invalid30,all,21,-9.368
+32B instruct,invalid30,all,22,-7.906
+32B instruct,invalid30,all,23,-6.776
+32B instruct,invalid30,all,24,-9.912
+32B instruct,invalid30,all,25,-10.22
+32B instruct,invalid30,all,26,-12.505
+32B instruct,invalid30,all,27,-11.201
+32B instruct,invalid30,all,28,-12.758
+32B instruct,invalid30,all,29,-12.05
+32B instruct,invalid30,all,30,-14.563
+32B instruct,invalid10,numbers,1,2.156
+32B instruct,invalid10,numbers,2,2.211
+32B instruct,invalid10,numbers,3,1.817
+32B instruct,invalid10,numbers,4,0.961
+32B instruct,invalid10,numbers,5,0.568
+32B instruct,invalid10,numbers,6,0.824
+32B instruct,invalid10,numbers,7,0.083
+32B instruct,invalid10,numbers,8,-0.242
+32B instruct,invalid10,numbers,9,0.205
+32B instruct,invalid10,numbers,10,-2.174
+32B instruct,invalid10,numbers,11,-0.623
+32B instruct,invalid10,numbers,12,-1.341
+32B instruct,invalid10,numbers,13,-1.687
+32B instruct,invalid10,numbers,14,-0.861
+32B instruct,invalid10,numbers,15,-1.525
+32B instruct,invalid10,numbers,16,-2.072
+32B instruct,invalid10,numbers,17,-2.107
+32B instruct,invalid10,numbers,18,-2.958
+32B instruct,invalid10,numbers,19,-3.944
+32B instruct,invalid10,numbers,20,-6.823
+32B instruct,invalid10,numbers,21,-6.002
+32B instruct,invalid10,numbers,22,-3.108
+32B instruct,invalid10,numbers,23,-3.074
+32B instruct,invalid10,numbers,24,-4.7
+32B instruct,invalid10,numbers,25,-5.475
+32B instruct,invalid10,numbers,26,-9.007
+32B instruct,invalid10,numbers,27,-8.089
+32B instruct,invalid10,numbers,28,-8.503
+32B instruct,invalid10,numbers,29,-9.001
+32B instruct,invalid10,numbers,30,-10.35
+32B instruct,invalid10,all,1,1.921
+32B instruct,invalid10,all,2,2.226
+32B instruct,invalid10,all,3,1.746
+32B instruct,invalid10,all,4,0.684
+32B instruct,invalid10,all,5,-0.264
+32B instruct,invalid10,all,6,-0.136
+32B instruct,invalid10,all,7,-0.724
+32B instruct,invalid10,all,8,-1.326
+32B instruct,invalid10,all,9,-2.725
+32B instruct,invalid10,all,10,-5.464
+32B instruct,invalid10,all,11,-4.785
+32B instruct,invalid10,all,12,-5.069
+32B instruct,invalid10,all,13,-4.076
+32B instruct,invalid10,all,14,-5.037
+32B instruct,invalid10,all,15,-4.558
+32B instruct,invalid10,all,16,-5.057
+32B instruct,invalid10,all,17,-3.942
+32B instruct,invalid10,all,18,-6.111
+32B instruct,invalid10,all,19,-7.876
+32B instruct,invalid10,all,20,-13.844
+32B instruct,invalid10,all,21,-9.616
+32B instruct,invalid10,all,22,-8.292
+32B instruct,invalid10,all,23,-7.723
+32B instruct,invalid10,all,24,-10.15
+32B instruct,invalid10,all,25,-10.629
+32B instruct,invalid10,all,26,-12.831
+32B instruct,invalid10,all,27,-12.07
+32B instruct,invalid10,all,28,-13.179
+32B instruct,invalid10,all,29,-12.561
+32B instruct,invalid10,all,30,-15.158
+32B instruct,invalid3,numbers,1,2.313
+32B instruct,invalid3,numbers,2,2.269
+32B instruct,invalid3,numbers,3,1.849
+32B instruct,invalid3,numbers,4,1.012
+32B instruct,invalid3,numbers,5,0.552
+32B instruct,invalid3,numbers,6,0.731
+32B instruct,invalid3,numbers,7,-0.14
+32B instruct,invalid3,numbers,8,-0.496
+32B instruct,invalid3,numbers,9,-0.304
+32B instruct,invalid3,numbers,10,-2.34
+32B instruct,invalid3,numbers,11,-1.201
+32B instruct,invalid3,numbers,12,-1.994
+32B instruct,invalid3,numbers,13,-2.351
+32B instruct,invalid3,numbers,14,-1.709
+32B instruct,invalid3,numbers,15,-1.837
+32B instruct,invalid3,numbers,16,-2.262
+32B instruct,invalid3,numbers,17,-2.578
+32B instruct,invalid3,numbers,18,-3.387
+32B instruct,invalid3,numbers,19,-4.306
+32B instruct,invalid3,numbers,20,-7.23
+32B instruct,invalid3,numbers,21,-6.662
+32B instruct,invalid3,numbers,22,-3.977
+32B instruct,invalid3,numbers,23,-3.552
+32B instruct,invalid3,numbers,24,-5.397
+32B instruct,invalid3,numbers,25,-5.907
+32B instruct,invalid3,numbers,26,-9.672
+32B instruct,invalid3,numbers,27,-8.643
+32B instruct,invalid3,numbers,28,-8.967
+32B instruct,invalid3,numbers,29,-9.341
+32B instruct,invalid3,numbers,30,-10.341
+32B instruct,invalid3,all,1,1.975
+32B instruct,invalid3,all,2,2.215
+32B instruct,invalid3,all,3,1.732
+32B instruct,invalid3,all,4,0.682
+32B instruct,invalid3,all,5,-0.324
+32B instruct,invalid3,all,6,-0.256
+32B instruct,invalid3,all,7,-1.008
+32B instruct,invalid3,all,8,-1.586
+32B instruct,invalid3,all,9,-3.035
+32B instruct,invalid3,all,10,-5.701
+32B instruct,invalid3,all,11,-5.098
+32B instruct,invalid3,all,12,-5.436
+32B instruct,invalid3,all,13,-4.809
+32B instruct,invalid3,all,14,-5.634
+32B instruct,invalid3,all,15,-4.913
+32B instruct,invalid3,all,16,-5.354
+32B instruct,invalid3,all,17,-4.457
+32B instruct,invalid3,all,18,-6.614
+32B instruct,invalid3,all,19,-8.106
+32B instruct,invalid3,all,20,-14.055
+32B instruct,invalid3,all,21,-10.085
+32B instruct,invalid3,all,22,-8.748
+32B instruct,invalid3,all,23,-8.515
+32B instruct,invalid3,all,24,-10.606
+32B instruct,invalid3,all,25,-11.107
+32B instruct,invalid3,all,26,-13.354
+32B instruct,invalid3,all,27,-12.451
+32B instruct,invalid3,all,28,-13.77
+32B instruct,invalid3,all,29,-13.433
+32B instruct,invalid3,all,30,-15.384
+32B instruct,valid30_sentence,numbers,1,1.925
+32B instruct,valid30_sentence,numbers,2,1.031
+32B instruct,valid30_sentence,numbers,3,0.877
+32B instruct,valid30_sentence,numbers,4,-0.135
+32B instruct,valid30_sentence,numbers,5,-0.926
+32B instruct,valid30_sentence,numbers,6,-1.055
+32B instruct,valid30_sentence,numbers,7,-1.907
+32B instruct,valid30_sentence,numbers,8,-2.589
+32B instruct,valid30_sentence,numbers,9,-3.323
+32B instruct,valid30_sentence,numbers,10,-4.078
+32B instruct,valid30_sentence,numbers,11,-4.025
+32B instruct,valid30_sentence,numbers,12,-4.534
+32B instruct,valid30_sentence,numbers,13,-4.908
+32B instruct,valid30_sentence,numbers,14,-4.392
+32B instruct,valid30_sentence,numbers,15,-5.358
+32B instruct,valid30_sentence,numbers,16,-5.886
+32B instruct,valid30_sentence,numbers,17,-5.983
+32B instruct,valid30_sentence,numbers,18,-6.464
+32B instruct,valid30_sentence,numbers,19,-6.963
+32B instruct,valid30_sentence,numbers,20,-9.335
+32B instruct,valid30_sentence,numbers,21,-8.786
+32B instruct,valid30_sentence,numbers,22,-7.782
+32B instruct,valid30_sentence,numbers,23,-7.866
+32B instruct,valid30_sentence,numbers,24,-8.757
+32B instruct,valid30_sentence,numbers,25,-9.859
+32B instruct,valid30_sentence,numbers,26,-11.078
+32B instruct,valid30_sentence,numbers,27,-11.533
+32B instruct,valid30_sentence,numbers,28,-12.185
+32B instruct,valid30_sentence,numbers,29,-12.355
+32B instruct,valid30_sentence,numbers,30,-13.058
+32B instruct,valid30_sentence,all,1,1.846
+32B instruct,valid30_sentence,all,2,0.984
+32B instruct,valid30_sentence,all,3,1.031
+32B instruct,valid30_sentence,all,4,-0.05
+32B instruct,valid30_sentence,all,5,-1.127
+32B instruct,valid30_sentence,all,6,-1.25
+32B instruct,valid30_sentence,all,7,-1.962
+32B instruct,valid30_sentence,all,8,-2.896
+32B instruct,valid30_sentence,all,9,-3.703
+32B instruct,valid30_sentence,all,10,-5.586
+32B instruct,valid30_sentence,all,11,-5.235
+32B instruct,valid30_sentence,all,12,-5.954
+32B instruct,valid30_sentence,all,13,-5.588
+32B instruct,valid30_sentence,all,14,-6.257
+32B instruct,valid30_sentence,all,15,-6.982
+32B instruct,valid30_sentence,all,16,-7.742
+32B instruct,valid30_sentence,all,17,-6.253
+32B instruct,valid30_sentence,all,18,-8.063
+32B instruct,valid30_sentence,all,19,-8.2
+32B instruct,valid30_sentence,all,20,-14.229
+32B instruct,valid30_sentence,all,21,-10.17
+32B instruct,valid30_sentence,all,22,-9.652
+32B instruct,valid30_sentence,all,23,-9.327
+32B instruct,valid30_sentence,all,24,-11.629
+32B instruct,valid30_sentence,all,25,-11.469
+32B instruct,valid30_sentence,all,26,-14.006
+32B instruct,valid30_sentence,all,27,-12.895
+32B instruct,valid30_sentence,all,28,-14.789
+32B instruct,valid30_sentence,all,29,-14.243
+32B instruct,valid30_sentence,all,30,-16.054
+32B instruct,valid10_sentence,numbers,1,2.179
+32B instruct,valid10_sentence,numbers,2,1.491
+32B instruct,valid10_sentence,numbers,3,1.307
+32B instruct,valid10_sentence,numbers,4,0.372
+32B instruct,valid10_sentence,numbers,5,-0.464
+32B instruct,valid10_sentence,numbers,6,-0.677
+32B instruct,valid10_sentence,numbers,7,-1.665
+32B instruct,valid10_sentence,numbers,8,-2.231
+32B instruct,valid10_sentence,numbers,9,-3.128
+32B instruct,valid10_sentence,numbers,10,-3.736
+32B instruct,valid10_sentence,numbers,11,-3.751
+32B instruct,valid10_sentence,numbers,12,-4.241
+32B instruct,valid10_sentence,numbers,13,-4.87
+32B instruct,valid10_sentence,numbers,14,-3.755
+32B instruct,valid10_sentence,numbers,15,-5.09
+32B instruct,valid10_sentence,numbers,16,-5.507
+32B instruct,valid10_sentence,numbers,17,-6.014
+32B instruct,valid10_sentence,numbers,18,-6.49
+32B instruct,valid10_sentence,numbers,19,-7.265
+32B instruct,valid10_sentence,numbers,20,-9.151
+32B instruct,valid10_sentence,numbers,21,-9.003
+32B instruct,valid10_sentence,numbers,22,-8.063
+32B instruct,valid10_sentence,numbers,23,-8.265
+32B instruct,valid10_sentence,numbers,24,-9.618
+32B instruct,valid10_sentence,numbers,25,-10.557
+32B instruct,valid10_sentence,numbers,26,-11.914
+32B instruct,valid10_sentence,numbers,27,-12.47
+32B instruct,valid10_sentence,numbers,28,-12.855
+32B instruct,valid10_sentence,numbers,29,-13.132
+32B instruct,valid10_sentence,numbers,30,-13.6
+32B instruct,valid10_sentence,all,1,1.931
+32B instruct,valid10_sentence,all,2,1.011
+32B instruct,valid10_sentence,all,3,1.322
+32B instruct,valid10_sentence,all,4,0.268
+32B instruct,valid10_sentence,all,5,-1.069
+32B instruct,valid10_sentence,all,6,-1.17
+32B instruct,valid10_sentence,all,7,-1.828
+32B instruct,valid10_sentence,all,8,-2.657
+32B instruct,valid10_sentence,all,9,-3.556
+32B instruct,valid10_sentence,all,10,-5.66
+32B instruct,valid10_sentence,all,11,-5.268
+32B instruct,valid10_sentence,all,12,-5.923
+32B instruct,valid10_sentence,all,13,-5.661
+32B instruct,valid10_sentence,all,14,-6.014
+32B instruct,valid10_sentence,all,15,-6.878
+32B instruct,valid10_sentence,all,16,-7.476
+32B instruct,valid10_sentence,all,17,-6.305
+32B instruct,valid10_sentence,all,18,-8.48
+32B instruct,valid10_sentence,all,19,-8.336
+32B instruct,valid10_sentence,all,20,-14.312
+32B instruct,valid10_sentence,all,21,-10.328
+32B instruct,valid10_sentence,all,22,-9.925
+32B instruct,valid10_sentence,all,23,-9.518
+32B instruct,valid10_sentence,all,24,-12.02
+32B instruct,valid10_sentence,all,25,-11.793
+32B instruct,valid10_sentence,all,26,-14.318
+32B instruct,valid10_sentence,all,27,-13.275
+32B instruct,valid10_sentence,all,28,-14.881
+32B instruct,valid10_sentence,all,29,-14.55
+32B instruct,valid10_sentence,all,30,-16.062
+32B instruct,valid3_sentence,numbers,1,2.095
+32B instruct,valid3_sentence,numbers,2,1.512
+32B instruct,valid3_sentence,numbers,3,1.114
+32B instruct,valid3_sentence,numbers,4,0.296
+32B instruct,valid3_sentence,numbers,5,-0.613
+32B instruct,valid3_sentence,numbers,6,-0.945
+32B instruct,valid3_sentence,numbers,7,-1.909
+32B instruct,valid3_sentence,numbers,8,-2.425
+32B instruct,valid3_sentence,numbers,9,-3.356
+32B instruct,valid3_sentence,numbers,10,-3.886
+32B instruct,valid3_sentence,numbers,11,-4.085
+32B instruct,valid3_sentence,numbers,12,-4.691
+32B instruct,valid3_sentence,numbers,13,-5.545
+32B instruct,valid3_sentence,numbers,14,-4.717
+32B instruct,valid3_sentence,numbers,15,-6.025
+32B instruct,valid3_sentence,numbers,16,-6.011
+32B instruct,valid3_sentence,numbers,17,-6.697
+32B instruct,valid3_sentence,numbers,18,-7.059
+32B instruct,valid3_sentence,numbers,19,-8.019
+32B instruct,valid3_sentence,numbers,20,-9.359
+32B instruct,valid3_sentence,numbers,21,-9.453
+32B instruct,valid3_sentence,numbers,22,-8.332
+32B instruct,valid3_sentence,numbers,23,-9.074
+32B instruct,valid3_sentence,numbers,24,-10.156
+32B instruct,valid3_sentence,numbers,25,-11.15
+32B instruct,valid3_sentence,numbers,26,-12.252
+32B instruct,valid3_sentence,numbers,27,-13.102
+32B instruct,valid3_sentence,numbers,28,-13.544
+32B instruct,valid3_sentence,numbers,29,-13.942
+32B instruct,valid3_sentence,numbers,30,-14.348
+32B instruct,valid3_sentence,all,1,1.96
+32B instruct,valid3_sentence,all,2,0.993
+32B instruct,valid3_sentence,all,3,1.152
+32B instruct,valid3_sentence,all,4,0.223
+32B instruct,valid3_sentence,all,5,-1.158
+32B instruct,valid3_sentence,all,6,-1.341
+32B instruct,valid3_sentence,all,7,-2.047
+32B instruct,valid3_sentence,all,8,-2.902
+32B instruct,valid3_sentence,all,9,-3.821
+32B instruct,valid3_sentence,all,10,-5.805
+32B instruct,valid3_sentence,all,11,-5.409
+32B instruct,valid3_sentence,all,12,-6.093
+32B instruct,valid3_sentence,all,13,-6.205
+32B instruct,valid3_sentence,all,14,-6.574
+32B instruct,valid3_sentence,all,15,-7.501
+32B instruct,valid3_sentence,all,16,-8.036
+32B instruct,valid3_sentence,all,17,-6.88
+32B instruct,valid3_sentence,all,18,-9.391
+32B instruct,valid3_sentence,all,19,-8.745
+32B instruct,valid3_sentence,all,20,-14.288
+32B instruct,valid3_sentence,all,21,-10.598
+32B instruct,valid3_sentence,all,22,-10.328
+32B instruct,valid3_sentence,all,23,-9.955
+32B instruct,valid3_sentence,all,24,-12.432
+32B instruct,valid3_sentence,all,25,-12.24
+32B instruct,valid3_sentence,all,26,-14.653
+32B instruct,valid3_sentence,all,27,-13.66
+32B instruct,valid3_sentence,all,28,-15.246
+32B instruct,valid3_sentence,all,29,-15.147
+32B instruct,valid3_sentence,all,30,-16.403
+32B instruct,valid30_interval,numbers,1,1.309
+32B instruct,valid30_interval,numbers,2,1.882
+32B instruct,valid30_interval,numbers,3,1.24
+32B instruct,valid30_interval,numbers,4,0.301
+32B instruct,valid30_interval,numbers,5,-0.917
+32B instruct,valid30_interval,numbers,6,-1.402
+32B instruct,valid30_interval,numbers,7,-2.268
+32B instruct,valid30_interval,numbers,8,-2.88
+32B instruct,valid30_interval,numbers,9,-3.533
+32B instruct,valid30_interval,numbers,10,-4.349
+32B instruct,valid30_interval,numbers,11,-4.797
+32B instruct,valid30_interval,numbers,12,-5.22
+32B instruct,valid30_interval,numbers,13,-5.999
+32B instruct,valid30_interval,numbers,14,-5.624
+32B instruct,valid30_interval,numbers,15,-6.113
+32B instruct,valid30_interval,numbers,16,-6.391
+32B instruct,valid30_interval,numbers,17,-7.024
+32B instruct,valid30_interval,numbers,18,-8.159
+32B instruct,valid30_interval,numbers,19,-9.285
+32B instruct,valid30_interval,numbers,20,-10.5
+32B instruct,valid30_interval,numbers,21,-10.12
+32B instruct,valid30_interval,numbers,22,-8.903
+32B instruct,valid30_interval,numbers,23,-9.68
+32B instruct,valid30_interval,numbers,24,-10.88
+32B instruct,valid30_interval,numbers,25,-11.926
+32B instruct,valid30_interval,numbers,26,-13.149
+32B instruct,valid30_interval,numbers,27,-14.029
+32B instruct,valid30_interval,numbers,28,-14.679
+32B instruct,valid30_interval,numbers,29,-15.593
+32B instruct,valid30_interval,numbers,30,-16.511
+32B instruct,valid30_interval,all,1,0.054
+32B instruct,valid30_interval,all,2,0.961
+32B instruct,valid30_interval,all,3,0.465
+32B instruct,valid30_interval,all,4,-0.998
+32B instruct,valid30_interval,all,5,-2.248
+32B instruct,valid30_interval,all,6,-2.436
+32B instruct,valid30_interval,all,7,-2.741
+32B instruct,valid30_interval,all,8,-3.371
+32B instruct,valid30_interval,all,9,-4.244
+32B instruct,valid30_interval,all,10,-6.412
+32B instruct,valid30_interval,all,11,-6.062
+32B instruct,valid30_interval,all,12,-6.356
+32B instruct,valid30_interval,all,13,-6.509
+32B instruct,valid30_interval,all,14,-6.884
+32B instruct,valid30_interval,all,15,-7.005
+32B instruct,valid30_interval,all,16,-7.994
+32B instruct,valid30_interval,all,17,-8.293
+32B instruct,valid30_interval,all,18,-11.212
+32B instruct,valid30_interval,all,19,-11.922
+32B instruct,valid30_interval,all,20,-14.225
+32B instruct,valid30_interval,all,21,-10.871
+32B instruct,valid30_interval,all,22,-10.606
+32B instruct,valid30_interval,all,23,-10.815
+32B instruct,valid30_interval,all,24,-12.564
+32B instruct,valid30_interval,all,25,-13.352
+32B instruct,valid30_interval,all,26,-15.147
+32B instruct,valid30_interval,all,27,-15.094
+32B instruct,valid30_interval,all,28,-16.315
+32B instruct,valid30_interval,all,29,-16.765
+32B instruct,valid30_interval,all,30,-17.909
+32B instruct,valid10_interval,numbers,1,1.593
+32B instruct,valid10_interval,numbers,2,1.634
+32B instruct,valid10_interval,numbers,3,1.028
+32B instruct,valid10_interval,numbers,4,0.283
+32B instruct,valid10_interval,numbers,5,-0.797
+32B instruct,valid10_interval,numbers,6,-1.256
+32B instruct,valid10_interval,numbers,7,-2.321
+32B instruct,valid10_interval,numbers,8,-2.96
+32B instruct,valid10_interval,numbers,9,-3.756
+32B instruct,valid10_interval,numbers,10,-4.381
+32B instruct,valid10_interval,numbers,11,-5.163
+32B instruct,valid10_interval,numbers,12,-5.77
+32B instruct,valid10_interval,numbers,13,-6.576
+32B instruct,valid10_interval,numbers,14,-7.049
+32B instruct,valid10_interval,numbers,15,-7.702
+32B instruct,valid10_interval,numbers,16,-8.295
+32B instruct,valid10_interval,numbers,17,-9.12
+32B instruct,valid10_interval,numbers,18,-10.113
+32B instruct,valid10_interval,numbers,19,-11.21
+32B instruct,valid10_interval,numbers,20,-12.169
+32B instruct,valid10_interval,numbers,21,-12.289
+32B instruct,valid10_interval,numbers,22,-11.947
+32B instruct,valid10_interval,numbers,23,-12.724
+32B instruct,valid10_interval,numbers,24,-13.788
+32B instruct,valid10_interval,numbers,25,-14.929
+32B instruct,valid10_interval,numbers,26,-15.874
+32B instruct,valid10_interval,numbers,27,-16.651
+32B instruct,valid10_interval,numbers,28,-17.504
+32B instruct,valid10_interval,numbers,29,-18.34
+32B instruct,valid10_interval,numbers,30,-19.137
+32B instruct,valid10_interval,all,1,0.219
+32B instruct,valid10_interval,all,2,0.937
+32B instruct,valid10_interval,all,3,0.42
+32B instruct,valid10_interval,all,4,-0.969
+32B instruct,valid10_interval,all,5,-2.228
+32B instruct,valid10_interval,all,6,-2.449
+32B instruct,valid10_interval,all,7,-2.928
+32B instruct,valid10_interval,all,8,-3.609
+32B instruct,valid10_interval,all,9,-4.626
+32B instruct,valid10_interval,all,10,-6.642
+32B instruct,valid10_interval,all,11,-6.46
+32B instruct,valid10_interval,all,12,-7.014
+32B instruct,valid10_interval,all,13,-7.292
+32B instruct,valid10_interval,all,14,-8.072
+32B instruct,valid10_interval,all,15,-8.637
+32B instruct,valid10_interval,all,16,-9.663
+32B instruct,valid10_interval,all,17,-10.481
+32B instruct,valid10_interval,all,18,-12.262
+32B instruct,valid10_interval,all,19,-13.167
+32B instruct,valid10_interval,all,20,-14.705
+32B instruct,valid10_interval,all,21,-14.079
+32B instruct,valid10_interval,all,22,-14.065
+32B instruct,valid10_interval,all,23,-14.544
+32B instruct,valid10_interval,all,24,-15.938
+32B instruct,valid10_interval,all,25,-17.025
+32B instruct,valid10_interval,all,26,-18.218
+32B instruct,valid10_interval,all,27,-18.311
+32B instruct,valid10_interval,all,28,-19.547
+32B instruct,valid10_interval,all,29,-20.283
+32B instruct,valid10_interval,all,30,-21.23
+32B instruct,valid3_interval,numbers,1,1.703
+32B instruct,valid3_interval,numbers,2,1.354
+32B instruct,valid3_interval,numbers,3,0.765
+32B instruct,valid3_interval,numbers,4,0.119
+32B instruct,valid3_interval,numbers,5,-0.794
+32B instruct,valid3_interval,numbers,6,-1.265
+32B instruct,valid3_interval,numbers,7,-2.401
+32B instruct,valid3_interval,numbers,8,-2.93
+32B instruct,valid3_interval,numbers,9,-3.855
+32B instruct,valid3_interval,numbers,10,-4.47
+32B instruct,valid3_interval,numbers,11,-5.198
+32B instruct,valid3_interval,numbers,12,-5.861
+32B instruct,valid3_interval,numbers,13,-6.76
+32B instruct,valid3_interval,numbers,14,-7.157
+32B instruct,valid3_interval,numbers,15,-7.977
+32B instruct,valid3_interval,numbers,16,-8.571
+32B instruct,valid3_interval,numbers,17,-9.324
+32B instruct,valid3_interval,numbers,18,-10.187
+32B instruct,valid3_interval,numbers,19,-11.35
+32B instruct,valid3_interval,numbers,20,-12.373
+32B instruct,valid3_interval,numbers,21,-12.701
+32B instruct,valid3_interval,numbers,22,-12.541
+32B instruct,valid3_interval,numbers,23,-13.165
+32B instruct,valid3_interval,numbers,24,-14.34
+32B instruct,valid3_interval,numbers,25,-15.461
+32B instruct,valid3_interval,numbers,26,-16.161
+32B instruct,valid3_interval,numbers,27,-16.935
+32B instruct,valid3_interval,numbers,28,-17.73
+32B instruct,valid3_interval,numbers,29,-18.686
+32B instruct,valid3_interval,numbers,30,-19.467
+32B instruct,valid3_interval,all,1,0.221
+32B instruct,valid3_interval,all,2,0.903
+32B instruct,valid3_interval,all,3,0.284
+32B instruct,valid3_interval,all,4,-0.966
+32B instruct,valid3_interval,all,5,-2.197
+32B instruct,valid3_interval,all,6,-2.504
+32B instruct,valid3_interval,all,7,-3.002
+32B instruct,valid3_interval,all,8,-3.698
+32B instruct,valid3_interval,all,9,-4.783
+32B instruct,valid3_interval,all,10,-6.935
+32B instruct,valid3_interval,all,11,-6.719
+32B instruct,valid3_interval,all,12,-7.223
+32B instruct,valid3_interval,all,13,-7.526
+32B instruct,valid3_interval,all,14,-8.283
+32B instruct,valid3_interval,all,15,-9.017
+32B instruct,valid3_interval,all,16,-10.066
+32B instruct,valid3_interval,all,17,-10.973
+32B instruct,valid3_interval,all,18,-12.508
+32B instruct,valid3_interval,all,19,-13.405
+32B instruct,valid3_interval,all,20,-15.057
+32B instruct,valid3_interval,all,21,-14.632
+32B instruct,valid3_interval,all,22,-14.926
+32B instruct,valid3_interval,all,23,-15.414
+32B instruct,valid3_interval,all,24,-16.863
+32B instruct,valid3_interval,all,25,-17.848
+32B instruct,valid3_interval,all,26,-18.953
+32B instruct,valid3_interval,all,27,-19.149
+32B instruct,valid3_interval,all,28,-20.301
+32B instruct,valid3_interval,all,29,-21.202
+32B instruct,valid3_interval,all,30,-22.174

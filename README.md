@@ -1,83 +1,30 @@
-# description-icl
+# How Many Demonstrations Is a Task Description Worth?
 
-**Task descriptions as Bayesian priors: how many in-context examples is an
-instruction worth?**
-
-```mermaid
-%%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Clear Sans, Noto Sans, Helvetica Neue, Arial, Noto Sans CJK JP, sans-serif","fontSize":"16px","primaryTextColor":"#171717","lineColor":"#a8a8a8","mainBkg":"#ffffff","clusterBkg":"#ffffff","clusterBorder":"#ffffff","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"curve":"linear"}}}%%
-flowchart TD
-    classDef gray fill:#f5f5f5,stroke:#b3b3b3,color:#171717,stroke-width:1px
-    classDef green fill:#edf3e8,stroke:#8a9f7a,color:#171717,stroke-width:1px
-    classDef pink fill:#f5e7ec,stroke:#bd7c8f,color:#171717,stroke-width:1px
-    classDef blue fill:#e8f0f9,stroke:#7f9fc4,color:#171717,stroke-width:1px
-    classDef edgeGreen stroke:#8a9f7a,color:#8a9f7a,stroke-width:2px
-    classDef edgeBlue stroke:#7f9fc4,color:#7f9fc4,stroke-width:2px
-    classDef edgePink stroke:#bd7c8f,color:#bd7c8f,stroke-width:2px
-
-    desc["Task description<br/>precision · reliability"] e1@--> prior["Prior over the task"]
-    ex["In-context examples"] e2@--> post["Posterior"]
-    prior e3@--> post
-    post e4@--> regret["Regret over the<br/>next N predictions"]
-    regret e5@--> ess["ESS: examples that match<br/>the description's regret"]
-
-    class desc,prior green
-    class ex,post blue
-    class regret gray
-    class ess pink
-    class e1,e3 edgeGreen
-    class e2 edgeBlue
-    class e4,e5 edgePink
-```
-
-Theories of in-context learning mostly study prompts made only of examples.
-Real prompts also carry an instruction. This project models the instruction
-as the prior in Bayesian inference over a latent task and measures its worth
-as an **effective sample size**: the smallest number of examples whose regret
-is no larger than the description's alone.
-
-The setting is in-context linear regression, where the Bayes-optimal learner
-is exact. A hierarchy of Gaussian task priors varies how *precise* a
-description is; a robust mixture prior varies how *reliable* it is. The
-research questions are:
-
-1. **RQ1:** How does task dimensionality change the gap between single-query
-   and long-horizon ESS?
-2. **RQ2:** What does an unreliable or mis-trusted description cost?
-3. **RQ3:** Do meta-trained Transformers and LSTMs reproduce the Bayes-optimal
-   ESS?
-
-The full plan is in the
-[proposal](docs/proposal/bayesian_icl/bayesian_icl_proposal.pdf).
+The paper and everything it is built from. A task description's *effective sample size* (ESS) is the
+number of demonstrations that lower a predictor's regret as much as the description does; the paper
+computes it for the Bayes-optimal predictor in in-context linear regression, then measures it for
+meta-trained Transformers and pretrained language models.
 
 ## Layout
 
-| Path | Contents |
+| Path | What it holds |
 | --- | --- |
-| `docs/proposal/bayesian_icl/` | Research proposal (LaTeX source and PDF). |
-| `docs/wiki/` | One page per result or topic, kept current whether or not the paper uses it. |
-| `docs/paper/` | The paper draft (`paper.tex`, with a generated Markdown copy `paper.md`); earlier versions in `archive/`. |
-| `docs/wiki/experiments.md` | The experimental design and its decision table. |
-| `src/description_icl/` | Shared code (created with the first implementation). |
-| `results/<rq>-<slug>/` | One self-contained analysis each: code, config, figures, and a short README. |
-| `AGENTS.md` | Project contract for agents, including where each kind of work goes. |
-| `STATUS.md` | Current state and next actions. |
-| `MEMORY.md`, `memory/` | Project history. |
+| `docs/paper/` | `paper.tex` (ICML 2026 style), `refs.bib`, the built `paper.pdf`, and `paper.md` (a Markdown copy, `to_md.sh`) |
+| `docs/paper/figs/` | Figure scripts and their outputs; `paper_style.py` is the shared figure style |
+| `results/rq3-meta-trained/` | The meta-trained Transformers of Section 6 (Figure 3, Table 1) |
+| `results/llm-test/` | The language-model test of Section 7 (Figure 4, Tables 2–7); see its `README.md` |
+| `src/description_icl/`, `tests/` | The library behind the meta-trained networks |
 
-## Build the proposal
+## Build
 
 ```bash
-cd docs/proposal/bayesian_icl && latexmk -pdf bayesian_icl_proposal.tex
+uv sync
+cd docs/paper/figs && uv run python ess_curve.py && uv run python ess_figure.py && uv run python networks_figure.py
+cd ../../../results/llm-test && uv run python analyze.py replot
+cd ../../docs/paper && latexmk -pdf paper.tex
 ```
 
-This needs the `titlesec` and `enumitem` LaTeX packages.
-
-## Build the paper
-
-```bash
-cd docs/paper && latexmk -pdf paper.tex
-docs/paper/to_md.sh
-```
-
-The second command writes `paper.md`, a Markdown copy for reading on GitHub,
-with the figures as SVG. It needs `pandoc` and `pdftocairo` (Poppler). Rerun
-it after editing `paper.tex`.
+`ess_curve.py` recomputes the Section 4–5 numbers (minutes); the others only redraw. `analyze.py replot`
+redraws Figure 4 and the language-model tables from the last analysis; run `analyze.py` on the
+`full_*.npz` score files to recompute them. Large pilot arrays (`results/llm-test/archive-v2/*.npz`)
+are kept out of Git.
