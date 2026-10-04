@@ -1,4 +1,4 @@
-# A Description Is Likely Not Worth a Thousand Demonstrations
+# Is a Description Worth a Thousand Demonstrations?
 
 *Measuring the Effective Sample Size of Task Descriptions in In-Context Learning*
 
