@@ -1,4 +1,6 @@
-# How Many Demonstrations Is a Task Description Worth?
+# A Description Is Likely Not Worth a Thousand Demonstrations
+
+*Measuring the Effective Sample Size of Task Descriptions in In-Context Learning*
 
 The paper and everything it is built from. A task description's *effective sample size* (ESS) is the
 number of demonstrations that lower a predictor's regret as much as the description does; the paper
