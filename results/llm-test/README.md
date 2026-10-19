@@ -66,6 +66,7 @@ python3 analyze.py full_gptoss20.npz full_phi4.npz full_olmo32.npz full_minicpm2
     written_gptoss20.npz written_phi4.npz written_qwen9.npz written_gemma12.npz written_gemma31.npz written_olmo32.npz written_*_p[0-3].npz
 python3 analyze.py replot     # tables and figure from the cached results
 python3 reason_table.py
+python3 mixture_ess.py full_gptoss20.npz full_phi4.npz full_olmo32.npz written_qwen9.npz written_gemma12.npz written_gemma31.npz   # Table 3: ESS under actual unreliability
 ```
 
 `analyze.py` writes `summary.csv`, `medians.csv`, `llm_table.tex` (Table 2, all compliant models),
@@ -76,7 +77,7 @@ models). The paper inputs these from `docs/paper` via `../../results/llm-test/`.
 ## Files
 
 - `llm_test.py`: tasks, prompts, paraphrases, the Bayes-optimal predictor, scoring (distribution / written / reasoning), read-out.
-- `analyze.py`: summary, tables, figure. `reason_table.py`: the reasoning table.
+- `analyze.py`: summary, tables, figure. `reason_table.py`: the reasoning table. `mixture_ess.py`: `llm_table_mixture.tex`, the relevant and irrelevant conditions combined with weights p and 1 - p (per task) before the ESS is read, told and not told, against the trusting and the hedging Bayes-optimal predictor.
 - `full_*.npz`: distribution readout (64 numbers shown); `written_*.npz`: written readout; `written_*_p[0-3].npz`: wording ablation; `reason_gptoss20.npz`.
 - `run_all.sh`, `run_written.sh`, `run_reason.sh`, `run_olmo32.sh`: the Colab jobs.
 - `agent-check/`: the frontier-model check.

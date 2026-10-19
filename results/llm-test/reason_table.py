@@ -10,11 +10,11 @@ for cond in L.REASON_CONDS:
     for n in L.REASON_NS:
         p = pred[ci, :, L.NS.index(n)]; ok = np.isfinite(p)
         ideal = L.ideal_mean(t, cond, n, p=cond[3] or 1.0)
-        err = np.sqrt(np.mean((p[ok] - t["w"][ok]) ** 2)); ierr = np.sqrt(np.mean((ideal - t["w"]) ** 2))
+        err = np.sqrt(np.mean((p[ok] - t["w"][ok]) ** 2)); ierr = np.sqrt(np.mean((ideal[ok] - t["w"][ok]) ** 2))  # the Bayes-optimal predictor on the same answered tasks
         if cond[1]:
             X = np.c_[L.stated(t, cond), t["y"][:, :n].mean(1), np.ones(L.S)]
             a = np.linalg.lstsq(X[ok], p[ok], rcond=None)[0][0]
-            ia = np.linalg.lstsq(X, ideal, rcond=None)[0][0]
+            ia = np.linalg.lstsq(X[ok], ideal[ok], rcond=None)[0][0]
             w = f"{a:.2f}/{ia:.2f}"
         else:
             w = "--"

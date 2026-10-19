@@ -1,0 +1,23 @@
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{irrelevant one time in ten ($p = 0.9$)} & \multicolumn{2}{c}{irrelevant half the time ($p = 0.5$)} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+Predictor & $c = 4$ & $c = 36$ & $c = 4$ & $c = 36$ \\
+\midrule
+Bayes-optimal, takes it as relevant & 1.0 [0.8, 1.1] & 0.2 [0.0, 0.4] & $\leq$ $-$1.0 & $\leq$ $-$1.0 \\
+Bayes-optimal, hedges at $p$ & 2.3 [2.1, 2.7] & 5.5 [5.1, 6.0] & 0.6 [0.5, 0.7] & 0.9 [0.8, 1.1] \\
+\midrule
+gpt-oss-20b, not told & 1.2 [1.0, 1.4] & 1.6 [1.4, 1.7] & 0.1 [0.0, 0.2] & $\leq$ 0.0 \\
+gpt-oss-20b, told & 1.1 [1.0, 1.3] & 1.3 [1.1, 1.4] & $-$0.1 [$-$0.1, 0.0] & $-$0.1 [$-$0.1, 0.0] \\
+Phi-4, not told & 1.3 [1.1, 1.5] & 1.9 [1.7, 2.4] & $\leq$ $-$1.0 & $\leq$ $-$1.0 \\
+Phi-4, told & 2.7 [2.2, 3.2] & 3.6 [3.1, 4.1] & $\leq$ 0.0 & $\leq$ 0.0 \\
+OLMo 2 32B, not told & 2.5 [2.2, 2.8] & 3.2 [2.9, 3.5] & $\leq$ 0.7 & $\leq$ 0.6 \\
+OLMo 2 32B, told & 3.2 [2.9, 3.4] & 4.0 [3.6, 4.3] & $\leq$ 1.0 & $\leq$ 0.9 \\
+Qwen3.5 9B (written), not told & 1.0 [0.7, 1.2] & 1.8 [1.3, 2.1] & $\leq$ $-$0.3 & $\leq$ $-$0.9 \\
+Qwen3.5 9B (written), told & $-$1.0 [$-$1.0, $-$0.7] & $-$0.1 [$-$0.5, 0.3] & $\leq$ $-$1.0 & $\leq$ $-$1.0 \\
+Gemma 4 12B (written), not told & 0.3 [0.2, 0.5] & 0.7 [0.5, 1.0] & $\leq$ $-$0.1 & $\leq$ 0.0 \\
+Gemma 4 12B (written), told & 0.6 [0.5, 0.7] & 1.0 [0.9, 1.3] & $\leq$ 0.0 & $\leq$ 0.1 \\
+Gemma 4 31B (written), not told & 0.1 [0.0, 0.2] & 0.4 [0.3, 0.5] & $\leq$ 0.0 & $\leq$ $-$0.1 \\
+Gemma 4 31B (written), told & $\leq$ 0.0 & 0.2 [0.1, 0.3] & $\leq$ 0.0 & $\leq$ 0.0 \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,9 @@
+2026-10-04T00:48:38.782894Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_bfbd71bda38c41f7902f9d9909980d2c
+{"type":"thread.started","thread_id":"01a10462-617f-7f40-a260-e84697197eb6"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+2026-10-04T00:48:39.104076Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_a4a0cea2329943b58e81d75dc802d273
+2026-10-04T00:48:40.328005Z ERROR codex_api::endpoint::responses_websocket: failed to connect to websocket: HTTP error: 403 Forbidden, url: wss://chatgpt.com/backend-api/codex/responses
+2026-10-04T00:48:41.245092Z ERROR codex_api::endpoint::responses_websocket: failed to connect to websocket: HTTP error: 403 Forbidden, url: wss://chatgpt.com/backend-api/codex/responses
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"576.5"}}
+{"type":"turn.completed","usage":{"input_tokens":26375,"cached_input_tokens":25344,"cache_write_input_tokens":0,"output_tokens":78,"reasoning_output_tokens":69}}

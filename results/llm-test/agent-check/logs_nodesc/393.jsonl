@@ -1,0 +1,9 @@
+2026-10-04T00:51:20.861861Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_9acacf320b464e88b00a40af0b1ee6d0
+2026-10-04T00:51:20.871949Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_90ee62ad26b34c32a2fad6263552111e
+2026-10-04T00:51:21.111923Z ERROR codex_skills_extension::host_service: failed to install system skills: io error while remove existing system skills dir: Directory not empty (os error 66)
+{"type":"thread.started","thread_id":"01a10464-da9e-7940-9ff9-9673dfdf29d1"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+2026-10-04T00:51:24.468522Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_f9befcd756d046fca8a18f18fe146fe2
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"813"}}
+{"type":"turn.completed","usage":{"input_tokens":27195,"cached_input_tokens":11008,"cache_write_input_tokens":0,"output_tokens":83,"reasoning_output_tokens":76}}

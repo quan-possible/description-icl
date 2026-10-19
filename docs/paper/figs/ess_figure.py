@@ -5,17 +5,21 @@ r -> 0 (the r = 0 row of ess_curve.csv). A linear ESS axis shows the cap as a pl
 
 Style: paper_style.py (the Editorial Neutral binding). ess_curve.py computes ess_curve.csv; this script only draws it.
 
-    python3 docs/paper/figs/ess_figure.py
+    python3 docs/paper/figs/ess_figure.py        # log loss: ess_curve.csv -> ess.pdf
+    python3 docs/paper/figs/ess_figure.py sq     # squared error: ess_curve_sq.csv -> ess_sq.pdf
 """
 
 import csv
 import pathlib
+import sys
 
 import paper_style as ps
 
 here = pathlib.Path(__file__).parent
+sq = sys.argv[1:] == ["sq"]
+stem = "ess_sq" if sq else "ess"
 RS = (0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002, 0.001)
-rows = [{k: float(v) for k, v in x.items()} for x in csv.DictReader((here / "ess_curve.csv").open())]
+rows = [{k: float(v) for k, v in x.items()} for x in csv.DictReader((here / ("ess_curve_sq.csv" if sq else "ess_curve.csv")).open())]
 curve = lambda p: [next(x["worth"] for x in rows if x["p"] == p and x["n"] == 0 and x["r"] == r) for r in RS]
 cap = next(x["worth"] for x in rows if x["p"] == 0.9 and x["r"] == 0)
 
@@ -31,4 +35,4 @@ ax.set_xlabel("$r$ (fraction of prior variance left)")
 ax.set_ylabel("ESS (demonstrations)")
 ps.style_axes(ax, grid_axis="y")
 ax.legend(loc="upper left")
-ps.save(fig, str(here / "ess"))
+ps.save(fig, str(here / stem))

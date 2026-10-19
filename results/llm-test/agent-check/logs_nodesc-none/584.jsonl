@@ -1,0 +1,6 @@
+{"type":"thread.started","thread_id":"01a10477-60ab-7442-b77c-ed9d6f1480a6"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+2026-10-04T01:11:35.171655Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_ebc3ce298fb54fb7a7bff3b75e9b3d13
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"600"}}
+{"type":"turn.completed","usage":{"input_tokens":26411,"cached_input_tokens":25344,"cache_write_input_tokens":0,"output_tokens":5,"reasoning_output_tokens":0}}

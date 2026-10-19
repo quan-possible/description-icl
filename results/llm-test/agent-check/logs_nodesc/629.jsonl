@@ -1,0 +1,5 @@
+{"type":"thread.started","thread_id":"01a1046b-412c-7d53-a171-1d0ef05dc588"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"359"}}
+{"type":"turn.completed","usage":{"input_tokens":107466,"cached_input_tokens":103424,"cache_write_input_tokens":0,"output_tokens":649,"reasoning_output_tokens":63}}

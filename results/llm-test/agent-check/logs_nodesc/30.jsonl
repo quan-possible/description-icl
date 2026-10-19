@@ -1,0 +1,7 @@
+2026-10-04T00:45:09.423804Z ERROR codex_skills_extension::host_service: failed to install system skills: io error while remove existing system skills dir: Directory not empty (os error 66)
+{"type":"thread.started","thread_id":"01a1045f-2ec1-7de0-991f-e86ee038da50"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+2026-10-04T00:45:09.706579Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_f5b629e2c3c4464785135938aa69ca31
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"498"}}
+{"type":"turn.completed","usage":{"input_tokens":26349,"cached_input_tokens":25344,"cache_write_input_tokens":0,"output_tokens":44,"reasoning_output_tokens":37}}

@@ -8,8 +8,8 @@ pred = np.full(len(rows), np.nan)
 for k in range(len(rows)):
     f = f"{REPLIES}/{k}.txt"
     if os.path.exists(f):
-        m = re.search(r"\b([1-9]\d\d)\b", open(f).read())
-        if m: pred[k] = int(m.group(1))
+        m = re.search(r"\b([1-9]\d\d(?:\.\d+)?)\b", open(f).read())  # a few no-description replies carry a decimal part
+        if m: pred[k] = float(m.group(1))
 
 def fit(idx, boot=500):
     """Regress the prediction on the stated value and the mean of the numbers shown; return weight a, worth n*a/b."""
@@ -56,8 +56,8 @@ def table(passes=(("replies", "GPT-5.6-Luna, low reasoning"), ("replies-none", "
         for k in range(len(rows)):
             f = f"{d}/{k}.txt"
             if os.path.exists(f):
-                m = re.search(r"\b([1-9]\d\d)\b", open(f).read())
-                if m: pred[k] = int(m.group(1))
+                m = re.search(r"\b([1-9]\d\d(?:\.\d+)?)\b", open(f).read())  # a few no-description replies carry a decimal part
+                if m: pred[k] = float(m.group(1))
         ws, ts = [], []
         for t, n in cells:
             idx = [k for k, r in enumerate(rows) if r["tol"] == t and r["n"] == n]
@@ -71,3 +71,60 @@ def table(passes=(("replies", "GPT-5.6-Luna, low reasoning"), ("replies-none", "
 
 if __name__ == "__main__" and os.path.isdir("replies-none"):
     table()
+
+
+def ess_table(passes=(("replies", "replies_nodesc", "GPT-5.6-Luna, low reasoning"), ("replies-none", "replies_nodesc-none", "GPT-5.6-Luna, reasoning off")), boot=500):
+    """Write agent_ess_table.tex: Definition 1 with squared error at n = 1 and 4 for c = 1, 4, 36, read from the
+    model's own no-description curve (prompts_nodesc.json, n = 1 to 64, the same 100 tasks), made nonincreasing
+    and interpolated in log n as in ../analyze.py; 95% bootstrap intervals over tasks. The Bayes-optimal row is
+    read the same way from its predictions on the same tasks."""
+    sys.path.insert(0, "..")
+    import llm_test as T
+    from analyze import worth, fmt_worth
+    nd = json.load(open("prompts_nodesc.json"))
+    NS, cells = (1, 2, 4, 8, 16, 32, 64), [(tol, n) for n in (1, 4) for tol in (60, 30, 10)]
+    tasks = sorted({r["i"] for r in nd})
+    def read(d, rows_):
+        out = np.full(len(rows_), np.nan)
+        for k in range(len(rows_)):
+            f = f"{d}/{k}.txt"
+            if os.path.exists(f):
+                m = re.search(r"\b([1-9]\d\d(?:\.\d+)?)\b", open(f).read())  # a few no-description replies carry a decimal part
+                if m: out[k] = float(m.group(1))
+        return out
+    def sq(p, rows_, key):  # (task, n) squared errors for the no-description prompts, or (task,) for one cell
+        return {(r["i"], r["n"]): (p[k] - r["w"]) ** 2 for k, r in enumerate(rows_)}
+    def curve(sqd, ns, idx):  # mean over the tasks idx at each n in ns, laid out on T.NS (nan where absent)
+        mse = np.full(len(T.NS), np.nan)
+        for n in ns:
+            vals = [sqd[(i, n)] for i in idx if (i, n) in sqd]
+            mse[T.NS.index(n)] = np.nanmean(vals) if vals else np.nan
+        return mse
+    rng = np.random.default_rng(0)
+    boots = [tasks] + [list(rng.choice(tasks, len(tasks))) for _ in range(boot)]
+    def ess_cells(pred_desc, pred_none):
+        s_none = sq(pred_none, nd, "w")
+        res = []
+        for tol, n in cells:
+            idx = [k for k, r in enumerate(rows) if r["tol"] == tol and r["n"] == n]
+            s_desc = {(rows[k]["i"], n): (pred_desc[k] - rows[k]["w"]) ** 2 for k in idx}
+            vals = [worth(curve(s_none, NS, b), curve(s_desc, (n,), b), n) for b in boots]
+            (v, cens), bs = vals[0], np.array([x for x, _ in vals[1:]])
+            lo, hi = np.percentile(bs, [2.5, 97.5], method="nearest")  # nearest: a draw may be inf (beyond the grid)
+            cell = fmt_worth(v, cens, n, max(NS))
+            res.append(cell if cens or not np.isfinite(v) else f"{cell} [{fmt_worth(lo, False, n, max(NS))}, {fmt_worth(hi, False, n, max(NS))}]")
+        return res
+    out = ["\\begin{tabular}{lcccccc}", "\\toprule",
+           "& \\multicolumn{3}{c}{$n = 1$} & \\multicolumn{3}{c}{$n = 4$} \\\\", "\\cmidrule(lr){2-4} \\cmidrule(lr){5-7}",
+           "Bayes-optimal ESS $c$ & 1 & 4 & 36 & 1 & 4 & 36 \\\\", "\\midrule"]
+    ideal_desc, ideal_none = np.array([r["ideal"] for r in rows]), np.array([r["ideal"] for r in nd])
+    out.append(" & ".join(["Bayes-optimal, read the same way"] + ess_cells(ideal_desc, ideal_none)) + " \\\\")
+    for d, dn, name in passes:
+        out.append(" & ".join([name] + ess_cells(read(d, rows), read(dn, nd))) + " \\\\")
+    out += ["\\bottomrule", "\\end{tabular}"]
+    open("agent_ess_table.tex", "w").write("\n".join(out) + "\n")
+    print("\n".join(out))
+
+
+if __name__ == "__main__" and os.path.isdir("replies_nodesc-none"):
+    ess_table()
