@@ -48,7 +48,7 @@ for ax in axes[1]:
     ax.set_xlabel("demonstrations in the prompt, $n$")
     ax.set_xticks([0, 5, 10, 15, 20])
 for ax in axes[:, 0]:
-    ax.set_ylabel("regret (nats)")
+    ax.set_ylabel("squared error")
 from matplotlib.lines import Line2D
 handles = [Line2D([], [], color=COLOR["1"], lw=1.2, label="Bayes-optimal, with description"),
            Line2D([], [], color=COLOR["1"], lw=1.2, ls="--", label="best single Gaussian, with description"),

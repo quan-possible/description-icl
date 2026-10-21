@@ -39,9 +39,11 @@ exactly and its weight on the stated value with `n` numbers shown is `c / (c + n
   over the 900 number tokens, renormalized, is the model's distribution over the next number; its mean
   is the prediction.
 - **Written readout** (`--written`; Qwen3.5 9B, Gemma 4 12B, Gemma 4 31B, and the three above as a
-  check): the first three-digit integer the model writes under greedy decoding with 8 new tokens.
+  check): the number the model writes under greedy decoding with 8 new tokens, by `read_number`, the rule
+  for every text reply (three digits before any decimal part, decimals kept; the saved written runs kept
+  only the integer part). Replies without a number are left out of the error curves and the weight.
 - **ESS**: Definition 1 with squared error, read off the model's own no-description error curve
-  (from n = 1, made non-increasing, interpolated in log n); headline value = median over n = 1, 2, 4
+  (from n = 1, interpolated in log n, at its first crossing); headline value = median over n = 1, 2, 4
   with a 95% bootstrap interval over tasks. **Weight**: regression of the prediction on the stated value
   and the mean of the numbers shown. Models that answer with a number in fewer than 75% of replies are
   not reported beyond that; cells below 75% are italic in the appendix tables.
@@ -61,11 +63,14 @@ python3 llm_test.py          # example prompts and a self-check of the ideal lea
 python3 llm_test.py score openai/gpt-oss-20b full_gptoss20.npz --tasks 2000
 python3 llm_test.py score Qwen/Qwen3.5-9B written_qwen9.npz --tasks 2000 --written
 python3 llm_test.py score Qwen/Qwen3.5-9B written_qwen9_p1.npz --tasks 2000 --written --paraphrase 1 --ablation
-# locally:
+# locally (control.py first: analyze.py's Figure 4b reads control_contrast.csv):
+python3 control.py control_gptoss20.npz control_phi4.npz control_olmo32.npz control_written_gptoss20.npz \
+    control_written_qwen9.npz control_written_gemma12.npz control_written_gemma31.npz   # Table 7, the specificity control
 python3 analyze.py full_gptoss20.npz full_phi4.npz full_olmo32.npz full_minicpm2.npz full_olmo7.npz full_olmo13.npz \
     written_gptoss20.npz written_phi4.npz written_qwen9.npz written_gemma12.npz written_gemma31.npz written_olmo32.npz written_*_p[0-3].npz
 python3 analyze.py replot     # tables and figure from the cached results
-python3 reason_table.py
+python3 reasoning.py         # Table 8: gpt-oss-20b (reason_gptoss20_4096.npz) and Haiku 5.5 (haiku/) reasoning
+python3 curves.py            # the error-curve figure and the sensitivity table (readings of the curve)
 python3 mixture_ess.py full_gptoss20.npz full_phi4.npz full_olmo32.npz written_qwen9.npz written_gemma12.npz written_gemma31.npz   # Table 3: ESS under actual unreliability
 ```
 
@@ -77,9 +82,9 @@ models). The paper inputs these from `docs/paper` via `../../results/llm-test/`.
 ## Files
 
 - `llm_test.py`: tasks, prompts, paraphrases, the Bayes-optimal predictor, scoring (distribution / written / reasoning), read-out.
-- `analyze.py`: summary, tables, figure. `reason_table.py`: the reasoning table. `mixture_ess.py`: `llm_table_mixture.tex`, the relevant and irrelevant conditions combined with weights p and 1 - p (per task) before the ESS is read, told and not told, against the trusting and the hedging Bayes-optimal predictor.
-- `full_*.npz`: distribution readout (64 numbers shown); `written_*.npz`: written readout; `written_*_p[0-3].npz`: wording ablation; `reason_gptoss20.npz`.
-- `run_all.sh`, `run_written.sh`, `run_reason.sh`, `run_olmo32.sh`: the Colab jobs.
+- `analyze.py`: summary, tables, figure. `control.py`: the specificity control. `reasoning.py`: the reasoning table. `curves.py`: `llm_curves.pdf` and `llm_table_sensitivity.tex`. `mixture_ess.py`: `llm_table_mixture.tex`, the relevant and irrelevant conditions combined with weights p and 1 - p (per task) before the ESS is read, told and not told, against the trusting and the hedging Bayes-optimal predictor.
+- `full_*.npz`: distribution readout (64 numbers shown); `written_*.npz`: written readout; `written_*_p[0-3].npz`: wording ablation; `control_*.npz`: the specificity control; `reason_gptoss20_4096.npz`; `haiku/`: the Haiku 5.5 replies.
+- `run_all.sh`, `run_written.sh`, `run_reason.sh`, `run_control.sh`, `run_olmo32.sh`: the Colab jobs.
 - `agent-check/`: the frontier-model check.
 - `archive-n8/`: the earlier 8-number run; `archive-pilot1/`, `archive-pilot2/`: prompt pilots; `archive-v2/`: the earlier list-continuation version of the test.
 - `tmp/`: job logs and the pre-merge analysis script.

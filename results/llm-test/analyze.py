@@ -55,23 +55,25 @@ def decreasing(y):
     return np.concatenate([[v] * k for v, k in blocks])
 
 
-def worth(mse_none, mse_desc, n):
+def worth(mse_none, mse_desc, n, grid_ns=None):
     """Definition 1 with squared error: the further demonstrations the no-description learner needs to match the
-    error with the description at n. The no-description curve is taken from n = 1 on (at n = 0 some models
-    rarely answer with a number), made non-increasing, and interpolated in log n. Returns (value, censored):
-    inf when the curve never gets that low within the grid; (1 - n, True) when even one demonstration alone
-    beats the description, so that the ESS is at most 1 - n."""
-    ns = [k for k in T.NS if k >= 1 and np.isfinite(mse_none[T.NS.index(k)])]  # the ablation files have only n = 1, 2, 4
-    grid, curve = np.log(np.array(ns, float)), decreasing([mse_none[T.NS.index(k)] for k in ns])
-    target = mse_desc[T.NS.index(n)]
+    error with the description at n, at the first crossing of the no-description curve as observed. The curve is
+    taken from n = 1 on (at n = 0 some models rarely answer with a number) and interpolated in log n. Returns
+    (value, censored): inf when the curve never gets that low within the grid; (1 - n, True) when even one
+    demonstration alone beats the description, so that the ESS is at most 1 - n."""
+    G = list(grid_ns or T.NS)  # the numbers shown that the curves are indexed by
+    ns = [k for k in G if k >= 1 and np.isfinite(mse_none[G.index(k)])]  # the ablation files have only n = 1, 2, 4
+    grid, curve = np.log(np.array(ns, float)), np.array([mse_none[G.index(k)] for k in ns])
+    target = mse_desc[G.index(n)]
     if not np.isfinite(target):
         return float("nan"), False
-    if target < curve[-1]:
+    below = np.nonzero(curve <= target)[0]
+    if below.size == 0:
         return float("inf"), False
-    k = int(np.argmax(curve <= target))
+    k = int(below[0])
     if k == 0:
         return float(ns[0] - n), True
-    x = grid[k - 1] + (grid[k] - grid[k - 1]) * (curve[k - 1] - target) / max(curve[k - 1] - curve[k], 1e-12)
+    x = grid[k - 1] + (grid[k] - grid[k - 1]) * (curve[k - 1] - target) / (curve[k - 1] - curve[k])
     return float(np.exp(x)) - n, False
 
 
@@ -115,10 +117,9 @@ def main(paths):
                 pred, ideal = d["mean"][ci, :, ni].astype(float), T.ideal_mean(t, cond, n, cond[3] or 1.0)
                 if np.isnan(pred).all():
                     continue
-                keep = ~np.isnan(pred)
-                pred = np.where(keep, pred, np.nanmean(pred))  # a missing answer counts as the average answer
+                keep = ~np.isnan(pred)  # a reply without a number is left out, here as in the ESS
                 row = dict(model=model_label(repo), noise=cond[0], sd=cond[1], valid=cond[2], p=cond[3], n=n,
-                           p_number=float(d["mass"][ci, :, ni].mean()), error=rms(pred - t["w"]), ideal_error=rms(ideal - t["w"]))
+                           p_number=float(d["mass"][ci, :, ni].mean()), error=rms((pred - t["w"])[keep]), ideal_error=rms((ideal - t["w"])[keep]))
                 if cond[1]:
                     c0 = none[cond[0]]
                     row["ess"], row["ess_censored"] = worth(np.nanmean(sq[c0], 0), np.nanmean(sq[ci], 0), n)
@@ -126,10 +127,11 @@ def main(paths):
                     bs = np.array([worth(np.nanmean(sq[c0][i], 0), np.nanmean(sq[ci][i], 0), n)[0] for i in boots[: BOOT // 5]])
                     row["ess_lo"], row["ess_hi"] = (float(np.percentile(bs, 2.5)), float(np.percentile(bs, 97.5))) if np.isfinite(bs).all() else (np.nan, np.nan)
                     m, ybar = T.stated(t, cond).astype(float), (t["y"][:, :n].mean(1) if n else None)
-                    a, b = fit(pred, m, ybar)
-                    ia, ib = fit(ideal, m, ybar)
+                    on = lambda i: (pred[i], m[i], None if ybar is None else ybar[i])
+                    a, b = fit(*on(keep))
+                    ia, ib = fit(ideal[keep], m[keep], None if ybar is None else ybar[keep])
                     row.update(weight=a, ideal_weight=ia, worth=n * a / b if n else np.nan, ideal_worth=n * ia / ib if n else np.nan,
-                               weight_se=float(np.std([fit(pred[i], m[i], None if ybar is None else ybar[i])[0] for i in boots])))
+                               weight_se=float(np.std([fit(*on(i[keep[i]]))[0] for i in boots])))
                 rows.append(row)
         print(path, "done", flush=True)
     with open(here / "summary.csv", "w", newline="") as f:
@@ -206,14 +208,17 @@ def tables(rows, medians):
 
     # appendix: the ESS (from n = 1) and the weight on the stated value (from n = 0) at every n, the Bayes-optimal
     # predictor first, then each model; a model's cell is in italics where it answers with a number in fewer than
-    # MIN_NUMBER of its replies
+    # MIN_NUMBER of its replies. The ESS of the models read from their written answer (gpt-oss-20b's written
+    # readout aside, a check on its distribution readout) goes in a second table, llm_table_worth_written.tex.
+    written = [m for m in models if m not in plain(models) and not m.startswith("gpt-oss")]
     models = plain(models)
     conds = [cond for cond in T.CONDITIONS if cond[1]]
-    for name, key_, ideal_key in (("llm_table_worth.tex", "ess", "ideal_ess"), ("llm_table_full.tex", "weight", "ideal_weight")):
+    for name, key_, ideal_key in (("llm_table_worth.tex", "ess", "ideal_ess"), ("llm_table_full.tex", "weight", "ideal_weight"), ("llm_table_worth_written.tex", "ess", "ideal_ess")):
+        group = written if "written" in name else ["Bayes-optimal"] + models
         ns = [n for n in T.NS if n >= 1] if key_ == "ess" else list(T.NS)
         show = (lambda v, cens, n: fmt_worth(v, cens, n)) if key_ == "ess" else (lambda v, cens, n: f"{v:.2f}")
         lines = [r"\begin{tabular}{llr" + "r" * len(ns) + "}", r"\toprule", r"Predictor & Description & number & " + " & ".join(f"$n = {n}$" for n in ns) + r" \\", r"\midrule"]
-        for m in ["Bayes-optimal"] + models:
+        for m in group:
             src, k, ck = (models[0], ideal_key, "ideal_censored") if m == "Bayes-optimal" else (m, key_, "ess_censored")
             for i, cond in enumerate(conds):
                 rs = {r["n"]: r for r in rows if r["model"] == src and (r["noise"], r["sd"], r["valid"], r["p"]) == cond}
@@ -262,15 +267,15 @@ def paraphrase_table(rows, medians):
 
 def figure(rows, medians):
     """llm_test.pdf (Figure 4). (a) Specificity: the ESS of a relevant description for each model against its
-    Bayes-optimal ESS, at c = 1, 4, 36. (b) The weight on the stated value for c = 36 minus that for c = 1, against
-    the demonstrations shown, with approximate 95% intervals. (c) Stated reliability: the ESS of the relevant c = 36
+    Bayes-optimal ESS, at c = 1, 4, 36. (b) The specificity control: the response to a change in the stated sd alone
+    (control_contrast.csv), with 95% bootstrap intervals; 1 is the Bayes-optimal response. (c) Stated reliability: the ESS of the relevant c = 36
     description with no stated chance of being wrong, or a stated 10% or 50%. (a) and (c) are medians over 1, 2 and
     4 demonstrations shown, with 95% bootstrap intervals, on one log scale; a value that is at most 0.3, or only an
     upper bound, is drawn as a downward triangle at the floor. Series at the same x are offset slightly."""
     import paper_style as ps
 
     ps.use_style()
-    fig, (a, b, c) = ps.figure(3, width=ps.WIDE, height=2.15, gridspec_kw=dict(width_ratios=[1.1, 1.1, 0.8]))
+    fig, (a, b, c) = ps.figure(3, width=ps.WIDE, height=2.15, gridspec_kw=dict(width_ratios=[1.1, 0.8, 0.8]))
     models = plain(compliant(rows))
     assert "OLMo 2 32B" in models or not any(r["model"] == "OLMo 2 32B" for r in rows), "OLMo 2 32B fails the number rule"
     tones = dict(zip(models, (ps.BLUE, ps.GREEN, ps.PINK)))  # three models, the three accents; the Bayes-optimal predictor is the dashed ink line
@@ -302,21 +307,21 @@ def figure(rows, medians):
     lines = [draw(a, cs, [(z[0], z[1], z[2], z[4]) for z in (med(m, (sd, True, None)) for sd in sds)], m, xlog=True) for m in models]
     a.set_xlabel("$c$")
 
-    # (b) how much the weight on the stated value follows the stated specificity: the weight on the most specific
-    # description (c = 36) minus that on the loosest (c = 1), against the demonstrations shown
+    # (b) the specificity control (control.py): the paired change in prediction when only the stated sd goes from 60
+    # to 10, as a share of the Bayes-optimal change, for a stated value accurate to sd 10 or 60
     c36 = sds[2]
-    ns = [n for n in T.NS if n >= 1]
-    wt = lambda m, sd, key: np.array([next(r[key] for r in rows if r["model"] == m and r["noise"] == T.MAIN and r["sd"] == sd and r["valid"] and r["p"] is None and r["n"] == n) for n in ns])
-    ideal = wt(models[0], c36, "ideal_weight") - wt(models[0], sds[0], "ideal_weight")
+    con = {(r["model"], int(r["actual"])): [float(r[k]) for k in ("share", "lo", "hi")] for r in csv.DictReader(open(here / "control_contrast.csv"))}
+    xs = [0, 1]
     b.axhline(0, color=ps.SPINE, lw=0.9)
-    b.plot(ns, ideal, **bayes)
+    b.plot([-0.4, 1.4], [1, 1], **bayes)
     for k, m in enumerate(models):
-        diff = wt(m, c36, "weight") - wt(m, sds[0], "weight")
-        se = np.hypot(wt(m, c36, "weight_se"), wt(m, sds[0], "weight_se"))  # ponytail: treats the two weights as independent
-        b.errorbar(np.array(ns) * 1.06 ** shift(k, 1), diff, yerr=1.96 * se, color=colors[m], marker=markers[m], ms=4, mfc=tones[m].fill, mec=colors[m], mew=0.9, lw=1.8, capsize=0, elinewidth=1)
-    b.set_xlabel("demonstrations shown, $n$")
-    b.set_ylabel("weight at $c = 36$ minus $c = 1$")
-    b.set_ylim(-0.2, 0.8); b.set_yticks([-0.2, 0, 0.2, 0.4, 0.6, 0.8])
+        v, lo, hi = np.array([con[m, acc] for acc in (10, 60)]).T
+        b.errorbar(np.array(xs) + shift(k, 0.12), v, yerr=[v - lo, hi - v], color=colors[m], marker=markers[m], ms=4, mfc=tones[m].fill, mec=colors[m], mew=0.9, ls="none", elinewidth=1)
+    b.set_xticks(xs); b.set_xticklabels(["10", "60"])
+    b.set_xlim(-0.4, 1.4)
+    b.set_xlabel("sd the stated value is accurate to")
+    b.set_ylabel("response to stated sd")
+    b.set_ylim(-0.2, 1.1); b.set_yticks([0, 0.5, 1])
 
     # (c) the relevant c = 36 description with a stated chance of being wrong
     conds = [(c36, True, None), (c36, True, 0.9), (c36, True, 0.5)]
@@ -335,7 +340,6 @@ def figure(rows, medians):
         ax.set_yticks([0.3, 1, 3, 10, 30]); ax.set_yticklabels(["0.3", "1", "3", "10", "30"]); ax.set_ylim(floor, 60); ax.minorticks_off()
         ax.set_ylabel("ESS (demonstrations)")
     a.set_xlim(0.7, 36)
-    b.set_xscale("log"); b.set_xticks(ns); b.set_xticklabels([str(t) for t in ns]); b.minorticks_off()
     for ax in (a, b, c):
         ps.style_axes(ax, grid_axis="y")
     ps.panel_labels([a, b, c])

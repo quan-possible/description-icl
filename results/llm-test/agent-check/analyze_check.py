@@ -1,6 +1,8 @@
 """Read the Luna replies: weight on the stated value and implied worth, against the Bayes-optimal values."""
-import json, re, os, sys
+import json, os, sys
 import numpy as np
+sys.path.insert(0, "..")
+from llm_test import read_number  # the rule of every text reply: first number with three digits before any decimal part, decimals kept
 
 rows = json.load(open("prompts.json"))
 REPLIES = sys.argv[1] if len(sys.argv) > 1 else "replies"
@@ -8,8 +10,7 @@ pred = np.full(len(rows), np.nan)
 for k in range(len(rows)):
     f = f"{REPLIES}/{k}.txt"
     if os.path.exists(f):
-        m = re.search(r"\b([1-9]\d\d(?:\.\d+)?)\b", open(f).read())  # a few no-description replies carry a decimal part
-        if m: pred[k] = float(m.group(1))
+        pred[k] = read_number(open(f).read())
 
 def fit(idx, boot=500):
     """Regress the prediction on the stated value and the mean of the numbers shown; return weight a, worth n*a/b."""
@@ -56,8 +57,7 @@ def table(passes=(("replies", "GPT-5.6-Luna, low reasoning"), ("replies-none", "
         for k in range(len(rows)):
             f = f"{d}/{k}.txt"
             if os.path.exists(f):
-                m = re.search(r"\b([1-9]\d\d(?:\.\d+)?)\b", open(f).read())  # a few no-description replies carry a decimal part
-                if m: pred[k] = float(m.group(1))
+                pred[k] = read_number(open(f).read())
         ws, ts = [], []
         for t, n in cells:
             idx = [k for k, r in enumerate(rows) if r["tol"] == t and r["n"] == n]
@@ -75,8 +75,8 @@ if __name__ == "__main__" and os.path.isdir("replies-none"):
 
 def ess_table(passes=(("replies", "replies_nodesc", "GPT-5.6-Luna, low reasoning"), ("replies-none", "replies_nodesc-none", "GPT-5.6-Luna, reasoning off")), boot=500):
     """Write agent_ess_table.tex: Definition 1 with squared error at n = 1 and 4 for c = 1, 4, 36, read from the
-    model's own no-description curve (prompts_nodesc.json, n = 1 to 64, the same 100 tasks), made nonincreasing
-    and interpolated in log n as in ../analyze.py; 95% bootstrap intervals over tasks. The Bayes-optimal row is
+    model's own no-description curve (prompts_nodesc.json, n = 1 to 64, the same 100 tasks), interpolated in
+    log n as in ../analyze.py; 95% bootstrap intervals over tasks. The Bayes-optimal row is
     read the same way from its predictions on the same tasks."""
     sys.path.insert(0, "..")
     import llm_test as T
@@ -89,8 +89,7 @@ def ess_table(passes=(("replies", "replies_nodesc", "GPT-5.6-Luna, low reasoning
         for k in range(len(rows_)):
             f = f"{d}/{k}.txt"
             if os.path.exists(f):
-                m = re.search(r"\b([1-9]\d\d(?:\.\d+)?)\b", open(f).read())  # a few no-description replies carry a decimal part
-                if m: out[k] = float(m.group(1))
+                out[k] = read_number(open(f).read())
         return out
     def sq(p, rows_, key):  # (task, n) squared errors for the no-description prompts, or (task,) for one cell
         return {(r["i"], r["n"]): (p[k] - r["w"]) ** 2 for k, r in enumerate(rows_)}

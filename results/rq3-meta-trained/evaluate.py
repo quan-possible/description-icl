@@ -2,8 +2,9 @@
 
     uv run python results/rq3-meta-trained/evaluate.py tmp/rq3/<name>.pt
 
-Regret is the log loss of a predictive distribution minus the log loss of
-an oracle that knows w, averaged over prompts, in nats.
+Regret is the squared error of a point prediction against the noiseless
+label w^T x, averaged over prompts (Garg et al.); the network's point
+prediction is the mean of its predictive distribution.
 Writes, next to this script and named after the checkpoint:
 
   <name>_regret.csv   regret after n examples, network and Bayes, with and
@@ -42,23 +43,18 @@ def bayes_paths(batch, a0, r):
     return mx.paths_from_data(n("X"), n("Y"), n("m"), batch["correct"].numpy(), a0, r * a0)
 
 
-def regret(mean, log_var, batch):
-    """Log-loss regret of the predictive N(mean, exp(log_var)) against the
-    oracle N(w^T x, 1), in the exact learner's units: (mean, standard error)
-    over prompts, for each number of examples."""
-    y = batch["Y"].double().numpy()
+def regret(mean, batch):
+    """Squared error of the predictions against the noiseless label w^T x, in
+    the exact learner's units: (mean, standard error) over prompts, for each
+    number of examples."""
     oracle = torch.einsum("bkd,bd->bk", batch["X"], batch["w"]).double().numpy()
-    nll = 0.5 * (np.log(2 * np.pi) + log_var + (y - mean) ** 2 * np.exp(-log_var))
-    x = nll - 0.5 * (np.log(2 * np.pi) + (y - oracle) ** 2)
+    x = (mean - oracle) ** 2
     return x.mean(0), x.std(0, ddof=1) / np.sqrt(len(x))
 
 
 def bayes_regret(paths, q, batch):
-    """Log-loss regret of the exact learner with trust q, (mean,) per n."""
-    y = batch["Y"].double().numpy()
-    oracle = torch.einsum("bkd,bd->bk", batch["X"], batch["w"]).double().numpy()
-    x = -mx.log_predictive(paths, q) - 0.5 * (np.log(2 * np.pi) + (y - oracle) ** 2)
-    return x.mean(0), x.std(0, ddof=1) / np.sqrt(len(x))
+    """Squared error of the exact learner with trust q, (mean, standard error) per n."""
+    return regret(mx.mean_prediction(paths, q), batch)
 
 
 if __name__ == "__main__":
@@ -105,13 +101,13 @@ if __name__ == "__main__":
 
     # prompts without a description: the examples-only curves
     plain = draw(args.S, K, d, a0, r, p_test, 0.0, seed=1)
-    net_plain, net_plain_se = regret(*predict(plain), plain)
+    net_plain, net_plain_se = regret(predict(plain)[0], plain)
     plain["correct"] = torch.zeros_like(plain["correct"])  # w came from the base prior
     bayes_plain, _ = bayes_regret(bayes_paths(plain, a0, r), 0.0, plain)
 
     batch = draw(args.S, K, d, a0, r, p_test, 1.0, seed=10)
-    (pred, pred_lv), paths = predict(batch), bayes_paths(batch, a0, r)
-    net, net_se = regret(pred, pred_lv, batch)
+    pred, paths = predict(batch)[0], bayes_paths(batch, a0, r)
+    net, net_se = regret(pred, batch)
     bayes, _ = bayes_regret(paths, p_train, batch)
 
     rows = [dict(desc=0, n=n, net=round(net_plain[n], 4), net_se=round(net_plain_se[n], 4),
