@@ -15,7 +15,7 @@ import analyze as A
 import llm_test as T
 
 here = pathlib.Path(__file__).parent
-FILES = ["full_gptoss20", "full_phi4", "full_olmo32", "written_qwen9", "written_gemma12", "written_gemma31"]
+FILES = ["full_gptoss20", "full_phi4", "full_olmo32", "digits_qwen9", "digits_gemma12", "digits_gemma31"]
 NONE = (T.MAIN, None, True, None)
 RELEVANT = [(T.MAIN, sd, True, None) for sd in T.REGIMES[T.MAIN]]  # c = 1, 4, 36
 CS = [1, 4, 36]

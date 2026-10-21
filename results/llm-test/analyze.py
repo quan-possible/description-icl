@@ -155,7 +155,7 @@ def compliant(rows):
     """Models in the order of LABELS that answer with a number at least MIN_NUMBER of the time."""
     order = []
     for r in rows:
-        if r["model"] not in order and "(paraphrase" not in r["model"]:
+        if r["model"] not in order and "(paraphrase" not in r["model"] and "(objective" not in r["model"]:
             order.append(r["model"])
     share = lambda m, **k: np.mean([r["p_number"] for r in rows if r["model"] == m and all(r.get(a) == b for a, b in k.items())])
     # a number in at least MIN_NUMBER of all replies, and in at least half of the no-description replies over MEDIAN_NS,
@@ -234,6 +234,7 @@ def tables(rows, medians):
         lines.append(r"\end{tabular}")
         (here / name).write_text("\n".join(lines) + "\n")
     paraphrase_table(rows, medians)
+    objective_table(rows)
 
 
 def paraphrase_table(rows, medians):
@@ -265,6 +266,32 @@ def paraphrase_table(rows, medians):
     (here / "llm_table_paraphrase.tex").write_text("\n".join(lines) + "\n")
 
 
+def objective_table(rows):
+    """llm_table_objective.tex: the weight on the stated value at n = 1 and 4 for the three relevant descriptions, with
+    the prompt as in the main run and with a sentence stating the loss the answer is scored by (--objective), for every
+    model with its distribution readout."""
+    sds = T.REGIMES[T.MAIN]
+    bases = [r["model"].replace(" (objective)", "") for r in rows if r["model"].endswith(" (objective)")]
+    bases = list(dict.fromkeys(bases))
+    if not bases:
+        return
+    cell = lambda m, sd, n, k="weight": next(r[k] for r in rows if r["model"] == m and r["noise"] == T.MAIN and r["sd"] == sd and r["valid"] and r["p"] is None and r["n"] == n)
+    lines = [r"\begin{tabular}{llccccccc}", r"\toprule", r"& & & \multicolumn{3}{c}{weight, $n = 1$} & \multicolumn{3}{c}{weight, $n = 4$} \\",
+             r"\cmidrule(lr){4-6} \cmidrule(lr){7-9}", r"Model & Prompt & number & $c = 1$ & $c = 4$ & $c = 36$ & $c = 1$ & $c = 4$ & $c = 36$ \\", r"\midrule",
+             "Bayes-optimal & & & " + " & ".join(f"{cell(bases[0], sd, n, 'ideal_weight'):.2f}" for n in (1, 4) for sd in sds) + r" \\", r"\midrule"]
+    for b in bases:
+        for k, (m, name) in enumerate(((b, "as in the main run"), (b + " (objective)", "loss stated"))):
+            share = np.mean([r["p_number"] for r in rows if r["model"] == m and r["n"] in MEDIAN_NS and r["noise"] == T.MAIN and r["p"] is None and (r["sd"] is None or r["valid"])])
+            lines.append((b if k == 0 else "") + f" & {name} & {share:.2f} & " + " & ".join(f"{cell(m, sd, n):.2f}" for n in (1, 4) for sd in sds) + r" \\")
+        lines.append(r"\midrule")
+    lines[-1] = r"\bottomrule"
+    lines.append(r"\end{tabular}")
+    (here / "llm_table_objective.tex").write_text("\n".join(lines) + "\n")
+
+
+FIGURE_MODELS = ("gpt-oss-20b", "Phi-4", "OLMo 2 32B")  # Figure 4: the three models read from one token; the rest are in Table 2
+
+
 def figure(rows, medians):
     """llm_test.pdf (Figure 4). (a) Specificity: the ESS of a relevant description for each model against its
     Bayes-optimal ESS, at c = 1, 4, 36. (b) The specificity control: the response to a change in the stated sd alone
@@ -276,7 +303,7 @@ def figure(rows, medians):
 
     ps.use_style()
     fig, (a, b, c) = ps.figure(3, width=ps.WIDE, height=2.15, gridspec_kw=dict(width_ratios=[1.1, 0.8, 0.8]))
-    models = plain(compliant(rows))
+    models = [m for m in plain(compliant(rows)) if m in FIGURE_MODELS]
     assert "OLMo 2 32B" in models or not any(r["model"] == "OLMo 2 32B" for r in rows), "OLMo 2 32B fails the number rule"
     tones = dict(zip(models, (ps.BLUE, ps.GREEN, ps.PINK)))  # three models, the three accents; the Bayes-optimal predictor is the dashed ink line
     colors = {m: t.edge for m, t in tones.items()}

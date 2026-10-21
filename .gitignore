@@ -40,5 +40,9 @@ wandb/
 *.fdb_latexmk
 *.fls
 *.synctex.gz
+*.lof
+*.lot
+*.xmpdata
+pdfa.xmpi
 # figure-script byproducts
 docs/paper/figs/*.svg

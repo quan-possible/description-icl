@@ -33,7 +33,7 @@ def main(paths):
         pred = {cond: d["mean"][ci].astype(float) for ci, cond in enumerate(T.CONTROL)}  # (task, n)
         ideal = {cond: np.stack([T.ideal_mean(t, cond, n) for n in T.NS], 1) for cond in T.CONTROL}
         none = T.CONTROL[0]
-        main = here / pathlib.Path(path).name.replace("control_", "full_" if "written" not in path else "")
+        main = here / pathlib.Path(path).name.replace("control_", "" if "written" in path or "digits" in path else "full_")
         if main.exists():  # the control's no-description and matched cells repeat prompts of the main run
             M = np.load(main)["mean"].astype(float)
             for cond in (none, (T.MAIN, 60, True, None, 60), (T.MAIN, 10, True, None, 10)):
