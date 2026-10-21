@@ -1,0 +1,110 @@
+% University of Alberta MSc thesis, built from docs/paper/paper.tex.
+% Compile from docs/thesis with: latexmk -pdf thesis.tex
+% Class: ualberta (TeX Live, V2.0.0, GPS-compliant title page, roman front matter, PDF/A-3b via the pdfa option).
+\documentclass[pdfa,oneside,12pt]{ualberta}
+
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{adjustbox}
+\usepackage{longtable}
+\usepackage{capt-of}
+% The class defines no thebibliography; natbib only renews it, so declare a placeholder first.
+\newenvironment{thebibliography}[1]{}{}
+\providecommand\newblock{}
+\usepackage[round]{natbib}
+\usepackage{xurl}
+% The class leaves \thepage undefined until \maketitle; define it so hyperref writes PDF page labels (i, ii, ..., 1, 2, ...).
+\providecommand\thepage{\arabic{page}}
+\usepackage{hyperref}
+\hypersetup{colorlinks, linkcolor={red!50!black}, citecolor={blue!50!black}, urlcolor={blue!80!black}}
+
+% The class uses these table-of-contents lengths without defining them; values from report.cls.
+\makeatletter
+\providecommand\@pnumwidth{1.55em}
+\providecommand\@tocrmarg{2.55em}
+\providecommand\@dotsep{4.5}
+\makeatother
+% The class sets \baselineskip directly, which the next size change undoes; \linespread survives it.
+% Values are setspace's for 12pt: 1.25 is one-and-a-half spacing (body, GPS minimum), 1.667 double (abstract).
+\renewcommand\onehalfspacing{\linespread{1.25}\selectfont}
+\renewcommand\truedoublespacing{\linespread{1.667}\selectfont}
+
+\graphicspath{{../paper/figs/}{../../results/llm-test/}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{example}[definition]{Example}
+\newcommand{\ess}{\mathrm{ESS}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+% Result tables were sized for the ICML page; shrink one only if it is wider than the text.
+\newcommand{\fittable}[1]{\adjustbox{max width=\textwidth}{\input{#1}}}
+% A result table too long for one page: typeset its tabular as a longtable, which breaks across pages.
+% longtable steps the table counter itself, so undo that; the caption comes from \captionof.
+\newcommand{\longinput}[1]{{\def\theHtable{longtable.\arabic{table}}\let\tabular\longtable\let\endtabular\endlongtable\input{#1}}\addtocounter{table}{-1}}
+% Table bodies are single-spaced; the text around them keeps one-and-a-half spacing.
+\AtBeginEnvironment{tabular}{\linespread{1}\selectfont}
+\AtBeginEnvironment{longtable}{\linespread{1}\selectfont}
+% Marks a fact only the author can supply; remove every one before submission.
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+% Bibliography: one unnumbered chapter, listed in the table of contents (GPS item 12).
+\renewcommand{\bibsection}{\chapter*{\bibname}\addcontentsline{toc}{chapter}{\bibname}}
+
+\title{Is a Description Worth a Thousand Demonstrations? Measuring the Effective Sample Size of Task Descriptions in In-Context Learning}
+\author{Trung Quan Nguyen}
+\degree{Master of Science}
+\specialization{Statistics}
+\deptfac{Department of Mathematical and Statistical Sciences}
+\convocationdate{2026}
+
+% Plain text only: GPS allows no images or tables, and the class copies it into the PDF/A metadata.
+\abstracttext{Prompts for in-context learning usually pair demonstrations with a task description, yet its theories mostly model the demonstrations alone. We ask how many demonstrations a description is worth: its effective sample size (ESS), the number of demonstrations that lower a learner's error as much as the description does. For the Bayes-optimal predictor in in-context linear regression, the ESS depends on the description's specificity (how much uncertainty about the task it removes) and its reliability (the probability that it is relevant). We prove that a reliable description's ESS grows linearly with the task dimension when the description is loose and with its precision when it is specific. A description of only part of the task is worth about the number of directions it covers, until demonstrations resolve the rest. Without demonstrations, a description that may be irrelevant is worth a bounded number of demonstrations however specific it is. With demonstrations, trusting it fully can be worse than ignoring it. Meta-trained Transformers come close to the Bayes-optimal ESS and learn how much to trust a description from training. Pretrained language models answering without reasoning respond to a description's stated specificity far less than the Bayes-optimal predictor does, even when nothing else changes, and they do not adjust to its stated reliability in proportion. A description worth 36 demonstrations to that predictor is worth 1 to 8 to these models. Models that reason first follow the stated specificity, and two come close to the Bayes-optimal ESS.}
+\preface{\input{front/preface}}
+\acknowledgementtext{\input{front/acknowledgements}}
+
+\begin{document}
+
+\maketitle
+\makeabstract\par
+\onehalfspacing
+\makepreface
+\input{front/quotation}\par
+\acknowledgements
+
+\tableofcontents
+\listoftables
+\listoffigures
+
+\bodyoftext
+\onehalfspacing
+
+\input{chapters/1-introduction}
+\input{chapters/2-background}
+\input{chapters/3-setup}
+\input{chapters/4-specificity}
+\input{chapters/5-reliability}
+\input{chapters/6-networks}
+\input{chapters/7-language-models}
+\input{chapters/8-conclusion}
+
+\bibliographystyle{../paper/icml2026}
+\bibliography{../paper/refs,extra}
+
+\appendix
+\onehalfspacing
+\input{chapters/a-llm-tables}
+
+\end{document}

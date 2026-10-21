@@ -1,0 +1,112 @@
+\chapter{Specificity: Reliable Descriptions}\label{ch:specificity}
+
+We begin with reliable descriptions ($p = 1$) and compute their ESS for the Bayes-optimal predictor. A reliable description narrows the prior over the task, and Theorem~\ref{thm:reliable} counts the demonstrations that would narrow it as much. Section~\ref{sec:partial} then turns to descriptions that inform only some directions of the task. The proofs are collected in Sections~\ref{sec:proof-reliable} to~\ref{sec:proof-partial}.
+
+With a reliable description, the posterior over $w$ is Gaussian. Write $W_n = X_n^\top X_n$, where the rows of $X_n$ are the $n$ demonstration inputs. Without the description, the posterior covariance of $w$ is $(I/a_0 + W_n)^{-1}$ (Equation~\eqref{eq:bg-posterior}). A reliable description replaces the baseline prior's precision $1/a_0$ with its own precision $c$. The Bayes-optimal prediction is the posterior mean of $w^\top x$, so its error is the expected posterior variance of $w^\top x$. The query is independent of the rest of the prompt and has $\E[x x^\top] = I$, so averaging over the query turns this variance into the trace of the posterior covariance (Equation~\eqref{eq:bg-gauss-regret}):
+\begin{equation}\label{eq:errors}
+    R^{\mathrm{demo}}(n) = \E \operatorname{tr}(I/a_0 + W_n)^{-1}, \qquad
+    R^{\mathrm{desc}}_{p=1}(n) = \E \operatorname{tr}(c I + W_n)^{-1}.
+\end{equation}
+
+\section{The ESS of a Reliable Description}\label{sec:reliable}
+\begin{theorem}[ESS of a reliable description]\label{thm:reliable}
+Let $p = 1$.
+\begin{enumerate}[nosep]
+    \item[(i)] (Loose descriptions, worth about $(1-r)d$ demonstrations) $\ess_0 \ge (1-r)\,d$, and $\ess_0 \to (1-r)\,d$ as $a_0 \to \infty$ with $r$ fixed.
+    \item[(ii)] (Specific descriptions, worth $c + d + 1$ demonstrations) If $c$ is a whole number, then $\ess_0 \to c + d + 1$ as $a_0 \to \infty$ with $c$ fixed.
+\end{enumerate}
+\end{theorem}
+We prove the theorem in Section~\ref{sec:proof-reliable}. The proof rests on two standard facts (Section~\ref{sec:bg-regret}). With $n < d$ demonstrations, the data say nothing about $d - n$ directions, so $R^{\mathrm{demo}}(n) \ge (d-n)\,a_0$. With a flat baseline prior and $n \ge d + 2$ demonstrations, $R^{\mathrm{demo}}(n) = d/(n-d-1)$, the trace of the mean of an inverse Wishart matrix \citep{muirhead1982}. A reliable description with no demonstrations leaves the error $R^{\mathrm{desc}}_{p=1}(0) = d/c = r a_0 d$. The ESS is the number of demonstrations at which these curves fall to this value.
+
+The ESS has two parts. The first, which we call the \emph{dimension term}, counts dimensions. At a high signal-to-noise ratio, each of the first $d$ demonstrations removes the uncertainty in one direction. A loose description removes a fraction $1-r$ of the prior variance in every direction, so it is worth about $(1-r)d$ of these demonstrations. A specific description removes nearly all of the variance, so it is worth about $d$.
+
+The second part applies to specific descriptions, which are also worth $c$ demonstrations. This is the ESS that \citet{morita2008} give a normal prior, the ratio of the observation variance to the prior variance (Section~\ref{sec:bg-ess}). Their ESS matches information. A description that raises the prior precision from $1/a_0$ to $c$ is therefore worth $c - 1/a_0 = (1-r)\,c$ demonstrations under their definition, at every $n$. Our ESS matches errors instead. With a flat prior, $n$ demonstrations leave the error $d/(n-d-1)$, not the error $d/n$ that their expected information would suggest. Setting $d/(n-d-1)$ equal to the description's error $d/c$ gives $n = c + d + 1$, while setting $d/n$ equal to it gives $n = c$. The dimension term is the gap between the two, which is $d + 1$ for a specific description. It fades as demonstrations accumulate (Corollary~\ref{cor:ess}(ii) in Chapter~\ref{ch:reliability}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.75\textwidth]{ess_sq.pdf}
+\caption[The ESS of a description against its specificity]{\textbf{Specificity raises the ESS of a reliable description without bound, but the ESS of a description that may be irrelevant stays below a bound.} The Bayes-optimal ESS of a description with no demonstrations in hand is plotted against $r$, the fraction of the prior variance that the description leaves. The two curves show a reliable description ($p = 1$) and a description that is relevant with probability $0.9$. The dotted line marks the limit of the $p = 0.9$ ESS as $r \to 0$. Here $d = 16$ and $a_0 = 10$. Each point averages eight batches of $4{,}000$ prompts, and the standard errors are below $0.02$ demonstrations.}
+\label{fig:ess}
+\end{figure}
+
+At $d = 16$ and $a_0 = 10$, a description that leaves a tenth of the prior variance ($r = 0.1$, $c = 1$) is worth $15.6$ demonstrations, compared with $(1-r)d = 14.4$. A description that leaves a thousandth ($r = 0.001$, $c = 100$) is worth $117$, which matches $c + d + 1$ (Figure~\ref{fig:ess}). With many demonstrations, the dimension term fades, because the demonstrations have already removed that uncertainty. At $r = 0.1$, for example, the ESS falls from $15.6$ with no demonstrations to $1.1$ with $100$.
+
+\section{Descriptions of Part of the Task}\label{sec:partial}
+A description can be specific about some aspects of a task and silent about others. We model such a description as a reliable description that leaves the fraction $r$ of the prior variance in $k < d$ directions and all of the prior variance in the other $d - k$. Its prior precision is then $c$ in those $k$ directions and $1/a_0$ in the rest.
+
+\begin{proposition}[ESS of a partial description]\label{prop:partial}
+Let $p = 1$ and $k < d$.
+\begin{enumerate}[nosep]
+    \item[(i)] (Without demonstrations, worth about $k$ demonstrations) As $a_0 \to \infty$, $\ess_0 \to (1-r)\,k$ with $r$ fixed, and $\ess_0 \to k$ with $c$ fixed.
+    \item[(ii)] (With many demonstrations, worth $(1-r)ck/d$ demonstrations) As $n \to \infty$, $\ess_n \to (1-r)\,c\,k/d$.
+\end{enumerate}
+\end{proposition}
+We prove the proposition in Section~\ref{sec:proof-partial}. Without demonstrations, a partial description is worth the number of directions that it pins down, and its precision adds nothing. The reason is that the error left in the directions it is silent about, $(d-k)\,a_0$, dwarfs the error that its precision removes. The value $c + d + 1$ of Theorem~\ref{thm:reliable}(ii) therefore needs a description of every direction.
+
+Once demonstrations have resolved the other directions, the description is worth the precision that it adds, $k(1-r)c$, measured in units of the information $d$ that one demonstration carries. When this value exceeds $k$, which happens about when $(1-r)c > d$, a partial description gains value as demonstrations accumulate. Table~\ref{tab:partial} shows this at $d = 16$, $a_0 = 10$, and $r = 0.001$. A description of half of the directions is worth $8.1$ demonstrations with none in hand and $36$ with $100$ in hand. Over the same range, a complete description falls from $117$ to $109$. Demonstrations thus substitute for a complete description and complement a partial one. A loose description ($r = 0.1$) loses value as demonstrations accumulate, whether it is partial or complete.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\caption[The ESS of a partial description]{\textbf{A specific partial description gains value as demonstrations accumulate.} The table gives the Bayes-optimal ESS of a reliable description of $k$ of the $d = 16$ directions, with $a_0 = 10$ and $n$ demonstrations in hand. The row $k = 16$ is a complete description. The last column of each block is the limit $(1-r)ck/d$ of Proposition~\ref{prop:partial}(ii). Each value averages eight batches of $2{,}000$ prompts, and the standard errors are at most $0.23$.}
+\label{tab:partial}
+\vspace{3pt}
+\fittable{../paper/figs/partial_table.tex}
+\end{table}
+
+\section{Proof of Theorem~\ref{thm:reliable}}\label{sec:proof-reliable}
+The proof compares the error curve without the description with the error that a reliable description leaves. We first fix notation and collect three standard facts about Wishart matrices.
+
+\paragraph{Notation and standard facts.}
+Throughout the proofs, $\varepsilon = 1/a_0$, the matrix $X_n \in \R^{n \times d}$ holds the demonstration inputs as rows, and $W_n = X_n^\top X_n$. For $\kappa > 0$, let
+\[
+R^{\kappa}(n) = \E \operatorname{tr}(\kappa I + W_n)^{-1}
+\]
+be the error with $n$ demonstrations under a Gaussian prior of precision $\kappa$ in every direction. By~\eqref{eq:errors}, $R^{\mathrm{demo}} = R^{\varepsilon}$ and $R^{\mathrm{desc}}_{p=1} = R^{c}$. We use three facts.
+\begin{enumerate}[nosep]
+    \item[(W1)] For $n < d$, $W_n$ has rank $n$ almost surely, so $(\kappa I + W_n)^{-1}$ has the eigenvalue $1/\kappa$ with multiplicity $d - n$.
+    \item[(W2)] For $n \ge d$ and a fixed unit vector $e$, $1/(e^\top W_n^{-1} e) \sim \chi^2_{n-d+1}$ \citep[Theorem~3.2.12]{muirhead1982}. Hence $\E \operatorname{tr} W_n^{-1} = d/(n-d-1)$ for $n \ge d + 2$, and $\E \operatorname{tr} W_n^{-1} = \infty$ for $n \in \{d, d+1\}$.
+    \item[(W3)] As $n \to \infty$ with $d$ fixed, $\E \operatorname{tr} W_n^{-2} = d/n^2 + O(n^{-3})$ and $\E \operatorname{tr} W_n^{-3} = O(n^{-3})$ \citep{vonrosen1988}.
+\end{enumerate}
+By the Sherman--Morrison formula, each new demonstration lowers $(\kappa I + W_n)^{-1}$ by a positive semidefinite matrix that is nonzero almost surely. So $R^{\kappa}$ is strictly decreasing in $n$. Since $R^{\kappa}(n) \le \E \operatorname{tr} W_n^{-1}$, (W2) shows that it tends to $0$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:reliable}]
+Without demonstrations, the error that the description leaves is the trace of its prior covariance $I/c$, so $R^{\mathrm{desc}}_{p=1}(0) = d/c = r a_0 d$.
+
+\emph{(i).} For $n < d$, (W1) gives $R^{\varepsilon}(n) \ge (d-n)\,a_0$, because the other eigenvalues are positive. For $n \ge d$, the bound holds trivially, because its right side is not positive. The bound is linear in $n$, so the interpolated $R^{\mathrm{demo}}$ satisfies $R^{\mathrm{demo}}(t) \ge (d-t)\,a_0$ at every real $t \ge 0$. For $t < (1-r)d$, the right side exceeds $r a_0 d$, so $\ess_0 \ge (1-r)d$. Now let $a_0 \to \infty$ with $r$ fixed. Then $R^{\varepsilon}(n)/a_0 = \E \operatorname{tr}(I + a_0 W_n)^{-1}$. Each eigenvalue $1/(1 + a_0 \lambda)$ of this matrix lies in $(0, 1]$, and it tends to $1$ if $\lambda = 0$ and to $0$ otherwise. By (W1), and because $W_n$ has full rank almost surely for $n \ge d$, exactly $(d-n)^+$ eigenvalues of $W_n$ are zero. By dominated convergence, $R^{\varepsilon}(n)/a_0 \to (d-n)^+$. So the interpolated $R^{\mathrm{demo}}(t)/a_0$ tends to $(d-t)^+$ at every $t$. This limit falls through the description's error over $a_0$, $r d$, only at $t = (1-r)d$. For any $0 < \delta \le rd$, the limit at $t = (1-r)d + \delta$ is $rd - \delta$, so $R^{\mathrm{demo}}(t) < r a_0 d$ there once $a_0$ is large. As $R^{\mathrm{demo}}$ is decreasing, $\ess_0 < (1-r)d + \delta$ for such $a_0$, and with the lower bound, $\ess_0 \to (1-r)d$.
+
+\emph{(ii).} With $c$ fixed, $R^{\mathrm{desc}}_{p=1}(0) = d/c$ does not depend on $a_0$. In contrast, $R^{\varepsilon}(n)$ increases as $a_0$ grows. By monotone convergence, it tends to $+\infty$ for $n \le d + 1$, by (W1) for $n < d$ and by (W2) for $n \in \{d, d+1\}$. For $n \ge d + 2$, it tends to $\E \operatorname{tr} W_n^{-1} = d/(n-d-1)$. So the interpolated curve tends to $+\infty$ below $d + 2$ and to the linear interpolation of $d/(n-d-1)$ above it. This limit is strictly decreasing, and for whole $c$ it equals $d/c$ at $n = c + d + 1$. The root that defines $\ess_0$ therefore increases to $c + d + 1$.
+\end{proof}
+
+\section{Extra Precision with Many Demonstrations}\label{sec:extra}
+The proofs of Proposition~\ref{prop:partial}(ii) and of Corollary~\ref{cor:ess}(ii) in Chapter~\ref{ch:reliability} need the error to second order in $1/n$, which we derive here. Since $\kappa I + W_n$ and $W_n$ commute,
+\[
+(\kappa I + W_n)^{-1} = W_n^{-1} - \kappa\, W_n^{-2} + \kappa^2\, W_n^{-2}(\kappa I + W_n)^{-1}.
+\]
+Because $(\kappa I + W_n)^{-1} \preceq W_n^{-1}$, the last term lies between $0$ and $\kappa^2 W_n^{-3}$. Taking expected traces with (W2) and (W3) gives, for fixed $d$ and $\kappa$,
+\begin{equation}\label{eq:extra}
+R^{\kappa}(n) = \frac{d}{n-d-1} - \frac{\kappa\, d}{n^2} + O(n^{-3}).
+\end{equation}
+Each further demonstration lowers the first term by about $d/n^2$. A prior of precision $\kappa$ lowers the error by $\kappa$ times as much. Once $n$ is large, such a prior is therefore worth $\kappa$ demonstrations.
+
+\section{Proof of Proposition~\ref{prop:partial}}\label{sec:proof-partial}
+Let $\Lambda = \operatorname{diag}(c I_k, \varepsilon I_{d-k})$ be the prior precision that the partial description gives. The error with the description is then $\E \operatorname{tr}(\Lambda + W_n)^{-1}$. The law of $W_n$ is invariant under rotations, so it does not matter which $k$ directions the description informs.
+
+\begin{proof}[Proof of Proposition~\ref{prop:partial}]
+\emph{(i).} Without demonstrations, the error with the description is $\operatorname{tr}\Lambda^{-1} = k/c + (d-k)\,a_0 = (kr + d - k)\,a_0$. As in the proof of Theorem~\ref{thm:reliable}(i), $R^{\mathrm{demo}}(t) \ge (d-t)\,a_0$ at every $t \ge 0$, so $\ess_0 \ge (1-r)k$. Also as there, $R^{\mathrm{demo}}(t)/a_0 \to (d-t)^+$, and the convergence is uniform in $t$ because the curves are monotone and the limit is continuous. With $r$ fixed, the error with the description over $a_0$ is $d - (1-r)k$. With $c$ fixed, it is $d - k + k/(c\,a_0)$, which tends to $d - k$. As $k < d$, the limit curve passes through each of these values at a single point, $(1-r)k$ or $k$, with slope $-1$. The root that defines $\ess_0$ therefore converges to that point.
+
+\emph{(ii).} Write $A = \Lambda + W_n$. Since $A^{-1} = W_n^{-1} - W_n^{-1}\Lambda A^{-1}$, expanding twice gives
+\[
+A^{-1} = W_n^{-1} - W_n^{-1}\Lambda W_n^{-1} + W_n^{-1}\Lambda W_n^{-1}\Lambda A^{-1}.
+\]
+By rotation invariance, $\E W_n^{-2} = (\E \operatorname{tr} W_n^{-2}/d)\,I$. By (W3), the middle term therefore has expected trace $\operatorname{tr}(\Lambda)/n^2 + O(n^{-3})$. For the last term, we use $|\operatorname{tr}(MB)| \le \|M\| \operatorname{tr} B$ for $B \succeq 0$, with $M = W_n^{-1}\Lambda W_n^{-1}\Lambda$ and $B = A^{-1} \preceq W_n^{-1}$. The trace of the last term is then at most $\|\Lambda\|^2 \|W_n^{-1}\|^2 \operatorname{tr} W_n^{-1} \le d\,\|\Lambda\|^2 \operatorname{tr} W_n^{-3}$, whose expectation is $O(n^{-3})$ by (W3). Hence
+\[
+\E \operatorname{tr}(\Lambda + W_n)^{-1} = \frac{d}{n-d-1} - \frac{\operatorname{tr}\Lambda}{n^2} + O(n^{-3}),
+\]
+which is~\eqref{eq:extra} with $\kappa d$ replaced by $\operatorname{tr}\Lambda$. With~\eqref{eq:extra} for $R^{\mathrm{demo}} = R^{\varepsilon}$, uniformly over integers $0 \le t \le T$ for any fixed $T$,
+\[
+R^{\mathrm{demo}}(n + t) - \E \operatorname{tr}(\Lambda + W_n)^{-1} = \frac{d}{n^2}\Big[\frac{\operatorname{tr}\Lambda - d\varepsilon}{d} - t + O(1/n)\Big].
+\]
+The argument in the proof of Corollary~\ref{cor:ess}(ii) with $p = 1$ (Section~\ref{sec:proof-unreliable}) then gives $\ess_n \to (\operatorname{tr}\Lambda - d\varepsilon)/d = k(c - \varepsilon)/d = (1-r)\,c\,k/d$.
+\end{proof}
+The same steps give the limit $(\operatorname{tr}\Lambda - d\varepsilon)/d$ for a reliable description with any Gaussian prior precision $\Lambda$. With many demonstrations in hand, a description is therefore worth the precision that it adds, averaged over directions.

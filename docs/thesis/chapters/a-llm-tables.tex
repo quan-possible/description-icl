@@ -1,0 +1,22 @@
+\chapter{Language-Model Results at Every Number of Demonstrations}\label{app:llm-tables}
+
+This appendix reports the language-model results of Chapter~\ref{ch:llm} at every number of demonstrations shown. Table~\ref{tab:llm-worth} gives the ESS of every description for the Bayes-optimal predictor of Section~\ref{sec:llm-bayes} and the three models read from their first-token distribution (Section~\ref{sec:llm-models}). Table~\ref{tab:llm-worth-written} gives the same for the three models read from the number they write (Section~\ref{sec:llm-readout}). Table~\ref{tab:llm-full} gives the weight on the stated value for the Bayes-optimal predictor and the three models read from their distribution. The ESS is read as in Section~\ref{sec:llm-measurement}. Tables~\ref{tab:llm-worth} and~\ref{tab:llm-full} each continue onto a second page.
+
+\clearpage
+\begin{center}
+\captionof{table}[The ESS at every number of demonstrations]{The ESS of a description for every condition and number of demonstrations shown, for the Bayes-optimal predictor and the three models read from their distribution ($2{,}000$ tasks). ``Number'' is the share of a model's replies that begin with a three-digit number, averaged over $n$, and ``10\% wrong'' and ``50\% wrong'' mark a stated chance of being wrong. The Bayes-optimal predictor is that of Section~\ref{sec:llm-bayes}, which is optimal for what the prompt states. It takes an irrelevant description with no stated chance of being wrong as relevant, so its ESS can be negative. The symbol $\leq$ marks an upper bound. An entry $> k$ means that the error with the description is below the no-description error at every $n$ measured, up to $64$, so the ESS exceeds $k = 64 - n$.}\label{tab:llm-worth}
+\end{center}
+{\scriptsize\setlength{\tabcolsep}{1.5pt}\longinput{../../results/llm-test/llm_table_worth.tex}}
+
+\begin{table}[p]
+\centering
+\caption[The ESS at every number of demonstrations, written readout]{The ESS of a description for every condition and number of demonstrations shown, for the three models read from the number they write ($2{,}000$ tasks). A reply without a number is left out. The columns and the Bayes-optimal values are as in Table~\ref{tab:llm-worth}.}\label{tab:llm-worth-written}
+\vspace{3pt}
+{\scriptsize\setlength{\tabcolsep}{1.5pt}\fittable{../../results/llm-test/llm_table_worth_written.tex}}
+\end{table}
+
+\clearpage
+\begin{center}
+\captionof{table}[The weight on the stated value at every number of demonstrations]{The weight on the stated value for every condition and number of demonstrations shown, for the Bayes-optimal predictor and the three models read from their distribution. ``Number'' is defined as in Table~\ref{tab:llm-worth}. A cell is set in italics where the model begins fewer than three quarters of its replies with a number at that $n$.}\label{tab:llm-full}
+\end{center}
+{\scriptsize\setlength{\tabcolsep}{1.5pt}\longinput{../../results/llm-test/llm_table_full.tex}}
