@@ -13,7 +13,7 @@ none = T.REASON_CONDS[0]
 G = [0] + sorted(n for c, n in T.REASON_CELLS if c is none)
 cell = {(c, n): k for k, (c, n) in enumerate(T.REASON_CELLS)}
 new_rows = json.load(open(H / "prompts.json"))
-for name, kind, orig, newdir in [("GPT-6 Sol, low", "codex", H.parent / "sol-check/replies-gpt-6-sol-low", H / "replies-sol-low"),
+for name, kind, orig, newdir in [("GPT-6 Sol, low", "codex", H.parent / "sol-check/replies-gpt-6-sol-low-bare", H / "replies-sol-low-bare"),
                                  ("Haiku 5.5, medium", "dir", H.parent / "haiku/replies-medium", H / "replies-haiku-medium")]:
     pred, _ = R.load(kind, orig)
     sq_orig = {key: (pred[k] - t["w"]) ** 2 for key, k in cell.items()}

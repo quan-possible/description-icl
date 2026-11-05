@@ -1,0 +1,13 @@
+{"type":"thread.started","thread_id":"01a1a9d1-4877-7881-9e74-4b97db8b323f"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."}}
+{"type":"turn.started"}
+2026-11-05T03:47:08.263862Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-05T03:47:08.836730Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-05T03:47:09.491404Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 2/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a558e01eaab0bf06-YYC)"}
+2026-11-05T03:47:10.296184Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 3/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a558e0238f6fc533-YYC)"}
+2026-11-05T03:47:11.540881Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 4/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a558e02b2c91befe-YYC)"}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"590"}}
+{"type":"turn.completed","usage":{"input_tokens":9133,"cached_input_tokens":7168,"cache_write_input_tokens":0,"output_tokens":110,"reasoning_output_tokens":103}}

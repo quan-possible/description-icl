@@ -1,0 +1,15 @@
+{"type":"thread.started","thread_id":"01a1a9d0-55c1-70b3-a94f-0969987802ce"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."}}
+{"type":"turn.started"}
+2026-11-05T03:46:06.086224Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-05T03:46:06.652066Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-05T03:46:07.293135Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 2/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a558de99fa00beca-YYC)"}
+2026-11-05T03:46:08.119443Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 3/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a558de9f096f01d4-YYC)"}
+2026-11-05T03:46:09.333096Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 4/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a558dea699ae01d0-YYC)"}
+2026-11-05T03:46:11.570955Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 5/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a558deb42eb0befe-YYC)"}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"504"}}
+{"type":"turn.completed","usage":{"input_tokens":9133,"cached_input_tokens":8960,"cache_write_input_tokens":0,"output_tokens":49,"reasoning_output_tokens":42}}

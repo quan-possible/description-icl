@@ -27,8 +27,8 @@ RUNS = [("gpt-oss-20b, low", "npz", here / "reason_gptoss20_4096.npz"),
         ("Opus 4.6, high", "dir", here / "haiku/replies-opus46-high"),
         ("Opus 4.6, no thinking", "dir", here / "haiku/replies-opus46-none"),
         ("Haiku 5.5, low", "dir", here / "haiku/replies-low"),
-        ("GPT-6 Sol, low", "codex", here / "sol-check/replies-gpt-6-sol-low"),
-        ("GPT-6 Sol, none", "codex", here / "sol-check/replies-gpt-6-sol-none"),
+        ("GPT-6 Sol, low", "codex", here / "sol-check/replies-gpt-6-sol-low-bare"),
+        ("GPT-6 Sol, none", "codex", here / "sol-check/replies-gpt-6-sol-none-bare"),
         ("Qwen3.5 9B, reasoning", "openrouter", here / "openrouter/qwen35-think"),
         ("Gemma 4 31B, reasoning", "openrouter", here / "openrouter/gemma31-think"),  # Gemini API, openrouter/gemini.py
         ("Olmo 3 7B Think", "olmo", here / "sol-check/olmo3-think-full.json")]

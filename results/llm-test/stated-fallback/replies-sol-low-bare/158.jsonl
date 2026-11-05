@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a1a9c8-29b1-7842-ad4e-b5c2ccdd45b8"}
+2026-11-05T03:37:10.688073Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_bfdeff0547154cc58b1cea98af001f79
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."}}
+{"type":"turn.started"}
+2026-11-05T03:37:11.356069Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"499"}}
+{"type":"turn.completed","usage":{"input_tokens":9127,"cached_input_tokens":8960,"cache_write_input_tokens":0,"output_tokens":39,"reasoning_output_tokens":32}}

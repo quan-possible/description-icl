@@ -43,3 +43,9 @@ should be revised to this. The filing-policy pilot (`../../filing-policy/`) show
   GPT-6 Sol's weight at n = 4 is 0.75, against 0.84.
 
 Written into the adopted paper (docs/paper/paper.tex): Section 6.3, Appendix C "Stating the fallback", Table 10.
+
+**Shell-free GPT-6 Sol (4 November 2026, used in the paper).** The Sol numbers above come from the first harness, which
+loaded the user's Codex instructions and allowed a shell. `compare.py` and `ess.py` now read the shell-free reruns
+(`replies-sol-low-bare` here and `../sol-check/replies-gpt-6-sol-low-bare` for the original wording). Weights at
+stated 50%, n = 1, 2, 4: original 0.49/0.46/0.40, fallback stated 0.58/0.59/0.59; closer to Bayes-optimal 0–5% → 92–97%.
+At 10%: 0.90/0.86/0.71 → 0.88/0.83/0.80. ESS at 50%: 4.2 → 5.4; at 10%: 29.7 → 25.0 (Bayes-optimal 5.7 and 27.5).

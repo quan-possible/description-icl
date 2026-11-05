@@ -37,12 +37,13 @@ for ax, (panel, title, xmax) in zip(axes, PANELS):
             if v is None:
                 continue
             e, lo, hi, _, ref, rlo, rhi = v
-            if not math.isfinite(e):  # own curve never falls to the error with the description: no ESS; shown in Appendix C
-                continue
+            mark = "o"
+            if not math.isfinite(e):  # own curve never falls to the error with the description: Bayes-optimal curve
+                e, lo, hi, mark = ref, rlo, rhi, "s"
             x = e
             top = xmax if not math.isfinite(hi) else min(hi, xmax)
             ax.plot([lo, top], [y + dy, y + dy], color=C, lw=1, ls=ls, alpha=0.7, zorder=2, solid_capstyle="butt")
-            ax.plot(x, y + dy, "o", ms=6, mfc=C if filled else "white", mec=C, mew=1.3, zorder=3, clip_on=False)
+            ax.plot(x, y + dy, mark, ms=6, mfc=C if filled else "white", mec=C, mew=1.3, zorder=3, clip_on=False)
             pts.append(x)
     ax.set_xlim(-1.5 * xmax / 22, xmax)
     ax.set_title(title, fontsize=8.6, color=ps.TEXT, loc="left")
@@ -62,6 +63,7 @@ tx.text(0.5, -0.6, "without\nreasoning", ha="center", va="bottom", color=ps.MUTE
 tx.text(1.5, -0.6, "with\nreasoning", ha="center", va="bottom", color=ps.MUTED, fontsize=7.4, linespacing=1.0)
 axes[0].plot([], [], "o", ms=5, mfc="white", mec=C, mew=1.3, color=C, lw=1, ls=(0, (2.2, 1.6)), label="without reasoning")
 axes[0].plot([], [], "o", ms=5, mfc=C, mec=C, mew=1.3, color=C, lw=1, ls="-", label="with reasoning")
+axes[0].plot([], [], "s", ms=5, mfc=C, mec=C, mew=1.3, color=C, lw=1, ls="-", label="with reasoning, in Bayes-optimal demonstrations")
 axes[0].plot([], [], label="Bayes-optimal", **ps.BAYES)
-fig.legend(loc="outside upper center", ncol=3, fontsize=8.2, handlelength=2.6, handletextpad=0.4, columnspacing=1.2)
+fig.legend(loc="outside upper center", ncol=2, fontsize=8.2, handlelength=2.6, handletextpad=0.4, columnspacing=1.2)
 ps.save(fig, "llm_ess")

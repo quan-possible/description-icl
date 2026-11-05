@@ -20,8 +20,8 @@ import llm_test as T
 T.S = 2000
 t = T.make_tasks(T.MAIN)
 K = 200
-ORIG = {"GPT-6 Sol, low": H.parent / "sol-check/replies-gpt-6-sol-low", "Haiku 5.5, medium": H.parent / "haiku/replies-medium"}
-NEW = {"GPT-6 Sol, low": H / "replies-sol-low", "Haiku 5.5, medium": H / "replies-haiku-medium"}
+ORIG = {"GPT-6 Sol, low": H.parent / "sol-check/replies-gpt-6-sol-low-bare", "Haiku 5.5, medium": H.parent / "haiku/replies-medium"}
+NEW = {"GPT-6 Sol, low": H / "replies-sol-low-bare", "Haiku 5.5, medium": H / "replies-haiku-medium"}
 CELLS = [(p, n) for p in (0.9, 0.5) for n in (1, 2, 4)]
 orig_index = {(c[0][3], c[1]): k for k, c in enumerate(T.REASON_CELLS) if c[0][1] == 10 and c[0][2] and c[0][3]}
 
