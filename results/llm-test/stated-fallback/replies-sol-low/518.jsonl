@@ -1,0 +1,19 @@
+2026-11-05T00:31:22.869142Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_fb3e15856d3a4040bec36a04b4f3939c
+{"type":"thread.started","thread_id":"01a1a91e-11e3-7082-9f89-94c26e7601dd"}
+2026-11-05T00:31:24.075002Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 1000 requests per hour\"}}")
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+2026-11-05T00:31:24.648567Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 1000 requests per hour\"}}")
+2026-11-05T00:31:25.974739Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-05T00:31:26.036963Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 1000 requests per hour\"}}")
+2026-11-05T00:31:32.048162Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-05T00:31:33.207067Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 2/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a557c196eb3abecc-YYC)"}
+2026-11-05T00:31:34.632583Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 3/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a557c19f79c301e6-YYC)"}
+2026-11-05T00:31:36.308123Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 4/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a557c1aa1ae601dc-YYC)"}
+2026-11-05T00:31:38.215173Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 5/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a557c1b62d90bef4-YYC)"}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"471"}}
+{"type":"turn.completed","usage":{"input_tokens":31773,"cached_input_tokens":21760,"cache_write_input_tokens":0,"output_tokens":39,"reasoning_output_tokens":32}}

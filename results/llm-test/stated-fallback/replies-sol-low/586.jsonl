@@ -1,0 +1,13 @@
+2026-11-05T00:32:31.635163Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_5a6a98dda6324c338a7bffede7cefade
+{"type":"thread.started","thread_id":"01a1a91f-1e86-7b60-a555-82c3f296306e"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+2026-11-05T00:32:32.759911Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+2026-11-05T00:32:33.305565Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+2026-11-05T00:32:33.389486Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-05T00:32:34.572501Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+2026-11-05T00:32:38.272775Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-05T00:32:38.909407Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 2/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a557c3319b47bec7-YYC)"}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"483"}}
+{"type":"turn.completed","usage":{"input_tokens":30815,"cached_input_tokens":30592,"cache_write_input_tokens":0,"output_tokens":51,"reasoning_output_tokens":44}}

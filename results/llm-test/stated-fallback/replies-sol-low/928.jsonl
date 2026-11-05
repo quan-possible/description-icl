@@ -1,0 +1,9 @@
+2026-11-05T00:38:40.229728Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_1f9bf3fb43b742b8885d8266a9c2c2b3
+{"type":"thread.started","thread_id":"01a1a924-bcbb-79b2-86c5-dacaa68bb6bb"}
+2026-11-05T00:38:40.864546Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+2026-11-05T00:38:41.369107Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+2026-11-05T00:38:42.606930Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"564"}}
+{"type":"turn.completed","usage":{"input_tokens":31980,"cached_input_tokens":31744,"cache_write_input_tokens":0,"output_tokens":172,"reasoning_output_tokens":165}}

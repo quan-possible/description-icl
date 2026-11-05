@@ -1,0 +1,13 @@
+2026-11-05T00:36:34.184327Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_6fa506ab21484a92986e658b898aef8c
+2026-11-05T00:36:34.547258Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_36a25e49a4b2419f9384aea1e04f85e1
+{"type":"thread.started","thread_id":"01a1a922-d15d-7da0-ad0b-27bd3b46d463"}
+2026-11-05T00:36:35.952760Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_b1dea2fbffad4c1d83b6fa3b09893139
+2026-11-05T00:36:36.030313Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+2026-11-05T00:36:36.585909Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+2026-11-05T00:36:37.583667Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-05T00:36:37.876790Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+2026-11-05T00:36:45.942463Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_e72cc66ae452455cb272b8ec01bf7f14
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"566"}}
+{"type":"turn.completed","usage":{"input_tokens":95922,"cached_input_tokens":63360,"cache_write_input_tokens":0,"output_tokens":407,"reasoning_output_tokens":101}}

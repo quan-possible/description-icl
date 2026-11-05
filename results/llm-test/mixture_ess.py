@@ -1,6 +1,7 @@
 """ESS under actual unreliability: the relevant and irrelevant conditions of the main run combined with weights
 p and 1 - p (per task, then averaged), for a model that is not told the chance and for one that is, against the
-Bayes-optimal predictor that takes the description as relevant and the one that hedges at p. Median over
+fully trusting predictor, which takes the description as relevant, and the calibrated one, which knows p
+and updates it from the demonstrations. Median over
 MEDIAN_NS with a 95% bootstrap interval over tasks, from the model's own no-description curve.
 
     python3 mixture_ess.py full_gptoss20.npz ... written_gemma31.npz   # writes llm_table_mixture.tex
@@ -37,7 +38,7 @@ def main(paths):
     cols = [(p, tol) for p in PS for tol in TOLS]
     rows = []
     none = ideal((T.MAIN, None, True, None), 1.0)
-    for name, p_trust in (("Bayes-optimal, takes it as relevant", lambda p: 1.0), ("Bayes-optimal, hedges at $p$", lambda p: p)):
+    for name, p_trust in (("Fully trusting", lambda p: 1.0), ("Calibrated", lambda p: p)):
         cells = []
         for p, tol in cols:
             mix = p * ideal((T.MAIN, tol, True, None), p_trust(p)) + (1 - p) * ideal((T.MAIN, tol, False, None), p_trust(p))

@@ -1,5 +1,5 @@
 """networks.pdf, Figure 3 of the paper: meta-trained Transformers against the Bayes-optimal predictor, for the
-specific description (r = 0.01), d = 5, a0 = 10, ESS with no demonstrations (the loose description is in Table 2).
+specific description (c = 10), d = 5, a0 = 10, ESS with no demonstrations (the loose description is in Table 2).
 
 (a) Trained and tested at the same reliability p: paired bars for the Bayes-optimal ESS on the network's prompts and the network's
 (the network's ESS is its mean over training seeds; error bars, the standard deviation across seeds); the ESS is in
@@ -36,7 +36,7 @@ def row(p_train, p_test):
 
 
 ps.use_style()
-fig, (a, b) = ps.figure(2, width=ps.WIDE, height=2.2, gridspec_kw=dict(width_ratios=[1.25, 1]))
+fig, (a, b) = ps.figure(2, width=ps.WIDE, height=2.0, gridspec_kw=dict(width_ratios=[1.25, 1]))
 
 # (a) trained and tested at the same reliability
 w = 0.36

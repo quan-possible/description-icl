@@ -1,0 +1,11 @@
+2026-11-05T00:36:37.876827Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_51595807b9fc46a9b9ff5da3b28c6bd9
+2026-11-05T00:36:37.920559Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_9f7b4adeda2745628e28b1a9abede1d9
+{"type":"thread.started","thread_id":"01a1a922-e07f-7690-8949-4faa9db474aa"}
+2026-11-05T00:36:40.558309Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_c9e3e27a02d5447ab6a635c4d3215c44
+2026-11-05T00:36:40.558929Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/brucenguyen/.codex/config.toml."}}
+{"type":"turn.started"}
+2026-11-05T00:36:41.109759Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+2026-11-05T00:36:42.491493Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 429: {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32000,\"message\":\"Rate limit exceeded: 100 requests per minute\"}}")
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"574"}}
+{"type":"turn.completed","usage":{"input_tokens":32022,"cached_input_tokens":22016,"cache_write_input_tokens":0,"output_tokens":351,"reasoning_output_tokens":344}}

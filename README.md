@@ -11,7 +11,7 @@ meta-trained Transformers and pretrained language models.
 
 | Path | What it holds |
 | --- | --- |
-| `docs/paper/` | `paper.tex` (ICML 2026 style), `refs.bib`, the built `paper.pdf`, and `paper.md` (a Markdown copy, `to_md.sh`) |
+| `docs/paper/` | `paper.tex` (ICML 2026 style; the external rewrite adopted on 4 November 2026, see `REWRITE_NOTES.txt`), `refs.bib`, and the built `paper.pdf`. Its figures (`figs_recovered/`) and most tables (`tables/`) are vector artwork recovered from an earlier build, so the scripts below no longer update the paper. Earlier versions, including the old Markdown copy, are in `archive/versions_2026-11-04/` |
 | `docs/thesis/` | The University of Alberta MSc thesis built from the paper: `thesis.tex` (`ualberta` class, PDF/A), `front/`, `chapters/`, `extra.bib`, and the built `thesis.pdf`; it reads figures, tables, and `refs.bib` from `docs/paper/` and `results/` |
 | `docs/paper/figs/` | Figure scripts and their outputs; `paper_style.py` is the shared figure style |
 | `results/rq3-meta-trained/` | The meta-trained Transformers of Section 6 (Figure 3, Table 1) |

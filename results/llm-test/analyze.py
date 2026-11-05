@@ -30,7 +30,7 @@ LABELS = {
     "google/gemma-4-12B-it": "Gemma 4 12B",
     "google/gemma-4-31B-it": "Gemma 4 31B",
 }
-PARAPHRASE_WORDING = ["normal, mean $m$, sd $\\tau$ (the paper's)", "about $m$, give or take $\\tau$", "Mean: $m \\pm \\tau$", "earlier estimate $m$, s.e.\\ $\\tau$"]
+PARAPHRASE_WORDING = ["normal, mean $m$, sd $\\tau$ (ours)", "about $m$, give or take $\\tau$", "Mean: $m \\pm \\tau$", "earlier estimate $m$, s.e.\\ $\\tau$"]
 
 
 def model_label(repo):

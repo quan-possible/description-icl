@@ -2,7 +2,7 @@
 
     cd results/llm-test && python3 curves.py
 
-writes llm_curves.pdf (the appendix figure: each model's error against the demonstrations shown, without a
+writes llm_curves.pdf (the appendix figure: each model's error against the demonstrations given, without a
 description and with each relevant description) and llm_table_sensitivity.tex (the headline ESS, the median over
 n = 1, 2, 4, under four readings of the no-description curve). Noise 60, the six reported models.
 """
@@ -15,7 +15,7 @@ import analyze as A
 import llm_test as T
 
 here = pathlib.Path(__file__).parent
-FILES = ["full_gptoss20", "full_phi4", "full_olmo32", "digits_qwen9", "digits_gemma12", "digits_gemma31"]
+FILES = ["full_gptoss20", "full_phi4", "full_olmo32", "written_qwen9", "written_gemma12", "written_gemma31"]
 NONE = (T.MAIN, None, True, None)
 RELEVANT = [(T.MAIN, sd, True, None) for sd in T.REGIMES[T.MAIN]]  # c = 1, 4, 36
 CS = [1, 4, 36]
@@ -120,7 +120,7 @@ def figure(results):
     axes = axes.ravel()
     mix = lambda f: to_hex(f * np.array(to_rgb(ps.GREEN.edge)) + (1 - f) * np.array(to_rgb(ps.GREEN.fill)))
     greens = [mix(0.45), mix(0.8), to_hex(0.7 * np.array(to_rgb(ps.GREEN.edge)))]  # c = 1, 4, 36, light to dark
-    panels = [("Bayes-optimal", results[0][2])] + [(label.replace(" (written)", ", written"), model) for label, model, _ in results]
+    panels = [("Bayes-optimal", results[0][2])] + [(label, model) for label, model, _ in results]
     for ax, (label, curves) in zip(axes, panels):
         ax.plot(NS, np.sqrt(curves[NONE]), color=ps.BLUE.edge, lw=1.8, marker="o", ms=3, mfc=ps.BLUE.fill, mec=ps.BLUE.edge)
         for cond, col in zip(RELEVANT, greens):
@@ -131,11 +131,11 @@ def figure(results):
         ax.set_title(label, fontsize=8, color=ps.TEXT, loc="left")
         ps.style_axes(ax, grid_axis="y")
     for ax in axes[4:]:
-        ax.set_xlabel("demonstrations shown, $n$")
+        ax.set_xlabel("demonstrations given, $n$")
     for ax in axes[::4]:
-        ax.set_ylabel("error (RMS)")
+        ax.set_ylabel("root-mean-square error")
     axes[-1].axis("off")
-    handles = [Line2D([], [], color=ps.BLUE.edge, lw=1.8, marker="o", ms=3, mfc=ps.BLUE.fill, label="no description")]
+    handles = [Line2D([], [], color=ps.BLUE.edge, lw=1.8, marker="o", ms=3, mfc=ps.BLUE.fill, label="without the description")]
     handles += [Line2D([], [], color=col, lw=1.4, marker="s", ms=2.6, label=f"relevant, $c = {c}$") for c, col in zip(CS, greens)]
     axes[-1].legend(handles=handles, loc="center", frameon=False)
     ps.save(fig, str(here / "llm_curves"))

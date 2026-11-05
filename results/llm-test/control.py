@@ -104,31 +104,22 @@ def main(paths):
 
 
 def table():
-    """control_table.tex from control.csv / control_contrast.csv (open models) and reasoning.csv / reason_contrast.csv
-    (reasoning runs): the response to the stated sd (primary contrast) for both accuracies of the stated value, and, for
-    the value accurate to sd 10, the weight at n = 1 and the ESS (median over n = 1, 2, 4) under each stated sd."""
-    read = lambda f: list(csv.DictReader(open(here / f))) if (here / f).exists() else []
-    rows, con, rrows, rcon = read("control.csv"), read("control_contrast.csv"), read("reasoning.csv"), read("reason_contrast.csv")
+    """control_table.tex from control.csv (open models, 2,000 tasks): for the value accurate to sd 10, the weight at
+    n = 1 and the ESS (median over n = 1, 2, 4) under each stated sd. The reasoning runs' control is in reason_table.tex."""
+    rows = list(csv.DictReader(open(here / "control.csv")))
     f2 = lambda v: ("0.00" if abs(float(v)) < 0.005 else f"{float(v):.2f}").replace("-", "$-$")
     ess = lambda v: A.fmt_worth(float(v), False, 4)
-    share = lambda cs, m, acc: next((f"{f2(c['share'])} [{f2(c['lo'])}, {f2(c['hi'])}]" for c in cs if c["model"] == m and int(c["actual"]) == acc), "--")
-    out = [r"\begin{tabular}{lcccccccc}", r"\toprule",
-           r"& \multicolumn{2}{c}{response to the stated sd} & \multicolumn{6}{c}{value accurate to sd $10$, stated sd $60$ / $30$ / $10$} \\",
-           r"\cmidrule(lr){2-3} \cmidrule(lr){4-9}",
-           r"& value sd $10$ & value sd $60$ & \multicolumn{3}{c}{weight, $n = 1$} & \multicolumn{3}{c}{ESS} \\", r"\midrule"]
+    out = [r"\begin{tabular}{lcccccc}", r"\toprule",
+           r"& \multicolumn{3}{c}{weight, $n = 1$} & \multicolumn{3}{c}{ESS} \\",
+           r"\cmidrule(lr){2-4} \cmidrule(lr){5-7}",
+           r"stated $c$ & $1$ & $4$ & $36$ & $1$ & $4$ & $36$ \\", r"\midrule"]
     models = list(dict.fromkeys(r["model"] for r in rows))
     pick = lambda m, s_, n: next(r for r in rows if r["model"] == m and int(r["actual"]) == 10 and int(r["stated"]) == s_ and int(r["n"]) == n)
     med = lambda m, s_, key: float(np.median([float(pick(m, s_, n)[key]) for n in A.MEDIAN_NS]))
-    out.append("Bayes-optimal & 1 & 1 & " + " & ".join(f2(pick(models[0], s_, 1)["ideal_weight"]) for s_ in (60, 30, 10)) + " & " + " & ".join(ess(med(models[0], s_, "ideal_ess")) for s_ in (60, 30, 10)) + r" \\")
+    out.append("Bayes-optimal & " + " & ".join(f2(pick(models[0], s_, 1)["ideal_weight"]) for s_ in (60, 30, 10)) + " & " + " & ".join(ess(med(models[0], s_, "ideal_ess")) for s_ in (60, 30, 10)) + r" \\")
     out.append(r"\midrule")
     for m in models:
-        out.append(f"{m} & {share(con, m, 10)} & {share(con, m, 60)} & " + " & ".join(f2(pick(m, s_, 1)["weight"]) for s_ in (60, 30, 10)) + " & " + " & ".join(ess(med(m, s_, "ess")) for s_ in (60, 30, 10)) + r" \\")
-    if rrows:
-        out.append(r"\midrule")
-        cond = {60: "relevant sd 60, value of sd 10", 30: "relevant sd 30, value of sd 10", 10: "relevant sd 10"}
-        for m in dict.fromkeys(r["run"] for r in rrows):
-            g = {s_: next(r for r in rrows if r["run"] == m and r["condition"] == cond[s_]) for s_ in cond}
-            out.append(f"{m} & {share(rcon, m, 10)} & {share(rcon, m, 60)} & " + " & ".join(f2(g[s_]["weight1"]) for s_ in (60, 30, 10)) + " & " + " & ".join(ess(g[s_]["ess"]) for s_ in (60, 30, 10)) + r" \\")
+        out.append(f"{m} & " + " & ".join(f2(pick(m, s_, 1)["weight"]) for s_ in (60, 30, 10)) + " & " + " & ".join(ess(med(m, s_, "ess")) for s_ in (60, 30, 10)) + r" \\")
     out += [r"\bottomrule", r"\end{tabular}"]
     (here / "control_table.tex").write_text("\n".join(out) + "\n")
 

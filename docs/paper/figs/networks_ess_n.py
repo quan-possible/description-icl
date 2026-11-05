@@ -1,6 +1,6 @@
-"""networks_ess_n.pdf, the appendix figure: each meta-trained network's ESS with n demonstrations in hand, against the
+"""networks_ess_n.pdf, the appendix figure: each meta-trained network's ESS with n demonstrations given, against the
 Bayes-optimal predictor's on the same prompts, trained and tested at the same reliability p; rows, the specific
-(r = 0.01) and the loose (r = 0.1) description; one line per training seed. A curve stops where the crossing lies
+(c = 10) and the loose (c = 1) description; one line per training seed. A curve stops where the crossing lies
 beyond the 20-demonstration grid; the dotted line, 20 - n, is the largest ESS the grid can show.
 
 Reads results/rq3-meta-trained/ess_n.csv (ess_n.py); writes networks_ess_n.pdf beside this script.
@@ -17,7 +17,7 @@ import paper_style as ps
 
 here = pathlib.Path(__file__).parent
 rows = list(csv.DictReader((here.parents[2] / "results" / "rq3-meta-trained" / "ess_n.csv").open()))
-P, R = ["1.0", "0.99", "0.9"], [("0.01", "specific"), ("0.1", "loose")]
+P, R = ["1.0", "0.99", "0.9"], [("0.01", "specific, $c = 10$"), ("0.1", "loose, $c = 1$")]
 N = np.arange(21)
 
 
@@ -43,7 +43,7 @@ for i, (r, name) in enumerate(R):
     axes[i, 0].set_ylabel("ESS$_n$ (demonstrations)")
     axes[i, 0].set_ylim(0, 20 if r == "0.01" else 7)
 for ax in axes[1]:
-    ax.set_xlabel("demonstrations in hand, $n$")
+    ax.set_xlabel("demonstrations given, $n$")
 from matplotlib.lines import Line2D
 
 handles = [Line2D([], [], color=ps.BLUE.edge, lw=1.1, marker="o", ms=2.2, mfc=ps.BLUE.fill, label="network (one line per seed)"),
