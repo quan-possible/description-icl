@@ -36,7 +36,8 @@
 \renewcommand\onehalfspacing{\linespread{1.25}\selectfont}
 \renewcommand\truedoublespacing{\linespread{1.667}\selectfont}
 
-\graphicspath{{../paper/figs/}{../../results/llm-test/}}
+% The paper's figures (recovered with it) come first, so the thesis shows the same figures as the paper.
+\graphicspath{{../paper/figs_recovered/}{../paper/figs/}{../../results/llm-test/}}
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -63,7 +64,7 @@
 % Bibliography: one unnumbered chapter, listed in the table of contents (GPS item 12).
 \renewcommand{\bibsection}{\chapter*{\bibname}\addcontentsline{toc}{chapter}{\bibname}}
 
-\title{Is a Description Worth a Thousand Demonstrations? Measuring the Effective Sample Size of Task Descriptions in In-Context Learning}
+\title{How Many Demonstrations Is a Task Description Worth? Specificity and Reliability in In-Context Learning}
 \author{Trung Quan Nguyen}
 \degree{Master of Science}
 \specialization{Statistics}
@@ -71,7 +72,7 @@
 \convocationdate{2026}
 
 % Plain text only: GPS allows no images or tables, and the class copies it into the PDF/A metadata.
-\abstracttext{Prompts for in-context learning usually pair demonstrations with a task description, yet its theories mostly model the demonstrations alone. We ask how many demonstrations a description is worth: its effective sample size (ESS), the number of demonstrations that lower a learner's error as much as the description does. For the Bayes-optimal predictor in in-context linear regression, the ESS depends on the description's specificity (how much uncertainty about the task it removes) and its reliability (the probability that it is relevant). We prove that a reliable description's ESS grows linearly with the task dimension when the description is loose and with its precision when it is specific. A description of only part of the task is worth about the number of directions it covers, until demonstrations resolve the rest. Without demonstrations, a description that may be irrelevant is worth a bounded number of demonstrations however specific it is. With demonstrations, trusting it fully can be worse than ignoring it. Meta-trained Transformers come close to the Bayes-optimal ESS and learn how much to trust a description from training. Pretrained language models answering without reasoning respond to a description's stated specificity far less than the Bayes-optimal predictor does, even when nothing else changes, and they do not adjust to its stated reliability in proportion. A description worth 36 demonstrations to that predictor is worth 1 to 8 to these models. Models that reason first follow the stated specificity, and two come close to the Bayes-optimal ESS.}
+\abstracttext{Task descriptions and demonstrations both convey information about a task, but their relative value is difficult to quantify. We define the predictive effective sample size (ESS) of a description as the number of additional demonstrations required to match its reduction in prediction error. In a Bayesian model of in-context linear regression, we distinguish a description's specificity—the precision of the task information it provides when relevant—from its reliability—the probability that this information applies. Reliable descriptions can replace many demonstrations, with a benefit that depends on task dimension as well as precision. Any fixed positive probability of irrelevance, however, bounds their ESS when no demonstrations are available. Transformers meta-trained on this task approach the Bayesian benchmark and learn how much to trust descriptions from their training distribution. We then test pretrained language models on numerical prediction tasks with explicit probabilistic descriptions. Without reasoning, the models respond weakly to stated precision; with reasoning, several approach the Bayesian reference. With reasoning, they also update a description's reliability from the demonstrations when the prompt states what follows if the description is wrong, but not when it leaves this open. Both behaviors depend on how explicitly the prompt specifies the description's statistical meaning. ESS thus provides a common scale for the information a description offers and the benefit a learner obtains from it.}
 \preface{\input{front/preface}}
 \acknowledgementtext{\input{front/acknowledgements}}
 

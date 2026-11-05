@@ -1,86 +1,194 @@
-\chapter{Reliability: Descriptions That May Be Irrelevant}\label{ch:reliability}
+\chapter{The Cost of Unreliability}\label{ch:reliability}
 
-We now turn to descriptions that may be irrelevant ($p < 1$). The Bayes-optimal prediction then mixes two predictions. The first, $\mu_1^\top x$, takes the description as relevant, and the second, $\mu_0^\top x$, ignores it. Here $\mu_1$ and $\mu_0$ are the posterior means of $w$ under the two readings of the description. The two predictions are weighted by the posterior probability $\pi_n$ that the description is relevant (Section~\ref{sec:bg-mixture}). Proposition~\ref{prop:unreliable} gives the price of not knowing whether the description is relevant, and it gives the error in closed form when no demonstrations are in hand. Corollary~\ref{cor:ess} turns the proposition into bounds on the ESS. Finally, Section~\ref{sec:trust} shows what happens to a predictor that does not hedge but trusts every description.
+When $p<1$, the learner must also infer whether the description applies. Let $\mu_1$ and $\mu_0$ denote the posterior means conditional on relevance and irrelevance, and let $\pi_n=P(Z=1\mid m,D_n)$ be the posterior relevance probability. The Bayesian prediction is
+\[
+\hat y=\big[\pi_n\mu_1+(1-\pi_n)\mu_0\big]^\top x.
+\]
+Demonstrations affect both the component predictions and their relative weight.
 
-\section{The Price of Not Knowing Relevance}\label{sec:price}
-\begin{proposition}[Error of a description that may be irrelevant]\label{prop:unreliable}
-For every $n \ge 0$,
+\begin{proposition}[Risk under uncertain relevance]\label{prop:unreliable}
+For every $n\geq0$,
 \begin{equation}\label{eq:decomp}
-    R^{\mathrm{desc}}(n) \;=\; p\, R^{\mathrm{desc}}_{p=1}(n) + (1-p)\, R^{\mathrm{demo}}(n) + \mathcal{V}_n,
+\begin{split}
+R^{\mathrm{desc}}(n)={}&pR^{\mathrm{desc}}_{p=1}(n)\\
+&+(1-p)R^{\mathrm{demo}}(n)+\mathcal{V}_n,
+\end{split}
 \end{equation}
-where $\mathcal{V}_n = \E\big[\pi_n(1-\pi_n)\big((\mu_1 - \mu_0)^\top x\big)^2\big] \ge 0$. With no demonstrations in hand,
+where
+\[
+\mathcal{V}_n=\E\!\left[\pi_n(1-\pi_n)
+\big((\mu_1-\mu_0)^\top x\big)^2\right]\geq0.
+\]
+With no demonstrations,
 \begin{equation}\label{eq:zero}
-    R^{\mathrm{desc}}(0) = \big(1 - p^2 (1-r)\big)\, a_0 d.
+R^{\mathrm{desc}}(0)=\big[1-p^2(1-r)\big]a_0d.
 \end{equation}
 \end{proposition}
-We prove the proposition in Section~\ref{sec:proof-unreliable}. The decomposition~\eqref{eq:decomp} is the law of total variance over $Z$ (Equation~\eqref{eq:bg-total-variance}). Its first two terms are the error of a \emph{cheating} predictor, one that is told whether the description is relevant. With probability $p$, this predictor holds a reliable description, and with probability $1-p$, it holds only the demonstrations. To the cheating predictor, a description that may be irrelevant is worth as much as a reliable one when it is relevant, and nothing when it is not.
 
-The last term, $\mathcal{V}_n$, is the price of not being told. It is the variance of the prediction between the two readings of the description. The price is small when the two readings agree. It is also small when the demonstrations make one reading far likelier than the other, because $\pi_n(1-\pi_n)$ is then near zero. With no demonstrations, the price grows as a more specific description pulls the two readings apart. With demonstrations, however, a specific description is also easier to tell apart from an irrelevant one.
+Equation~\eqref{eq:decomp} separates the error of an oracle that knows $Z$ from the cost of uncertainty about relevance. The oracle uses the description when it applies and otherwise uses the baseline prior. The remaining term, $\mathcal{V}_n$, is the disagreement between these two predictions, weighted by uncertainty about which is appropriate. Without demonstrations, the oracle removes a fraction $p(1-r)$ of baseline risk; a learner that must infer relevance removes only $p^2(1-r)$. The proof follows from the law of total variance (Section~\ref{app:reliability}).
 
-With no demonstrations, Equation~\eqref{eq:zero} puts the two predictors side by side. The baseline prior leaves the error $a_0 d$. The cheating predictor removes a fraction $p(1-r)$ of this error, and the Bayes-optimal predictor removes a fraction $p^2(1-r)$. Not being told therefore costs $p(1-p)(1-r)\,a_0 d$.
+The cost of uncertainty about relevance is small when the two predictions agree. It is also small when the demonstrations make one relevance branch far more likely than the other, because $\pi_n(1-\pi_n)$ is then near zero. Without demonstrations, the cost is $\mathcal{V}_0=p(1-p)(1-r)a_0d$, which grows as a more specific description pulls the two predictions apart. With demonstrations, however, a specific description is also easier to distinguish from an irrelevant one.
 
-\section{The ESS of a Description That May Be Irrelevant}\label{sec:unreliable-ess}
-\begin{corollary}[ESS of a description that may be irrelevant]\label{cor:ess}
+\begin{corollary}[ESS under uncertain relevance]\label{cor:ess}
 \leavevmode
-\begin{enumerate}[nosep]
-    \item[(i)] (Without demonstrations) If $p < 1$, then $\ess_0 \le n^{\max}_p$, where $n^{\max}_p$ solves $R^{\mathrm{demo}}(n^{\max}_p) = (1-p)\,R^{\mathrm{demo}}(0)$ for the interpolated $R^{\mathrm{demo}}$. This bound depends on $d$, $a_0$, and $p$ but not on $r$. Also $\ess_0 \ge p^2(1-r)\,d$, and as $a_0 \to \infty$ with $r$ fixed, $n^{\max}_p \to p\,d$ and $\ess_0 \to p^2(1-r)\,d$.
-    \item[(ii)] (With many demonstrations) As $n \to \infty$, $\ess_n \to (1-r)\,c$ if $p = 1$, and if $p < 1$,
-    \[ \limsup_{n \to \infty} \ess_n \le p\,(1-r)\,c . \]
+\begin{enumerate}[label=(\roman*),nosep,leftmargin=*]
+\item For $0<p<1$, define $n_p^{\sharp}$ by
+\[
+R^{\mathrm{demo}}(n_p^{\sharp})=(1-p^2)R^{\mathrm{demo}}(0).
+\]
+Then $\ess_0<n_p^{\sharp}$ at every finite $c$, and $\ess_0\to n_p^{\sharp}$ as $c\to\infty$. As $a_0\to\infty$ with $r$ fixed, $\ess_0\to p^2(1-r)d$ and $n_p^{\sharp}\to p^2d$. For $p=0$, both ESS and the ceiling are zero.
+\item With $d$, $a_0$, and $c$ fixed, as $n\to\infty$,
+\[
+\begin{cases}
+\ess_n\to c-a_0^{-1},&p=1,\\
+\limsup\limits_{n\to\infty}\ess_n\leq p(c-a_0^{-1}),&p<1.
+\end{cases}
+\]
 \end{enumerate}
 \end{corollary}
 
-\paragraph{Without demonstrations, the ESS is bounded.} Refining a description from $r = 0.1$ to $r = 0.001$ raises its ESS from $15.6$ to $117$ if the description is reliable, but only from $12.0$ to $13.5$ if it is relevant with probability $0.9$. The reason is a floor on the error. However specific the description, the average error cannot fall below the contribution of irrelevant descriptions, $(1-p)R^{\mathrm{demo}}(0)$. Corollary~\ref{cor:ess}(i) turns this floor into a bound on the ESS: $n^{\max}_p = 15.6$ demonstrations at $d = 16$, $a_0 = 10$, and $p = 0.9$. This bound is the ESS of a reliable description that leaves a fraction $1 - p$ of the prior variance, because such a description leaves the same error, $(1-p)\,a_0 d$. The bound holds even for the cheating predictor, which is told whether the description is relevant. It therefore comes from irrelevant descriptions being worth nothing, not from uncertainty about relevance. That uncertainty lowers the ESS further. At a high signal-to-noise ratio, it lowers the ESS from about $pd$ to about $p^2 d$. At $a_0 = 10$, as $r \to 0$, the ESS approaches $13.5$ (the dotted line in Figure~\ref{fig:ess}), compared with $p^2 d = 13.0$.
+\paragraph{Specificity cannot remove a relevance error floor.}
+For fixed $p<1$, Equation~\eqref{eq:zero} gives a positive risk floor $(1-p^2)a_0d$, even as $c\to\infty$. Hence zero-demonstration ESS has a finite ceiling. At $p=0.9$, $d=16$, and $a_0=10$, increasing $c$ from $1$ to $100$ raises ESS only from $12.0$ to $13.5$, compared with $15.6$ to $117$ when $p=1$ (Figure~\ref{fig:ess}). The finite-$a_0$ ceiling is approximately $13.5$; the diffuse-baseline approximation is $p^2d=12.96$.
 
-\paragraph{With many demonstrations, the ESS is at most $p$ times that of a reliable description.} Demonstrations shrink the error in the irrelevant case, $R^{\mathrm{demo}}(n)$, so the floor $(1-p)R^{\mathrm{demo}}(n)$ falls and the ESS can grow. In the limit, a reliable description is worth $(1-r)\,c$ demonstrations. The dimension term has faded, and what remains is the precision that the description adds to the baseline prior. A description that may be irrelevant is then worth at most $p$ times as much. With $100$ demonstrations in hand, the $r = 0.001$ description is worth $109$ demonstrations if it is reliable and $86.6$ if $p = 0.9$, compared with limits of $99.9$ and at most $89.9$. The reliable value exceeds its limit because at $n = 100$ the dimension term has not yet faded completely.
+An oracle that knows $Z$ has the lower floor $(1-p)a_0d$, which is the risk of a reliable description that leaves variance fraction $1-p$. In this setting, its ceiling is therefore $15.6$ demonstrations, the ESS of the reliable $c=1$ description; uncertainty about relevance lowers it to approximately $13.5$.
 
-\section{Full Trust Can Be Worse Than No Description}\label{sec:trust}
-The Bayes-optimal predictor hedges between the two readings of the description. A \emph{fully trusting} predictor does not: it treats every description as relevant and predicts as if $p = 1$. With no demonstrations, its error is
-\begin{equation}\label{eq:trust}
-    R^{\mathrm{trust}}(0) = \big(1 - (2p-1)(1-r)\big)\, a_0 d
-\end{equation}
-(derived in Section~\ref{sec:proof-trust}). The fully trusting predictor removes a fraction $(2p-1)(1-r)$ of the prior error, compared with $p^2(1-r)$ for the Bayes-optimal predictor. With no demonstrations, it does worse than ignoring the description only when $p < 1/2$. Demonstrations do not rescue it. They show whether a specific description is relevant, but the fully trusting predictor keeps predicting near $m$. As $r \to 0$, its error tends to $2(1-p)\,a_0 d$ at every $n$, while the error without the description tends to $0$ as $n$ grows. At $d = 16$, $a_0 = 10$, and $p = 0.9$, the fully trusting predictor with the $r = 0.001$ description is worse than no description from $15$ demonstrations on.
+\paragraph{With many demonstrations, ESS is at most $p$ times that of a reliable description.}
+Demonstrations reduce the risk when the description is irrelevant, $R^{\mathrm{demo}}(n)$, so the term $(1-p)R^{\mathrm{demo}}(n)$ falls and ESS can grow. In the limit, a reliable description is worth $c-a_0^{-1}$ demonstrations: the dimension benefit has disappeared, and what remains is the precision the description adds to the baseline prior. An unreliable description is then worth at most $p$ times as much (Corollary~\ref{cor:ess}). After $100$ demonstrations, the $c=100$ description has ESS $109$ when $p=1$ and $86.6$ when $p=0.9$, compared with limits of $99.9$ and at most $89.9$. The reliable value exceeds its limit because the dimension benefit has not yet disappeared completely at $n=100$.
 
-\section{Proofs of Proposition~\ref{prop:unreliable} and Corollary~\ref{cor:ess}}\label{sec:proof-unreliable}
-Let $D_n = (x_{1:n}, y_{1:n}, m, x)$ be the prompt, including the query input, and let $\pi_n = P(Z = 1 \mid D_n)$ be the posterior probability that the description is relevant.
+\paragraph{Demonstrations distinguish low precision from uncertain relevance.}
+Without demonstrations, an unreliable description has the same risk as a reliable description that leaves variance fraction $1-p^2(1-r)$. For example, $c=100$, $p=0.9$ and a reliable description with $c\approx0.52$ both have ESS approximately $13.5$ in this setting. Their values diverge once demonstrations are available: after $100$ demonstrations, the former has ESS $86.6$ and the latter $0.5$. Evidence can support the high-precision component of the unreliable description; the reliable low-precision description has no such component to recover.
 
-\paragraph{Step 1: the two readings.}
-Given $D_n$ and $Z = 1$, $w$ is Gaussian with the posterior mean $\mu_1$ and covariance $\Sigma_1$ of a reliable description, that is, the posterior~\eqref{eq:bg-posterior} under the prior $\mathcal{N}(m, r a_0 I)$. Given $D_n$ and $Z = 0$, the description $m$ is independent of $w$. So $w$ is Gaussian with the posterior mean $\mu_0$ and covariance $\Sigma_0$ from the demonstrations alone. At $n = 0$, $\pi_0 = p$. Observing $m$ says nothing about $Z$, because $m$ has the same distribution $\mathcal{N}(0, (1-r) a_0 I)$ in both cases, and $x$ is independent of $Z$.
+\paragraph{Treating every description as relevant can be harmful.}
+A fully trusting predictor always uses $\mu_1$, even when the description is irrelevant. Without demonstrations, it is worse than ignoring the description when $p<1/2$, provided the description is informative ($r<1$). For fixed $n$, its risk tends to $2(1-p)a_0d$ as $c\to\infty$, whereas the demonstrations-only risk tends to zero as $n$ grows. Thus a sufficiently precise, occasionally irrelevant description can outweigh useful demonstrations. At $p=0.9$ and $c=100$, full trust is worse than ignoring the description from $15$ demonstrations onward in the reported evaluation (Section~\ref{app:trust}).
 
-\paragraph{Step 2: the decomposition.}
-The Bayes-optimal prediction is $\E[w^\top x \mid D_n] = (\pi_n \mu_1 + (1-\pi_n)\mu_0)^\top x$, and its error is $\E \operatorname{Var}(w^\top x \mid D_n)$. By the law of total variance over $Z$~\eqref{eq:bg-total-variance},
+\section{Unreliable Descriptions}\label{app:reliability}
+
+Let $\mathcal P_n=(D_n,m,x)$ denote the full prompt, including the query input, and write $\pi_n=P(Z=1\mid\mathcal P_n)$. Conditional on relevance, the posterior parameters are
 \[
-\operatorname{Var}(w^\top x \mid D_n) = \pi_n\, x^\top \Sigma_1 x + (1-\pi_n)\, x^\top \Sigma_0 x + \pi_n(1-\pi_n)\big((\mu_1 - \mu_0)^\top x\big)^2 .
+\Sigma_1=(cI_d+W_n)^{-1},
+\qquad
+\mu_1=\Sigma_1(c m+X_n^\top y_{1:n}).
 \]
-The first two terms are the expected conditional variance, and the last is the variance of the conditional mean. For any function $g$ of the prompt, $\E[\pi_n\, g(D_n)] = \E[Z\, g(D_n)] = p\,\E[g(D_n) \mid Z = 1]$. Given $Z = 1$, the prompt has the distribution of a prompt with a reliable description, so $\E[\pi_n\, x^\top \Sigma_1 x] = p\,R^{\mathrm{desc}}_{p=1}(n)$. In the same way, $\E[(1-\pi_n)\, x^\top \Sigma_0 x] = (1-p)\,R^{\mathrm{demo}}(n)$. Taking expectations of the three terms gives~\eqref{eq:decomp}.
-
-\paragraph{Step 3: no demonstrations.}
-At $n = 0$, $\pi_0 = p$, $\mu_1 = m$, and $\mu_0 = 0$, so the Bayes-optimal prediction is $p\,m^\top x$. In each coordinate, $\operatorname{Var}(w_i) = a_0$ and $\operatorname{Var}(m_i) = (1-r)\,a_0$. When the description is relevant, $w_i$ is $m_i$ plus independent noise, and when it is irrelevant, $w_i$ is independent of $m_i$. Hence $\operatorname{Cov}(w_i, m_i) = p\,(1-r)\,a_0$, and
+Conditional on irrelevance, $m$ is independent of $w$, and
 \[
-\E(w_i - p\, m_i)^2 = a_0 - 2p^2(1-r)\,a_0 + p^2(1-r)\,a_0 = \big(1 - p^2(1-r)\big)\,a_0 .
+\Sigma_0=(\varepsilon I_d+W_n)^{-1},
+\qquad
+\mu_0=\Sigma_0X_n^\top y_{1:n}.
 \]
-The query is independent of $(w, m)$ with $\E[x x^\top] = I$, so the error $\E\|w - p\,m\|^2$ is $d$ times this value, which is~\eqref{eq:zero}. This completes the proof of Proposition~\ref{prop:unreliable}.
+The relevance probability is obtained from the two Gaussian marginal likelihoods,
+\begin{align*}
+L_1&=\mathcal N\!\left(y_{1:n};X_nm,I_n+c^{-1}X_nX_n^\top\right),\\
+L_0&=\mathcal N\!\left(y_{1:n};0,I_n+a_0X_nX_n^\top\right),\\
+\pi_n&=\frac{pL_1}{pL_1+(1-p)L_0}.
+\end{align*}
+The query does not enter this update because it is independent of $Z$. Without demonstrations, both marginal likelihoods equal one and $\pi_0=p$: the distribution of $m$ is the same under both hypotheses. At $p=0$ or $p=1$, the formula reduces to the corresponding single component.
 
-\begin{proof}[Proof of Corollary~\ref{cor:ess}]
-\emph{(i).} At $n = 0$, \eqref{eq:decomp} with $\mathcal{V}_0 \ge 0$ gives $R^{\mathrm{desc}}(0) \ge (1-p)\,R^{\mathrm{demo}}(0)$ for every $r$, because $R^{\mathrm{desc}}_{p=1}(0) \ge 0$. Since $R^{\mathrm{demo}}$ is strictly decreasing and tends to $0$ (Section~\ref{sec:proof-reliable}), there is a finite $n^{\max}_p$ with $R^{\mathrm{demo}}(n^{\max}_p) = (1-p)\,R^{\mathrm{demo}}(0)$, and the root that defines $\ess_0$ cannot exceed it. By~\eqref{eq:zero}, $R^{\mathrm{desc}}(0) = \big(d - p^2(1-r)\,d\big)\,a_0$, and since $R^{\mathrm{demo}}(0) = a_0 d$, $(1-p)\,R^{\mathrm{demo}}(0) = (d - pd)\,a_0$. The proof of Theorem~\ref{thm:reliable}(i) gives the bound $R^{\mathrm{demo}}(t) \ge (d-t)\,a_0$ and the limit $R^{\mathrm{demo}}(t)/a_0 \to (d-t)^+$. The bound gives $\ess_0 \ge p^2(1-r)\,d$, and the limit gives $\ess_0 \to p^2(1-r)\,d$ and $n^{\max}_p \to pd$.
-
-\emph{(ii).} We first sketch the idea. With many demonstrations, each further demonstration lowers the error by about $d/n^2$, and a prior of precision $\kappa$ lowers it by $\kappa$ times as much (Section~\ref{sec:extra}). A reliable description raises the precision from $\varepsilon$ to $c$, so it saves about $c - \varepsilon = (1-r)c$ demonstrations. A description that is relevant with probability $p$ saves about $p$ times as much, and the price $\mathcal{V}_n$ can only lower its value further.
-
-Formally, fix $d$, $a_0$, and $r$, and read every $O$ below as $n \to \infty$ with these quantities fixed. A reliable description leaves the prior $\mathcal{N}(m, r a_0 I)$, which has precision $c$ in every direction, and its error does not depend on $m$. Hence $R^{\mathrm{desc}}_{p=1} = R^{c}$ in the notation of Section~\ref{sec:proof-reliable}, while $R^{\mathrm{demo}} = R^{\varepsilon}$. Let $L(n) = p\,R^{c}(n) + (1-p)\,R^{\varepsilon}(n)$ be the first two terms of~\eqref{eq:decomp}. By~\eqref{eq:extra}, uniformly over integers $0 \le t \le T = \lceil c \rceil + 1$,
+\begin{proof}[Proof of Proposition~\ref{prop:unreliable}]
+The posterior mean prediction is
 \[
-R^{\mathrm{demo}}(n + t) - L(n) = \frac{d}{n^2}\Big[p\,(c - \varepsilon) - t + O(1/n)\Big].
+\E[w^\top x\mid\mathcal P_n]
+=\big(\pi_n\mu_1+(1-\pi_n)\mu_0\big)^\top x.
 \]
-The bracket is linear in $t$, so the same expansion holds for the interpolated $R^{\mathrm{demo}}$ at real $t \in [0, T]$. The interpolated curve therefore equals $L(n)$ at a unique point $n + \eta_n$, with $\eta_n = p\,(c - \varepsilon) + O(1/n)$, where $c - \varepsilon = (1-r)\,c$. If $p = 1$, then $R^{\mathrm{desc}} = L$, and $\ess_n = \eta_n \to (1-r)\,c$. If $p < 1$, then $R^{\mathrm{desc}}(n) = L(n) + \mathcal{V}_n \ge L(n)$. Since $R^{\mathrm{demo}}$ is decreasing, $\ess_n \le \eta_n$, and hence $\limsup_n \ess_n \le p\,(1-r)\,c$.
+Applying the law of total variance over $Z$ yields
+\begin{align*}
+\operatorname{Var}(w^\top x\mid\mathcal P_n)
+={}&\pi_n x^\top\Sigma_1x+(1-\pi_n)x^\top\Sigma_0x\\
+&+\pi_n(1-\pi_n)\big((\mu_1-\mu_0)^\top x\big)^2.
+\end{align*}
+For any integrable function $g$ of the prompt,
+\[
+\E[\pi_ng(\mathcal P_n)]=\E[Zg(\mathcal P_n)]
+=p\,\E[g(\mathcal P_n)\mid Z=1].
+\]
+Conditional on $Z=1$, the prompt follows the reliable-description model. Conditional on $Z=0$, the description provides no information about the task. Taking expectations in the variance decomposition therefore gives
+\[
+R^{\mathrm{desc}}(n)
+=pR^{\mathrm{desc}}_{p=1}(n)+(1-p)R^{\mathrm{demo}}(n)+\mathcal V_n,
+\]
+with $\mathcal V_n$ as in Equation~\eqref{eq:decomp}.
+
+At $n=0$, $\mu_1=m$, $\mu_0=0$, and the prediction is $p\,m^\top x$. For each coordinate,
+\[
+\operatorname{Var}(w_i)=a_0,\qquad
+\operatorname{Var}(m_i)=(1-r)a_0,\qquad
+\operatorname{Cov}(w_i,m_i)=p(1-r)a_0.
+\]
+The covariance holds because, conditional on relevance, $w_i$ is $m_i$ plus independent noise, and conditional on irrelevance, $w_i$ is independent of $m_i$. It follows that
+\[
+\E(w_i-pm_i)^2
+=a_0-2p^2(1-r)a_0+p^2(1-r)a_0
+=\big(1-p^2(1-r)\big)a_0.
+\]
+Since $\E[xx^\top]=I_d$, the prediction risk is $\E\|w-pm\|^2$. Summing over coordinates proves Equation~\eqref{eq:zero}.
 \end{proof}
 
-\section{Derivation of Equation~\eqref{eq:trust}}\label{sec:proof-trust}
-The idea is that, when the description is irrelevant, the fully trusting predictor centres its prediction on an unrelated mean. With no demonstrations, it predicts $m^\top x$. With the moments of Step~3 in Section~\ref{sec:proof-unreliable},
+\begin{proof}[Proof of Corollary~\ref{cor:ess}]
+\emph{(i) No demonstrations.}
+For $0<p<1$ and finite $c$,
 \[
-\E(w_i - m_i)^2 = a_0 - 2p(1-r)\,a_0 + (1-r)\,a_0 = \big(1 - (2p-1)(1-r)\big)\,a_0 ,
+R^{\mathrm{desc}}(0)
+=\big(1-p^2(1-r)\big)R^{\mathrm{demo}}(0)
+>(1-p^2)R^{\mathrm{demo}}(0).
 \]
-and summing over the $d$ coordinates gives~\eqref{eq:trust}. This error exceeds $R^{\mathrm{demo}}(0) = a_0 d$ exactly when $p < 1/2$.
+The risk on the left decreases to the right-hand side as $c\to\infty$, equivalently $r\to0$. The interpolated baseline risk is continuous, strictly decreasing, and tends to zero. Consequently, the matching sample size is strictly below the unique finite $n_p^{\sharp}$ defined in the corollary and converges to it as $c\to\infty$. At $p=0$, the description is always irrelevant, so $\ess_0=n_0^{\sharp}=0$; the non-strict bound remains valid.
 
-With $n$ demonstrations, the fully trusting predictor predicts $\mu_1^\top x$ whatever the value of $Z$, where
+The baseline lower bound and normalized limit established in Section~\ref{app:specificity} also give
 \[
-\mu_1 = m + (cI + W_n)^{-1} X_n^\top (y_{1:n} - X_n m).
+\ess_0\ge p^2(1-r)d,
+\qquad
+\ess_0\longrightarrow p^2(1-r)d
 \]
-As $r \to 0$ with $a_0$ and $n$ fixed, $c \to \infty$ and $\mu_1 \to m$ in mean square, so the error tends to $\E\|w - m\|^2$. This limit is $r a_0 d \to 0$ for a relevant description and $(2 - r)\,a_0 d \to 2 a_0 d$ for an irrelevant one, which gives $2(1-p)\,a_0 d$ in all. Since $R^{\mathrm{demo}}(n) \to 0$, for every $p < 1$ there is an $n$ from which full trust does worse than no description once $r$ is small enough.
+when $a_0\to\infty$ with $r$ fixed. Applying the same argument to the level $1-p^2$ gives $n_p^{\sharp}\to p^2d$. These are broad-prior limits, not exact identities at finite $a_0$.
+
+For comparison, an oracle told $Z$ has zero-demonstration risk
+\[
+\big(1-p(1-r)\big)a_0d\ge(1-p)a_0d.
+\]
+Its limiting ceiling is therefore $pd$ demonstrations as $a_0\to\infty$. The additional reduction from $p$ to $p^2$ in the non-oracle expression is the cost of uncertainty about relevance.
+
+\emph{(ii) Many demonstrations.}
+The idea is as follows. With many demonstrations, an additional demonstration reduces risk by about $d/n^2$, and a prior of precision $\kappa$ reduces it by $\kappa$ times as much (Equation~\eqref{eq:extra}). A reliable description raises the precision from $\varepsilon$ to $c$, so it saves about $c-\varepsilon$ demonstrations. A description that is relevant with probability $p$ saves about $p$ times as much, and the term $\mathcal V_n$ can only lower its value further.
+
+Fix $d$, $a_0$, and $c$, and define the oracle risk
+\[
+L(n)=pR^c(n)+(1-p)R^\varepsilon(n).
+\]
+Equation~\eqref{eq:extra} implies, uniformly over integers $0\le t\le T=\lceil c\rceil+1$,
+\[
+R^{\mathrm{demo}}(n+t)-L(n)
+=\frac{d}{n^2}\left[p(c-\varepsilon)-t+O(n^{-1})\right].
+\]
+Linear interpolation gives the same expansion for real $t\in[0,T]$. Let $n+\eta_n$ be the sample size at which the baseline risk equals $L(n)$. Then
+\[
+\eta_n=p(c-\varepsilon)+O(n^{-1}).
+\]
+When $p(c-\varepsilon)=0$, the two risks coincide and $\eta_n=0$ exactly. If $p=1$, the description risk equals $L(n)$, so
+\[
+\ess_n\longrightarrow c-\varepsilon=(1-r)c.
+\]
+If $p<1$, the variance decomposition gives $R^{\mathrm{desc}}(n)=L(n)+\mathcal V_n\ge L(n)$. Since the baseline risk decreases with sample size, $\ess_n\le\eta_n$, proving
+\[
+\limsup_{n\to\infty}\ess_n\le p(c-\varepsilon)=p(1-r)c.
+\]
+The nonnegative term $\mathcal V_n$ is why the result is an upper bound for unreliable descriptions.
+\end{proof}
+
+\section{The Fully Trusting Predictor}\label{app:trust}
+
+Without demonstrations, a predictor that always treats the description as relevant returns $m^\top x$. The moments used in the proof of Proposition~\ref{prop:unreliable} give
+\[
+R^{\mathrm{trust}}(0)
+=\E\|w-m\|^2
+=\big(1-(2p-1)(1-r)\big)a_0d.
+\]
+In each coordinate, these moments give $\E(w_i-m_i)^2=a_0-2p(1-r)a_0+(1-r)a_0$. For $r<1$, this risk exceeds the baseline $a_0d$ exactly when $p<1/2$. At $r=1$, the description carries no information, $m=0$ almost surely, and the two risks coincide for every $p$.
+
+With demonstrations, the fully trusting predictor uses $\mu_1^\top x$ regardless of $Z$, where
+\[
+\mu_1=m+(cI_d+W_n)^{-1}X_n^\top(y_{1:n}-X_nm).
+\]
+For fixed $a_0$ and $n$, $\mu_1\to m$ in mean square as $c\to\infty$. Conditional on relevance, $\E\|w-m\|^2=ra_0d\to0$; conditional on irrelevance, it is $(2-r)a_0d\to2a_0d$. Thus
+\[
+\lim_{c\to\infty}R^{\mathrm{trust}}(n)=2(1-p)a_0d.
+\]
+For every $p<1$, this is a positive error floor at fixed $n$, whereas $R^{\mathrm{demo}}(n)\to0$ as $n\to\infty$. Hence sufficiently many demonstrations can outperform full trust in a sufficiently precise unreliable description. The order of limits matters: this argument takes $c\to\infty$ at fixed $n$ and does not assert that demonstrations can never overcome a fixed finite prior precision.
