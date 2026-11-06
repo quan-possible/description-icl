@@ -301,13 +301,20 @@ def reason_prompts():
 
 
 def read_number(text):
-    """The prediction in a text reply, the one rule for every readout that reads text: its first number with three
-    digits before any decimal part, decimals kept (nan if none). The written runs in this folder were scored when
-    that readout kept only the integer part; direct answers rarely carry a decimal part."""
+    """The prediction in a text reply, the one rule for every readout that reads text: its final answer, the number in
+    the last \\boxed{} if there is one, else the last number with three digits before any decimal part, decimals kept
+    (nan if none). A digit group of a comma-grouped number, such as 945 in 14,945, is not a number. Replies that show
+    their working repeat the stated value and the demonstrations before the answer, so their first number is not the
+    prediction. The written runs without reasoning (at most eight new tokens) were scored with the first number, and
+    with only its integer part; in replies that short, it is the answer."""
     import re
 
-    m = re.search(r"(?<![\d.])([1-9]\d\d(?:\.\d+)?)(?!\d|\.\d)", text)
-    return float(m.group(1)) if m else np.nan
+    num = r"(?<![\d.,])([1-9]\d\d(?:\.\d+)?)(?!\d|\.\d|,\d)"
+    for box in reversed(re.findall(r"\\boxed\{([^}]*)\}", text)):
+        if m := re.findall(num, box):
+            return float(m[-1])
+    m = re.findall(num, text)
+    return float(m[-1]) if m else np.nan
 
 
 def reason(repo, out, budget=4096, batch=500):
@@ -383,5 +390,7 @@ if __name__ == "__main__":
                 assert all(abs(weight(ideal_mean(make_tasks(cond[0]), cond, n), make_tasks(cond[0]), cond, n) - c / (c + n)) < 0.01 for n in NS), cond
         bad = next(c for c in CONDITIONS if not c[2] and c[3] == 0.5)
         assert abs(weight(ideal_mean(t, bad, 8, 0.5), t, bad, 8)) < 0.1  # a hedging learner drops an invalid description
-        assert read_number("504.5, not 512") == 504.5 and read_number("It is 504.") == 504 and np.isnan(read_number("1000 or 99"))
+        assert read_number("504.5") == 504.5 and read_number("It is 504.") == 504 and np.isnan(read_number("1000 or 99"))
+        assert read_number("Sum = 14,945\nMean = 14,945 / 32 = 467.03125\n\n467") == 467  # the answer, not 945
+        assert read_number("Prior mean 510, data 548 and 431, so \\boxed{327} (check: 412)") == 327
         print(f"ok: {len(CONDITIONS)} conditions, {len(CONTROL)} control conditions, {len(REASON_CELLS)} reasoning cells")

@@ -22,8 +22,47 @@ from editorial_data_viz import BLUE, GRAY, GREEN, MUTED, PINK, SPINE, SUBTLE, TE
 COLUMN, WIDE = 3.25, 6.75  # inches: one column, both columns of the ICML page
 BAYES = dict(color=MUTED, lw=1.3, ls=(0, (4, 3)))  # the Bayes-optimal predictor, in every figure
 
+def _truetype(otf):
+    """Inter ships with CFF outlines; Matplotlib's Type 42 embedding expects TrueType ones, so a CFF font would land in
+    the PDF's TrueType slot, which strict readers such as Acrobat reject. Convert once to TrueType, cached in fonts/."""
+    out = pathlib.Path(__file__).parent / "fonts" / (pathlib.Path(otf).stem + ".ttf")
+    if not out.exists():
+        from fontTools.pens.cu2quPen import Cu2QuPen
+        from fontTools.pens.ttGlyphPen import TTGlyphPen
+        from fontTools.ttLib import TTFont, newTable
+
+        font = TTFont(otf)
+        order, glyphs = font.getGlyphOrder(), {}
+        cff = font["CFF "].cff.topDictIndex[0].CharStrings
+        for name in order:
+            pen = TTGlyphPen(None)
+            cff[name].draw(Cu2QuPen(pen, 1.0, reverse_direction=True))
+            glyphs[name] = pen.glyph()
+        del font["CFF "]
+        maxp = font["maxp"]
+        maxp.tableVersion = 0x00010000
+        for k in ("maxTwilightPoints", "maxStorage", "maxFunctionDefs", "maxInstructionDefs", "maxStackElements",
+                  "maxSizeOfInstructions", "maxComponentElements"):
+            setattr(maxp, k, 0)
+        maxp.maxZones = 1
+        for tag in ("glyf", "loca", "head", "post"):
+            if tag not in font:
+                font[tag] = newTable(tag)
+        font["loca"] = newTable("loca")
+        font["glyf"] = newTable("glyf")
+        font["glyf"].glyphOrder, font["glyf"].glyphs = order, glyphs
+        font["head"].glyphDataFormat = 0
+        post = font["post"]
+        post.formatType, post.extraNames, post.mapping = 2.0, [], {}
+        post.glyphOrder = order
+        font.sfntVersion = "\x00\x01\x00\x00"
+        out.parent.mkdir(exist_ok=True)
+        font.save(out)
+    return str(out)
+
+
 for path in glob.glob("/usr/local/texlive/*/texmf-dist/fonts/opentype/public/inter/Inter-*.otf"):
-    font_manager.fontManager.addfont(path)
+    font_manager.fontManager.addfont(_truetype(path))
 
 
 def use_style():

@@ -33,14 +33,17 @@ QS = np.round(np.concatenate([[0.001, 0.01], np.arange(0.05, 1.0, 0.05), [0.99, 
 TRUST_STEPS = (0, 2, 8)
 
 
-def draw(S, K, d, a0, r, p, p_desc, seed):
+def draw(S, K, d, a0, r, p, p_desc, seed, k=None):
     gen = torch.Generator().manual_seed(seed)
-    return meta.sample_batch(S, K, d, a0, torch.tensor([r]), p, p_desc, "cpu", gen)
+    return meta.sample_batch(S, K, d, a0, torch.tensor([r]), p, p_desc, "cpu", gen, k=k)
 
 
-def bayes_paths(batch, a0, r):
-    n = lambda k: batch[k].double().numpy()
-    return mx.paths_from_data(n("X"), n("Y"), n("m"), batch["correct"].numpy(), a0, r * a0)
+def bayes_paths(batch, a0, r, k=None):
+    """A partial description (k of d directions) has prior variance r a0 in the described directions, a0 in the rest."""
+    n = lambda key: batch[key].double().numpy()
+    d = batch["X"].shape[2]
+    a_desc = r * a0 if k is None else np.where(np.arange(d) < k, r * a0, a0)
+    return mx.paths_from_data(n("X"), n("Y"), n("m"), batch["correct"].numpy(), a0, a_desc)
 
 
 def regret(mean, batch):
@@ -66,7 +69,7 @@ if __name__ == "__main__":
 
     ck = torch.load(args.ckpt, map_location="cpu")
     cfg = ck["args"]
-    d, a0, K, p_train, r = cfg["d"], cfg["a_base"], cfg["K"], cfg["p"], cfg["r"]
+    d, a0, K, p_train, r, kd = cfg["d"], cfg["a_base"], cfg["K"], cfg["p"], cfg["r"], cfg.get("k")
     p_test = p_train if args.p_test is None else args.p_test
     dev = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
     model = meta.Transformer(d)
@@ -100,13 +103,13 @@ if __name__ == "__main__":
             w.writerows(rows)
 
     # prompts without a description: the examples-only curves
-    plain = draw(args.S, K, d, a0, r, p_test, 0.0, seed=1)
+    plain = draw(args.S, K, d, a0, r, p_test, 0.0, seed=1, k=kd)
     net_plain, net_plain_se = regret(predict(plain)[0], plain)
     plain["correct"] = torch.zeros_like(plain["correct"])  # w came from the base prior
-    bayes_plain, _ = bayes_regret(bayes_paths(plain, a0, r), 0.0, plain)
+    bayes_plain, _ = bayes_regret(bayes_paths(plain, a0, r, kd), 0.0, plain)
 
-    batch = draw(args.S, K, d, a0, r, p_test, 1.0, seed=10)
-    pred, paths = predict(batch)[0], bayes_paths(batch, a0, r)
+    batch = draw(args.S, K, d, a0, r, p_test, 1.0, seed=10, k=kd)
+    pred, paths = predict(batch)[0], bayes_paths(batch, a0, r, kd)
     net, net_se = regret(pred, batch)
     bayes, _ = bayes_regret(paths, p_train, batch)
 

@@ -46,3 +46,5 @@ wandb/
 pdfa.xmpi
 # figure-script byproducts
 docs/paper/figs/*.svg
+docs/paper/figs/fonts/
+results/llm-test/fonts/

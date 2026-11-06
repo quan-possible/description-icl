@@ -52,7 +52,7 @@ def table(rows, ks=(1, 4, 8, 12, 16), tab_ns=(0, 10, 100, 400)):
     get = lambda k, r, n: next(x["ess"] for x in rows if x["k"] == k and x["r"] == r and x["n"] == n)
     fmt = lambda v: f"{v + 1e-9:.1f}" if v < 100 else f"{v:.0f}"  # round half up (49.95 -> 50.0)
     lines = [r"\begin{tabular}{r" + "c" * (2 * len(tab_ns) + 2) + "}", r"\toprule",
-             rf"& \multicolumn{{{len(tab_ns) + 1}}}{{c}}{{loose, $r = 0.1$ ($c = 1$)}} & \multicolumn{{{len(tab_ns) + 1}}}{{c}}{{specific, $r = 0.001$ ($c = 100$)}} \\",
+             rf"& \multicolumn{{{len(tab_ns) + 1}}}{{c}}{{$c = 1$}} & \multicolumn{{{len(tab_ns) + 1}}}{{c}}{{$c = 100$}} \\",
              rf"\cmidrule(lr){{2-{len(tab_ns) + 2}}} \cmidrule(lr){{{len(tab_ns) + 3}-{2 * len(tab_ns) + 3}}}",
              "$k$ & " + " & ".join(2 * ([f"$n = {n}$" for n in tab_ns] + [r"$n \to \infty$"])) + r" \\", r"\midrule"]
     for k in ks:

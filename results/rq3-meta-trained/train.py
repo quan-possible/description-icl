@@ -18,6 +18,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--p", type=float, required=True)
 ap.add_argument("--r", type=float, required=True)
 ap.add_argument("--d", type=int, default=5)
+ap.add_argument("--k", type=int, help="the description describes directions 1..k only (default all d)")
 ap.add_argument("--a-base", type=float, default=10.0)
 ap.add_argument("--K", type=int, default=16)
 ap.add_argument("--steps", type=int, default=100_000)
@@ -40,12 +41,12 @@ opt = torch.optim.Adam(model.parameters(), lr=args.lr)
 rs = torch.tensor([args.r], device=dev)
 out = pathlib.Path("tmp/rq3")
 out.mkdir(parents=True, exist_ok=True)
-name = args.name or f"p{args.p}_r{args.r}_d{args.d}_s{args.seed}"
+name = args.name or f"p{args.p}_r{args.r}_d{args.d}" + (f"_k{args.k}" if args.k else "") + f"_s{args.seed}"
 
 t0, run = time.time(), 0.0
 for step in range(1, args.steps + 1):
     # One question per prompt, after a random number of examples.
-    batch = meta.sample_batch(args.batch, args.K, args.d, args.a_base, rs, args.p, 0.5, dev)
+    batch = meta.sample_batch(args.batch, args.K, args.d, args.a_base, rs, args.p, 0.5, dev, k=args.k)
     n = torch.randint(0, args.K, (args.batch,), device=dev)
     with torch.autocast("cuda", dtype=torch.bfloat16, enabled=args.amp and dev == "cuda"):
         mean, log_var = model(*meta.tokens(batch, n), n)

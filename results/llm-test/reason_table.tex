@@ -2,16 +2,16 @@
 \toprule
 Run & $c = 1$ & $c = 4$ & $c = 36$ & irrelevant & 10\% wrong & 50\% wrong & $c = 4$, drawn $36$ \\
 \midrule
-Bayes-optimal & 1.0 & 3.5 & 34.6 & $\leq$ $-$1.0 & 27.5 & 5.7 & 13.7 \\
+Reference & 1.0 & 3.5 & 34.6 & $\leq$ $-$1.0 & 27.5 & 5.7 & 13.7 \\
 GPT-6 Sol, without reasoning & 0.9 & 1.9 & 10 & $\leq$ $-$1.0 & 3.3 & 0.9 & 2.4 \\
 GPT-6 Sol, with reasoning (low) & 0.9 & 3.3 & 35 (34) & $\leq$ $-$1.0 & 30 (29) & 4.2 & 11 \\
-Opus 4.6, without reasoning & 0.9 & 2.0 & 5.8 (5.9) & $\leq$ $-$1.0 & 6.1 (6.0) & 3.7 & 3.0 \\
+Opus 4.6, without reasoning & 0.9 & 2.0 & 5.8 (5.9) & $\leq$ $-$1.0 & 6.1 (6.0) & 3.8 & 3.0 \\
 Opus 4.6, with reasoning (high) & 1.0 & 3.5 & 35 & $\leq$ $-$1.0 & 29 & 3.8 & 13 \\
 Gemma 4 31B, with reasoning & 1.0 & 3.5 & 35 & $\leq$ $-$1.0 & 21 & 4.0 & 14 \\
-Qwen3.5 9B, with reasoning & 0.9 & 3.5 & $> 60$ (34) & $\leq$ $-$1.0 & $> 60$ (21) & 3.9 & $> 60$ (14) \\
+Qwen3.5 9B, with reasoning & 0.9 & 3.5 & $> 60$ (34) & $\leq$ $-$1.0 & 29 (27) & 3.9 & 15 (14) \\
 gpt-oss-20b, with reasoning (low) & 0.3 & 1.0 & $> 60$ (24) & $\leq$ $-$1.0 & 1.3 (1.2) & 8.8 & 8.6 (8.4) \\
-Haiku 5.5, with reasoning (medium) & 1.1 & 3.3 (3.5) & 28 & $\leq$ $-$1.0 & 33 & 3.8 (3.9) & 11 (8.8) \\
-Haiku 5.5, with reasoning (low) & 0.8 (0.7) & 3.4 (3.3) & 26 (24) & $\leq$ $-$1.0 & 27 (26) & 5.7 (5.6) & 16 (8.1) \\
-Olmo 3 7B Think, with reasoning & $\leq$ $-$0.7 ($\leq$ $-$0.9) & $-$0.7 ($-$0.9) & $> 60$ ($\leq$ $-$0.5) & $\leq$ $-$1.0 & $> 60$ (0.8) & $> 60$ (0.8) & $> 60$ ($-$0.7) \\
+Haiku 5.5, with reasoning (medium) & 1.1 & 3.3 (3.5) & 28 & $\leq$ $-$1.0 & 33 & 3.8 (3.9) & 8.5 (8.8) \\
+Haiku 5.5, with reasoning (low) & 0.8 (0.7) & 3.2 (3.3) & 24 & $\leq$ $-$1.0 & 27 (26) & 5.5 (5.6) & 8.6 (8.4) \\
+Olmo 3 7B Think, with reasoning & $-$0.5 & 0.0 & 6.2 (6.0) & $\leq$ $-$1.0 & 5.9 (5.6) & 5.5 (5.3) & 15 (13) \\
 \bottomrule
 \end{tabular}

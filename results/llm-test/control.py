@@ -116,7 +116,7 @@ def table():
     models = list(dict.fromkeys(r["model"] for r in rows))
     pick = lambda m, s_, n: next(r for r in rows if r["model"] == m and int(r["actual"]) == 10 and int(r["stated"]) == s_ and int(r["n"]) == n)
     med = lambda m, s_, key: float(np.median([float(pick(m, s_, n)[key]) for n in A.MEDIAN_NS]))
-    out.append("Bayes-optimal & " + " & ".join(f2(pick(models[0], s_, 1)["ideal_weight"]) for s_ in (60, 30, 10)) + " & " + " & ".join(ess(med(models[0], s_, "ideal_ess")) for s_ in (60, 30, 10)) + r" \\")
+    out.append("Reference & " + " & ".join(f2(pick(models[0], s_, 1)["ideal_weight"]) for s_ in (60, 30, 10)) + " & " + " & ".join(ess(med(models[0], s_, "ideal_ess")) for s_ in (60, 30, 10)) + r" \\")
     out.append(r"\midrule")
     for m in models:
         out.append(f"{m} & " + " & ".join(f2(pick(m, s_, 1)["weight"]) for s_ in (60, 30, 10)) + " & " + " & ".join(ess(med(m, s_, "ess")) for s_ in (60, 30, 10)) + r" \\")

@@ -195,7 +195,7 @@ def tables(rows, medians):
              r"& \multicolumn{3}{c}{relevant} & \multicolumn{3}{c}{$c = 36$} & & \multicolumn{3}{c}{relevant} \\",
              r"\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){9-11}",
              "Model & " + " & ".join(head) + " & & " + " & ".join(head[:3]) + r" \\", r"\midrule"]
-    lines.append("Bayes-optimal & " + " & ".join(fmt_worth(medians[key(models[0], c)][3], medians[key(models[0], c)][5], max(MEDIAN_NS)) for c in cols) + " & & " + " & ".join(f"{w1(models[0], c, 'ideal_weight'):.2f}" for c in wcols) + r" \\")
+    lines.append("Reference & " + " & ".join(fmt_worth(medians[key(models[0], c)][3], medians[key(models[0], c)][5], max(MEDIAN_NS)) for c in cols) + " & & " + " & ".join(f"{w1(models[0], c, 'ideal_weight'):.2f}" for c in wcols) + r" \\")
     lines.append(r"\midrule")
     for m in models:
         cells = []
@@ -214,20 +214,20 @@ def tables(rows, medians):
     models = plain(models)
     conds = [cond for cond in T.CONDITIONS if cond[1]]
     for name, key_, ideal_key in (("llm_table_worth.tex", "ess", "ideal_ess"), ("llm_table_full.tex", "weight", "ideal_weight"), ("llm_table_worth_written.tex", "ess", "ideal_ess")):
-        group = written if "written" in name else ["Bayes-optimal"] + models
+        group = written if "written" in name else ["Reference"] + models
         ns = [n for n in T.NS if n >= 1] if key_ == "ess" else list(T.NS)
         show = (lambda v, cens, n: fmt_worth(v, cens, n)) if key_ == "ess" else (lambda v, cens, n: f"{v:.2f}")
         lines = [r"\begin{tabular}{llr" + "r" * len(ns) + "}", r"\toprule", r"Predictor & Description & number & " + " & ".join(f"$n = {n}$" for n in ns) + r" \\", r"\midrule"]
         for m in group:
-            src, k, ck = (models[0], ideal_key, "ideal_censored") if m == "Bayes-optimal" else (m, key_, "ess_censored")
+            src, k, ck = (models[0], ideal_key, "ideal_censored") if m == "Reference" else (m, key_, "ess_censored")
             for i, cond in enumerate(conds):
                 rs = {r["n"]: r for r in rows if r["model"] == src and (r["noise"], r["sd"], r["valid"], r["p"]) == cond}
                 cells = []
                 for n in ns:
                     r = rs.get(n)
                     v = show(r[k], r.get(ck), n) if r else "--"
-                    cells.append(rf"\textit{{{v}}}" if r and m != "Bayes-optimal" and r["p_number"] < MIN_NUMBER else v)
-                share = "" if m == "Bayes-optimal" else f"{np.mean([r['p_number'] for r in rs.values()]):.2f}"
+                    cells.append(rf"\textit{{{v}}}" if r and m != "Reference" and r["p_number"] < MIN_NUMBER else v)
+                share = "" if m == "Reference" else f"{np.mean([r['p_number'] for r in rs.values()]):.2f}"
                 lines.append((m if i == 0 else "") + f" & {label(cond)} & {share} & " + " & ".join(cells) + r" \\")
             lines.append(r"\midrule")
         lines[-1] = r"\bottomrule"
@@ -278,7 +278,7 @@ def objective_table(rows):
     cell = lambda m, sd, n, k="weight": next(r[k] for r in rows if r["model"] == m and r["noise"] == T.MAIN and r["sd"] == sd and r["valid"] and r["p"] is None and r["n"] == n)
     lines = [r"\begin{tabular}{llccccccc}", r"\toprule", r"& & & \multicolumn{3}{c}{weight, $n = 1$} & \multicolumn{3}{c}{weight, $n = 4$} \\",
              r"\cmidrule(lr){4-6} \cmidrule(lr){7-9}", r"Model & Prompt & number & $c = 1$ & $c = 4$ & $c = 36$ & $c = 1$ & $c = 4$ & $c = 36$ \\", r"\midrule",
-             "Bayes-optimal & & & " + " & ".join(f"{cell(bases[0], sd, n, 'ideal_weight'):.2f}" for n in (1, 4) for sd in sds) + r" \\", r"\midrule"]
+             "Reference & & & " + " & ".join(f"{cell(bases[0], sd, n, 'ideal_weight'):.2f}" for n in (1, 4) for sd in sds) + r" \\", r"\midrule"]
     for b in bases:
         for k, (m, name) in enumerate(((b, "as in the main run"), (b + " (objective)", "loss stated"))):
             share = np.mean([r["p_number"] for r in rows if r["model"] == m and r["n"] in MEDIAN_NS and r["noise"] == T.MAIN and r["p"] is None and (r["sd"] is None or r["valid"])])
@@ -371,7 +371,7 @@ def figure(rows, medians):
         ps.style_axes(ax, grid_axis="y")
     ps.panel_labels([a, b, c])
     from matplotlib.lines import Line2D
-    handles = lines + [Line2D([], [], label="Bayes-optimal", **ps.BAYES)]
+    handles = lines + [Line2D([], [], label="reference", **ps.BAYES)]
     fig.legend(handles=handles, loc="outside upper center", ncol=len(handles), frameon=False)
     ps.save(fig, str(here / "llm_test"))
 

@@ -94,12 +94,12 @@ def table(results):
              " ".join(rf"\cmidrule(lr){{{2 + 4 * i}-{5 + 4 * i}}}" for i in range(len(CS))),
              "Predictor & " + " & ".join(["log $n$", "linear", "monotone", "fit"] * len(CS)) + r" \\", r"\midrule"]
     label0, _, ideal = results[0]
-    rows = [("Bayes-optimal", ideal)] + [(label, model) for label, model, _ in results]
+    rows = [("Reference", ideal)] + [(label, model) for label, model, _ in results]
     for label, curves in rows:
         by = {r: headline(curves, r) for r in names}
         cells = [A.fmt_worth(*by[r][i], max(A.MEDIAN_NS)) for i in range(len(CS)) for r in names]
         lines.append(label + " & " + " & ".join(cells) + r" \\")
-        if label == "Bayes-optimal":
+        if label == "Reference":
             lines.append(r"\midrule")
     lines += [r"\bottomrule", r"\end{tabular}"]
     (here / "llm_table_sensitivity.tex").write_text("\n".join(lines) + "\n")
@@ -120,7 +120,7 @@ def figure(results):
     axes = axes.ravel()
     mix = lambda f: to_hex(f * np.array(to_rgb(ps.GREEN.edge)) + (1 - f) * np.array(to_rgb(ps.GREEN.fill)))
     greens = [mix(0.45), mix(0.8), to_hex(0.7 * np.array(to_rgb(ps.GREEN.edge)))]  # c = 1, 4, 36, light to dark
-    panels = [("Bayes-optimal", results[0][2])] + [(label, model) for label, model, _ in results]
+    panels = [("Reference", results[0][2])] + [(label, model) for label, model, _ in results]
     for ax, (label, curves) in zip(axes, panels):
         ax.plot(NS, np.sqrt(curves[NONE]), color=ps.BLUE.edge, lw=1.8, marker="o", ms=3, mfc=ps.BLUE.fill, mec=ps.BLUE.edge)
         for cond, col in zip(RELEVANT, greens):
@@ -145,6 +145,6 @@ if __name__ == "__main__":
     results = [mse_curves(f) for f in FILES]
     for label, model, ideal in results:
         print(label, {r: headline(model, r) for r in READINGS})
-    print("Bayes-optimal", {r: headline(results[0][2], r) for r in READINGS})
+    print("Reference", {r: headline(results[0][2], r) for r in READINGS})
     table(results)
     figure(results)

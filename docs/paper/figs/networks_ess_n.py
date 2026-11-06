@@ -17,7 +17,7 @@ import paper_style as ps
 
 here = pathlib.Path(__file__).parent
 rows = list(csv.DictReader((here.parents[2] / "results" / "rq3-meta-trained" / "ess_n.csv").open()))
-P, R = ["1.0", "0.99", "0.9"], [("0.01", "specific, $c = 10$"), ("0.1", "loose, $c = 1$")]
+P, R = ["1.0", "0.99", "0.9"], [("0.01", "$c = 10$"), ("0.1", "$c = 1$")]
 N = np.arange(21)
 
 

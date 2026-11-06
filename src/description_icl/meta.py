@@ -20,11 +20,13 @@ import torch
 from torch import nn
 
 
-def sample_batch(B, K, d, a_base, rs, p, p_desc, device, generator=None):
+def sample_batch(B, K, d, a_base, rs, p, p_desc, device, generator=None, k=None):
     """Draw B prompts of K examples. Returns a dict of tensors.
 
     rs: tensor of precision ratios to sample from. p: probability a
     description is correct. p_desc: probability the prompt has one.
+    k: a partial description, of directions 1..k only (default all d): w
+    keeps the base prior in the others, where m is 0.
     """
     g = generator
     rn = lambda *s: torch.randn(*s, device=device, generator=g)
@@ -35,6 +37,9 @@ def sample_batch(B, K, d, a_base, rs, p, p_desc, device, generator=None):
     m = torch.sqrt(a_base * (1 - r))[:, None] * rn(B, d)
     w_right = m + torch.sqrt(a_base * r)[:, None] * rn(B, d)
     w_wrong = math.sqrt(a_base) * rn(B, d)
+    if k is not None and k < d:
+        m[:, k:] = 0
+        w_right[:, k:] = w_wrong[:, k:]
     # without a description the task is a plain draw from the base prior
     w = torch.where((has_desc & correct)[:, None], w_right, w_wrong)
     X = rn(B, K, d)

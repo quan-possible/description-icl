@@ -165,7 +165,7 @@ def table(rows):
     f = lambda v, c=False: A.fmt_worth(v, c, 4)
     f1 = lambda v, c=False: f(v, c) if c else f"{v:.1f}"  # the Bayes-optimal row with one decimal, as the text quotes it
     out = ["\\begin{tabular}{l" + "c" * len(conds) + "}", "\\toprule", "Run & " + " & ".join(names) + " \\\\", "\\midrule",
-           "Bayes-optimal & " + " & ".join(f1(get(runs[0], c)["ideal_ess"], c.startswith("irrelevant")) for c in conds) + " \\\\"]
+           "Reference & " + " & ".join(f1(get(runs[0], c)["ideal_ess"], c.startswith("irrelevant")) for c in conds) + " \\\\"]
     for run in runs:
         cells = []
         for c in conds:
