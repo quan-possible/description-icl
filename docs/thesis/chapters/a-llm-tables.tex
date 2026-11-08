@@ -1,22 +1,22 @@
 \chapter{Language-Model Results at Every Number of Demonstrations}\label{app:llm-tables}
 
-This appendix collects the language-model tables of Chapter~\ref{ch:llm} at every number of demonstrations. Tables~\ref{tab:llm-worth} and~\ref{tab:llm-worth-written} report ESS at every evaluated demonstration count, and Table~\ref{tab:llm-full} reports description weights for the models with a distribution readout. Tables~\ref{tab:llm-worth} and~\ref{tab:llm-full} each continue onto a second page.
+This appendix collects the complete language-model tables of Chapter~\ref{ch:llm}. Tables~\ref{tab:llm-worth}--\ref{tab:llm-full} report ESS and description weights at every evaluated demonstration count for the full run without reasoning: Tables~\ref{tab:llm-worth} and~\ref{tab:llm-worth-written} report ESS, and Table~\ref{tab:llm-full} reports description weights for the models with a distribution readout. Tables~\ref{tab:llm-worth} and~\ref{tab:llm-full} each continue onto a second page.
 
 \clearpage
 \begin{center}
-\captionof{table}[ESS by description condition and demonstration count: distribution readout]{\textbf{ESS by description condition and demonstration count: distribution readout.} Results cover the prompt-based reference and the three distribution-readout models in the full run without reasoning. ``Number'' is the numeric response rate averaged over $n$. ``10\% wrong'' and ``50\% wrong'' denote stated irrelevance probabilities. An upper bound, $\leq$, marks error above the first baseline point; $>64-n$ means that the description-conditioned error lies below the entire baseline curve through $64$ demonstrations.}\label{tab:llm-worth}
+\captionof{table}[ESS by description condition and demonstration count: distribution readout]{\textbf{ESS by description condition and demonstration count: distribution readout.} Results cover the prompt-based reference and the three distribution-readout models in the full run without reasoning. ``Number'' is the numeric response rate averaged over $n$. ``10\% wrong'' and ``50\% wrong'' denote stated irrelevance probabilities. The censoring marker $\leq$ marks error above the first baseline point; $>64-n$ means that the description-conditioned error lies below the entire baseline curve through $64$ demonstrations.}\label{tab:llm-worth}
 \end{center}
-{\scriptsize\setlength{\tabcolsep}{1.5pt}\longinput{../../results/llm-test/llm_table_worth.tex}}
+{\scriptsize\setlength{\tabcolsep}{1.5pt}\longinput{../paper/tables/llm_table_worth.tex}}
 
 \begin{table}[p]
 \centering
 \caption[ESS by description condition and demonstration count: written readout]{\textbf{ESS by description condition and demonstration count: written readout.} Results cover the three written-readout models in the full run without reasoning. Replies without a qualifying number are excluded. Columns and reference values follow Table~\ref{tab:llm-worth}.}\label{tab:llm-worth-written}
 \vspace{3pt}
-{\scriptsize\setlength{\tabcolsep}{1.5pt}\fittable{../../results/llm-test/llm_table_worth_written.tex}}
+{\scriptsize\setlength{\tabcolsep}{1.5pt}\fittable{../paper/tables/llm_table_worth_written.tex}}
 \end{table}
 
 \clearpage
 \begin{center}
 \captionof{table}[Description weights by demonstration count: distribution readout]{\textbf{Description weights by demonstration count: distribution readout.} Results cover the prompt-based reference and the three distribution-readout models in the full run without reasoning. ``Number'' is defined as in Table~\ref{tab:llm-worth}; cells are italicized when the numeric response rate is below three quarters at the corresponding $n$.}\label{tab:llm-full}
 \end{center}
-{\scriptsize\setlength{\tabcolsep}{1.5pt}\longinput{../../results/llm-test/llm_table_full.tex}}
+{\scriptsize\setlength{\tabcolsep}{1.5pt}\longinput{../paper/tables/llm_table_full.tex}}

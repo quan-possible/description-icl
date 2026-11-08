@@ -1,6 +1,6 @@
 \chapter{The Value of a Reliable Description}\label{ch:specificity}
 
-For $p=1$, the Bayesian predictor uses the posterior mean of $w^\top x$. Its risk is the expected trace of the posterior covariance of $w$. Let $X_n$ contain the demonstration inputs as rows and write $W_n=X_n^\top X_n$. Then
+For $p=1$, a description with fixed positive integer precision $c$ has $\ess_0\to c+d+1$ as $a_0\to\infty$. Its value without demonstrations therefore depends on task dimension as well as precision. The Bayes-optimal predictor uses the posterior mean of $w^\top x$, so its risk is the expected trace of the posterior covariance of $w$. Write $W_n=X_n^\top X_n$, where the rows of $X_n$ are the demonstration inputs. Gaussian conjugacy gives the Bayes-optimal risks
 \begin{align*}
 R^{\mathrm{demo}}(n)&=\E\operatorname{tr}(a_0^{-1}I_d+W_n)^{-1},\\
 R^{\mathrm{desc}}_{p=1}(n)&=\E\operatorname{tr}(cI_d+W_n)^{-1}.
@@ -15,43 +15,45 @@ Let $p=1$.
 \end{enumerate}
 \end{proposition}
 
-The two limits describe different regimes (proof in Section~\ref{app:specificity}). In the first, the description removes a fixed fraction of uncertainty in every direction. Each of the first $d$ demonstrations constrains one direction, so reducing variance across all directions can save approximately $(1-r)d$ demonstrations. In the second, the description retains a fixed absolute precision while the baseline prior becomes diffuse. Without a description, the limiting risk is $d/(n-d-1)$ for $n>d+1$ \citep{muirhead1982}; the description alone has risk $d/c$. These risks match at $n=c+d+1$. The integer restriction makes the crossing coincide with a measured count under linear interpolation.
+The fixed-precision limit in part (ii) follows by comparing the description's risk $d/c$ with the limiting demonstrations-only risk $d/(n-d-1)$, valid for integer $n>d+1$ \citep{muirhead1982}. The risks match at $n=c+d+1$. Integer $c$ places this crossing on the grid used to interpolate the learning curve. In this limit, demonstrations-only risk depends on $\E\operatorname{tr}(W_n^{-1})=d/(n-d-1)$, whereas $\E W_n=nI_d$; this difference accounts for the additional $d+1$ demonstrations.
 
 This $d+1$ contribution reflects the cost of learning a $d$-dimensional task from random inputs. Matching average information would count only the added precision $c-a_0^{-1}$; matching predictive error also accounts for the random design. We refer to the additional contribution as the \emph{dimension term}. It is substantial when $c$ is small relative to $d$, whereas precision dominates when $c$ is large. This interpretation concerns the stated limits, rather than an exact additive formula for every finite $a_0$ and $n$.
 
 The comparison with matching information can be made explicit in this limit. For a normal prior, the ESS of \citet{morita2008} is the ratio of the observation variance to the prior variance, so raising the baseline precision $a_0^{-1}$ to $c$ is worth $c-a_0^{-1}=(1-r)c$ demonstrations under their definition, at every $n$. With a diffuse baseline prior, $n$ demonstrations leave risk $d/(n-d-1)$, not the risk $d/n$ that their expected information would suggest. Setting $d/n$ equal to the description's risk $d/c$ gives $n=c$; setting $d/(n-d-1)$ equal to it gives $n=c+d+1$. The dimension term is the gap between the two.
 
+Part (i) describes a different scaling. Holding $r$ fixed makes $c=(ra_0)^{-1}$ decrease as $a_0$ grows, so the description removes a fixed fraction $1-r$ of baseline variance. Before the demonstration inputs span $\R^d$, error in the remaining directions dominates as $a_0\to\infty$. The description then replaces $(1-r)d$ demonstrations in the limit, with the same quantity providing a lower bound at finite $a_0$ (Section~\ref{app:specificity}).
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.75\textwidth]{ess_sq.pdf}
-\caption[Reliability limits the benefit of greater specificity without demonstrations]{\textbf{Reliability limits the benefit of greater specificity without demonstrations.} Bayesian $\ess_0$ versus specificity $c$, for $p=1$ and $p=0.9$, at $d=16$ and $a_0=10$. The dotted line is the finite ceiling for $p=0.9$ as $c\to\infty$. Estimates use eight batches of $4{,}000$ prompts; standard errors are below $0.02$ demonstrations.}
+\caption[Reliability limits the benefit of specificity without demonstrations]{\textbf{Reliability limits the benefit of specificity without demonstrations.} Bayes-optimal $\ess_0$ versus precision $c$, for $p=1$ and $p=0.9$, with $d=16$ and $a_0=10$. The dotted line is the finite ceiling as $c\to\infty$ at $p=0.9$. Estimates use eight batches of $4{,}000$ prompts; standard errors are below $0.02$ demonstrations.}
 \label{fig:ess}
 \end{figure}
 
-At $d=16$ and $a_0=10$, a reliable description with $c=1$ has ESS $15.6$, compared with the lower bound $(1-r)d=14.4$. Increasing $c$ to $100$ raises ESS to approximately $117$ (Figure~\ref{fig:ess}). As demonstrations accumulate, the dimension benefit disappears: $\ess_n\to c-a_0^{-1}$ (Corollary~\ref{cor:ess}). For example, after $100$ demonstrations the $c=1$ description is worth $1.1$ demonstrations, close to its added precision of $0.9$.
+At $d=16$ and $a_0=10$, a reliable description with $c=1$ has ESS $15.6$, compared with the lower bound $(1-r)d=14.4$. Increasing $c$ to $100$ raises ESS to approximately $117$ (Figure~\ref{fig:ess}). With many demonstrations, the dimension-dependent contribution disappears: $\ess_n\to c-a_0^{-1}$ (Corollary~\ref{cor:ess}). After $100$ demonstrations, the $c=1$ description has ESS $1.1$, close to its added precision of $0.9$.
 
-\paragraph{Coverage matters as well as precision.}
-A description may constrain only $k<d$ directions. For any fixed precision $c>0$, its zero-demonstration ESS approaches $k$ as $a_0\to\infty$; increasing that fixed precision does not remove uncertainty in the other directions. With many demonstrations, its ESS instead approaches $k(c-a_0^{-1})/d$ (Proposition~\ref{prop:partial}). A precise partial description can therefore become more valuable as demonstrations resolve what it leaves unspecified. At $d=16$, $k=8$, and $c=100$, ESS increases from $8.1$ without demonstrations to $36$ with $100$ demonstrations (Table~\ref{tab:partial}).
+\paragraph{The number of constrained directions matters.}
+A reliable description may constrain only $k<d$ directions. With fixed $c>0$, its zero-demonstration ESS approaches $k$ as $a_0\to\infty$: the unconstrained directions dominate the remaining error. With many demonstrations, its ESS instead approaches $k(c-a_0^{-1})/d$ (Proposition~\ref{prop:partial}, Section~\ref{app:partial}). A sufficiently precise partial description can therefore gain value as demonstrations resolve what it leaves unspecified. At $d=16$, $k=8$, and $c=100$, ESS rises from $8.1$ without demonstrations to $36.2$ after $100$ demonstrations (Table~\ref{tab:partial}).
 
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{3pt}
-\caption[Demonstrations can increase the value of a precise partial description]{\textbf{Demonstrations can increase the value of a precise partial description.} Bayes-optimal ESS for a reliable description of $k$ of $d=16$ directions, with $a_0=10$. The case $k=16$ is a complete description. Each block reports ESS after $n$ demonstrations and its large-sample limit $(1-r)ck/d$. Estimates use eight batches of $2{,}000$ prompts; standard errors are at most $0.23$.}
+\caption[Demonstrations can increase the value of a precise partial description]{\textbf{Demonstrations can increase the value of a precise partial description.} Bayes-optimal ESS for a reliable description of $k$ of $d=16$ directions, with $a_0=10$. The case $k=16$ is a complete description. Each block reports ESS after $n$ demonstrations and its large-sample limit $(1-r)ck/d$. Estimates use eight batches of $2{,}000$ prompts; standard errors are at most $0.05$.}
 \label{tab:partial}
 \vspace{3pt}
-\fittable{../paper/figs/partial_table.tex}
+\fittable{../paper/tables_polished/partial_table.tex}
 \end{table}
 
 \section{Reliable Descriptions}\label{app:specificity}
 
 \paragraph{Notation and risk.}
-Write $\varepsilon = 1/a_0$, let $X_n\in\R^{n\times d}$ contain the demonstration inputs as rows, and set $W_n=X_n^\top X_n$. For $\kappa>0$, define
+Write $\varepsilon = 1/a_0$ for the baseline prior precision. Let $X_n\in\R^{n\times d}$ contain the demonstration inputs as rows, and set $W_n=X_n^\top X_n$. For a prior precision $\kappa>0$, define
 \[
 R^{\kappa}(n)=\E\operatorname{tr}(\kappa I_d+W_n)^{-1}.
 \]
-Thus $R^{\mathrm{demo}}=R^{\varepsilon}$ and $R^{\mathrm{desc}}_{p=1}=R^c$. These identities follow from the posterior covariance under Gaussian linear regression. Conditional on the prompt, the posterior mean minimizes squared prediction error, and the independent query satisfies $\E[xx^\top]=I_d$. Averaging its conditional error $x^\top\Sigma x$ therefore gives $\E\operatorname{tr}\Sigma$.
+Thus $R^{\mathrm{demo}}=R^{\varepsilon}$ and $R^{\mathrm{desc}}_{p=1}=R^c$. Here and throughout, risk means expected squared prediction error against the noiseless query mean $w^\top x$. The identities follow from the Gaussian posterior covariance: the posterior mean minimizes conditional squared error, and the independent query satisfies $\E[xx^\top]=I_d$. Averaging the conditional error $x^\top\Sigma x$ therefore gives $\E\operatorname{tr}\Sigma$.
 
-Throughout the proofs, $d$ is a positive integer, $a_0>0$, $c\ge\varepsilon$, $r=1/(ca_0)\in(0,1]$, and $p\in[0,1]$. Noninteger sample sizes refer to linear interpolation between the risks at adjacent integers.
+Throughout the proofs, $d$ is a positive integer, $a_0>0$, $c\ge\varepsilon$, $r=1/(ca_0)\in(0,1]$, and $p\in[0,1]$. Specificity is represented by the relevant component's precision $c$; $r$ is its variance as a fraction of the baseline variance. Reliability $p$ is the prior probability of relevance. Noninteger demonstration counts refer to linear interpolation between the risks at adjacent integers.
 
 \paragraph{Wishart identities.}
 We use three standard properties of $W_n$.
@@ -117,11 +119,11 @@ The final term is positive semidefinite and bounded above by $\kappa^2W_n^{-3}$.
 \begin{equation}\label{eq:extra}
 R^\kappa(n)=\frac{d}{n-d-1}-\frac{\kappa d}{n^2}+O(n^{-3}).
 \end{equation}
-An additional demonstration reduces the leading term by $d/n^2+O(n^{-3})$. Thus a fixed change in prior precision and a fixed change in sample size affect risk at the same order. This observation underlies the large-$n$ ESS limits below.
+An additional demonstration reduces the leading term by $d/n^2+O(n^{-3})$. A fixed increase in prior precision and a fixed increase in the demonstration count therefore reduce risk at the same asymptotic order. This comparison gives the large-sample ESS limits below.
 
 \section{Partial Descriptions}\label{app:partial}
 
-A reliable description may constrain only part of a task. Suppose it leaves a fraction $r$ of the baseline variance in $k<d$ directions and leaves the remaining $d-k$ directions unchanged. Its conditional prior precision is $c$ in the first set of directions and $\varepsilon=1/a_0$ in the second. Write
+A reliable description may constrain only $k<d$ directions. Suppose the description leaves a fraction $r$ of the baseline variance in these directions and leaves the remaining $d-k$ directions unchanged. The description-conditioned prior precision is $c$ in the constrained directions and $\varepsilon=1/a_0$ elsewhere. Write
 \[
 \Lambda=\operatorname{diag}(cI_k,\varepsilon I_{d-k}).
 \]
@@ -139,7 +141,7 @@ Let $p=1$ and let $0\le k<d$ be an integer.
 \end{enumerate}
 \end{proposition}
 
-In the broad-prior limit, the unconstrained directions dominate the initial error. Even an arbitrarily precise description of $k<d$ directions therefore replaces only about $k$ demonstrations when used alone. After many demonstrations, its value instead approaches the added precision averaged across all $d$ directions. These two limits permit complementarity: a sufficiently precise partial description can be worth more alongside demonstrations than by itself. The numerical example in Table~\ref{tab:partial} shows this effect. At $c=100$, a description of half of the $d=16$ directions has ESS $8.1$ without demonstrations and $36$ with $100$ demonstrations.
+As the baseline prior becomes diffuse with $c$ fixed, the unconstrained directions dominate the zero-demonstration risk, and ESS approaches the number of constrained directions, $k$. After many demonstrations, ESS instead approaches the added precision averaged across all $d$ directions. A sufficiently precise partial description can therefore be worth more alongside demonstrations than by itself. Table~\ref{tab:partial} illustrates this complementarity: at $c=100$, a description of half of the $d=16$ directions has ESS $8.1$ without demonstrations and $36$ with $100$ demonstrations.
 
 The large-sample limit exceeds $k$ about when $c-a_0^{-1}>d$, and this is when a partial description gains value as demonstrations accumulate. Between $0$ and $100$ demonstrations, a complete description at $c=100$ falls from $117$ to $109$, so demonstrations substitute for a complete description and complement a partial one. At $c=1$, ESS falls as demonstrations accumulate, whether the description is partial or complete.
 
@@ -183,4 +185,4 @@ Matching this expansion to the baseline risk, as in Corollary~\ref{cor:ess}(ii),
 =\frac{k(c-\varepsilon)}{d}.
 \]
 \end{proof}
-The same expansion applies to any fixed Gaussian description precision $\Lambda\succeq\varepsilon I_d$ compatible with the baseline task distribution. Its large-sample ESS is the added precision averaged across directions, $(\operatorname{tr}\Lambda-d\varepsilon)/d$.
+The same expansion applies to any fixed Gaussian description precision matrix $\Lambda\succeq\varepsilon I_d$ compatible with the baseline task distribution. Its large-sample ESS is the added precision averaged across directions, $(\operatorname{tr}\Lambda-d\varepsilon)/d$.
