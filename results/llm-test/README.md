@@ -86,5 +86,4 @@ models). The paper inputs these from `docs/paper` via `../../results/llm-test/`.
 - `full_*.npz`: distribution readout (64 numbers shown); `written_*.npz`: written readout; `written_*_p[0-3].npz`: wording ablation; `control_*.npz`: the specificity control; `reason_gptoss20_4096.npz`; `haiku/`: the Haiku 5.5 replies.
 - `run_all.sh`, `run_written.sh`, `run_reason.sh`, `run_control.sh`, `run_olmo32.sh`: the Colab jobs.
 - `agent-check/`: the frontier-model check.
-- `archive-n8/`: the earlier 8-number run; `archive-pilot1/`, `archive-pilot2/`: prompt pilots; `archive-v2/`: the earlier list-continuation version of the test.
 - `tmp/`: job logs and the pre-merge analysis script.

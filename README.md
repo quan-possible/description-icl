@@ -31,5 +31,4 @@ cd ../thesis && latexmk -pdf thesis.tex
 `ess_curve_sq.py` and `trust_sq.py` recompute the Section 4–5 numbers (minutes); the others only redraw. The paper's theory
 scores squared error; the log-loss versions (`ess_curve.py`, `ess.pdf`, `overview.tex`) remain for the thesis. `analyze.py replot`
 redraws Figure 4 and the language-model tables from the last analysis; run `analyze.py` on the
-`full_*.npz` score files to recompute them. Large pilot arrays (`results/llm-test/archive-v2/*.npz`)
-are kept out of Git.
+`full_*.npz` score files to recompute them.
