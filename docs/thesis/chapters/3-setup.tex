@@ -34,7 +34,7 @@ As in Section~\ref{sec:bg-regret}, we score a prediction $\hat y$ by its predict
 \begin{equation}\label{eq:regret}
 R=\E\big[(\hat y-w^\top x)^2\big].
 \end{equation}
-The expectation is over tasks, descriptions, demonstrations, and queries. For a fixed learner, $R^{\mathrm{desc}}(n)$ and $R^{\mathrm{demo}}(n)$ denote risk with and without a description, and $R^{\mathrm{desc}}_{p=1}(n)$ denotes the reliable case. We call $R^{\mathrm{demo}}$, as a function of the demonstration count, the learner's \emph{baseline curve}. To express a description's value in demonstrations, we compare these two risk curves, as the loss-based ESS of Section~\ref{sec:bg-ess} does for a prior.
+The expectation is over tasks, descriptions, demonstrations, and queries. For a fixed learner, $R^{\mathrm{desc}}(n)$ and $R^{\mathrm{demo}}(n)$ denote risk with and without a description, and $R^{\mathrm{desc}}_{p=1}(n)$ denotes the reliable case. As a function of the demonstration count, $R^{\mathrm{demo}}$ is the learner's \emph{baseline curve}. To express a description's value in demonstrations, we compare these two risk curves, as the loss-based ESS of Section~\ref{sec:bg-ess} does for a prior.
 
 \begin{definition}[Predictive effective sample size]\label{def:ess}
 Given $n$ demonstrations, let $n^*$ be the smallest $t\geq0$ satisfying $R^{\mathrm{demo}}(t)=R^{\mathrm{desc}}(n)$. When this crossing exists, the description's ESS is
