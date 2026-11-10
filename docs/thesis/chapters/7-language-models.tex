@@ -1,6 +1,6 @@
 \chapter{Pretrained Language Models}\label{ch:llm}
 
-Unlike the meta-trained networks, pretrained language models must be told a description's precision and reliability. We ask whether they use what the prompt states. To isolate the use of a description from the ability to carry out linear regression in context, we study numerical mean estimation, the scalar case with fixed input $x=1$, and then semantic classification. The scalar task has an exact Bayesian reference and tests the use of stated precision and relevance probabilities without the dimension term of Chapter~\ref{ch:specificity}, which arises from random inputs.
+Unlike the meta-trained networks, pretrained language models must be told a description's precision and reliability. We ask whether they use what the prompt states. To isolate the use of a description from the ability to carry out linear regression in context, we study numerical mean estimation, the scalar case with fixed input $x=1$, and then semantic classification. The scalar task has an exact Bayesian reference and tests the use of stated precision and relevance probabilities without the dimension term of Chapter~\ref{ch:specificity}, which arises from random inputs. Using a stated precision requires weighting the description and the demonstrations by their precisions. Reasoning may help a model carry out this computation, so we compare models with reasoning enabled and disabled.
 
 \section{Task and Evaluation}\label{sec:llm-task}
 
