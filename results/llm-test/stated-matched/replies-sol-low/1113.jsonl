@@ -1,0 +1,10 @@
+2026-11-10T01:03:09.142934Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_e5a747d983424ccaa8a2a63fd606614a
+{"type":"thread.started","thread_id":"01a1c2fa-f534-7742-a345-d66ae8e623c4"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."}}
+{"type":"turn.started"}
+2026-11-10T01:03:18.245070Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-10T01:03:31.731898Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Tls
+2026-11-10T01:03:38.704035Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+{"type":"error","message":"Reconnecting... 2/5 (unexpected status 403 Forbidden: Unknown error, url: wss://chatgpt.com/backend-api/codex/responses, cf-ray: a5812378cb4001e0-YYC)"}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"702"}}
+{"type":"turn.completed","usage":{"input_tokens":9133,"cached_input_tokens":7168,"cache_write_input_tokens":0,"output_tokens":33,"reasoning_output_tokens":26}}

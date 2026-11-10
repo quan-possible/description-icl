@@ -1,0 +1,8 @@
+{"type":"thread.started","thread_id":"01a1c2f1-8632-7b93-a89f-f7f4cd33c24a"}
+2026-11-10T00:52:50.995305Z ERROR codex_core::shell_snapshot: Shell snapshot validation failed: Snapshot command exited with status exit status: 127: zsh:.:1: no such file or directory: /Users/brucenguyen/Projects/description-icl/tmp/codex-bare/shell_snapshots/01a1c2f1-8632-7b93-a89f-f7f4cd33c24a.tmp-1794271970868756000
+
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."}}
+{"type":"turn.started"}
+2026-11-10T00:52:58.358853Z ERROR codex_core::tools::router: error=code-mode host is disabled
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"582"}}
+{"type":"turn.completed","usage":{"input_tokens":18553,"cached_input_tokens":16384,"cache_write_input_tokens":0,"output_tokens":386,"reasoning_output_tokens":195}}

@@ -17,8 +17,8 @@ import llm_test as T
 
 here = pathlib.Path(__file__).parent
 K, BOOT = T.REASON_TASKS, 500
-PANELS = {"c36": "relevant sd 10", "control": "relevant sd 30, value of sd 10", "wrong50": "relevant sd 10, 50% may be wrong"}
-COND = {"c36": (60, 10, True, None), "control": (60, 30, True, None, 10), "wrong50": (60, 10, True, 0.5)}
+PANELS = {"c4": "relevant sd 30", "c36": "relevant sd 10", "control": "relevant sd 30, value of sd 10", "wrong50": "relevant sd 10, 50% may be wrong"}
+COND = {"c4": (60, 30, True, None), "c36": (60, 10, True, None), "control": (60, 30, True, None, 10), "wrong50": (60, 10, True, 0.5)}
 # open models without reasoning: label -> (main array, control array); the paper reads gpt-oss-20b from its distribution
 OPEN = {"gpt-oss-20b": ("full_gptoss20.npz", "control_gptoss20.npz"),
         "Qwen3.5 9B": ("written_qwen9.npz", "control_written_qwen9.npz"),
@@ -78,8 +78,32 @@ def reasoning_rows():
     return rows
 
 
+def fixed_row():
+    """Fixed-weight averaging at the stated 50%: the two component predictions averaged with weights 0.5, never
+    updated on the demonstrations; its summary ESS on the reference's baseline curve, as for the reference."""
+    T.S = 2000
+    t = {k: v[:K] for k, v in T.make_tasks(60).items()}
+    none, cond = T.CONDITIONS[0], COND["c36"]
+    ideal_none = np.stack([(T.ideal_mean(t, none, n) - t["w"]) ** 2 for n in G], 1)
+    fixed = {n: (0.5 * T.ideal_mean(t, cond, n) + 0.5 * T.ideal_mean(t, none, n) - t["w"]) ** 2 for n in (1, 2, 4)}
+    e = ess(ideal_none, fixed, np.arange(K), G)
+    return dict(model="Fixed weights", mode="with", panel="wrong50", ess=e, lo=e, hi=e, ref_ess=e, ref_lo=e, ref_hi=e,
+                bayes=ess(ideal_none, {n: (T.ideal_mean(t, COND["wrong50"], n, 0.5) - t["w"]) ** 2 for n in (1, 2, 4)}, np.arange(K), G))
+
+
+def matched_rows():
+    """The matched stated-reliability design at a stated and true 10% chance of irrelevance (stated-matched/score.py
+    writes matched.csv): every task with its relevant and an irrelevant description, errors weighted by the chance."""
+    rows = list(csv.DictReader(open(here / "stated-matched/matched.csv")))
+    bayes = next(r["ess"] for r in rows if r["run"] == "reference" and r["stated"] == "10")
+    names = {"GPT-6 Sol, low": ("GPT-6 Sol", "with"), "GPT-6 Sol, none": ("GPT-6 Sol", "without"), "Haiku 5.5, medium": ("Haiku 5.5", "with"),
+             "Opus 4.6, high": ("Opus 4.6", "with"), "Opus 4.6, none": ("Opus 4.6", "without")}
+    return [dict(model=names[r["run"]][0], mode=names[r["run"]][1], panel="matched10", ess=r["ess"], lo=r["lo"], hi=r["hi"],
+                 ref_ess=r["ess"], ref_lo=r["lo"], ref_hi=r["hi"], bayes=bayes) for r in rows if r["stated"] == "10" and r["run"] in names]
+
+
 if __name__ == "__main__":
-    rows = open_rows() + reasoning_rows()
+    rows = open_rows() + reasoning_rows() + [fixed_row()] + matched_rows()
     with open(here / "figure_data.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()

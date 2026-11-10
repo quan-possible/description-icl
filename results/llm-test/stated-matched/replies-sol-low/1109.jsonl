@@ -1,0 +1,12 @@
+2026-11-10T01:03:07.007320Z ERROR codex_models_manager::manager: failed to refresh available models: exceeded retry limit, last status: 429 Too Many Requests, request id: req_437f2018d9e44a3a97d9e29d9c0d5730
+{"type":"thread.started","thread_id":"01a1c2fa-eb29-73f2-a9bf-c339f3ba6d5b"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."}}
+{"type":"turn.started"}
+2026-11-10T01:03:12.638994Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-10T01:03:20.703870Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Unknown
+2026-11-10T01:03:26.439992Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Tls
+{"type":"error","message":"Reconnecting... 2/5 (stream disconnected before completion: invalid peer certificate: UnknownIssuer)"}
+2026-11-10T01:03:33.540380Z ERROR codex_api::endpoint::responses_websocket: failed to connect to Responses WebSocket stage=Tls
+{"type":"error","message":"Reconnecting... 3/5 (stream disconnected before completion: invalid peer certificate: UnknownIssuer)"}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"594"}}
+{"type":"turn.completed","usage":{"input_tokens":9133,"cached_input_tokens":7168,"cache_write_input_tokens":0,"output_tokens":37,"reasoning_output_tokens":30}}

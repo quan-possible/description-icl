@@ -1,0 +1,6 @@
+{"type":"thread.started","thread_id":"01a1c2ef-06fd-76c3-a91b-e97320e8c085"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."}}
+{"type":"turn.started"}
+2026-11-10T00:50:15.369742Z ERROR codex_core::tools::router: error=code-mode host is disabled
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"527"}}
+{"type":"turn.completed","usage":{"input_tokens":18512,"cached_input_tokens":18176,"cache_write_input_tokens":0,"output_tokens":263,"reasoning_output_tokens":103}}

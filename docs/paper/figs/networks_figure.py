@@ -75,5 +75,5 @@ b.set_xlabel("$p$ in test"); b.set_ylabel("$p$ in training")
 b.tick_params(length=0, pad=6)
 for side in b.spines.values():
     side.set_visible(False)
-ps.panel_labels((a, b), titles=["", "share of the calibrated ESS"])
+ps.panel_labels((a, b), titles=["", "share of the Bayes-optimal ESS"])
 ps.save(fig, str(here / "networks"))
