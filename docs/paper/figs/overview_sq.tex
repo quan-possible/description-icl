@@ -121,6 +121,11 @@
   \node[note] at ($(r2)+(26mm,3mm)$) {specific, reliable\\\textcolor{inkmuted}{$c = 100$, $p = 1$}};
   \node[note] at ($(r3)+(26mm,3mm)$) {specific, \textcolor{pinkstroke}{90\% reliable}\\\textcolor{inkmuted}{$c = 100$, $p = 0.9$}};
 
+  % An instruction of each kind, in words; illustrations only (the ESS values are the Gaussian model's).
+  \node[note, text=inkmuted] at ($(r1)+(26mm,-2.7mm)$) {e.g.\ ``Write this report as an accountant.''};
+  \node[note, text=inkmuted] at ($(r2)+(26mm,-2.7mm)$) {e.g.\ ``Write this report in these ten steps: \dots''};
+  \node[note, text=inkmuted] at ($(r3)+(26mm,-2.7mm)$) {e.g.\ the same steps, \textcolor{pinkstroke}{out of date one time in ten}};
+
   \coordinate (b1) at ($(r1)+(56mm,3mm)$);
   \coordinate (b2) at ($(r2)+(56mm,3mm)$);
   \coordinate (b3) at ($(r3)+(56mm,3mm)$);
@@ -131,9 +136,9 @@
   \node[note] at ($(b2)+(117*\pitch+11*\gap+1mm,0)$) {117};
   \node[note] at ($(b3)+(13.5*\pitch+1*\gap+1mm,0)$) {13.5};
 
-  \node[note, text=inkmuted] at ($(b1)+(20mm,-7mm)$) {7.5$\times$ the ESS};
+  \node[note, text=inkmuted] at ($(b1)+(34mm,-7mm)$) {7.5$\times$ the ESS};
   \node[note, text=inkmuted] at ($(b3)+(17mm,0)$) {\textcolor{pinkstroke}{$-88\%$ of $117$}};
-  \node[lbl, text=inksubtle, anchor=north east] at ($(b3)+(84mm,-5mm)$) {$d = 16$, $a_0 = 10$, no demonstrations given};
+  \node[lbl, text=inksubtle, anchor=east] at ($(r3)+(140mm,-2.7mm)$) {$d = 16$, $a_0 = 10$, no demonstrations given};
 
 \end{tikzpicture}
 \end{document}
