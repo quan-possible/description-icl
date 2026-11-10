@@ -1,6 +1,6 @@
 \chapter{The Value of a Reliable Description}\label{ch:specificity}
 
-For $p=1$, a description with fixed positive integer precision $c$ has $\ess_0\to c+d+1$ as $a_0\to\infty$. Its value without demonstrations therefore depends on task dimension as well as precision. Section~\ref{app:specificity} derives this limit for a description that constrains every direction, together with the limit $c-a_0^{-1}$ that its ESS approaches as demonstrations accumulate. Section~\ref{app:partial} treats a partial description, which constrains only some directions and can gain value as demonstrations resolve the rest.
+For $p=1$, a description with fixed positive integer precision $c$ has $\ess_0\to c+d+1$ as $a_0\to\infty$. Its value without demonstrations therefore depends on task dimension as well as precision. Section~\ref{app:specificity} derives this limit for a description that constrains every direction. It also derives the limit $c-a_0^{-1}$ that such a description's ESS approaches as demonstrations accumulate. Section~\ref{app:partial} treats a partial description, which constrains only some directions and can gain value as demonstrations resolve the rest.
 
 \section{Complete Descriptions}\label{app:specificity}
 
@@ -20,7 +20,7 @@ Let $p=1$.
 \end{enumerate}
 \end{proposition}
 
-Part (ii) follows from the two facts of Section~\ref{sec:bg-regret}. Without demonstrations, the description's risk is $d/c$. Under a diffuse baseline prior, $n\ge d+2$ demonstrations leave risk $\E\operatorname{tr}W_n^{-1}=d/(n-d-1)$, which equals $d/c$ at $n=c+d+1$; integer $c$ places this crossing on the grid used to interpolate the learning curve. Matching information instead of error gives a smaller count. The expected information $\E W_n=nI_d$ of $n$ demonstrations suggests risk $d/n$, which equals $d/c$ at $n=c$, the count that an ESS matching information, such as that of \citet{morita2008}, assigns to the description (Section~\ref{sec:bg-ess}). We call the gap of $d+1$ demonstrations between the two counts the \emph{dimension term}. It reflects the cost of learning a $d$-dimensional task from random inputs, and it is substantial for a broad description, whereas precision dominates for a specific one. This interpretation concerns the stated limits, rather than an exact additive formula for every finite $a_0$ and $n$.
+Part (ii) follows from the two facts of Section~\ref{sec:bg-regret}. Without demonstrations, the description's risk is $d/c$. Under a diffuse baseline prior, $n\ge d+2$ demonstrations leave risk $\E\operatorname{tr}W_n^{-1}=d/(n-d-1)$, which equals $d/c$ at $n=c+d+1$; integer $c$ places this crossing on the grid used to interpolate the learning curve. Matching information instead of error gives a smaller count. The expected information $\E W_n=nI_d$ of $n$ demonstrations suggests risk $d/n$, and $d/n$ equals $d/c$ at $n=c$. In this limit, $c$ is also the count that an information-matching ESS, such as that of \citet{morita2008}, assigns to the description (Section~\ref{sec:bg-ess}). We call the gap of $d+1$ demonstrations between the two counts the \emph{dimension term}. It reflects the cost of learning a $d$-dimensional task from random inputs, and it is substantial for a broad description, whereas precision dominates for a specific one. This interpretation concerns the stated limits, rather than an exact additive formula for every finite $a_0$ and $n$.
 
 Part (i) fixes the fraction $1-r$ of baseline variance that the description removes, so the description's precision $c=(ra_0)^{-1}$ decreases as $a_0$ grows. With fewer than $d$ demonstrations, the inputs leave some directions unconstrained, and as $a_0\to\infty$ the error in those directions dominates. In the limit, the description then replaces $(1-r)d$ demonstrations; at finite $a_0$, it replaces at least that many.
 
@@ -114,7 +114,7 @@ Linear interpolation gives the same expansion for real $t\in[0,T]$. The baseline
 
 \section{Partial Descriptions}\label{app:partial}
 
-Descriptions often specify only part of a task. In our model, a reliable description may constrain only $k<d$ directions, leaving a fraction $r$ of the baseline variance in these directions and the remaining $d-k$ directions unchanged. Its prior precision is then $c$ in the constrained directions and $\varepsilon$ elsewhere. Write
+Descriptions often specify only part of a task. In our model, a reliable description may constrain only $k<d$ directions. It leaves a fraction $r$ of the baseline variance in these $k$ directions, and it leaves the other $d-k$ directions unchanged. Its prior precision is then $c$ in the constrained directions and $\varepsilon$ elsewhere. Write
 \[
 \Lambda=\operatorname{diag}(cI_k,\varepsilon I_{d-k}).
 \]
@@ -132,7 +132,7 @@ Let $p=1$ and let $0\le k<d$ be an integer.
 \end{enumerate}
 \end{proposition}
 
-Without demonstrations, the unconstrained directions dominate the remaining error, so with $c$ fixed the ESS approaches $k$. With many demonstrations, it approaches the limit in part (ii), the added precision averaged across all $d$ directions. This limit exceeds $k$ approximately when $c-a_0^{-1}>d$, and such a precise partial description gains value as demonstrations resolve what it leaves unspecified. At $d=16$, $k=8$, and $c=100$, ESS rises from $8.1$ without demonstrations to $36.2$ after $100$ demonstrations (Table~\ref{tab:partial}). Over the same range, a complete description at $c=100$ falls from $117$ to $109$, so demonstrations substitute for a complete description and complement a partial one. At $c=1$, ESS falls as demonstrations accumulate, whether the description is partial or complete.
+Without demonstrations, the unconstrained directions dominate the remaining error, so with $c$ fixed the ESS approaches $k$. With many demonstrations, it approaches the limit in part (ii), the added precision averaged across all $d$ directions. This limit exceeds $k$ when, approximately, $c-a_0^{-1}>d$. A partial description this precise gains value as demonstrations resolve what it leaves unspecified. At $d=16$, $k=8$, and $c=100$, ESS rises from $8.1$ without demonstrations to $36.2$ after $100$ demonstrations (Table~\ref{tab:partial}). Over the same range, the ESS of a complete description at $c=100$ falls from $117$ to $109$, so demonstrations substitute for a complete description and complement a partial one. At $c=1$, ESS falls as demonstrations accumulate, whether the description is partial or complete.
 
 \begin{table}[t]
 \centering\small
@@ -167,7 +167,7 @@ Rotational invariance implies
 \E W_n^{-2}=\frac{\E\operatorname{tr}W_n^{-2}}{d}I_d.
 \]
 The expected trace of the middle term is therefore
-$\operatorname{tr}(\Lambda)/n^2+O(n^{-3})$ by (W3). To bound the remainder, use $|\operatorname{tr}(MB)|\le\|M\|_{\mathrm{op}}\operatorname{tr}B$ for $B\succeq0$, together with $(\Lambda+W_n)^{-1}\preceq W_n^{-1}$. Its absolute trace is at most
+$\operatorname{tr}(\Lambda)/n^2+O(n^{-3})$ by (W3). To bound the remainder, use $|\operatorname{tr}(MB)|\le\|M\|_{\mathrm{op}}\operatorname{tr}B$ for $B\succeq0$, together with $(\Lambda+W_n)^{-1}\preceq W_n^{-1}$. The remainder's absolute trace is at most
 \[
 \|\Lambda\|_{\mathrm{op}}^2\|W_n^{-1}\|_{\mathrm{op}}^2\operatorname{tr}W_n^{-1}
 \le d\|\Lambda\|_{\mathrm{op}}^2\operatorname{tr}W_n^{-3},
@@ -183,4 +183,4 @@ Matching this expansion to the baseline risk, as in the proof of Proposition~\re
 =\frac{k(c-\varepsilon)}{d}.
 \]
 \end{proof}
-The same expansion applies to any fixed Gaussian description precision matrix $\Lambda\succeq\varepsilon I_d$ compatible with the baseline task distribution. Its large-sample ESS is the added precision averaged across directions, $(\operatorname{tr}\Lambda-d\varepsilon)/d$.
+The same expansion applies to a Gaussian description with any fixed precision matrix $\Lambda\succeq\varepsilon I_d$ compatible with the baseline task distribution. The large-sample ESS of such a description is the added precision averaged across directions, $(\operatorname{tr}\Lambda-d\varepsilon)/d$.
