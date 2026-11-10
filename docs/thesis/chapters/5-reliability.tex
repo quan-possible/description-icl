@@ -29,7 +29,7 @@ R^{\mathrm{desc}}(0)=\big[1-p^2(1-r)\big]a_0d.
 \end{equation}
 \end{proposition}
 
-Here $\mathcal{V}_n$ is the expected between-component posterior variance. The first two terms in Equation~\eqref{eq:decomp} are the risk of an \emph{oracle}, the Bayes-optimal predictor that also observes $Z$, so $\mathcal{V}_n$ is the excess Bayes risk due to unobserved relevance. The oracle uses the description when it is relevant and otherwise uses the baseline prior; $\mathcal{V}_n$ is the disagreement between these two predictions, weighted by uncertainty about which is appropriate. Without demonstrations, observing $Z$ would remove a fraction $p(1-r)$ of baseline risk; without $Z$, the predictor shrinks $m$ by the factor $p$, and the reduction is only $p^2(1-r)$.
+Here $\mathcal{V}_n$ is the expected between-component posterior variance. The first two terms in Equation~\eqref{eq:decomp} are the risk of an \emph{oracle}, the Bayes-optimal predictor that also observes $Z$, so $\mathcal{V}_n$ is the excess Bayes risk due to unobserved relevance. The oracle uses the description when it is relevant and otherwise uses the baseline prior; $\mathcal{V}_n$ is the disagreement between these two predictions, weighted by uncertainty about which is appropriate. At $n=0$, a predictor that observed $Z$ would remove a fraction $p(1-r)$ of baseline risk. The Bayes-optimal predictor does not observe $Z$: it shrinks $m$ by the factor $p$ and removes only $p^2(1-r)$.
 
 The cost of uncertainty about relevance is small when the two predictions agree. It is also small when the demonstrations make one component far more likely than the other, because $\pi_n(1-\pi_n)$ is then near zero. Without demonstrations, the cost is $\mathcal{V}_0=p(1-p)(1-r)a_0d$, which grows as a more specific description pulls the two predictions apart. With demonstrations, however, a specific description is also easier to distinguish from an irrelevant one.
 
@@ -52,20 +52,20 @@ $p$ times the large-sample ESS of a reliable description (Proposition~\ref{prop:
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.75\textwidth]{ess_sq.pdf}
-\caption[Reliability limits the benefit of specificity without demonstrations]{\textbf{Reliability limits the benefit of specificity without demonstrations.} Bayes-optimal $\ess_0$ versus precision $c$, for $p=1$ and $p=0.9$, with $d=16$ and $a_0=10$. The dotted line is the finite ceiling as $c\to\infty$ at $p=0.9$. Estimates use eight batches of $4{,}000$ prompts; standard errors are below $0.02$ demonstrations.}
+\caption[Without demonstrations, reliability limits the benefit of specificity]{\textbf{Without demonstrations, reliability limits the benefit of specificity.} Bayes-optimal $\ess_0$ versus precision $c$, for $p=1$ and $p=0.9$, with $d=16$ and $a_0=10$. The dotted line is the finite ceiling as $c\to\infty$ at $p=0.9$. Estimates use eight batches of $4{,}000$ prompts; standard errors are below $0.02$ demonstrations.}
 \label{fig:ess}
 \end{figure}
 
 \paragraph{Without demonstrations, uncertain relevance imposes an error floor.}
 For fixed $p<1$, the risk in Equation~\eqref{eq:zero} approaches the positive floor $(1-p^2)a_0d$ as $c\to\infty$, giving a finite ceiling on zero-demonstration ESS. We take $p=0.9$, the weight on the informative component in the robust-prior example of \citet{schmidli2014}. With $d=16$ and $a_0=10$, increasing $c$ from $1$ to $100$ then raises ESS only from $12.0$ to $13.5$, which is approximately the ceiling, compared with $15.6$ to $117$ at $p=1$ (Figure~\ref{fig:ess}). As the baseline prior becomes diffuse, the ceiling tends to $p^2d=12.96$.
 
-The oracle has the lower floor $(1-p)a_0d$, which is the risk of a reliable description that leaves variance fraction $1-p$. In this setting, its ceiling is therefore $15.6$ demonstrations, the ESS of the reliable $c=1$ description; uncertainty about relevance lowers it to the ceiling above.
+The oracle has the lower floor $(1-p)a_0d$, the risk of a reliable description that leaves a fraction $1-p$ of the baseline variance. In this setting, its ceiling is therefore $15.6$ demonstrations, the ESS of the reliable $c=1$ description; uncertainty about relevance lowers it to the ceiling above.
 
 \paragraph{With many demonstrations, ESS is at most $p$ times that of a reliable description.}
 Demonstrations reduce $R^{\mathrm{demo}}(n)$, the risk when the description is irrelevant, so the term $(1-p)R^{\mathrm{demo}}(n)$ in Equation~\eqref{eq:decomp} falls and ESS can grow. In the limit, a reliable description is worth $c-a_0^{-1}$ demonstrations (Proposition~\ref{prop:reliable}(iii)), and an unreliable one at most $p$ times as much (Corollary~\ref{cor:ess}(ii)). After $100$ demonstrations, the $c=100$ description has ESS $109$ when $p=1$ and $86.6$ when $p=0.9$, compared with limits of $99.9$ and at most $89.9$. The reliable value exceeds its limit because the dimension term has not yet vanished at $n=100$.
 
 \paragraph{Demonstrations distinguish low precision from uncertain relevance.}
-Without demonstrations, an unreliable description has the same risk as a reliable description with remaining variance fraction $1-p^2(1-r)$. For example, an unreliable description with $c=100$ and $p=0.9$ and a reliable one with $c\approx0.52$ both have ESS about $13.5$ here. After $100$ demonstrations, their ESS values are $86.6$ and $0.5$. Demonstrations can provide evidence for the high-precision component of the unreliable description; the reliable low-precision description has no such component.
+Without demonstrations, an unreliable description has the same risk as a reliable description that leaves a fraction $1-p^2(1-r)$ of the baseline variance. For example, a $c=100$ description with $p=0.9$ and a reliable one with $c\approx0.52$ both have ESS about $13.5$ here. After $100$ demonstrations, their ESS values are $86.6$ and $0.5$. Demonstrations can provide evidence for the high-precision component of the unreliable description; the reliable low-precision description has no such component.
 
 The rest of this section proves Proposition~\ref{prop:unreliable} and Corollary~\ref{cor:ess}.
 
