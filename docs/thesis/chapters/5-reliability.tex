@@ -57,7 +57,7 @@ $p$ times the large-sample ESS of a reliable description (Proposition~\ref{prop:
 \end{figure}
 
 \paragraph{Without demonstrations, uncertain relevance imposes an error floor.}
-For fixed $p<1$, the risk in Equation~\eqref{eq:zero} approaches the positive floor $(1-p^2)a_0d$ as $c\to\infty$, giving a finite ceiling on zero-demonstration ESS. We take $p=0.9$, the weight on the informative component in the robust-prior example of \citet{schmidli2014}. With $d=16$ and $a_0=10$, increasing $c$ from $1$ to $100$ then raises ESS only from $12.0$ to $13.5$, approximately the ceiling. At $p=1$, the same increase raises ESS from $15.6$ to $117$ (Figure~\ref{fig:ess}). As the baseline prior becomes diffuse, the ceiling tends to $p^2d=12.96$.
+For fixed $p<1$, the risk in Equation~\eqref{eq:zero} approaches the positive floor $(1-p^2)a_0d$ as $c\to\infty$, giving a finite ceiling on zero-demonstration ESS. As an illustration, we take $p=0.9$, the weight on the informative component in the robust-prior example of \citet{schmidli2014}. With $d=16$ and $a_0=10$, increasing $c$ from $1$ to $100$ then raises ESS only from $12.0$ to $13.5$, approximately the ceiling. At $p=1$, the same increase raises ESS from $15.6$ to $117$ (Figure~\ref{fig:ess}). As the baseline prior becomes diffuse, the ceiling tends to $p^2d=12.96$.
 
 The oracle has the lower floor $(1-p)a_0d$, the risk of a reliable description that leaves a fraction $1-p$ of the baseline variance. In this setting, the oracle's ESS ceiling is therefore $15.6$ demonstrations, the ESS of the reliable $c=1$ description. Not observing relevance lowers the ceiling to about $13.5$.
 
