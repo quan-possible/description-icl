@@ -279,7 +279,6 @@ Prior ESS expresses the influence of a prior in observation units, with differen
 \paragraph{Descriptions and evidence in language models.}
 Task summaries distilled from demonstrations can replace the examples in context \citep{honda2025}. Other studies report weak sensitivity to instruction relevance \citep{webson2022} or limited benefits from repository instruction files \citep{gloaguen2026}. \citet{gupta2025} compare explicitly stated coin biases with observations and evaluate the predictions against Bayesian predictors. Concurrent work studies how reasoning and code execution affect language models' approximation of Bayesian posteriors \citep{filbry2026}; our main runs disable code execution. Appendix~\ref{app:related} discusses further connections.
 
-\balance
 \section{Discussion}\label{sec:discussion}
 
 We asked how descriptions can be characterized and how well learners use them in practice. For the first question, we treated a description as a prior with a specificity and a reliability, and we measured it by its predictive ESS. A reliable description can replace many demonstrations; uncertain relevance imposes a finite ESS ceiling before demonstrations are observed; and demonstrations can then raise a description's ESS by supplying evidence about its relevance. For the second, meta-trained Transformers approach the Bayes-optimal ESS, and their fitted description weight follows the reliability of their training data. Most of the pretrained language models that we test need reasoning enabled to use a stated precision as the Bayesian reference does; when descriptions are unreliable and the prompt says so, GPT-6 Sol with reasoning also matches the reference.
@@ -289,14 +288,12 @@ The analysis explains, in a controlled setting, why descriptions sometimes subst
 \paragraph{Limitations and future work.}
 We develop the theory in Gaussian linear regression with squared error, a standard controlled setting for ICL \citep{garg2022}, where the Bayes-optimal predictor is known exactly. In this setting, a relevant description is a single Gaussian centered on one point. Descriptions in practice can take other forms: a description may be consistent with several distinct tasks, or its prior may have a different shape altogether. Future work could model such descriptions with a mixture of Gaussians, which can approximate a wide class of priors \citep{dalal1983}.
 
-Our language-model prompts state a description's precision as a number, so that every prediction can be compared with an exact reference. Descriptions in practice rarely state their precision. In a first test with informal wording such as “give or take,” models weight the description differently from the reference (Appendix~\ref{app:llm}). How a model infers the precision of a description written in natural language is a natural next question, and one that predictive ESS can measure.
+Our language-model prompts state a description's precision and reliability explicitly, as numbers, because only then can every prediction be compared with an exact reference. In practice, these properties are implicit. A more specific instruction is typically a longer one that says more about the task, as a step-by-step workflow does, and nothing in it states a precision. A model must infer such properties from the instruction itself. Our experiments take first steps in this direction: with informal wording such as “give or take,” models weight the description differently from the reference, and in the message-filing task, where a note's specificity lies in what it says, two models with reasoning agree with it (Appendix~\ref{app:llm}). How models infer specificity and reliability from natural language is a natural next question, and one that predictive ESS can measure.
 
 Our language-model experiments use small synthetic tasks, and the test of unreliable descriptions covers two models. Extending them to more models and to tasks closer to practice, as the message-filing task begins to do, would show how far the agreement with the Bayesian reference reaches. This agreement concerns a model's predictions; how models compute them is a question for future work.
 
 \section*{Impact Statement}
 This work studies how learners combine task descriptions with demonstrations. Its measurement framework may inform prompt evaluation and design when descriptions are uncertain or incomplete. The experiments use synthetic tasks; their results do not establish dependable instruction following in consequential applications.
-\clearpage
-\nobalance
 \bibliographystyle{icml2026}
 \bibliography{refs}
 \clearpage
