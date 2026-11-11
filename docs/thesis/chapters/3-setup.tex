@@ -1,49 +1,57 @@
-\chapter{Framework}\label{ch:setup}
+\chapter{Problem Setup}\label{ch:setup}
 
 This chapter applies the tools of Chapter~\ref{ch:background} to task descriptions: a description becomes a robust mixture prior over the regression task, and its value is measured by a predictive effective sample size.
 
+A description carries information about a task, so we model it as a prior over tasks. Let $Q_0$ be the \emph{baseline prior}, the distribution of tasks when no description is given. A description comes with a prior of its own, $Q_{\mathrm{desc}}$. If the description is about the right task, which we call \emph{relevant}, the task is drawn from $Q_{\mathrm{desc}}$. Otherwise the description is \emph{irrelevant}, and the task is drawn from $Q_0$ whatever the description says. Given a description, the task therefore has the prior
+\begin{equation}\label{eq:mixture}
+p\,Q_{\mathrm{desc}}+(1-p)\,Q_0,
+\end{equation}
+where $p$, the description's \emph{reliability}, is the probability that it is relevant. We call the description \emph{reliable} when $p=1$ and \emph{unreliable} when $p<1$. This two-component form is the robust mixture prior that Bayesian clinical trials use to borrow external information that may not apply (Section~\ref{sec:bg-mixture}; \citealp{schmidli2014}).
+
+A description's \emph{specificity} is how little it leaves unknown about the task when it is relevant. What a prior leaves unknown can be measured by the smallest expected loss that a prediction made from the prior alone attains, its generalized entropy \citep{grunwald2004}. We score predictions by squared error, as is standard for in-context regression (Section~\ref{sec:bg-regret}; \citealp{garg2022}). The best prediction from a prior is then the one made with its mean, and for the isotropic inputs used here its expected squared error is the prior's variance, summed over the directions of the task. We therefore measure a description's specificity by the variance of $Q_{\mathrm{desc}}$: the lower the variance, the more specific the description. We study this model in Gaussian linear regression.
+
+\paragraph{What counts as a description.}
+A \emph{description} is information about the task that a prompt gives other than through demonstrations, such as a numeric token given to a Transformer (Chapter~\ref{ch:networks}) or a probabilistic statement or a note about a sorting rule given in text to a language model (Chapter~\ref{ch:llm}). Anything that a prompt contains whether or not it has a description, such as instructions on the answer format, is not part of the description.
+
 \paragraph{Tasks and demonstrations.}
-We use the noisy in-context linear regression setting of Section~\ref{sec:bg-linreg} \citep{garg2022,raventos2023}. A task is a vector $w\in\R^d$ with baseline prior $\mathcal{N}(0,a_0I_d)$, where $a_0>0$. A prompt contains $n$ demonstrations $D_n=\{(x_i,y_i)\}_{i=1}^n$ and a query input $x$, with
+We use the noisy in-context linear regression setting of Section~\ref{sec:bg-linreg} \citep{garg2022,raventos2023}. A task is a vector $w\in\R^d$, and the baseline prior is $Q_0=\mathcal{N}(0,\tau_0^2I_d)$, where $\tau_0>0$. A prompt contains $n$ demonstrations $D_n=\{(x_i,y_i)\}_{i=1}^n$ and a query input $x$, with
 \[
 x_i,x\overset{\mathrm{iid}}{\sim}\mathcal{N}(0,I_d),\qquad
 y_i=w^\top x_i+\epsilon_i,\quad
 \epsilon_i\overset{\mathrm{iid}}{\sim}\mathcal{N}(0,1).
 \]
-Inputs and observation noise are independent of the task and one another. The parameter $a_0$ controls variation across tasks. Numerical illustrations in Chapters~\ref{ch:specificity}--\ref{ch:reliability} use $d=16$ and $a_0=10$.
+Inputs and observation noise are independent of the task, of its description, and of one another. Numerical illustrations in Chapters~\ref{ch:specificity}--\ref{ch:reliability} use $d=16$ and $\tau_0^2=10$; other dimensions and baseline variances give the same pattern (Table~\ref{tab:grid} in Chapter~\ref{ch:reliability}).
 
-\paragraph{Descriptions and relevance.}
-A \emph{description} is information about the task $w$ that a prompt gives other than through demonstrations, such as a numeric token given to a Transformer (Chapter~\ref{ch:networks}) or a probabilistic statement or policy note given in text to a language model (Chapter~\ref{ch:llm}). Anything that a prompt contains whether or not it has a description, such as instructions on the answer format, is not part of the description. We model a description by a center $m\in\R^d$, a precision $c\geq a_0^{-1}$ that measures its \emph{specificity}, and its \emph{reliability} $p\in[0,1]$. Let $r=(ca_0)^{-1}\in(0,1]$ be the fraction of baseline variance remaining in the relevant component. With a latent relevance indicator $Z\sim\mathrm{Bernoulli}(p)$ independent of $m$, the joint model is
+\paragraph{Descriptions.}
+A description supplies a prior mean $m\in\R^d$, and its prior is $Q_{\mathrm{desc}}=\mathcal{N}(m,\tau^2I_d)$ with $0<\tau\leq\tau_0$. Its variance is $\tau^2$ in each direction, so the smaller $\tau$, the more specific the description: a relevant description places each coordinate of the task within about $\tau$ of that of $m$. So that learners with and without descriptions face the same tasks, the task must follow $Q_0$ once we average over descriptions. Under a relevant description, $w$ is $m$ plus independent noise of variance $\tau^2$, so $m$ must have variance $\tau_0^2-\tau^2$, the part of the task's variance that the description accounts for. With a latent relevance indicator $Z\sim\mathrm{Bernoulli}(p)$ independent of $m$, the joint model is
 \begin{align*}
-m&\sim\mathcal{N}(0,(1-r)a_0I_d),\\
-w\mid m,Z=1&\sim\mathcal{N}(m,ra_0I_d),\\
-w\mid m,Z=0&\sim\mathcal{N}(0,a_0I_d).
+m&\sim\mathcal{N}(0,(\tau_0^2-\tau^2)I_d),\\
+w\mid m,Z=1&\sim\mathcal{N}(m,\tau^2I_d),\\
+w\mid m,Z=0&\sim\mathcal{N}(0,\tau_0^2I_d).
 \end{align*}
-Thus
-\[
-w\mid m\sim p\,\mathcal{N}(m,c^{-1}I_d)
- +(1-p)\,\mathcal{N}(0,a_0I_d).
-\]
-This is a robust mixture prior (Section~\ref{sec:bg-mixture}; \citealp{schmidli2014}), with weight $p$ on the description's component. Integrating over $m$ recovers $w\sim\mathcal{N}(0,a_0I_d)$ under either component, so comparisons with and without descriptions concern the same task population.
+The description is relevant when $Z=1$ and irrelevant when $Z=0$, which gives the prior in~\eqref{eq:mixture}, and integrating over $m$ recovers $w\sim Q_0$ under either component. A description of the wrong task carries no information about this one, so when $Z=0$ its mean is independent of the task. A description of the right task that is only somewhat inaccurate is modeled instead as a relevant description with a larger $\tau$.
 
-A description is \emph{relevant} when $Z=1$ and \emph{irrelevant} when $Z=0$. Relevance identifies the generating component, irrespective of the realized distance between $m$ and $w$. We use \emph{reliable} for $p=1$ and \emph{unreliable} for $p<1$. At $c=a_0^{-1}$, the two components coincide and the description provides no task information. The model separates uncertainty within the described region from uncertainty about whether that region applies. It does not assume that a precision and a reliability can summarize every natural-language description.
+Relevance identifies the generating component, irrespective of the realized distance between $m$ and $w$. At $\tau=\tau_0$, $m=0$ and the two components coincide, so the description provides no task information. The model separates uncertainty within the described region from uncertainty about whether that region applies. It does not assume that a variance and a reliability can summarize every natural-language description.
 
-A relevant description splits the baseline variance $a_0$ into the part $(1-r)a_0$ that $m$ resolves and the part $ra_0$ that remains. Because the observation noise has unit variance, a description of precision $c$ carries in each direction the precision of $c$ direct observations of $w$. Since $\E W_n=nI_d$, this is also the expected information of $c$ demonstrations, and it is the ESS that \citet{morita2008} assign to a normal prior of precision $c$ (Section~\ref{sec:bg-ess}). Relative to the baseline prior, the description adds precision $c-a_0^{-1}$. We call a description \emph{broad} when $c$ is small relative to $d$ and \emph{specific} when $c$ exceeds $d$; Chapter~\ref{ch:specificity} shows that dimension dominates the ESS of a broad description, and precision dominates the ESS of a specific one. At $d=16$ and $a_0=10$, a description with $c=1$ ($r=0.1$) is broad, and one with $c=100$ ($r=0.001$) is specific.
+To compare a description with demonstrations, we use precision, the inverse of variance, because the precisions of independent Gaussian sources of information add (Equation~\eqref{eq:bg-posterior}). With unit noise and isotropic inputs, each demonstration adds expected precision $1$ in every direction, since $\E W_n=nI_d$. We therefore write $c=\tau^{-2}$ for a description's precision and $c_0=\tau_0^{-2}$ for the baseline prior's, so that both are counted in demonstrations. A description of precision $c$ thus carries the expected information of $c$ demonstrations, the ESS that \citet{morita2008} assign to a normal prior of that precision (Section~\ref{sec:bg-ess}); relative to the baseline prior, it adds precision $c-c_0$.
 
 \paragraph{Prediction error.}
-As in Section~\ref{sec:bg-regret}, we score a prediction $\hat y$ by its prediction error, or risk, the expected squared error against the noise-free query response:
+As in Section~\ref{sec:bg-regret}, for a prediction $\hat y$, we measure expected squared error against the noise-free query response:
 \begin{equation}\label{eq:regret}
 R=\E\big[(\hat y-w^\top x)^2\big].
 \end{equation}
-The expectation is over tasks, descriptions, demonstrations, and queries. For a fixed learner, $R^{\mathrm{desc}}(n)$ and $R^{\mathrm{demo}}(n)$ denote risk with and without a description, and $R^{\mathrm{desc}}_{p=1}(n)$ denotes the reliable case. As a function of the demonstration count, $R^{\mathrm{demo}}$ is the learner's \emph{baseline curve}. To express a description's value in demonstrations, we compare these two risk curves, as the loss-based ESS of Section~\ref{sec:bg-ess} does for a prior.
+We call this quantity \emph{prediction error}, or simply error; it excludes irreducible query noise. The expectation is over tasks, descriptions, demonstrations, and queries. For a fixed learner, $R^{\mathrm{desc}}(n)$ and $R^{\mathrm{base}}(n)$ denote the error with and without a description. As a function of the demonstration count, $R^{\mathrm{base}}$ is the learner's \emph{baseline curve}, its learning curve without the description. To express a description's value in demonstrations, we compare these two error curves, as the loss-based ESS of Section~\ref{sec:bg-ess} does for a prior.
 
 \begin{definition}[Predictive effective sample size]\label{def:ess}
-Given $n$ demonstrations, let $n^*$ be the smallest $t\geq0$ satisfying $R^{\mathrm{demo}}(t)=R^{\mathrm{desc}}(n)$. When this crossing exists, the description's ESS is
+Given $n$ demonstrations, let $n^*$ be the smallest $t\geq0$ satisfying $R^{\mathrm{base}}(t)=R^{\mathrm{desc}}(n)$. When such a $t$ exists, we call $n^*$ the \emph{crossing}, and the description's ESS is
 \[
 \ess_n=n^*-n.
 \]
-Noninteger counts refer to an interpolated baseline curve.
+We interpolate the baseline curve between integer counts, so $n^*$ and the ESS need not be integers.
 \end{definition}
 
-ESS measures the horizontal displacement between a learner's learning curves with and without the description. Without a description, a learner still predicts from prior knowledge. For the Bayes-optimal predictor, this knowledge is the baseline prior; for a network or a language model, it is what the model learned in training. ESS therefore measures what the description adds to that knowledge, its value \emph{to that learner}. An ESS of $10$ means that $n$ demonstrations plus the description match the error of $n+10$ demonstrations alone. Because each learner is compared with its own baseline curve, a large ESS need not imply low absolute error. For a decreasing baseline curve, negative ESS indicates higher error at the same demonstration count. For the Bayes-optimal predictor under the correctly specified model, conditioning on the description cannot increase expected risk, so $R^{\mathrm{desc}}(n)\le R^{\mathrm{demo}}(n)$ and ESS is nonnegative. Because $R$ averages over descriptions, the ESS is a property of a class of descriptions, determined by $c$ and $p$, rather than of a particular value of $m$.
+For example, $\ess_n=10$ means that $n$ demonstrations plus the description match the error of $n+10$ demonstrations alone. The ESS without demonstrations, $\ess_0$, is the \emph{zero-shot ESS}. A learner without a description still has prior knowledge, from the baseline prior or from training, and ESS measures what the description adds to it, so we measure ESS against each learner's own baseline curve. For a learner whose baseline curve falls slowly, the same error reduction is worth more demonstrations, so a large ESS need not imply low absolute error. A negative ESS means that the description raises error. For the Bayes-optimal predictor under the correctly specified model, conditioning on the description cannot increase expected error, so $R^{\mathrm{desc}}(n)\le R^{\mathrm{base}}(n)$ and ESS is nonnegative. Because $R$ averages over descriptions, the ESS is a property of a class of descriptions, those with the same $\tau$ and $p$, rather than of a particular value of $m$.
 
-Empirical ESS interpolates a learner's measured risk curve. The interpolation is linear in the demonstration count for the Bayes-optimal predictor, the meta-trained Transformers, and the semantic task. For the numerical language-model tasks, whose evaluation grid doubles $n$, it is linear in the logarithm of the count. It uses the first crossing in the evaluated range. When no crossing is observed, we report censoring at the corresponding boundary under the conventions in Section~\ref{sec:llm-ess}; an exact ESS is then unavailable.
+Definition~\ref{def:ess} follows the prior sample size of \citet{reimherr2021}, who match the mean squared error of an estimate under a prior with that under a baseline prior and additional observations (Section~\ref{sec:bg-ess}). We match prediction error, which can be measured for any learner, including a network or a language model, whose prior knowledge is only implicit in its parameters.
+
+Empirical ESS interpolates a learner's measured error curve. The interpolation is linear in the demonstration count for the Bayes-optimal predictor, the meta-trained Transformers, and the message-sorting experiment. For the numerical language-model tasks, whose evaluation grid doubles $n$, it is linear in the logarithm of the count. It uses the first crossing in the evaluated range. When no crossing is observed, we report censoring at the corresponding boundary under the conventions in Section~\ref{sec:llm-ess}; an exact ESS is then unavailable.

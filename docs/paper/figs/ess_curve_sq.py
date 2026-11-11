@@ -86,21 +86,26 @@ def add(p, r, n, per_batch, pooled):
     rows.append(dict(p=p, r=r, n=n, worth=round(pooled, 3), se=round(float(np.std(per_batch, ddof=1) / np.sqrt(B)), 3)))
 
 
-for r in RS:
-    runs = [regrets(r, seed) for seed in range(B)]
-    R_demo = np.mean([x[0] for x in runs], 0)
-    if r == RS[0]:
-        for p in PS[1:]:  # n = 0 limits, from the closed form: r -> 0, and the bound for the predictor told Z
-            add(p, 0, 0, [ess(x[0], r0(0, p), 0) for x in runs], ess(R_demo, r0(0, p), 0))
-            add(p, -1, 0, [ess(x[0], (1 - p) * A0 * D, 0) for x in runs], ess(R_demo, (1 - p) * A0 * D, 0))
-    for p in PS:
-        R_desc = np.mean([x[1][p] for x in runs], 0)
-        assert abs(R_desc[0] - r0(r, p)) < 0.05 * r0(r, p), (r, p, R_desc[0], r0(r, p))  # Monte Carlo agrees with the closed form
-        for n in NS:
-            add(p, r, n, [ess(x[0], x[1][p][n], n) for x in runs], ess(R_demo, R_desc[n], n))
-    print(f"r={r} done", flush=True)
+def main():
+    for r in RS:
+        runs = [regrets(r, seed) for seed in range(B)]
+        R_demo = np.mean([x[0] for x in runs], 0)
+        if r == RS[0]:
+            for p in PS[1:]:  # n = 0 limits, from the closed form: r -> 0, and the bound for the predictor told Z
+                add(p, 0, 0, [ess(x[0], r0(0, p), 0) for x in runs], ess(R_demo, r0(0, p), 0))
+                add(p, -1, 0, [ess(x[0], (1 - p) * A0 * D, 0) for x in runs], ess(R_demo, (1 - p) * A0 * D, 0))
+        for p in PS:
+            R_desc = np.mean([x[1][p] for x in runs], 0)
+            assert abs(R_desc[0] - r0(r, p)) < 0.05 * r0(r, p), (r, p, R_desc[0], r0(r, p))  # Monte Carlo agrees with the closed form
+            for n in NS:
+                add(p, r, n, [ess(x[0], x[1][p][n], n) for x in runs], ess(R_demo, R_desc[n], n))
+        print(f"r={r} done", flush=True)
 
-with (here / "ess_curve_sq.csv").open("w", newline="") as f:
-    out = csv.DictWriter(f, fieldnames=list(rows[0]))
-    out.writeheader()
-    out.writerows(rows)
+    with (here / "ess_curve_sq.csv").open("w", newline="") as f:
+        out = csv.DictWriter(f, fieldnames=list(rows[0]))
+        out.writeheader()
+        out.writerows(rows)
+
+
+if __name__ == "__main__":  # ess_n_sq.py imports regrets() and ess() without rerunning this
+    main()

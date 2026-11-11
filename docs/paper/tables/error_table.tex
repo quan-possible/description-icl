@@ -1,0 +1,22 @@
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+& \multicolumn{3}{c}{$c=4$} & \multicolumn{3}{c}{$c=36$} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+Run & $n=1$ & $2$ & $4$ & $1$ & $2$ & $4$ \\
+\midrule
+Reference & $26.7$ & $24.0$ & $19.9$ & $9.5$ & $9.3$ & $9.3$ \\
+GPT-6 Sol, without reasoning & $32.1$ & $28.6$ & $24.2$ & $15.2$ & $16.3$ & $18.4$ \\
+GPT-6 Sol, with reasoning (low) & $26.7$ & $26.7$ & $20.1$ & $9.5$ & $9.4$ & $9.6$ \\
+Opus 4.6, without reasoning & $29.4$ & $28.1$ & $23.7$ & $13.6$ & $18.9$ & $18.1$ \\
+Opus 4.6, with reasoning (high) & $26.7$ & $24.0$ & $19.8$ & $9.5$ & $9.3$ & $9.3$ \\
+Gemma 4 31B, without reasoning & $43.4$ & $41.6$ & $27.6$ & $32.6$ & $39.1$ & $24.0$ \\
+Gemma 4 31B, with reasoning & $26.7$ & $24.0$ & $19.9$ & $9.5$ & $9.3$ & $9.3$ \\
+Qwen3.5 9B, without reasoning & $38.0$ & $38.7$ & $34.5$ & $28.5$ & $33.6$ & $26.0$ \\
+Qwen3.5 9B, with reasoning & $26.7$ & $24.0$ & $19.9$ & $9.6$ & $9.3$ & $9.3$ \\
+gpt-oss-20b, without reasoning & $34.5$ & $32.6$ & $26.5$ & $31.5$ & $30.5$ & $23.7$ \\
+gpt-oss-20b, with reasoning (low) & $28.0$ & $34.5$ & $52.4$ & $11.9$ & $32.2$ & $11.0$ \\
+Haiku 5.5, with reasoning (medium) & $33.7$ & $24.0$ & $19.8$ & $27.0$ & $9.3$ & $10.1$ \\
+Haiku 5.5, with reasoning (low) & $46.1$ & $24.0$ & $20.2$ & $41.9$ & $9.7$ & $11.1$ \\
+Olmo 3 7B Think, with reasoning & $28.7$ & $42.1$ & $32.1$ & $20.8$ & $16.5$ & $28.8$ \\
+\bottomrule
+\end{tabular}

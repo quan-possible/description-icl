@@ -54,11 +54,11 @@
   \fill[bluestroke] ($(#1)+({#2*\pitch + int(#2/10)*\gap}, -\tick/2)$) rectangle +({#3*\sq}, \tick);
 }
 
-% A prior sketch on a 24 mm axis (w from -3 to 3); the description states m = 1.2.
+% A prior sketch on a 30 mm axis (w from -3 to 3); the description states m = 1.2.
 % #1 anchor (left end of the axis), #2 the relevant-description component,
 % #3 the irrelevant-description component (0 when reliable).
 \newcommand{\prior}[3]{%
-  \begin{scope}[shift={(#1)}, x=4mm, y=1mm]
+  \begin{scope}[shift={(#1)}, x=5mm, y=1.15mm]
     \fill[green, domain=-3:3, samples=160, smooth] plot ({\x+3}, {#2 + #3}) -- (6,0) -- (0,0) -- cycle;
     \fill[pink, domain=-3:3, samples=60, smooth] plot ({\x+3}, {#3}) -- (6,0) -- (0,0) -- cycle;
     \draw[axis, dash pattern=on 2pt off 1.5pt, line width=0.6pt, domain=-3:3, samples=60, smooth]
@@ -70,6 +70,13 @@
     \fi
     \draw[axis, line width=0.6pt] (0,0) -- (6,0);
     \draw[axis, line width=0.6pt] (4.2,0) -- (4.2,-0.8) node[below, lbl, inner sep=1pt] {$m$};
+  \end{scope}
+}
+
+% The true task on a prior's axis. #1 anchor (left end of the axis), #2 its position in w (-3 to 3), #3 color.
+\newcommand{\truetask}[3]{%
+  \begin{scope}[shift={(#1)}, x=5mm, y=1.15mm]
+    \fill[#3] ({#2+3}, 0) circle (0.42mm);
   \end{scope}
 }
 
@@ -104,36 +111,46 @@
 
   % ---------- (b) what sets the worth ----------
   \node[panel, font=\footnotesize] at (0,-28mm) {(b)};
-  \node[header] at (6mm,-28mm) {PRIOR ON $w$};
-  \node[header] at (56mm,-28mm) {ESS (DEMONSTRATIONS)};
-  \node[note, text=inksubtle, anchor=east] at (140mm,-28mm)
+  \node[header] at (6mm,-28mm) {PRIOR ON $w$\quad\tikz[baseline=-0.6mm]\fill[ink] (0,0) circle (0.42mm); TRUE TASK};
+  \node[header] at (62mm,-28mm) {ESS (DEMONSTRATIONS)};
+  \node[note, text=inksubtle, anchor=east] at (146mm,-28mm)
     {each \tikz[baseline=0.3mm]\fill[bluestroke] (0,0) rectangle (\sq,\tick); is one demonstration};
 
   \coordinate (r1) at (0,-41mm);
-  \coordinate (r2) at (0,-55mm);
-  \coordinate (r3) at (0,-69mm);
+  \coordinate (r2) at (0,-56mm);
+  \coordinate (r3) at (0,-71mm);
 
-  \prior{r1}{7*exp(-(\x-1.2)*(\x-1.2)/(2*0.1))}{0}
-  \prior{r2}{9*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144))}{0}
-  \prior{r3}{8.1*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144))}{1.6*exp(-\x*\x/2)}
+  % Both reliable priors peak at the same height, so width alone shows specificity. The irrelevant component is
+  % drawn small (a quarter of the baseline's height; its true weight is a tenth), so it reads as the rare case.
+  \prior{r1}{8*exp(-(\x-1.2)*(\x-1.2)/(2*0.1))}{0}
+  \prior{r2}{8*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144))}{0}
+  \prior{r3}{7.2*exp(-(\x-1.2)*(\x-1.2)/(2*0.0144))}{0.75*exp(-\x*\x/2)}
+
+  % The true task sits under the description's prior: somewhere inside the broad one, at m under the specific
+  % one, and, for the unreliable description, at m nine times in ten and elsewhere one time in ten (pink).
+  \truetask{r1}{0.9}{ink}
+  \truetask{r2}{1.36}{ink}
+  \truetask{r3}{1.36}{ink}
+  \truetask{r3}{-1.5}{pinkstroke}
+  \node[lbl, text=pinkstroke, inner sep=1pt, anchor=north] at ($(r3)+(7.5mm,-0.9mm)$) {1 in 10};
 
   % Each row: the prior with its two parameters, the kind of description, and one such instruction in words.
   % The instructions are illustrations only (the ESS values are the Gaussian model's).
-  \node[note, text=inksubtle, anchor=north west, inner sep=0pt] at ($(r1)+(0,8.8mm)$) {$c = 1$\\$p = 1$};
-  \node[note, text=inksubtle, anchor=north west, inner sep=0pt] at ($(r2)+(0,8.8mm)$) {$c = 100$\\$p = 1$};
-  \node[note, text=inksubtle, anchor=north west, inner sep=0pt] at ($(r3)+(0,8.8mm)$) {$c = 100$\\\textcolor{pinkstroke}{$p = 0.9$}};
+  \node[note, text=inksubtle, anchor=north west, inner sep=0pt] at ($(r1)+(0,9.6mm)$) {$\tau = 1$\\$p = 1$};
+  \node[note, text=inksubtle, anchor=north west, inner sep=0pt] at ($(r2)+(0,9.6mm)$) {$\tau = 0.1$\\$p = 1$};
+  \node[note, text=inksubtle, anchor=north west, inner sep=0pt] at ($(r3)+(0,9.6mm)$) {$\tau = 0.1$\\\textcolor{pinkstroke}{$p = 0.9$}};
 
-  \node[note] at ($(r1)+(26mm,3mm)$) {broad, reliable};
-  \node[note] at ($(r2)+(26mm,3mm)$) {specific, reliable};
-  \node[note] at ($(r3)+(26mm,3mm)$) {specific, \textcolor{pinkstroke}{90\% reliable}};
+  \node[note] at ($(r1)+(32mm,3mm)$) {broad, reliable};
+  \node[note] at ($(r2)+(32mm,3mm)$) {specific, reliable};
+  \node[note] at ($(r3)+(32mm,3mm)$) {specific, \textcolor{pinkstroke}{90\% reliable}};
 
-  \node[note, text=inkmuted] at ($(r1)+(26mm,-0.6mm)$) {e.g.\ ``Write this report as an accountant.''};
-  \node[note, text=inkmuted] at ($(r2)+(26mm,-0.6mm)$) {e.g.\ ``Write this report in these ten steps: \dots''};
-  \node[note, text=inkmuted] at ($(r3)+(26mm,-0.6mm)$) {e.g.\ the same steps, entirely wrong one time in ten};
+  \node[note, text=inkmuted] at ($(r1)+(32mm,-0.6mm)$) {e.g.\ ``Write this report as an accountant.''};
+  \node[note, text=inkmuted] at ($(r2)+(32mm,-0.6mm)$) {e.g.\ ``Write this report in these ten steps: \dots''};
+  \node[note, text=inkmuted] at ($(r3)+(32mm,-0.6mm)$) {e.g.\ the same steps, about the wrong task one time in ten};
 
-  \coordinate (b1) at ($(r1)+(56mm,3mm)$);
-  \coordinate (b2) at ($(r2)+(56mm,3mm)$);
-  \coordinate (b3) at ($(r3)+(56mm,3mm)$);
+  \coordinate (b1) at ($(r1)+(62mm,3mm)$);
+  \coordinate (b2) at ($(r2)+(62mm,3mm)$);
+  \coordinate (b3) at ($(r3)+(62mm,3mm)$);
   \exbar{b1}{15}{0.6}
   \exbar{b2}{117}{0}
   \exbar{b3}{13}{0.5}

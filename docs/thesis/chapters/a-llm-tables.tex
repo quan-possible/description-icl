@@ -1,22 +1,22 @@
 \chapter{Language-Model Results at Every Number of Demonstrations}\label{app:llm-tables}
 
-This appendix reports the full run of Chapter~\ref{ch:llm}, without reasoning, at every evaluated demonstration count. Tables~\ref{tab:llm-worth} and~\ref{tab:llm-worth-written} report ESS for the distribution-readout and written-readout models, and Table~\ref{tab:llm-full} reports description weights for the distribution-readout models. Tables~\ref{tab:llm-worth} and~\ref{tab:llm-full} each continue onto a second page.
+This appendix reports the $2{,}000$-task run of Chapter~\ref{ch:llm}, without reasoning, at every evaluated demonstration count. Tables~\ref{tab:llm-worth} and~\ref{tab:llm-worth-written} report ESS for the distribution-readout and written-readout models, and Table~\ref{tab:llm-full} reports description weights for the distribution-readout models. Tables~\ref{tab:llm-worth} and~\ref{tab:llm-full} each continue onto a second page.
 
 \clearpage
 \begin{center}
-\captionof{table}[ESS by description condition and demonstration count: distribution readout]{\textbf{ESS by description condition and demonstration count: distribution readout.} Results cover the prompt-based reference and the three distribution-readout models in the full run without reasoning. ``Number'' is the numeric response rate averaged over $n$. ``10\% wrong'' and ``50\% wrong'' denote stated irrelevance probabilities. The censoring marker $\leq$ marks error above the first baseline point; $>64-n$ means that the description-conditioned error lies below the entire baseline curve through $64$ demonstrations.}\label{tab:llm-worth}
+\captionof{table}[ESS by description condition and demonstration count: distribution readout]{\textbf{ESS by description condition and demonstration count: distribution readout.} Results cover the Bayesian reference and the three distribution-readout models in the $2{,}000$-task run without reasoning. ``Number'' is the numeric response rate averaged over $n$. ``10\% wrong'' and ``50\% wrong'' denote stated irrelevance probabilities. The censoring marker $\leq$ marks error above the first baseline point; $>64-n$ means that the error with the description lies below the entire baseline curve through $64$ demonstrations.}\label{tab:llm-worth}
 \end{center}
 {\scriptsize\setlength{\tabcolsep}{1.5pt}\longinput{../paper/tables/llm_table_worth.tex}}
 
 \begin{table}[p]
 \centering
-\caption[ESS by description condition and demonstration count: written readout]{\textbf{ESS by description condition and demonstration count: written readout.} Results cover the three written-readout models in the full run without reasoning. Replies without a qualifying number are excluded. Columns and reference values follow Table~\ref{tab:llm-worth}.}\label{tab:llm-worth-written}
+\caption[ESS by description condition and demonstration count: written readout]{\textbf{ESS by description condition and demonstration count: written readout.} Results cover the three written-readout models in the $2{,}000$-task run without reasoning. Replies without a qualifying number are excluded. Columns and reference values follow Table~\ref{tab:llm-worth}.}\label{tab:llm-worth-written}
 \vspace{3pt}
 {\scriptsize\setlength{\tabcolsep}{1.5pt}\fittable{../paper/tables/llm_table_worth_written.tex}}
 \end{table}
 
 \clearpage
 \begin{center}
-\captionof{table}[Description weights by demonstration count: distribution readout]{\textbf{Description weights by demonstration count: distribution readout.} Results cover the prompt-based reference and the three distribution-readout models in the full run without reasoning. ``Number'' is defined as in Table~\ref{tab:llm-worth}; cells are italicized when the numeric response rate is below three quarters at the corresponding $n$.}\label{tab:llm-full}
+\captionof{table}[Description weights by demonstration count: distribution readout]{\textbf{Description weights by demonstration count: distribution readout.} Results cover the Bayesian reference and the three distribution-readout models in the $2{,}000$-task run without reasoning. ``Number'' is defined as in Table~\ref{tab:llm-worth}; cells are italicized when the numeric response rate is below three quarters at the corresponding $n$.}\label{tab:llm-full}
 \end{center}
 {\scriptsize\setlength{\tabcolsep}{1.5pt}\longinput{../paper/tables/llm_table_full.tex}}

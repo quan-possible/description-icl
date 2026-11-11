@@ -3,7 +3,7 @@ Bayes-optimal zero-demonstration ESS of a c = 100 description at p = 1 and p = 0
 baseline variances a0. R_desc(0) = [1 - p^2 (1 - r)] a0 d (Proposition 2, r = 1 / (c a0)); R_demo(n) =
 E tr(I / a0 + X'X)^{-1} by Monte Carlo (4,000 draws of the n x d Gaussian inputs per n); ESS_0 is the first crossing
 of the baseline curve, interpolated linearly between integers (Definition 1). Limits for comparison: c + d + 1 at
-p = 1 (Proposition 1(ii)) and the ceiling p^2 d (Corollary 3(i)) as a0 grows."""
+p = 1 (Proposition 1(ii)) and the ceiling p^2 d (Proposition 2) as a0 grows."""
 import numpy as np
 
 rng = np.random.default_rng(0)
