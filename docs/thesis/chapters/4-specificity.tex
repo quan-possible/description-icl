@@ -11,6 +11,7 @@ Let $p=1$.
 \begin{enumerate}[label=(\roman*),nosep,leftmargin=*]
 \item With the share $s$ fixed, $\ess_0\geq sd$, and $\ess_0\to sd$ as $\tau_0\to\infty$.
 \item With $\tau$ fixed and $c=\tau^{-2}$ a positive integer, $\ess_0\to c+d+1$ as $\tau_0\to\infty$.
+\item With $\tau$ and $\tau_0$ fixed, $\ess_n\to c-c_0$ as $n\to\infty$.
 \end{enumerate}
 \end{proposition}
 
@@ -28,7 +29,7 @@ Part (ii) fixes the description's variance instead. The result follows by compar
 At $d=16$ and $\tau_0^2=10$ (Figure~\ref{fig:ess}a), a reliable description with $\tau=0.1$, so that $c=100$, is worth about $117$ demonstrations before any are seen, the value $c+d+1$ that Proposition~\ref{prop:reliable}(ii) gives for a diffuse baseline prior. A description with $\tau=1$, so that $c=1$, is worth $15.6$, against the lower bound $sd=14.4$ of part (i).
 
 \paragraph{Demonstrations lower the value of a complete description.}
-The descriptions modeled so far are \emph{complete}: they constrain every direction of $w$. After many demonstrations, the dimension no longer adds to such a description's value: $\ess_n\to c-c_0$ as $n\to\infty$ (Proposition~\ref{prop:partial} in Section~\ref{app:partial}). This limit is the precision that the description adds to the baseline prior, its conventional prior ESS \citep{morita2008} measured relative to that prior. A complete description therefore loses value as demonstrations accumulate: a $c=100$ description is worth $117$ demonstrations before any are seen and $109$ after $100$ (Figure~\ref{fig:ess}b), and a $c=1$ description falls from $15.6$ to $1.1$, close to its added precision of $0.9$ (Table~\ref{tab:partial}).
+The descriptions modeled so far are \emph{complete}: they constrain every direction of $w$. By part (iii), which is the case $k=d$ of Proposition~\ref{prop:partial} in Section~\ref{app:partial}, after many demonstrations the dimension no longer adds to such a description's value, which tends to $c-c_0$. This limit is the precision that the description adds to the baseline prior, its conventional prior ESS \citep{morita2008} measured relative to that prior. A complete description therefore loses value as demonstrations accumulate: a $c=100$ description is worth $117$ demonstrations before any are seen and $109$ after $100$ (Figure~\ref{fig:ess}b), and a $c=1$ description falls from $15.6$ to $1.1$, close to its added precision of $0.9$ (Table~\ref{tab:partial}).
 
 \paragraph{Demonstrations can raise the value of a partial description.}
 Descriptions often specify only part of a task. A \emph{partial} description constrains only $k<d$ of the $d$ directions (Section~\ref{app:partial}). Without demonstrations, its error comes almost entirely from the $d-k$ directions it leaves open, and a learner without the description reaches that error after about $k$ demonstrations. After many demonstrations, the description is worth the precision it adds, averaged over all $d$ directions: about $k(c-c_0)/d$ demonstrations, which exceeds $k$ when $c-c_0>d$. At $d=16$ and $\tau_0^2=10$, a $c=100$ partial description with $k=8$ is worth $8.1$ demonstrations before any are seen and $36.2$ after $100$ (Figure~\ref{fig:ess}b). Over the same range, the complete description's ESS falls from $117$ to $109$, so demonstrations substitute for a complete description and complement a partial one.

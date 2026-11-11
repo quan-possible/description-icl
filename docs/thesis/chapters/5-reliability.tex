@@ -11,16 +11,34 @@ Let $0<p<1$.
 \begin{equation}\label{eq:zero}
 R^{\mathrm{desc}}(0)=\big[(1-p^2)\,\tau_0^2+p^2\,\tau^2\big]\,d.
 \end{equation}
-\item For every $\tau>0$, $\ess_0$ lies below a finite ceiling that does not depend on $\tau$. As $\tau_0\to\infty$, the ceiling tends to $p^2d$, and so does $\ess_0$ for fixed $\tau$.
-\item With $d$, $\tau_0$, and $\tau$ fixed, $\limsup_{n\to\infty}\ess_n\leq p\,(c-c_0)$.
+\item With $\tau$ fixed, $\ess_0\to p^2d$ as $\tau_0\to\infty$.
+\item With $\tau$ and $\tau_0$ fixed, $\limsup_{n\to\infty}\ess_n\leq p\,(c-c_0)$.
 \end{enumerate}
 \end{proposition}
 
 \paragraph{Without demonstrations, unreliability imposes an error floor.}
-The error in Equation~\eqref{eq:zero} is the variance of the mixture prior~\eqref{eq:mixture}, averaged over descriptions. It is a floor, $(1-p^2)\tau_0^2d$, plus $p^2$ times the error $d\tau^2$ of a reliable description. However specific the description, the error stays above the floor, so the zero-shot ESS stays below a finite ceiling: the number of demonstrations at which the baseline error equals the floor. The floor arises because, without demonstrations, nothing shows whether the description is relevant: the posterior relevance probability is still the prior one, $\pi_0=p$, and the Bayes-optimal predictor shrinks the prior mean $m$ by the factor $p$. A predictor that knew whether the description was relevant would have a ceiling that tends to $pd$ in place of $p^2d$; the further factor of $p$ is the cost of not knowing (proved below). Figure~\ref{fig:ess}a shows the effect at $p=0.9$, the weight that the robust-prior example of \citet{schmidli2014} gives its informative component, our relevant component: lowering $\tau$ from $1$ to $0.1$, which raises $c$ from $1$ to $100$, multiplies a reliable description's ESS by more than seven, but raises an unreliable one's only from $12.0$ to $13.5$, already within $0.1$ of the ceiling.
+The error in Equation~\eqref{eq:zero} is the variance of the mixture prior~\eqref{eq:mixture}, averaged over descriptions. It is a floor, $(1-p^2)\tau_0^2d$, plus $p^2$ times the error $d\tau^2$ of a reliable description. However specific the description, the error stays above the floor, so the zero-shot ESS stays below a finite ceiling: the number of demonstrations at which the baseline error equals the floor. For a diffuse baseline prior the ceiling is $p^2d$, the limit in part (ii), which does not depend on $\tau$. The floor arises because, without demonstrations, nothing shows whether the description is relevant: the posterior relevance probability is still the prior one, $\pi_0=p$, and the Bayes-optimal predictor shrinks the prior mean $m$ by the factor $p$. A predictor that knew whether the description was relevant would have a ceiling that tends to $pd$ in place of $p^2d$; the further factor of $p$ is the cost of not knowing (proved below). Figure~\ref{fig:ess}a shows the effect at $p=0.9$, the weight that the robust-prior example of \citet{schmidli2014} gives its informative component, our relevant component: lowering $\tau$ from $1$ to $0.1$, which raises $c$ from $1$ to $100$, multiplies a reliable description's ESS by more than seven, but raises an unreliable one's only from $12.0$ to $13.5$, already within $0.1$ of the ceiling.
 
 \paragraph{Demonstrations distinguish low specificity from unreliability.}
-By Proposition~\ref{prop:unreliable}, an unreliable description has, without demonstrations, the error of a less specific reliable one. For example, at $d=16$ and $\tau_0^2=10$, a $c=100$ description with $p=0.9$ and a reliable one with $c\approx0.52$ both have ESS about $13.5$. After $100$ demonstrations, their ESS values are $86.6$ and $0.5$. Once demonstrations show that the unreliable description is relevant, its high specificity takes effect; the reliable description has low specificity to begin with, so demonstrations cannot raise its value in this way. The unreliable description's ESS does not rise steadily: after a small rise at $n=1$, it falls to $7.8$ at $n=12$, and it climbs steeply only as $n$ approaches $d$, to $25.9$ at $n=20$ (Figure~\ref{fig:ess}b). With fewer demonstrations than $d$, its error is dominated by the cases in which it is irrelevant. The baseline curve falls steeply while directions of the task remain undetermined, so it matches that error within a few demonstrations. The rise also levels off: in the limit of many demonstrations, an unreliable description is worth at most $p(c-c_0)$, which is $p$ times the limit $c-c_0$ of a reliable one (Proposition~\ref{prop:unreliable}).
+By Proposition~\ref{prop:unreliable}, an unreliable description has, without demonstrations, the error of a less specific reliable one. For example, at $d=16$ and $\tau_0^2=10$, a $c=100$ description with $p=0.9$ and a reliable one with $c\approx0.52$ both have ESS about $13.5$. After $100$ demonstrations, their ESS values are $86.6$ and $0.5$. Once demonstrations show that the unreliable description is relevant, its high specificity takes effect; the reliable description has low specificity to begin with, so demonstrations cannot raise its value in this way. The unreliable description's ESS does not rise steadily: after a small rise at $n=1$, it falls to $7.8$ at $n=12$, and it climbs steeply only as $n$ approaches $d$, to $25.9$ at $n=20$ (Figure~\ref{fig:ess}b). With fewer demonstrations than $d$, its error is dominated by the cases in which it is irrelevant. The baseline curve falls steeply while directions of the task remain undetermined, so it matches that error within a few demonstrations. The rise also levels off: in the limit of many demonstrations, an unreliable description is worth at most $p(c-c_0)$, which is $p$ times the limit $c-c_0$ of a reliable one (Proposition~\ref{prop:unreliable}(iii)). Table~\ref{tab:summary} collects the limits of this chapter and the last.
+
+\begin{table}[t]
+\centering\small
+\caption[The Bayes-optimal value of a description, in demonstrations]{\textbf{The Bayes-optimal value of a description, in demonstrations.} Limits of the ESS of a description with precision $c=\tau^{-2}$: without demonstrations, for a diffuse baseline prior ($\tau_0\to\infty$ with $\tau$ fixed), and after many demonstrations ($n\to\infty$ with $\tau_0$ fixed, $c_0=\tau_0^{-2}$). The unreliable description's entry after many demonstrations is an upper bound (Propositions~\ref{prop:reliable}--\ref{prop:partial}).}
+\label{tab:summary}
+\vspace{3pt}
+\begin{tabular}{lcc}
+\toprule
+& \multicolumn{2}{c}{Demonstrations} \\
+\cmidrule(lr){2-3}
+Description & none & many \\
+\midrule
+Reliable & $c+d+1$ & $c-c_0$ \\
+Unreliable, $p<1$ & $p^2d$ & $\leq p\,(c-c_0)$ \\
+Partial, $k$ of $d$ directions & $k$ & $k\,(c-c_0)/d$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 The rest of this section proves Proposition~\ref{prop:unreliable}.
 
@@ -62,7 +80,7 @@ The covariance follows because, conditional on relevance, $w_i$ is $m_i$ plus in
 \]
 Since $\E[xx^\top]=I_d$, the prediction error is $\E\|w-pm\|^2$. Summing over coordinates proves Equation~\eqref{eq:zero}. Because $p\,m$ is the mean of the mixture prior~\eqref{eq:mixture} given $m$, this error is the trace of that prior's covariance, averaged over $m$.
 
-\emph{(ii) The ceiling.}
+\emph{(ii) The ceiling and its limit.}
 Since $R^{\mathrm{base}}(0)=d\tau_0^2$ and $s<1$, Equation~\eqref{eq:zero} gives, for every $\tau>0$,
 \[
 R^{\mathrm{desc}}(0)

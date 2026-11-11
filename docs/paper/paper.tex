@@ -47,7 +47,7 @@ Prompts for in-context learning (ICL) can describe a task in addition to, or ins
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figs/overview_sq.pdf}
-\caption{\textbf{Measuring a task description in demonstrations.} (a) A description's ESS is the number of demonstrations that lower the error as much as it does. (b) The prior on the task $w$ under three descriptions, and each description's Bayes-optimal ESS at $n=0$, with $d=16$ and baseline prior variance $\tau_0^2=10$ (dashed); $\tau$ is the standard deviation of the task around the description's prior mean $m$. The curves are sketches; dots mark the true task, and the pink curve is the irrelevant component.}
+\caption{\textbf{Measuring a task description in demonstrations.} (a) A description's ESS is the number of demonstrations that lower the error as much as it does. (b) The prior on the task $w$ under three descriptions, and each description's Bayes-optimal ESS at $n=0$, with $d=16$ and baseline prior variance $\tau_0^2=10$ (dashed); $\tau$ is the standard deviation of the task around the description's prior mean $m$. The curves are sketches; dots mark the true task, and the pink curve is the prior when the description is about the wrong task.}
 \label{fig:overview}
 \end{figure*}
 
@@ -76,7 +76,7 @@ p\,Q_{\mathrm{desc}}+(1-p)\,Q_0,
 \end{equation}
 where $p$, the description's \emph{reliability}, is the probability that it is relevant. We call the description \emph{reliable} when $p=1$ and \emph{unreliable} when $p<1$. This two-component form is the robust mixture prior that Bayesian clinical trials use to borrow external information that may not apply \citep{schmidli2014}.
 
-A description's \emph{specificity} is how little it leaves unknown about the task when it is relevant. What a prior leaves unknown can be measured by the smallest expected loss that a prediction made from the prior alone attains, its generalized entropy \citep{grunwald2004}. We score predictions by squared error, as is standard for in-context regression \citep{garg2022}. The best prediction from a prior is then the one made with its mean, and for the isotropic inputs used here its expected squared error is the prior's variance, summed over the directions of the task. We therefore measure a description's specificity by the variance of $Q_{\mathrm{desc}}$: the lower the variance, the more specific the description. We study this model in Gaussian linear regression.
+A description's \emph{specificity} is how little it leaves unknown about the task when it is relevant. What a prior leaves unknown can be measured by the smallest expected loss that a prediction made from the prior alone attains, its generalized entropy \citep{grunwald2004}. We score predictions by squared error, as is standard for in-context regression \citep{garg2022}. The best prediction from a prior is then the prior's mean, and its expected squared error is the prior's variance (Appendix~\ref{app:specificity}). We therefore measure a description's specificity by the variance of $Q_{\mathrm{desc}}$: the lower the variance, the more specific the description. We study this model in Gaussian linear regression.
 
 \paragraph{Tasks and demonstrations.}
 A task is a vector $w\in\R^d$, and the baseline prior is $Q_0=\mathcal{N}(0,\tau_0^2I_d)$, where $\tau_0>0$. A prompt contains $n$ demonstrations $D_n=\{(x_i,y_i)\}_{i=1}^n$ and a query input $x$, with
@@ -88,13 +88,13 @@ y_i=w^\top x_i+\epsilon_i,\quad
 Inputs and observation noise are independent of the task, of its description, and of one another. Numerical illustrations in Sections~\ref{sec:specificity}--\ref{sec:reliability} use $d=16$ and $\tau_0^2=10$; other dimensions and baseline variances give the same pattern (Table~\ref{tab:grid} in Appendix~\ref{app:reliability}).
 
 \paragraph{Descriptions.}
-A description supplies a prior mean $m\in\R^d$, and its prior is $Q_{\mathrm{desc}}=\mathcal{N}(m,\tau^2I_d)$ with $0<\tau\leq\tau_0$. Its variance is $\tau^2$ in each direction, so the smaller $\tau$, the more specific the description: a relevant description places each coordinate of the task within about $\tau$ of that of $m$. So that learners with and without descriptions face the same tasks, the task must follow $Q_0$ once we average over descriptions. Under a relevant description, $w$ is $m$ plus independent noise of variance $\tau^2$, so $m$ must have variance $\tau_0^2-\tau^2$, the part of the task's variance that the description accounts for. With a latent relevance indicator $Z\sim\mathrm{Bernoulli}(p)$ independent of $m$, the joint model is
+A description supplies a prior mean $m\in\R^d$, and its prior is $Q_{\mathrm{desc}}=\mathcal{N}(m,\tau^2I_d)$ with $0<\tau\leq\tau_0$. Its variance is $\tau^2$ in each direction, so the smaller $\tau$, the more specific the description: a relevant description places the task within about $\tau$ of $m$ in each coordinate. So that learners with and without descriptions face the same tasks, the task must follow $Q_0$ once we average over descriptions. Under a relevant description, $w$ is $m$ plus independent noise of variance $\tau^2$, so $m$ must have variance $\tau_0^2-\tau^2$, the part of the task's variance that the description accounts for. With a latent relevance indicator $Z\sim\mathrm{Bernoulli}(p)$ independent of $m$, the joint model is
 \begin{align*}
 m&\sim\mathcal{N}(0,(\tau_0^2-\tau^2)I_d),\\
 w\mid m,Z=1&\sim\mathcal{N}(m,\tau^2I_d),\\
 w\mid m,Z=0&\sim\mathcal{N}(0,\tau_0^2I_d).
 \end{align*}
-The description is relevant when $Z=1$ and irrelevant when $Z=0$, which gives the prior in~\eqref{eq:mixture}, and integrating over $m$ recovers $w\sim Q_0$ under either component. A description of the wrong task carries no information about this one, so when $Z=0$ its mean is independent of the task. A description of the right task that is only somewhat inaccurate is modeled instead as a relevant description with a larger $\tau$.
+The description is relevant when $Z=1$ and irrelevant when $Z=0$, which gives the prior in~\eqref{eq:mixture}. A description of the wrong task carries no information about this one, so when $Z=0$ its mean is independent of the task. A description of the right task that is only somewhat inaccurate is modeled instead as a relevant description with a larger $\tau$.
 
 To compare a description with demonstrations, we use precision, the inverse of variance, because the precisions of independent Gaussian sources of information add. With unit noise and isotropic inputs, each demonstration adds expected precision $1$ in every direction. We therefore write $c=\tau^{-2}$ for a description's precision and $c_0=\tau_0^{-2}$ for the baseline prior's, so that both are counted in demonstrations.
 
@@ -118,19 +118,20 @@ Definition~\ref{def:ess} follows the prior sample size of \citet{reimherr2021}, 
 
 \section{The Value of a Reliable Description}\label{sec:specificity}
 
-We first take a reliable description, $p=1$. Its value without demonstrations depends on the task's dimension as well as on its specificity. In this section and the next, error and ESS are those of the Bayes-optimal predictor. We state the result for a diffuse baseline prior, the limit $\tau_0\to\infty$, in which a learner knows little about the task without the description. The limit can be taken in two ways: a description may remove a fixed share of the baseline uncertainty, or its own variance $\tau^2$ may stay fixed. For the first, let $s=1-\tau^2/\tau_0^2\in[0,1)$ be the share of the baseline variance that the description removes.
+We first take a reliable description, $p=1$. Its value without demonstrations depends on the task's dimension as well as on its specificity. In this section and the next, error and ESS are those of the Bayes-optimal predictor. We state the zero-shot results for a diffuse baseline prior, the limit $\tau_0\to\infty$, in which a learner knows little about the task without the description. The limit can be taken in two ways: a description may remove a fixed share of the baseline uncertainty, or its own variance $\tau^2$ may stay fixed. For the first, let $s=1-\tau^2/\tau_0^2\in[0,1)$ be the share of the baseline variance that the description removes.
 
 \begin{proposition}[Reliable descriptions]\label{prop:reliable}
 Let $p=1$.
 \begin{enumerate}[label=(\roman*),nosep,leftmargin=*]
 \item With the share $s$ fixed, $\ess_0\geq sd$, and $\ess_0\to sd$ as $\tau_0\to\infty$.
 \item With $\tau$ fixed and $c=\tau^{-2}$ a positive integer, $\ess_0\to c+d+1$ as $\tau_0\to\infty$.
+\item With $\tau$ and $\tau_0$ fixed, $\ess_n\to c-c_0$ as $n\to\infty$.
 \end{enumerate}
 \end{proposition}
 
-Part (i) fixes the share $s$ of the baseline variance that the description removes, so $\tau$ grows in proportion to $\tau_0$. A learner with $t<d$ demonstrations and no description knows nothing about $d-t$ directions of $w$, and as $\tau_0\to\infty$ its error is dominated by what those directions contribute, $(d-t)\tau_0^2$. The description alone leaves an error of $d\tau^2=(1-s)d\tau_0^2$, the variance of its prior summed over the $d$ directions, which this learner matches at $t=sd$: a description that removes a share of the uncertainty is worth that share of $d$ demonstrations.
+In part (i), $\tau$ grows in proportion to $\tau_0$. A learner with $t<d$ demonstrations and no description knows nothing about $d-t$ directions of $w$, and as $\tau_0\to\infty$ its error is dominated by what those directions contribute, $(d-t)\tau_0^2$. The description alone leaves an error of $d\tau^2=(1-s)d\tau_0^2$, the variance of its prior summed over the $d$ directions, which this learner matches at $t=sd$: a description that removes a share of the uncertainty is worth that share of $d$ demonstrations.
 
-Part (ii) fixes the description's variance instead. The result follows by comparing the description's error, $d\tau^2=d/c$, with the limiting baseline error after $t$ demonstrations, which is $d/(t-d-1)$ for integer $t>d+1$ \citep{muirhead1982}: the two match at $t=c+d+1$ (Appendix~\ref{app:specificity}). If the demonstration inputs gave every direction of the task the same information, the baseline error would be $d/t$ and the description would be worth $c$ demonstrations. Random inputs constrain some directions less than that, so the error is $d/(t-d-1)$, and matching the description takes $d+1$ more demonstrations.
+Part (ii) fixes the description's variance instead. The result follows by comparing the description's error, $d\tau^2=d/c$, with the limiting baseline error after $t$ demonstrations, which is $d/(t-d-1)$ for integer $t>d+1$ \citep{muirhead1982}: the two match at $t=c+d+1$ (Appendix~\ref{app:specificity}). If the demonstration inputs gave every direction of the task the same information, the baseline error would be $d/t$ and the description would be worth $c$ demonstrations. Random inputs constrain some directions less than that, so the error is $d/(t-d-1)$, and matching the description takes $d+1$ more demonstrations. We state part (ii) for integer $c$ because the baseline curve is interpolated between integer counts, so the limit is exactly $c+d+1$ only then.
 
 \begin{figure}[t]
 \centering
@@ -142,22 +143,14 @@ Part (ii) fixes the description's variance instead. The result follows by compar
 At $d=16$ and $\tau_0^2=10$ (Figure~\ref{fig:ess}a), a reliable description with $\tau=0.1$, so that $c=100$, is worth about $117$ demonstrations before any are seen, the value $c+d+1$ that Proposition~\ref{prop:reliable}(ii) gives for a diffuse baseline prior.
 
 \paragraph{Demonstrations lower the value of a complete description.}
-The descriptions modeled so far are \emph{complete}: they constrain every direction of $w$. After many demonstrations, the dimension no longer adds to such a description's value: $\ess_n\to c-c_0$ as $n\to\infty$ (Proposition~\ref{prop:partial} in Appendix~\ref{app:partial}). This limit is the precision that the description adds to the baseline prior, its conventional prior ESS \citep{morita2008} measured relative to that prior. A complete description therefore loses value as demonstrations accumulate: a $c=100$ description is worth $117$ demonstrations before any are seen and $109$ after $100$ (Figure~\ref{fig:ess}b), and a $c=1$ description falls from $15.6$ to $1.1$ (Table~\ref{tab:partial}).
+The descriptions modeled so far are \emph{complete}: they constrain every direction of $w$. By part (iii), after many demonstrations the dimension no longer adds to such a description's value, which tends to $c-c_0$. This limit is the precision that the description adds to the baseline prior, its conventional prior ESS \citep{morita2008} measured relative to that prior. A complete description therefore loses value as demonstrations accumulate: a $c=100$ description is worth $117$ demonstrations before any are seen and $109$ after $100$ (Figure~\ref{fig:ess}b), and a $c=1$ description falls from $15.6$ to $1.1$ (Table~\ref{tab:partial}).
 
 \paragraph{Demonstrations can raise the value of a partial description.}
-Descriptions often specify only part of a task. A \emph{partial} description constrains only $k<d$ of the $d$ directions (Appendix~\ref{app:partial}). Without demonstrations, its error comes almost entirely from the $d-k$ directions it leaves open, and a learner without the description reaches that error after about $k$ demonstrations. After many demonstrations, the description is worth the precision it adds, averaged over all $d$ directions: about $k(c-c_0)/d$ demonstrations, which exceeds $k$ when $c-c_0>d$. At $d=16$ and $\tau_0^2=10$, a $c=100$ partial description with $k=8$ is worth $8.1$ demonstrations before any are seen and $36.2$ after $100$ (Figure~\ref{fig:ess}b).
-
-% Figure 3 belongs to Section 5.1; its source sits here, before Section 4, so that it lands at the top of the page where Section 5.1's text is.
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{figs/networks.pdf}
-\caption{\textbf{Meta-trained Transformers approach Bayes-optimal ESS and weight descriptions by how often descriptions were relevant in training.} Results use $c=10$, $d=5$, $\tau_0^2=10$, and no demonstrations. (a) Training and test reliability match. Network ESS uses each network's own baseline curve; bars show the mean and one standard deviation across three training seeds. The Bayes-optimal comparison uses the same prompts. (b) Networks trained at each reliability, evaluated at each test reliability. Cells show network ESS as a fraction of the Bayes-optimal ESS under the test distribution, estimated on $200{,}000$ prompts; outlined cells have matching reliabilities. Table~\ref{tab:networks} includes $c=1$.}
-\label{fig:networks}
-\end{figure*}
+Descriptions often specify only part of a task. A \emph{partial} description constrains only $k<d$ of the $d$ directions (Proposition~\ref{prop:partial} in Appendix~\ref{app:partial}). Without demonstrations, its error comes almost entirely from the $d-k$ directions it leaves open, and a learner without the description reaches that error after about $k$ demonstrations. After many demonstrations, the description is worth the precision it adds, averaged over all $d$ directions: about $k(c-c_0)/d$ demonstrations, which exceeds $k$ when $c-c_0>d$. At $d=16$ and $\tau_0^2=10$, a $c=100$ partial description with $k=8$ is worth $8.1$ demonstrations before any are seen and $36.2$ after $100$ (Figure~\ref{fig:ess}b).
 
 \section{The Cost of Unreliability}\label{sec:reliability}
 
-We now allow the description to be irrelevant with probability $1-p$. The Bayes-optimal predictor must then weigh the two components by each one's probability given the demonstrations. Let $\pi_n=P(Z=1\mid m,D_n)$ be the \emph{posterior relevance probability}. The predictor averages the two components' predictions with weights $\pi_n$ and $1-\pi_n$ \citep{hoeting1999}.
+We now allow the description to be irrelevant with probability $1-p$. The Bayes-optimal predictor must then weigh the two components of the prior~\eqref{eq:mixture} by each one's probability given the demonstrations. Let $\pi_n=P(Z=1\mid m,D_n)$ be the \emph{posterior relevance probability}. The predictor averages the two components' predictions with weights $\pi_n$ and $1-\pi_n$ \citep{hoeting1999}.
 
 \begin{proposition}[Unreliable descriptions]\label{prop:unreliable}
 Let $0<p<1$.
@@ -166,16 +159,42 @@ Let $0<p<1$.
 \begin{equation}\label{eq:zero}
 R^{\mathrm{desc}}(0)=\big[(1-p^2)\,\tau_0^2+p^2\,\tau^2\big]\,d.
 \end{equation}
-\item For every $\tau>0$, $\ess_0$ lies below a finite ceiling that does not depend on $\tau$. As $\tau_0\to\infty$, the ceiling tends to $p^2d$, and so does $\ess_0$ for fixed $\tau$.
-\item With $d$, $\tau_0$, and $\tau$ fixed, $\limsup_{n\to\infty}\ess_n\leq p\,(c-c_0)$.
+\item With $\tau$ fixed, $\ess_0\to p^2d$ as $\tau_0\to\infty$.
+\item With $\tau$ and $\tau_0$ fixed, $\limsup_{n\to\infty}\ess_n\leq p\,(c-c_0)$.
 \end{enumerate}
 \end{proposition}
 
+% Figure 3 belongs to Section 5.1; its source sits here so that it lands at the top of the page where Section 5.1's text is.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figs/networks.pdf}
+\caption{\textbf{Meta-trained Transformers approach Bayes-optimal ESS and weight descriptions by how often descriptions were relevant in training.} Results use $c=10$, $d=5$, $\tau_0^2=10$, and no demonstrations. (a) Training and test reliability match. Network ESS uses each network's own baseline curve; bars show the mean and one standard deviation across three training seeds. The Bayes-optimal comparison uses the same prompts. (b) Networks trained at each reliability, evaluated at each test reliability. Cells show network ESS as a fraction of the Bayes-optimal ESS under the test distribution, estimated on $200{,}000$ prompts; outlined cells have matching reliabilities. Table~\ref{tab:networks} includes $c=1$.}
+\label{fig:networks}
+\end{figure*}
+
 \paragraph{Without demonstrations, unreliability imposes an error floor.}
-The error in Equation~\eqref{eq:zero} is the variance of the mixture prior~\eqref{eq:mixture}, averaged over descriptions. It is a floor, $(1-p^2)\tau_0^2d$, plus $p^2$ times the error $d\tau^2$ of a reliable description. However specific the description, the error stays above the floor, so the zero-shot ESS stays below a finite ceiling: the number of demonstrations at which the baseline error equals the floor. The floor arises because, without demonstrations, nothing shows whether the description is relevant: the posterior relevance probability is still the prior one, $\pi_0=p$, and the Bayes-optimal predictor shrinks the prior mean $m$ by the factor $p$. A predictor that knew whether the description was relevant would have a ceiling that tends to $pd$ in place of $p^2d$; the further factor of $p$ is the cost of not knowing (Appendix~\ref{app:reliability}). Figure~\ref{fig:ess}a shows the effect at $p=0.9$, the weight that the robust-prior example of \citet{schmidli2014} gives its informative component, our relevant component: lowering $\tau$ from $1$ to $0.1$, which raises $c$ from $1$ to $100$, multiplies a reliable description's ESS by more than seven, but raises an unreliable one's only from $12.0$ to $13.5$, already within $0.1$ of the ceiling.
+The error in Equation~\eqref{eq:zero} is a floor, $(1-p^2)\tau_0^2d$, plus $p^2$ times the error $d\tau^2$ of a reliable description. However specific the description, the error stays above the floor, so the zero-shot ESS stays below a finite ceiling: the number of demonstrations at which the baseline error equals the floor. For a diffuse baseline prior the ceiling is $p^2d$, the limit in part (ii), which does not depend on $\tau$. The floor arises because, without demonstrations, nothing shows whether the description is relevant: the posterior relevance probability is still the prior one, $\pi_0=p$, and the Bayes-optimal predictor shrinks the prior mean $m$ by the factor $p$. A predictor that knew whether the description was relevant would have a ceiling that tends to $pd$ in place of $p^2d$; the further factor of $p$ is the cost of not knowing (Appendix~\ref{app:reliability}). Figure~\ref{fig:ess}a shows the effect at $p=0.9$. Lowering $\tau$ from $1$ to $0.1$, which raises $c$ from $1$ to $100$, multiplies a reliable description's ESS by more than seven but raises an unreliable one's only from $12.0$ to $13.5$, within $0.1$ of its ceiling.
 
 \paragraph{Demonstrations distinguish low specificity from unreliability.}
-By Proposition~\ref{prop:unreliable}, an unreliable description has, without demonstrations, the error of a less specific reliable one. For example, at $d=16$ and $\tau_0^2=10$, a $c=100$ description with $p=0.9$ and a reliable one with $c\approx0.52$ both have ESS about $13.5$. After $100$ demonstrations, their ESS values are $86.6$ and $0.5$. Once demonstrations show that the unreliable description is relevant, its high specificity takes effect; the reliable description has low specificity to begin with, so demonstrations cannot raise its value in this way. The rise is not steady (Figure~\ref{fig:ess}b, Appendix~\ref{app:reliability}), and it levels off: in the limit of many demonstrations, an unreliable description is worth at most $p(c-c_0)$, which is $p$ times the limit $c-c_0$ of a reliable one (Proposition~\ref{prop:unreliable}).
+By Proposition~\ref{prop:unreliable}, an unreliable description has, without demonstrations, the error of a less specific reliable one. For example, at $d=16$ and $\tau_0^2=10$, a $c=100$ description with $p=0.9$ and a reliable one with $c\approx0.52$ both have ESS about $13.5$. After $100$ demonstrations, their ESS values are $86.6$ and $0.5$. Demonstrations show whether the unreliable description is relevant, and when it is, its high specificity takes effect; the reliable description has low specificity to begin with, so demonstrations cannot raise its value in this way. The rise is not steady (Figure~\ref{fig:ess}b, Appendix~\ref{app:reliability}). It also levels off: in the limit of many demonstrations, an unreliable description is worth at most $p(c-c_0)$, which is $p$ times the limit $c-c_0$ of a reliable one (Proposition~\ref{prop:unreliable}(iii)). Table~\ref{tab:summary} collects the limits of this section and the last.
+
+\begin{table}[t]
+\centering\small
+\caption{\textbf{The Bayes-optimal value of a description, in demonstrations.} Limits of the ESS of a description with precision $c=\tau^{-2}$: without demonstrations, for a diffuse baseline prior ($\tau_0\to\infty$ with $\tau$ fixed), and after many demonstrations ($n\to\infty$ with $\tau_0$ fixed, $c_0=\tau_0^{-2}$). The unreliable description's entry after many demonstrations is an upper bound (Propositions~\ref{prop:reliable}--\ref{prop:partial}).}
+\label{tab:summary}
+\vspace{3pt}
+\begin{tabular}{lcc}
+\toprule
+& \multicolumn{2}{c}{Demonstrations} \\
+\cmidrule(lr){2-3}
+Description & none & many \\
+\midrule
+Reliable & $c+d+1$ & $c-c_0$ \\
+Unreliable, $p<1$ & $p^2d$ & $\leq p\,(c-c_0)$ \\
+Partial, $k$ of $d$ directions & $k$ & $k\,(c-c_0)/d$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Experiments}\label{sec:experiments}
 
@@ -195,24 +214,30 @@ Pretrained language models are not trained on our task distribution, so they can
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figs/llm_ess.pdf}
-\caption{\textbf{Language models use the precision and the reliability that a prompt states mainly when they reason.} Median ESS over $n=1$, $2$, and $4$, from error averaged over $200$ tasks at $\sigma=60$; $95\%$ bootstrap intervals resample tasks. Open points indicate reasoning disabled; filled points indicate reasoning enabled; vertical dashed lines show the Bayesian reference. (a) Descriptions generated and stated at $c=4$. (b) Descriptions generated and stated at $c=36$. (c) GPT-6 Sol, Opus~4.6, and Haiku~5.5 on the $c=36$ descriptions of (b), when the prompt states a $10\%$ chance that the description is irrelevant; each task is presented with a relevant description and with an irrelevant one. Squares in (b) measure ESS on the reference's baseline curve, not the model's own, and so are not comparable with the other points. Intervals are clipped to the display.}
+\caption{\textbf{Language models use the precision and the reliability that a prompt states mainly when they reason.} Median ESS over $n=1$, $2$, and $4$, from error averaged over $200$ tasks at $\sigma=60$; $95\%$ bootstrap intervals resample tasks. Open points indicate reasoning disabled; filled points indicate reasoning enabled; vertical dashed lines show the Bayesian reference. (a) Descriptions generated and stated at $c=4$. (b) Descriptions generated and stated at $c=36$. (c) GPT-6 Sol, Opus~4.6, and Haiku~5.5 on the $c=36$ descriptions of (b), when the prompt states a $10\%$ chance that the description is irrelevant; each task is presented with a relevant description and with an irrelevant one. Squares in (b) mark two models whose own baseline curves never reach their error with the description; their ESS is measured on the reference's baseline curve and is not comparable with the other points. Intervals are clipped to the display.}
 \label{fig:llm}
 \end{figure*}
 
 \paragraph{Task and prompts.}
 Each task has a hidden mean $w\sim\mathcal{N}(500,100^2)$, and its demonstrations are drawn from $\mathcal{N}(w,\sigma^2)$ with $\sigma=60$, which the prompt states. A description gives a prior mean $m$ and a standard deviation $\tau$: “Its mean was drawn from a normal distribution with mean 510 and standard deviation 30.” We generate $m$ as in Section~\ref{sec:setting}, so the task lies within about $\tau$ of it. Each demonstration now adds precision $\sigma^{-2}$, so the description's precision counted in demonstrations is $c=\sigma^2/\tau^2$; stated standard deviations of $60$, $30$, and $10$ give $c=1$, $4$, and $36$. Because a more precise description also has a more accurate prior mean, a model could do well with $c=36$ descriptions without using the stated precision. To separate the two, we also give the $c=36$ descriptions with a stated precision of $c=4$ (Appendix~\ref{app:prompts}).
 
-\paragraph{Models and reference.}
-We give the same $200$ tasks to five models whose reasoning can be enabled and disabled: gpt-oss-20b \citep{openai2025}, Qwen3.5 9B \citep{qwen35}, Gemma~4 31B \citep{gemma4}, GPT-6 Sol \citep{openai2026sol}, and Claude Opus~4.6 \citep{anthropic2026opus}. Claude Haiku~5.5 \citep{anthropic2026haiku}, whose reasoning could not be disabled in our setup, appears only with reasoning. We compare each model with a \emph{Bayesian reference}, the Bayesian predictor for the statistical model that the prompt states. With a description, the reference predicts approximately the precision-weighted mean $(cm+n\bar y)/(c+n)$, where $\bar y$ is the sample mean of the demonstrations. Without one, the prompt says only that the mean is “unknown”, because a stated distribution would itself be a description, and the reference takes a uniform prior over the integers $100$ to $999$, the range of every number shown. This prior is not the normal distribution that generates the tasks, so agreement with the reference shows that a model follows what the prompt states, not that its error is the lowest possible on these tasks. Models rarely answer with a number when the prompt has neither a description nor demonstrations, so we compute ESS at $n=1$, $2$, and $4$ against each model's own baseline curve and report the median of the three values, the \emph{median ESS}; the reference's is $1.0$, $3.5$, and $34.6$ at $c=1$, $4$, and $36$ (Appendix~\ref{app:ess-est}).
+\paragraph{Models.}
+We give the same $200$ tasks to five models whose reasoning can be enabled and disabled: gpt-oss-20b \citep{openai2025}, Qwen3.5 9B \citep{qwen35}, Gemma~4 31B \citep{gemma4}, GPT-6 Sol \citep{openai2026sol}, and Claude Opus~4.6 \citep{anthropic2026opus}. Claude Haiku~5.5 \citep{anthropic2026haiku}, whose reasoning could not be disabled in our setup, appears only with reasoning.
+
+\paragraph{Bayesian reference.}
+We compare each model with a \emph{Bayesian reference}, the Bayesian predictor for the statistical model that the prompt states. With a description, the reference predicts approximately the precision-weighted mean $(cm+n\bar y)/(c+n)$, where $\bar y$ is the sample mean of the demonstrations. Without one, the prompt says only that the mean is “unknown”, because a stated distribution would itself be a description. The reference then takes a uniform prior over the integers $100$ to $999$, the range of every number shown. This prior is not the normal distribution that generates the tasks, so agreement with the reference shows that a model follows what the prompt states, not that its error is the lowest possible on these tasks.
+
+\paragraph{Evaluation.}
+Models rarely answer with a number when the prompt has neither a description nor demonstrations, so we compute ESS at $n=1$, $2$, and $4$ against each model's own baseline curve and report the median of the three values, the \emph{median ESS}. The reference's median ESS is $1.0$, $3.5$, and $34.6$ at $c=1$, $4$, and $36$. These values differ slightly from $c$ because of the finite task sample and the interpolation of the baseline curve (Appendix~\ref{app:ess-est}).
 
 \paragraph{Language models use a stated precision mainly when they reason.}\label{sec:once}\label{sec:reasoning}
-Without reasoning, all five models fall far short of the reference at $c=36$: median ESS ranges from $2.0$ to $10.3$, against $34.6$ for the reference (Figure~\ref{fig:llm}b). With reasoning enabled, four of the six models come close to the reference's absolute error at $c=4$ and $c=36$: Opus~4.6, Gemma~4 31B, and Qwen3.5 9B are within $0.1$ of it at every demonstration count, and GPT-6 Sol within $0.3$ at all but one (Table~\ref{tab:error}). Opus~4.6, GPT-6 Sol, and Gemma~4 31B also attain its ESS at both precisions (Figure~\ref{fig:llm}a,b), and when only the stated precision is lowered, from $c=36$ to $c=4$, their ESS falls to between $11$ and $14$, against $13.7$ for the reference (Table~\ref{tab:reason}), so they use the stated precision itself and do not merely average the demonstrations better. For some models, the runs with and without reasoning also differ in serving software and retry policy, so these are comparisons of the configurations we evaluated, not evidence for a particular mechanism (Appendix~\ref{app:reasoning-runs}, which also covers the other two models and the squares in Figure~\ref{fig:llm}b).
+Without reasoning, all five models fall far short of the reference at $c=36$: median ESS ranges from $2.0$ to $10.3$, against $34.6$ for the reference (Figure~\ref{fig:llm}b). With reasoning enabled, four of the six models come close to the reference's absolute error at $c=4$ and $c=36$ (Table~\ref{tab:error}). Opus~4.6, Gemma~4 31B, and Qwen3.5 9B are within $0.1$ of it at every demonstration count, and GPT-6 Sol is within $0.3$ at all but one. Opus~4.6, GPT-6 Sol, and Gemma~4 31B also attain its ESS at both precisions (Figure~\ref{fig:llm}a,b). When only the stated precision is lowered, from $c=36$ to $c=4$, their ESS falls to between $11$ and $14$, against $13.7$ for the reference (Table~\ref{tab:reason}), so they use the stated precision itself and do not merely average the demonstrations better. For some models, the runs with and without reasoning also differ in serving software and retry policy, so these are comparisons of the configurations we evaluated, not evidence for a particular mechanism. Appendix~\ref{app:reasoning-runs} gives the settings and the results for the other two models, Haiku~5.5 and gpt-oss-20b.
 
 \paragraph{Stated reliability.}\label{sec:llm-stated}
 Section~\ref{sec:reliability} shows that demonstrations can reveal whether an unreliable description is relevant. To test whether language models use demonstrations in this way, we add a sentence to the $c=36$ description: “There is a 10\% chance that this statement is wrong, in which case the mean was instead drawn uniformly at random from the whole numbers 100 to 999.” Each task is presented once with its relevant description and once with an irrelevant one, and we average the two errors with weights $0.9$ and $0.1$. For cost reasons, we ran this experiment on three of the models, GPT-6 Sol, Opus~4.6, and Haiku~5.5 (Appendix~\ref{app:llm-reliability}). The stated chance cuts the reference's ESS from $34.6$ to $5.0$ (Figure~\ref{fig:llm}c). Most of what remains comes from using the demonstrations to judge whether the description is relevant: a predictor that keeps the chance of irrelevance at the stated $10\%$, whatever the demonstrations show, has an ESS of only $0.3$. With reasoning, GPT-6 Sol and Opus~4.6 reach $4.8$ and $5.0$, and Haiku~5.5 reaches $3.2$; without reasoning, GPT-6 Sol and Opus~4.6 reach only $0.9$ and $1.0$ (Table~\ref{tab:matched}).
 
 \paragraph{Descriptions in words.}
-The descriptions above state a distribution, whereas descriptions in practice usually state constraints in words. We therefore ran two of these three models, GPT-6 Sol and Haiku~5.5, on a second task, message sorting (Appendix~\ref{app:semantic}). A hidden rule, one of $60$, sorts messages into two folders by two of their six properties, and the description is a note that narrows down the rule, such as ``to go into A, a message must request a payment''. A note leaves the rules compatible with it equally likely, so it is more specific the fewer rules it leaves: $20$ for a broad note and $2$ for a specific one (Appendix~\ref{app:related} relates this count to the measure of Section~\ref{sec:setting}). Models give a probability for each message's folder, scored by squared error, and the reference is the exact Bayesian predictor over the $60$ rules. With reasoning, both models' ESS is within $2$ demonstrations of the reference's for every note and demonstration count but one; a specific note at $n=2$, for example, is worth $9.5$ and $9.9$ demonstrations to them, against $11.4$ for the reference (Table~\ref{tab:semantic}). When the prompt adds that the note has a $50\%$ chance of being wrong, $77$ to $99\%$ of their predictions are closer to the reference than to a predictor that keeps that chance fixed, at $n=2$ and $4$.
+The descriptions above state a distribution, whereas descriptions in practice usually state constraints in words. We therefore ran two of these three models, GPT-6 Sol and Haiku~5.5, on a second task, message sorting (Appendix~\ref{app:semantic}). A hidden rule, one of $60$, sorts messages into two folders by two of their six properties, and the description is a note that narrows down the rule, such as ``to go into A, a message must request a payment''. A note leaves the rules compatible with it equally likely, so it is more specific the fewer rules it leaves: $20$ for a broad note and $2$ for a specific one (Appendix~\ref{app:related}). Models give a probability for each message's folder, scored by squared error, and the reference is the exact Bayesian predictor over the $60$ rules. With reasoning, both models' ESS is within $2$ demonstrations of the reference's for every note and demonstration count but one; a specific note at $n=2$, for example, is worth $9.5$ and $9.9$ demonstrations to them, against $11.4$ for the reference (Table~\ref{tab:semantic}). When the prompt adds that the note has a $50\%$ chance of being wrong, the models again use the demonstrations to check it. At $n=2$ and $4$, $77$ to $99\%$ of their predictions are closer to the reference than to a predictor that keeps the $50\%$ chance whatever the demonstrations show.
 
 
 \section{Related Work}
@@ -304,6 +329,9 @@ R^{c_0}(n)\longrightarrow
 \end{cases}
 \]
 The finite part of this limiting curve equals $d/c$ at the integer $n=c+d+1$. For every $t<c+d+1$ the limiting error exceeds $d/c$, and for every $t>c+d+1$ it is smaller, so the crossing of the interpolated finite-$\tau_0$ error converges to $c+d+1$. The baseline curve is interpolated linearly between integer counts, so the limit is exactly $c+d+1$ only for integer $c$, and the proposition is stated for that case.
+
+\emph{(iii) Many demonstrations.}
+This is the case $k=d$ of Proposition~\ref{prop:partial}(ii), proved in Appendix~\ref{app:partial}.
 \end{proof}
 
 \subsection{Unreliable Descriptions}\label{app:reliability}
@@ -345,7 +373,7 @@ It follows that
 \]
 Since $\E[xx^\top]=I_d$, the prediction error is $\E\|w-pm\|^2$. Summing over coordinates proves Equation~\eqref{eq:zero}. Because $p\,m$ is the mean of the mixture prior~\eqref{eq:mixture} given $m$, this error is the trace of that prior's covariance, averaged over $m$.
 
-\emph{(ii) The ceiling.}
+\emph{(ii) The ceiling and its limit.}
 Since $R^{\mathrm{base}}(0)=d\tau_0^2$ and $s<1$, Equation~\eqref{eq:zero} gives, for every $\tau>0$,
 \[
 R^{\mathrm{desc}}(0)
@@ -399,7 +427,7 @@ $1$ & $1$ & $0.5$ & $0.45$ & $0.199$ \\
 \end{table}
 
 \paragraph{Other dimensions and baseline variances.}
-The numerical illustrations in the body use $d=16$ and $\tau_0^2=10$. Table~\ref{tab:grid} repeats the comparison of a reliable and an unreliable $c=100$ description at other values. In every case the reliable description's zero-shot ESS is within $1.6$ of $c+d+1$. A one-in-ten chance of irrelevance cuts it to between $4.2$ and $44.4$, and it approaches the diffuse-prior limit $p^2d$ of Proposition~\ref{prop:unreliable} as $\tau_0^2$ grows.
+The numerical illustrations in the body use $d=16$ and $\tau_0^2=10$, and $p=0.9$ for the unreliable description, the weight that the robust-prior example of \citet{schmidli2014} gives its informative component, which corresponds to our relevant component. Table~\ref{tab:grid} repeats the comparison of a reliable and an unreliable $c=100$ description at other values. In every case the reliable description's zero-shot ESS is within $1.6$ of $c+d+1$. A one-in-ten chance of irrelevance cuts it to between $4.2$ and $44.4$, and it approaches the diffuse-prior limit $p^2d$ of Proposition~\ref{prop:unreliable} as $\tau_0^2$ grows.
 
 \begin{table}[!htb]
 \centering\small
