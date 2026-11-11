@@ -156,7 +156,7 @@ Let $0<p<1$. Without demonstrations,
 \begin{equation}\label{eq:zero}
 R^{\mathrm{desc}}(0)=\big[(1-p^2)\,\tau_0^2+p^2\,\tau^2\big]\,d=(1-p^2s)\,\tau_0^2d.
 \end{equation}
-An unreliable description thus leaves the error of a reliable one that removes the share $p^2s$ of the baseline variance, and Proposition~\ref{prop:reliable}(i) holds with $p^2s$ in place of $s$. Because $p^2s<p^2$, $\ess_0$ stays below a finite ceiling for every $\tau>0$ and tends to it as $\tau\to0$; the ceiling is the number of demonstrations at which the baseline error equals $(1-p^2)\tau_0^2d$. As $\tau_0\to\infty$, the ceiling tends to $p^2d$, and with $\tau$ fixed so does $\ess_0$.
+An unreliable description thus leaves the error of a reliable one that removes the share $p^2s$ of the baseline variance, and Proposition~\ref{prop:reliable}(i) holds with $p^2s$ in place of $s$. Because $p^2s<p^2$, $\ess_0$ stays below a finite ceiling for every $\tau>0$ and tends to it as $\tau\to0$; the ceiling is the number of demonstrations at which the baseline error equals $(1-p^2)\tau_0^2d$. As $\tau_0\to\infty$, the ceiling tends to $p^2d$, and with $\tau$ fixed so does $\ess_0$. With $d$, $\tau_0$, and $\tau$ fixed, $\limsup_{n\to\infty}\ess_n\leq p\,(c-c_0)$.
 \end{proposition}
 
 % Figure 3 belongs to Section 5.1; its source sits here so that it lands at the top of the page where that section's text is.
@@ -171,7 +171,7 @@ An unreliable description thus leaves the error of a reliable one that removes t
 The error in Equation~\eqref{eq:zero} is the variance of the mixture prior~\eqref{eq:mixture}, averaged over descriptions. It is a floor, $(1-p^2)\tau_0^2d$, plus $p^2$ times the error $d\tau^2$ of a reliable description. However specific the description, the error stays above the floor, and the zero-shot ESS below a finite ceiling. The floor arises because, without demonstrations, nothing shows whether the description is relevant: the posterior relevance probability is still the prior one, $\pi_0=p$, and the Bayes-optimal predictor shrinks the prior mean $m$ by the factor $p$. A predictor that knew whether the description was relevant would have a ceiling that tends to $pd$ in place of $p^2d$; the further factor of $p$ is the cost of not knowing (Appendix~\ref{app:reliability}). Figure~\ref{fig:ess}a shows the effect at $p=0.9$, the weight that the robust-prior example of \citet{schmidli2014} gives its informative component, our relevant component: lowering $\tau$ from $1$ to $0.1$, which raises $c$ from $1$ to $100$, multiplies a reliable description's ESS by more than seven, but raises an unreliable one's only from $12.0$ to $13.5$, already within $0.1$ of the ceiling.
 
 \paragraph{Demonstrations distinguish low specificity from unreliability.}
-By Proposition~\ref{prop:unreliable}, an unreliable description has, without demonstrations, the error of a less specific reliable one. For example, at $d=16$ and $\tau_0^2=10$, a $c=100$ description with $p=0.9$ and a reliable one with $c\approx0.52$ both have ESS about $13.5$. After $100$ demonstrations, their ESS values are $86.6$ and $0.5$. Once demonstrations show that the unreliable description is relevant, its high specificity takes effect; the reliable description has low specificity to begin with, so demonstrations cannot raise its value in this way. The rise is not steady: the unreliable description's ESS falls to $7.8$ at $n=12$ before climbing steeply as $n$ approaches $d$ (Figure~\ref{fig:ess}b, Appendix~\ref{app:reliability}).
+By Proposition~\ref{prop:unreliable}, an unreliable description has, without demonstrations, the error of a less specific reliable one. For example, at $d=16$ and $\tau_0^2=10$, a $c=100$ description with $p=0.9$ and a reliable one with $c\approx0.52$ both have ESS about $13.5$. After $100$ demonstrations, their ESS values are $86.6$ and $0.5$. Once demonstrations show that the unreliable description is relevant, its high specificity takes effect; the reliable description has low specificity to begin with, so demonstrations cannot raise its value in this way. The rise is not steady (Figure~\ref{fig:ess}b, Appendix~\ref{app:reliability}), and it levels off: in the limit of many demonstrations, an unreliable description is worth at most $p(c-c_0)$, which is $p$ times the limit $c-c_0$ of a reliable one (Proposition~\ref{prop:unreliable}).
 
 \section{Experiments}\label{sec:experiments}
 
@@ -230,7 +230,7 @@ Task summaries distilled from demonstrations can replace the examples in context
 
 We asked how descriptions can be characterized and how well learners use them in practice. For the first question, we treated a description as a prior with a specificity and a reliability, and we measured it by its predictive ESS. A reliable description can replace many demonstrations; unreliability imposes a finite ESS ceiling before demonstrations are observed; and demonstrations can then raise a description's ESS by supplying evidence about its relevance. For the second, meta-trained Transformers approach the Bayes-optimal ESS and, without demonstrations, weight a description by how often descriptions in their training data were relevant. Language models make too little use of a precise description without reasoning; with reasoning, most use a stated precision as the Bayesian reference does.
 
-Our controlled analysis suggests why a description can substitute for many examples \citep{honda2025} or have limited influence \citep{webson2022,gupta2025,gloaguen2026}. A description has little influence when it says little about the task, when it may be about the wrong task, when the demonstrations already supply what it says, or when the learner does not use it. The Bayes-optimal ESS reflects the first three, and a learner's shortfall from it reflects the fourth. For prompt design, the results suggest two practices. An instruction that may be outdated should come with enough demonstrations to let the learner check it; and a prompt that warns that an instruction may be wrong should say what holds in that case. In a variant of our stated-reliability prompt that said only that the mean was otherwise unknown, the models we tested revised the stated chance far less than the Bayesian reference; once the prompt said what held instead, the two models we retested revised it as the reference does (Appendix~\ref{app:llm-reliability}). More broadly, treating a description as a prior extends the Bayesian analysis of ICL from demonstrations to descriptions.
+Our controlled analysis suggests why a description can substitute for many examples \citep{honda2025} or have limited influence \citep{webson2022,gupta2025,gloaguen2026}. A description has little influence when it says little about the task, when it may be about the wrong task, when the demonstrations already supply what it says, or when the learner does not use it. The Bayes-optimal ESS reflects the first three, and a learner's shortfall from it reflects the fourth. For prompt design, the results suggest two practices. An instruction that may be wrong should come with enough demonstrations to let the learner check it, and a prompt that warns of this should say what holds in that case. In a variant of our stated-reliability prompt that said only that the mean was otherwise unknown, the models we tested revised the stated chance far less than the Bayesian reference; once the prompt said what held instead, the two models we retested revised it as the reference does (Appendix~\ref{app:llm-reliability}). More broadly, treating a description as a prior extends the Bayesian analysis of ICL from demonstrations to descriptions.
 
 \paragraph{Limitations and future work.}
 We model a relevant description as a single Gaussian prior around one prior mean. This is the usual case: a description points to one task and is more or less specific about it. Future work could model other forms of description, such as one that names several candidate tasks, with a mixture of Gaussians, which can approximate a wide class of priors \citep{dalal1983}. Most of our language-model prompts state a description's precision and reliability explicitly, as numbers, so that every prediction can be compared with a Bayesian reference. In practice, these properties are implicit: a more specific instruction is typically a longer one that says more about the task. The message-sorting notes are a first step in this direction. How well models infer these properties from the wording of realistic instructions is the next question, and predictive ESS applies to it directly, since it requires only a learner's errors with and without the description. Our language-model experiments also use small synthetic tasks, and two of them cover only two or three models.
@@ -359,7 +359,42 @@ For comparison, a predictor that also observes $Z$ predicts $m^\top x$ when $Z=1
 p\,d\tau^2+(1-p)\,d\tau_0^2=(1-ps)\,d\tau_0^2.
 \]
 As $\tau\to0$ this error tends to $(1-p)d\tau_0^2$, so by the same limit its zero-shot ESS ceiling approaches $pd$ as $\tau_0\to\infty$, against $p^2d$ for the Bayes-optimal predictor, which does not observe $Z$. The difference, $p(1-p)d$, is the cost of not knowing whether the description is relevant.
+
+\emph{Many demonstrations.}
+The same predictor bounds the ESS after many demonstrations. Given $Z$, it is the Bayes-optimal predictor for the corresponding component, so its error with $n$ demonstrations is $pR^{c}(n)+(1-p)R^{c_0}(n)$. It predicts with the posterior mean given $(Z,m,D_n)$, and the Bayes-optimal predictor with the posterior mean given $(m,D_n)$ alone. Conditioning on less cannot lower the expected squared error, so
+\[
+R^{\mathrm{desc}}(n)\ge pR^{c}(n)+(1-p)R^{c_0}(n).
+\]
+The expansion in the proof of Proposition~\ref{prop:partial}(ii), applied with $\Lambda=cI_d$ and with $\Lambda=c_0I_d$, gives for every fixed real $t\ge0$
+\[
+R^{\mathrm{base}}(n+t)-\big[pR^{c}(n)+(1-p)R^{c_0}(n)\big]
+=\frac{d}{n^2}\Big[p\,(c-c_0)-t+O(n^{-1})\Big].
+\]
+Fix $t>p(c-c_0)$. For all large $n$ the right-hand side is negative, so $R^{\mathrm{base}}(n+t)<R^{\mathrm{desc}}(n)$. The crossing $n^*$ exists, because $R^{\mathrm{desc}}(n)\le R^{\mathrm{base}}(n)$ and the interpolated baseline error is continuous and tends to zero (Appendix~\ref{app:specificity}); since that error is strictly decreasing, $n^*<n+t$, that is, $\ess_n<t$. Since $t>p(c-c_0)$ is arbitrary, $\limsup_{n\to\infty}\ess_n\le p(c-c_0)$: even a predictor that knew whether the description was relevant would gain the added precision $c-c_0$ only with probability $p$.
 \end{proof}
+
+Simulations indicate that the bound is nearly attained in the settings we study. The ESS can stay below it in the limit because the Bayes-optimal predictor remains unsure whether the description is relevant, which the predictor that observes $Z$ is not. Table~\ref{tab:gap} gives Monte Carlo estimates of this gap (\texttt{results/theory-check/vn\_limit.py}): it is below $10^{-4}$ demonstrations at $d=16$ and grows as the dimension falls. The bound concerns the limit, not each finite $n$: at $d=16$, $\tau_0^2=10$, $c=100$, and $p=0.9$, where the bound is $89.91$, the ESS is $86.6$ at $n=100$, $90.6$ at $n=400$, and $90.1$ at $n=3{,}000$, so it approaches the limit from above.
+
+\begin{table}[!htb]
+\centering\small
+\caption{\textbf{The bound of Proposition~\ref{prop:unreliable} after many demonstrations is nearly attained.} The bound $p(c-c_0)$ on an unreliable description's ESS in the limit $n\to\infty$, and a Monte Carlo estimate of how far the ESS stays below it, at $\tau_0^2=10$. The gap is estimated from the difference in error between the Bayes-optimal predictor and the predictor that observes $Z$, with two million draws.}
+\label{tab:gap}
+\vspace{3pt}
+\begin{tabular}{rrrcc}
+\toprule
+$d$ & $c$ & $p$ & bound $p(c-c_0)$ & gap \\
+\midrule
+$16$ & $100$ & $0.9$ & $89.91$ & $<0.0001$ \\
+$16$ & $1$ & $0.9$ & $0.81$ & $<0.0001$ \\
+$5$ & $10$ & $0.9$ & $8.91$ & $0.002$ \\
+$5$ & $1$ & $0.9$ & $0.81$ & $0.010$ \\
+$5$ & $1$ & $0.5$ & $0.45$ & $0.023$ \\
+$1$ & $36$ & $0.9$ & $32.31$ & $1.30$ \\
+$1$ & $1$ & $0.9$ & $0.81$ & $0.105$ \\
+$1$ & $1$ & $0.5$ & $0.45$ & $0.199$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \paragraph{Other dimensions and baseline variances.}
 The numerical illustrations in the body use $d=16$ and $\tau_0^2=10$. Table~\ref{tab:grid} repeats the comparison of a reliable and an unreliable $c=100$ description at other values. In every case the reliable description's zero-shot ESS is within $1.6$ of $c+d+1$. A one-in-ten chance of irrelevance cuts it to between $4.2$ and $44.4$, and it approaches the diffuse-prior limit $p^2d$ of Proposition~\ref{prop:unreliable} as $\tau_0^2$ grows.
