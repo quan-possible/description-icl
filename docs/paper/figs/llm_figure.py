@@ -12,7 +12,7 @@ import paper_style as ps
 
 DATA = pathlib.Path(__file__).resolve().parents[3] / "results/llm-test/figure_data.csv"
 ROWS = ["Opus 4.6", "GPT-6 Sol", "Gemma 4 31B", "Qwen3.5 9B", "gpt-oss-20b", "Haiku 5.5"]
-PANELS = [("c4", "(a) $c = 4$", 8), ("c36", "(b) $c = 36$", 44), ("matched10", "(c) $c = 36$, $10\\%$ irrelevant", 8)]  # (c) on (a)'s scale, so that models can be told apart near the reference
+PANELS = [("c4", "(a) stated s.d. 30 ($c = 4$)", 8), ("c36", "(b) stated s.d. 10 ($c = 36$)", 44), ("matched10", "(c) s.d. 10, $10\\%$ irrelevant", 8)]  # (c) on (a)'s scale, so that models can be told apart near the reference
 C = ps.BLUE.edge
 
 val = {}

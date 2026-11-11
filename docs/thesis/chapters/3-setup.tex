@@ -2,7 +2,7 @@
 
 This chapter applies the tools of Chapter~\ref{ch:background} to task descriptions: a description becomes a robust mixture prior over the regression task, and its value is measured by a predictive effective sample size.
 
-A description carries information about a task, so we model it as a prior over tasks. Let $Q_0$ be the \emph{baseline prior}, the distribution of tasks when no description is given. A description comes with a prior of its own, $Q_{\mathrm{desc}}$. If the description is about the right task, which we call \emph{relevant}, the task is drawn from $Q_{\mathrm{desc}}$. Otherwise the description is \emph{irrelevant}, and the task is drawn from $Q_0$ whatever the description says. Given a description, the task therefore has the prior
+A description carries information about a task that does not come from demonstrations, so we model it as a prior over tasks. Let $Q_0$ be the \emph{baseline prior}, the distribution of tasks when no description is given. A description comes with a prior of its own, $Q_{\mathrm{desc}}$. If the description is about the right task, which we call \emph{relevant}, the task is drawn from $Q_{\mathrm{desc}}$. Otherwise the description is \emph{irrelevant}, and the task is drawn from $Q_0$ whatever the description says. Given a description, the task therefore has the prior
 \begin{equation}\label{eq:mixture}
 p\,Q_{\mathrm{desc}}+(1-p)\,Q_0,
 \end{equation}
